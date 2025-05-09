@@ -21,7 +21,8 @@ class ItemTemplateController extends Controller
 
         return Inertia::render('items/Index', [
             'items' => $items,
-            'authUser' => $authUser, // Pass to frontend
+            'authUser' => $authUser,
+            'publicTemplates' => $items,
         ]);
     }
 
@@ -31,7 +32,11 @@ class ItemTemplateController extends Controller
      */
     public function create()
     {
-        return Inertia::render('items/Create');
+        $publicTemplates = Template::whereNull('user_id')->get();
+        // dd($publicTemplates);
+        return Inertia::render('items/Create', [
+            'publicTemplates' => $publicTemplates,
+        ]);
     }
 
     /**

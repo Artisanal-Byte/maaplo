@@ -9,9 +9,10 @@ import Button from '@/components/Button.vue';
 const toast = new ToastMagic();
 
 const props = defineProps<{
-    errors: Record<string, string>
+    errors: Record<string, string>;
+    publicTemplates: Array<{ id: number; name: string }>;
 }>();
-
+console.log(props.publicTemplates);
 const form = reactive({
     name: '',
     gender: '',
@@ -62,7 +63,7 @@ const submitForm = () => {
                 <!-- <h1>Select Base Template</h1> -->
                 <div>
                     <label class="text-md">Select Base Template</label>
-                    <SearchSelect class="mt-2" />
+                    <SearchSelect class="mt-2" :public-templates="props.publicTemplates" />
                 </div>
                 <div>
                     <Input v-model="form.name" label="Template Name" modelValue="" placeholder="Enter Template Name"
