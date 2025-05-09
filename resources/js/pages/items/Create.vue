@@ -98,10 +98,7 @@ const submitForm = () => {
                         </label>
                     </div>
                 </div>
-                <div>
-                    <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG code or path here"
-                        margin="md" width="full" fonttype="normal" textSize="base" rounded="md" error="" />
-                </div>
+
 
                 <div class="mt-2 lg:mt-4 flex flex-row gap-2 gap-4">
                     <div>
@@ -133,7 +130,10 @@ const submitForm = () => {
                         </label>
                     </div>
                 </div>
-
+                <div>
+                    <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG code or path here"
+                        margin="md" width="full" fonttype="normal" textSize="base" rounded="md" error="" />
+                </div>
                 <div class="mb-5">
                     <h1 class="mb-2 text-md mt-2">Required Measurements :</h1>
                     <div class="grid grid-cols-2 gap-4">
