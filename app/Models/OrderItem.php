@@ -47,7 +47,7 @@ class OrderItem extends Model
      */
     public function itemTemplate()
     {
-        return $this->belongsTo(ItemTemplate::class);
+        return $this->belongsTo(Template::class);
     }
 
     // Accessors & Mutators
