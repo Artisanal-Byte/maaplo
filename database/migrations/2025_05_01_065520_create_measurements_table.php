@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('text');
             $table->timestamps();
 
-            $table->foreign('templates_measurements_id')->references('id')->on('templates_measurements')->cascadeOnUpdate()->cascadeOnDelete();
+            // $table->foreign('templates_measurements_id')->references('id')->on('templates_measurements')->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 
