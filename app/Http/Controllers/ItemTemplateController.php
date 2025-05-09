@@ -40,15 +40,15 @@ class ItemTemplateController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f,o',
             'body_part' => 'required|in:upper,lower',
+            'svg_logo' => 'required|string',
             'required_measurements' => 'required|array',
         ]);
 
-        // dd($request->all(),$validated['body_part']);
+        // dd($validated);
         try {
             DB::beginTransaction();
 
@@ -59,6 +59,7 @@ class ItemTemplateController extends Controller
                 'name' => $validated['name'],
                 'gender' => $validated['gender'],
                 'body_part' => $validated['body_part'],
+                'svg_logo' => $validated['svg_logo'],
                 'required_measurements' => json_encode($validated['required_measurements']),
             ]);
 

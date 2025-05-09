@@ -19,6 +19,7 @@ class Template extends Model
         // 'custom_template',
         'body_part',
         // 'global_scope',
+        'svg_logo',
         'user_id',
     ];
 

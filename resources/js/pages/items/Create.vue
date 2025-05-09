@@ -18,6 +18,7 @@ const form = reactive({
     body_part: '',
     required_measurements: [] as string[],
     custom_template: false,
+    svg_logo: '',
 });
 
 const measurements = [
@@ -42,7 +43,7 @@ const submitForm = () => {
             router.visit(route('items.index'));
         },
         onError: (error) => {
-            toast.error("Failed to create Item. Please fill in all the required fields."+error);
+            toast.error("Failed to create Item. Please fill in all the required fields." + error);
             console.error(error);
         },
     });
@@ -64,7 +65,7 @@ const submitForm = () => {
                     <SearchSelect class="mt-2" />
                 </div>
                 <div>
-                    <Input  v-model="form.name"  label="Template Name" modelValue="" placeholder="Enter Template Name"
+                    <Input v-model="form.name" label="Template Name" modelValue="" placeholder="Enter Template Name"
                         margin="md" width="full" fonttype="normal" textSize="base" rounded="md" error="" />
                 </div>
                 <div class="mt-2 lg:mt-4 flex flex-row gap-2 gap-4">
@@ -73,7 +74,7 @@ const submitForm = () => {
                     </div>
                     <div class="flex gap-4">
                         <label>
-                            <input type="radio" name="gender"  value="f" v-model="form.gender" class="hidden" />
+                            <input type="radio" name="gender" value="f" v-model="form.gender" class="hidden" />
                             <div :class="[
                                 'px-4 py-1 rounded border text-sm cursor-pointer',
                                 form.gender === 'f'
@@ -85,7 +86,7 @@ const submitForm = () => {
                         </label>
 
                         <label>
-                            <input type="radio" name="gender"  value="m" v-model="form.gender" class="hidden" />
+                            <input type="radio" name="gender" value="m" v-model="form.gender" class="hidden" />
                             <div :class="[
                                 'px-4 py-1 rounded border text-sm cursor-pointer',
                                 form.gender === 'm'
@@ -97,6 +98,10 @@ const submitForm = () => {
                         </label>
                     </div>
                 </div>
+                <div>
+                    <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG code or path here"
+                        margin="md" width="full" fonttype="normal" textSize="base" rounded="md" error="" />
+                </div>
 
                 <div class="mt-2 lg:mt-4 flex flex-row gap-2 gap-4">
                     <div>
@@ -107,7 +112,7 @@ const submitForm = () => {
                             <input type="radio" name="bodyPart" value="upper" v-model="form.body_part" class="hidden" />
                             <div :class="[
                                 'px-4 py-1 rounded border text-sm cursor-pointer',
-                               form.body_part === 'upper'
+                                form.body_part === 'upper'
                                     ? 'bg-primary text-white'
                                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
                             ]">
@@ -116,7 +121,7 @@ const submitForm = () => {
                         </label>
 
                         <label>
-                            <input type="radio" name="bodyPart"  v-model="form.body_part" class="hidden" value="lower" />
+                            <input type="radio" name="bodyPart" v-model="form.body_part" class="hidden" value="lower" />
                             <div :class="[
                                 'px-4 py-1 rounded border text-sm cursor-pointer',
                                 form.body_part === 'lower'
@@ -133,7 +138,7 @@ const submitForm = () => {
                     <h1 class="mb-2 text-md mt-2">Required Measurements :</h1>
                     <div class="grid grid-cols-2 gap-4">
                         <div v-for="measurement in measurements" :key="measurement">
-                            <Input type="checkbox"  :label="measurement"
+                            <Input type="checkbox" :label="measurement"
                                 :modelValue="form.required_measurements.includes(measurement)"
                                 @update:modelValue="toggleMeasurement(measurement)" width="sm" error="" />
                         </div>
