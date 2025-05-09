@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ItemTemplate;
+use App\Models\Template;
 use Devrabiul\ToastMagic\Facades\ToastMagic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +16,7 @@ class ItemTemplateController extends Controller
      */
     public function index()
     {
-        $items = ItemTemplate::all();
+        $items = Template::all();
         $authUser = Auth::user();
 
         return Inertia::render('items/Index', [
@@ -40,6 +40,7 @@ class ItemTemplateController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f,o',
@@ -51,7 +52,7 @@ class ItemTemplateController extends Controller
         try {
             DB::beginTransaction();
 
-            ItemTemplate::create([
+            Template::create([
                 'user_id' => Auth::user()->id,
                 //  'global_scope' => $validated['global_scope'] ?? 'n',
                 //  'custom_template' => $validated['custom_template'] ?? false,
@@ -85,7 +86,7 @@ class ItemTemplateController extends Controller
      */
     public function edit($id)
     {
-        $item = ItemTemplate::findOrFail($id);
+        $item = Template::findOrFail($id);
 
         return Inertia::render('items/Edit', [
             'item' => $item,
