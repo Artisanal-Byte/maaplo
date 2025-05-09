@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('templates_measurements', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('measurements_id');
+            $table->unsignedBigInteger('template_id');
             $table->timestamps();
 
-           
+            $table->foreign('template_id')->references('id')->on('templates')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreign('measurements_id')->references('id')->on('templates_measurements')->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
