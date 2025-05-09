@@ -12,7 +12,6 @@ const props = defineProps<{
     errors: Record<string, string>;
     publicTemplates: Array<{ id: number; name: string }>;
 }>();
-console.log(props.publicTemplates);
 const form = reactive({
     name: '',
     gender: '',
@@ -132,7 +131,7 @@ const submitForm = () => {
                     </div>
                 </div>
                 <div>
-                    <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG code or path here"
+                    <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here"
                         margin="md" width="full" fonttype="normal" textSize="base" rounded="md" error="" />
                 </div>
                 <div class="mb-5">
