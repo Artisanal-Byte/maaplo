@@ -42,7 +42,8 @@ watch(()=>notes.value,(val)=>{
 <template>
     <div class="notes-section">
         <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-3 mb-3">
+                <label class="">Notes</label>
                 <span class="text-sm text-gray-600">Total: {{ notes.length }}</span>
 
                 <!-- Add Note Button -->

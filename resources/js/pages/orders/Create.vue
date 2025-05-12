@@ -7,10 +7,11 @@ import { computed, reactive, ref } from 'vue';
 import ItemModel from '@/components/Items/ItemModel.vue';
 import Button from '@/components/Button.vue';
 import { useForm } from '@inertiajs/vue3';
-const props = defineProps(["users", "customers","itemType"])
+import Notes from '@/components/Items/Notes.vue';
+const props = defineProps(["users", "customers", "itemType"])
 const showModal = ref(false);
 const toast = new ToastMagic();
-
+const notes = ref([{ label: '', text: '' }]);
 let form = useForm({
     user_id: null,
     customer_id: null,
@@ -49,9 +50,9 @@ let setFormData = (data) => {
     form.delivery_date = data.delivery_date
     form.close_date = data.close_date
     form.notes = data.notes
-    console.log('check:',data.order_items.length > 0);
-    
-    data.order_items   && items.value.push({ ...data.order_items });
+    console.log('check:', data.order_items.length > 0);
+
+    data.order_items && items.value.push({ ...data.order_items });
     form.order_items = items.value
     showModal.value = false;
 }
@@ -140,7 +141,7 @@ let create = () => {
 
                         <!-- Modal Content -->
                         <ItemModel :measurements="measurements" :showModal="showModal" @close="showModal = false"
-                            :form="form" @setFormData="setFormData" :itemType="itemType"/>
+                            :form="form" @setFormData="setFormData" :itemType="itemType" />
 
                         <!-- table -->
                         <!-- Items Table -->
@@ -151,7 +152,7 @@ let create = () => {
                                         <th class="p-2 border">Work Type</th>
                                         <th class="p-2 border">Item type</th>
                                         <th class="p-2 border">Delivery Date</th>
-
+                                        <th class="p-2 border">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -159,11 +160,22 @@ let create = () => {
                                         <td class="p-2 border">{{ item.workType }}</td>
                                         <td class="p-2 border">{{ item.itemType }}</td>
                                         <td class="p-2 border">{{ item.deliveryDate }}</td>
+                                        <td class="p-2 border">
+                                            <div class="flex gap-4">
+                                                <Icon icon="material-symbols:edit-rounded" width="24" height="24"
+                                                    class="text-primary cursor-pointer hover:text-blue-700" />
+                                                <Icon icon="mingcute:delete-fill" width="24" height="24"
+                                                    class="text-red-500 cursor-pointer hover:text-red-700" />
+                                            </div>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
+                        <div class="mt-5">
+                            <Notes v-model:notes="notes" />
+                        </div>
                     </div>
                 </div>
             </div>

@@ -95,8 +95,8 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
 
                 <!-- Contact Number -->
                 <div>
-                    <Input type="tel" v-model="form.phone" label="Contact Number" :required="true"
-                        :error="errors.phone" color="grayBorder" placeholder="Enter Phone Number" />
+                    <Input type="tel" v-model="form.phone" label="Contact Number" :required="true" :error="errors.phone"
+                        color="grayBorder" placeholder="Enter Phone Number" />
                     <!-- <div v-if="phoneError" class="text-red-600 text-sm mt-1">{{ phoneError }}</div> -->
                 </div>
 
@@ -126,12 +126,9 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                         <label class="text-[18px]  mb-1">Gender <span class="text-red-500">*</span></label>
                     </div>
                     <div class="flex flex-row items-center space-x-6 text-black">
-                        <Input type="radio" v-model="form.gender" name="gender" label="Male"
-                            radioValue="m" />
-                        <Input type="radio" v-model="form.gender" name="gender" label="Female"
-                            radioValue="f" />
-                        <Input type="radio" v-model="form.gender" name="gender" label="Other"
-                            radioValue="o" />
+                        <Input type="radio" v-model="form.gender" name="gender" label="Male" radioValue="m" />
+                        <Input type="radio" v-model="form.gender" name="gender" label="Female" radioValue="f" />
+                        <Input type="radio" v-model="form.gender" name="gender" label="Other" radioValue="o" />
                     </div>
                 </div>
                 <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.gender }}</div>
@@ -139,11 +136,13 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                 <!-- Measurements -->
                 <div>
                     <!-- <label class="block font-[Lato] text-[18px] leading-[16px] tracking-[0] mb-2">Measurements</label> -->
-                    <Measurements class="mb-4" v-model:measurements="form.measurements" />
+                    <Measurements class="" v-model:measurements="form.measurements" />
                 </div>
 
                 <!-- Notes Section -->
-                <Notes v-model:notes="notes" />
+                <div>
+                    <Notes v-model:notes="notes" />
+                </div>
 
                 <!-- Upload Section -->
                 <div>
