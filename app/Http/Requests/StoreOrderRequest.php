@@ -25,7 +25,7 @@ class StoreOrderRequest extends FormRequest
         return [
             'user_id' => ['required', 'exists:users,id'],
             'customer_id' => ['required', 'exists:customers,id'],
-            // 'order_number' => ['required', 'string', 'unique:orders,order_number'],
+            'order_number' => ['required', 'string', 'unique:orders,order_number'],
             'total_amount' => ['required', 'numeric', 'min:0'],
             'advance_paid' => ['required', 'numeric', 'min:0', 'lte:total_amount'],
             'delivery_date' => ['required', 'date', 'after_or_equal:today'],
@@ -36,17 +36,16 @@ class StoreOrderRequest extends FormRequest
             'order_items' => ['required', 'array'],
             'order_items.*.order_id' => ['required', 'string'],
             'order_items.*.item_template_id' => ['required', 'numeric'],
-            'order_items.*.name' => ['required', 'string', 'max:256'],
             'order_items.*.measurements' => ['required', 'array'],
-            'order_items.*.design_details' => ['required', 'array'],
+            'order_items.*.design_details_ids' => ['required', 'array'],
             'order_items.*.colors' => ['required', 'string', 'max:256'],
             'order_items.*.notes' => ['required', 'array'],
             'order_items.*.trial_dates.*' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:delivery_date'],
-            'order_items.*.price' => ['required', 'numeric', 'min:0'],
             'order_items.*.work_type' => ['required', 'string', 'in:New from Material,Only Stitching,Only Altering'],
             'order_items.*.material_code' => ['nullable', 'string', 'max:256'],
-            'order_items.*.material' => ['nullable', 'string', 'max:256'],
+            'order_items.*.material_type' => ['nullable', 'string', 'max:256'],
             'order_items.*.refrence_dress' => ['required', 'string', 'in:yes,no'],
+            'order_items.*.is_urgent' => ['required', 'string', 'in:yes,no'],
             'order_items.*.material_cost' => ['nullable', 'numeric', 'min:0'],
             'order_items.*.stiching_cost' => ['nullable', 'numeric', 'min:0'],
             'order_items.*.item_cost' => ['required', 'numeric', 'min:0'],
@@ -56,71 +55,79 @@ class StoreOrderRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'user_id.required' => 'User is required.',
-            'user_id.exists' => 'User does not exist.',
+            'user_id.required' => 'The user is required.',
+            'user_id.exists' => 'The selected user does not exist.',
 
-            'customer_id.required' => 'Please select a customer.',
+            'customer_id.required' => 'The customer is required.',
             'customer_id.exists' => 'The selected customer does not exist.',
 
-            // 'order_number.required' => 'Order number is required.',
-            // 'order_number.unique' => 'Order number must be unique.',
+            'order_number.required' => 'The order number is required.',
+            'order_number.unique' => 'The order number has already been taken.',
 
-            'total_amount.required' => 'Total amount is required.',
-            'total_amount.numeric' => 'Total amount must be a valid number.',
-            'total_amount.min' => 'Total amount must be at least 0.',
+            'total_amount.required' => 'The total amount is required.',
+            'total_amount.numeric' => 'The total amount must be a valid number.',
+            'total_amount.min' => 'The total amount must be at least 0.',
 
-            'advance_paid.required' => 'Advance paid is required.',
-            'advance_paid.numeric' => 'Advance paid must be a number.',
-            'advance_paid.min' => 'Advance paid must be at least 0.',
-            'advance_paid.lte' => 'Advance paid cannot be more than the total amount.',
+            'advance_paid.required' => 'The advance paid amount is required.',
+            'advance_paid.numeric' => 'The advance paid must be a number.',
+            'advance_paid.min' => 'The advance paid must be at least 0.',
+            'advance_paid.lte' => 'The advance paid cannot be greater than the total amount.',
 
-            'delivery_date.required' => 'Delivery date is required.',
-            'delivery_date.date' => 'Delivery date must be a valid date.',
-            'delivery_date.after_or_equal' => 'Delivery date cannot be in the past.',
+            'delivery_date.required' => 'The delivery date is required.',
+            'delivery_date.date' => 'The delivery date must be a valid date.',
+            'delivery_date.after_or_equal' => 'The delivery date cannot be in the past.',
 
-            'close_date.date' => 'Close date must be a valid date.',
-            'close_date.after_or_equal' => 'Close date cannot be earlier than the delivery date.',
+            'close_date.date' => 'The close date must be a valid date.',
+            'close_date.after_or_equal' => 'The close date cannot be earlier than the delivery date.',
 
-            'notes.array' => 'Notes must be a valid array.',
+            'notes.array' => 'Notes must be an array.',
 
-            //-- This Validation Messages Is Defined For Order Items
-
+            // Order Items
             'order_items.required' => 'At least one order item is required.',
-            'order_items.*.order_id.required' => 'Order ID is required for each item.',
-            'order_items.*.item_template_id.required' => 'Template ID is required.',
-            'order_items.*.item_template_id.numeric' => 'Template ID must be a number.',
-            'order_items.*.name.required' => 'Item name is required.',
-            'order_items.*.name.max' => 'Item name cannot exceed 256 characters.',
+            'order_items.*.order_id.required' => 'The order ID is required for each item.',
+            'order_items.*.item_template_id.required' => 'The item template ID is required.',
+            'order_items.*.item_template_id.numeric' => 'The item template ID must be a number.',
+
             'order_items.*.measurements.required' => 'Measurements are required.',
-            'order_items.*.design_details.required' => 'Design details are required.',
+            'order_items.*.design_details_ids.required' => 'Design details are required.',
+
             'order_items.*.colors.required' => 'Color information is required.',
-            'order_items.*.colors.max' => 'Color must not exceed 256 characters.',
+            'order_items.*.colors.max' => 'Color information may not be greater than 256 characters.',
+
             'order_items.*.notes.required' => 'Notes are required.',
+
             'order_items.*.trial_dates.*.required' => 'Trial date is required.',
             'order_items.*.trial_dates.*.date' => 'Trial date must be a valid date.',
             'order_items.*.trial_dates.*.after_or_equal' => 'Trial date cannot be in the past.',
-            'order_items.*.trial_dates.*.before_or_equal' => 'Trial date must be before or equal to delivery date.',
-            'order_items.*.price.required' => 'Price is required.',
-            'order_items.*.price.numeric' => 'Price must be a number.',
-            'order_items.*.price.min' => 'Price must be at least 0.',
-            'order_items.*.work_type.required' => 'Work type is required.',
-            'order_items.*.work_type.in' => 'Work type must be one of: New from Material, Only Stitching, Only Altering.',
-            'order_items.*.material_code.string' => 'Material code must be text.',
-            'order_items.*.material_code.max' => 'Material code may not be greater than 256 characters.',
-            'order_items.*.material.string' => 'Material must be text.',
-            'order_items.*.material.max' => 'Material may not be greater than 256 characters.',
+            'order_items.*.trial_dates.*.before_or_equal' => 'Trial date must be on or before the delivery date.',
+
+            'order_items.*.work_type.required' => 'The work type is required.',
+            'order_items.*.work_type.in' => 'The selected work type must be one of: New from Material, Only Stitching, or Only Altering.',
+
+            'order_items.*.material_code.string' => 'The material code must be a string.',
+            'order_items.*.material_code.max' => 'The material code may not exceed 256 characters.',
+
+            'order_items.*.material_type.string' => 'The material type must be a string.',
+            'order_items.*.material_type.max' => 'The material type may not exceed 256 characters.',
+
             'order_items.*.refrence_dress.required' => 'Reference dress is required.',
             'order_items.*.refrence_dress.in' => 'Reference dress must be either "yes" or "no".',
+
+            'order_items.*.is_urgent.required' => 'Urgency information is required.',
+            'order_items.*.is_urgent.in' => 'Urgency must be either "yes" or "no".',
+
             'order_items.*.material_cost.numeric' => 'Material cost must be a number.',
             'order_items.*.material_cost.min' => 'Material cost must be at least 0.',
+
             'order_items.*.stiching_cost.numeric' => 'Stitching cost must be a number.',
             'order_items.*.stiching_cost.min' => 'Stitching cost must be at least 0.',
+
             'order_items.*.item_cost.required' => 'Item cost is required.',
             'order_items.*.item_cost.numeric' => 'Item cost must be a number.',
             'order_items.*.item_cost.min' => 'Item cost must be at least 0.',
-
         ];
     }
+
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {

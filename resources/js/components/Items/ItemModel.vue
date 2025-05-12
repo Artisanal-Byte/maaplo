@@ -16,28 +16,21 @@ const props = defineProps(['showModal', 'measurements', 'form', "itemType"]);
 const emit = defineEmits(['close', 'setFormData']);
 
 let orderItems = reactive({
-    //  item_template_id
-    name: '',
-    measurements: {
-
-    },
-    item_template_id: null,
-    design_details: {
-
-    },
-    colors: '',
-    notes: [],
-    trial_dates: '',
-    price: null,
-    work_type: '',
-    material_code: '',
-    material: '',
-    refrence_dress: false,
-    is_urgent: false,
+    item_template_id: [],
+    measurements: [],
+    design_details_ids: null,
+    colors: null,
+    work_type: null,
+    material_type: null,
+    material_code: null,
+    refrence_dress: null,
+    is_urgent: null,
     material_cost: null,
     stiching_cost: null,
     item_cost: null,
-    item_type: '',
+    notes: null,
+    trial_dates: null,
+    status: null,
     cloth_img1: null,
     cloth_img2: null,
     Pattern_img1: null,
