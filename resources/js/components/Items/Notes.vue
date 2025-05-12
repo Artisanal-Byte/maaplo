@@ -8,8 +8,6 @@ const props = defineProps<{
     notes: Array<{ label: string; text: string }>;
 }>();
 
-
-
 const emit = defineEmits(['update:notes','setNotes']);
 const { notes } = toRefs(props);
 

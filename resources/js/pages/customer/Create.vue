@@ -5,7 +5,6 @@ import { reactive, ref, computed } from 'vue';
 import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
 import Input from '@/components/InputWithLabel.vue';
-import InputWithLabel from '@/components/InputWithLabel.vue';
 import Notes from '@/components/Items/Notes.vue';
 import Measurements from '@/components/Items/Measurements.vue';
 const customerMeasurements = ref({});
@@ -33,23 +32,6 @@ const form = reactive({
 
 // Notes
 const notes = ref([{ label: '', text: '' }]);
-const noteErrors = ref<string | null>(null);
-
-const addNote = () => {
-    notes.value.push({ label: '', text: '' });
-};
-
-const removeNote = (index: number) => {
-    notes.value.splice(index, 1);
-};
-
-const validateNotes = () => {
-    const isValid = notes.value.length > 0 && notes.value.every(
-        note => note.label.trim() !== '' && note.text.trim() !== ''
-    );
-    noteErrors.value = isValid ? null : 'All notes must have a label and text.';
-    return isValid;
-};
 
 const submitForm = () => {
     // console.log('Form submitted:', form);
