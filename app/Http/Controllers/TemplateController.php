@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
-class ItemTemplateController extends Controller
+class TemplateController extends Controller
 {
     /**
      * Display a listing of the resource.
