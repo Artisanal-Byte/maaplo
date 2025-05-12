@@ -37,6 +37,15 @@ class Template extends Model
         );
     }
 
+    protected function bodyPart(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                return ucfirst(strtolower($value));
+            },
+        );
+    }
+
     // Relationships
     public function user()
     {
