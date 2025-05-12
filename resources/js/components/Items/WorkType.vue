@@ -112,6 +112,7 @@ watch(()=>material.type,(val)=>{
         <Input v-model="material.cost" type="number" label="Material Cost:" placeholder="Enter material cost" />
         <Input v-model="material.type" type="text" label="Material Type:" placeholder="Enter material type" />
         <Input v-model="cost.stitching" type="number" label="Stitching Cost:" placeholder="Enter stitching cost" />
+        <h1>Total Cost:{{ item_cost }}</h1>
       </div>
 
       <div v-if="modelValue === 'Only Stitching'" class="mt-4 ml-2">
