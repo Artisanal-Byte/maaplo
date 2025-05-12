@@ -37,7 +37,6 @@ let setMeasurements = (value) => {
 }
 
 
-
 // set data which is set by child components 
 let setFormData = (data) => {
     // console.log('form data:', data);
@@ -83,6 +82,9 @@ let disabled = computed(() => {
     //     // )
     // );
 });
+const deleteItem = (index) => {
+    this.items.splice(index, 1);
+}
 
 let create = () => {
     form.post(route('orders.store'), {
@@ -166,7 +168,8 @@ let create = () => {
                                                 <Icon icon="material-symbols:edit-rounded" width="24" height="24"
                                                     class="text-primary cursor-pointer hover:text-blue-700" />
                                                 <Icon icon="mingcute:delete-fill" width="24" height="24"
-                                                    class="text-red-500 cursor-pointer hover:text-red-700" />
+                                                    class="text-red-500 cursor-pointer hover:text-red-700"
+                                                    @click="deleteItem(index)" />
                                             </div>
                                         </td>
                                     </tr>
@@ -185,8 +188,16 @@ let create = () => {
                         <div class="mt-5">
                             <Notes v-model:notes="notes" />
                         </div>
+
                     </div>
+
                 </div>
+                <!-- Submit Button (Full Width Below) -->
+
+                <Button :color="'primary'" :padding="'md'" :rounded="'full'" :textSize="'sm'">
+                    Save
+                </Button>
+
             </div>
         </div>
     </AppLayout>
