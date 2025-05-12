@@ -11,7 +11,7 @@ import PatternImage from './PatternImage.vue';
 import Button from '../Button.vue';
 import { ref, defineProps, defineEmits, watch, reactive } from 'vue';
 import TrialAndDeliveryDate from '../TrialAndDeliveryDate.vue';
-const notes = ref([]);
+const notes = ref([{ label: '', text: '' }]);
 const props = defineProps(['showModal', 'measurements', 'form', "itemType"]);
 const emit = defineEmits(['close', 'setFormData']);
 
