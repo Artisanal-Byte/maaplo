@@ -15,16 +15,12 @@ class Template extends Model
     protected $fillable = [
         'name',
         'gender',
-        // 'required_measurements',
-        // 'custom_template',
         'body_part',
-        // 'global_scope',
         'svg_logo',
         'user_id',
     ];
 
     protected $casts = [
-        // 'required_measurements' => 'array',
         'custom_template' => 'boolean',
     ];
 
