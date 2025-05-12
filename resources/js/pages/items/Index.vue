@@ -15,7 +15,7 @@ defineProps({
             <div class="flex gap-4 text-gray-600">
                 <div>
                     <h1 class="text-[24px] mt-3 leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
-                        Item's Template
+                        Template's
                     </h1>
                 </div>
             </div>
