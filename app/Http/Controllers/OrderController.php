@@ -87,13 +87,14 @@ class OrderController extends Controller
 
             $validatedOrderData['order_id'] = $Order->id;
 
-            //- Add Order Items in Created Order
+            //- Add Order Items of Created Order
 
             OrderItem::insert($validatedOrderItemsData);
 
             DB::commit();
 
             return redirect()->route('orders.index')->with('success', 'Order created successfully.');
+
         } catch (Exception $exception) {
 
             DB::rollBack();
