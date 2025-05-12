@@ -19,7 +19,8 @@ const props = defineProps([
     'label',
     'radioValue',
     'error',
-    'required'
+    'required',
+    'icon'
 ])
 
 const model = defineModel('modelValue');
@@ -137,18 +138,25 @@ const widthClass = {
                     <span v-if="required" class="text-red-500 text-lg">*</span>
                     <span v-else class="text-gray-400 text-sm">(optional)</span>
                 </label>
-                <input :type="type" :id="id" :name="name" :placeholder="placeholder" :disabled="disabled"
-                    v-model="model" :class="[
-                        'transition duration-200 focus:outline-none w-full',
-                        colorClass,
-                        paddingClass,
-                        roundedClass,
-                        textSizeClass,
-                        marginClass,
-                        widthClass,
-                        fullWidth ? 'w-full' : '',
-                        disabled ? 'opacity-50 cursor-not-allowed' : ''
-                    ]" />
+                <div class="relative">
+                    <input :type="type" :id="id" :name="name" :placeholder="placeholder" :disabled="disabled"
+                        v-model="model" :class="[
+                            'transition duration-200 focus:outline-none w-full',
+                            colorClass,
+                            paddingClass,
+                            roundedClass,
+                            textSizeClass,
+                            marginClass,
+                            widthClass,
+                            fullWidth ? 'w-full' : '',
+                            disabled ? 'opacity-50 cursor-not-allowed' : ''
+                        ]" />
+
+                    <!-- Icon slot (optional) -->
+                    <div class="absolute top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+                        <slot name="icon" />
+                    </div>
+                </div>
                 <slot />
             </div>
         </template>

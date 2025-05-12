@@ -175,8 +175,12 @@ let create = () => {
                         </div>
 
                         <div class="mt-5">
-                            <Input type="number" label="Advance Paid" :required="true"
-                                color="grayBorder" placeholder="Enter Advance Paid" />
+                            <Input type="number" label="Advance Paid" :required="true" color="grayBorder"
+                                placeholder="Enter Advance Paid">
+                            <template #icon>
+                                <Icon icon="mdi:rupee" width="18" height="18" />
+                            </template>
+                            </Input>
                         </div>
                         <div class="mt-5">
                             <Notes v-model:notes="notes" />
