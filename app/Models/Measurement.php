@@ -13,13 +13,11 @@ class Measurement extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'slug',
-        'text',
+        'slug'
     ];
 
     protected $casts = [
-        'slug' => 'integer',
-        'text' => 'string',
+        'slug' => 'integer'
     ];
 
 

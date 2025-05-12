@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Measurement;
 use App\Models\Template;
+use App\Models\TemplateMeasurement;
 use Devrabiul\ToastMagic\Facades\ToastMagic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,21 +59,31 @@ class TemplateController extends Controller
         try {
             DB::beginTransaction();
 
-            Template::create([
-                'user_id' => Auth::user()->id,
-                //  'global_scope' => $validated['global_scope'] ?? 'n',
-                //  'custom_template' => $validated['custom_template'] ?? false,
-                'name' => $validated['name'],
-                'gender' => $validated['gender'],
-                'body_part' => $validated['body_part'],
-                'svg_logo' => $validated['svg_logo'],
-                'required_measurements' => json_encode($validated['required_measurements']),
-            ]);
+        Template::create([
+            'user_id' => Auth::user()->id,
+            'name' => $validated['name'],
+            'gender' => $validated['gender'],
+            'body_part' => $validated['body_part'],
+            'svg_logo' => $validated['svg_logo'],
+        ]);
 
-            DB::commit();
+        Measurement::create([
+            'slug' => json_encode($validated['required_measurements']), // Store the measurements as JSON
+        ]);
 
-            // Redirect with flash message
-            return redirect()->route('items.index')->with('success', 'Item created successfully!');
+        // Get the IDs of the created records
+        $template = Template::all()->last()->id;
+        $measurement = Measurement::all()->last()->id;
+        // dd( $template, $measurement);
+        TemplateMeasurement::create([
+            'template_id' => $template, // Store Template ID
+            'measurements_id' => $measurement, // Store Measurement ID
+        ]);
+
+        DB::commit();
+
+        // Redirect with flash message
+        return redirect()->route('items.index')->with('success', 'Item created successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
             dd($e->getMessage());
