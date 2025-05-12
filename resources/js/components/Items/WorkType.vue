@@ -108,19 +108,19 @@ watch(()=>material.type,(val)=>{
 
       <!-- Conditional inputs -->
       <div v-if="modelValue === 'New from Material'" class="mt-4 ml-2 flex flex-col gap-3">
-        <Input v-model="material.code" type="text" label="Material Code:" :required="true" placeholder="Enter material code" />
-        <Input v-model="material.cost" type="number" label="Material Cost:" :required="true" placeholder="Enter material cost" />
-        <Input v-model="material.type" type="text" label="Material Type:" :required="true" placeholder="Enter material type" />
-        <Input v-model="cost.stitching" type="number" label="Stitching Cost:" :required="true" placeholder="Enter stitching cost" />
+        <Input v-model="material.code" type="text" label="Material Code" :required="true" placeholder="Enter material code" />
+        <Input v-model="material.cost" type="number" label="Material Cost" :required="true" placeholder="Enter material cost" />
+        <Input v-model="material.type" type="text" label="Material Type" :required="true" placeholder="Enter material type" />
+        <Input v-model="cost.stitching" type="number" label="Stitching Cost" :required="true" placeholder="Enter stitching cost" />
         <h1>Total Cost:{{ item_cost }}</h1>
       </div>
 
       <div v-if="modelValue === 'Only Stitching'" class="mt-4 ml-2">
-        <Input v-model="cost.stitching" type="text" label="Cost:" :required="true" placeholder="Enter Cost" />
+        <Input v-model="cost.stitching" type="text" label="Cost" :required="true" placeholder="Enter Cost" />
       </div>
 
       <div v-if="modelValue === 'Only Altering'" class="mt-4 ml-2">
-        <Input v-model="cost.altering" type="text" label="Cost:" :required="true" placeholder="Enter Cost" />
+        <Input v-model="cost.altering" type="text" label="Cost" :required="true" placeholder="Enter Cost" />
       </div>
     </div>
   </div>
