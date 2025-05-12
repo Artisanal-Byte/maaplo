@@ -8,6 +8,7 @@ import ItemModel from '@/components/Items/ItemModel.vue';
 import Button from '@/components/Button.vue';
 import { useForm } from '@inertiajs/vue3';
 import Notes from '@/components/Items/Notes.vue';
+import Input from '@/components/InputWithLabel.vue';
 const props = defineProps(["users", "customers", "itemType"])
 const showModal = ref(false);
 const toast = new ToastMagic();
@@ -173,6 +174,10 @@ let create = () => {
                             </table>
                         </div>
 
+                        <div class="mt-5">
+                            <Input type="number" label="Advance Paid" :required="true"
+                                color="grayBorder" placeholder="Enter Advance Paid" />
+                        </div>
                         <div class="mt-5">
                             <Notes v-model:notes="notes" />
                         </div>
