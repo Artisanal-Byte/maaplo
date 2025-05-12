@@ -1,102 +1,141 @@
-<script setup>
-import { ref } from 'vue';
-import { usePage, router } from '@inertiajs/vue3'; // Use Inertia to handle page data
-import Button from '@/components/Button.vue';
+<script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import { router, usePage } from '@inertiajs/vue3';
+import { reactive } from 'vue';
+import Input from '@/components/InputWithLabel.vue';
+import Button from '@/components/Button.vue';
 
-// Fetch the current item data from Inertia
+const toast = new ToastMagic();
 const { item } = usePage().props;
 
-// Setup form state with initial values from `item`
-const form = ref({
-  name: item.name,
-  gender: item.gender,
-  body_part: item.body_part,
-  required_measurements: JSON.parse(item.required_measurements)
+const measurements = [
+    'Length', 'Arms', 'Back Neck', 'Waist', 'Sleeve Circle',
+    'Chest', 'Sleeve Length', 'Shoulder', 'Seat', 'Front Neck'
+];
+
+const form = reactive({
+    name: item.name,
+    gender: item.gender,
+    body_part: item.body_part,
+    svg_logo: item.svg_logo ?? '',
+    required_measurements: item.required_measurements ?? [],
 });
 
-// Handle form submission to update the item
-const handleSubmit = () => {
-  router.put(route('items.update', item.id), form.value, {
-    onSuccess: () => {
-      router.push(route('items.index')); // Redirect to the item list page after success
-    },
-    onError: () => {
-      console.error('There was an error updating the item.');
+const toggleMeasurement = (label: string) => {
+    const index = form.required_measurements.indexOf(label);
+    if (index > -1) {
+        form.required_measurements.splice(index, 1);
+    } else {
+        form.required_measurements.push(label);
     }
-  });
+};
+
+const submitForm = () => {
+    router.put(route('items.update', item.id), form, {
+        onSuccess: () => {
+            toast.success("Item updated successfully!");
+            router.visit(route('items.index'));
+        },
+        onError: (error) => {
+            toast.error("Failed to update item. Please fix errors and try again.");
+            console.error(error);
+        },
+    });
 };
 </script>
 
 <template>
-  <AppLayout>
-    <div class="lg:mx-auto max-w-7xl py-8 px-4">
-      <h1 class="text-3xl font-bold text-gray-800 mb-6">Edit Item Template</h1>
+    <AppLayout>
+        <div class="px-4 py-8 max-w-6xl mx-auto">
+            <div>
+                <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
+                    Edit Template
+                </h1>
+            </div>
 
-      <!-- Edit Form -->
-      <div @submit.prevent="handleSubmit" class="space-y-6">
+            <div class="flex flex-col mt-10 gap-4 rounded-lg border border-primary p-4">
 
-        <!-- Item Name -->
-        <div class="flex flex-col">
-          <label for="name" class="font-semibold text-lg">Item Name</label>
-          <input
-            v-model="form.name"
-            type="text"
-            id="name"
-            class="mt-2 p-2 border rounded-md"
-            placeholder="Enter item name"
-            required
-          />
+                <!-- Name -->
+                <Input v-model="form.name" label="Template Name" placeholder="Enter Template Name" margin="md"
+                    width="full" fonttype="normal" textSize="base" rounded="md" error="" />
+
+                <!-- Gender -->
+                <div class="flex flex-col">
+                    <label class="text-md mb-2">Gender:</label>
+                    <div class="flex gap-4">
+                        <label>
+                            <input type="radio" name="gender" value="f" v-model="form.gender" class="hidden" />
+                            <div :class="[
+                                'px-4 py-1 rounded border text-sm cursor-pointer',
+                                form.gender === 'f'
+                                    ? 'bg-primary text-white'
+                                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+                            ]">Female</div>
+                        </label>
+                        <label>
+                            <input type="radio" name="gender" value="m" v-model="form.gender" class="hidden" />
+                            <div :class="[
+                                'px-4 py-1 rounded border text-sm cursor-pointer',
+                                form.gender === 'm'
+                                    ? 'bg-primary text-white'
+                                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+                            ]">Male</div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Body Part -->
+                <div class="flex flex-col mt-4">
+                    <label class="text-md mb-2">Body Part:</label>
+                    <div class="flex gap-4">
+                        <label>
+                            <input type="radio" name="bodyPart" value="upper" v-model="form.body_part" class="hidden" />
+                            <div :class="[
+                                'px-4 py-1 rounded border text-sm cursor-pointer',
+                                form.body_part === 'upper'
+                                    ? 'bg-primary text-white'
+                                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+                            ]">Upper</div>
+                        </label>
+                        <label>
+                            <input type="radio" name="bodyPart" value="lower" v-model="form.body_part" class="hidden" />
+                            <div :class="[
+                                'px-4 py-1 rounded border text-sm cursor-pointer',
+                                form.body_part === 'lower'
+                                    ? 'bg-primary text-white'
+                                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+                            ]">Lower</div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- SVG Logo -->
+                <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
+                    width="full" fonttype="normal" textSize="base" rounded="md" error="" />
+
+                <!-- Required Measurements -->
+                <div>
+                    <label class="text-md mb-2">Required Measurements:</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div v-for="measurement in measurements" :key="measurement">
+                            <Input type="checkbox" :label="measurement"
+                                :modelValue="form.required_measurements.includes(measurement)" @update:modelValue="checked => {
+                                    if (checked && !form.required_measurements.includes(measurement)) {
+                                        form.required_measurements.push(measurement);
+                                    } else if (!checked) {
+                                        form.required_measurements = form.required_measurements.filter(m => m !== measurement);
+                                    }
+                                }" width="sm" error="" />
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Submit Button -->
+                    <Button @click="submitForm" color="primary" textSize="lg" padding="md" rounded="full">
+                        Save Changes
+                    </Button>
+            </div>
         </div>
-
-        <!-- Gender -->
-        <div class="flex flex-col">
-          <label for="gender" class="font-semibold text-lg">Gender</label>
-          <select
-            v-model="form.gender"
-            id="gender"
-            class="mt-2 p-2 border rounded-md"
-            required
-          >
-            <option value="m">Male</option>
-            <option value="f">Female</option>
-            <option value="o">Other</option>
-          </select>
-        </div>
-
-        <!-- Body Part -->
-        <div class="flex flex-col">
-          <label for="body_part" class="font-semibold text-lg">Body Part</label>
-          <select
-            v-model="form.body_part"
-            id="body_part"
-            class="mt-2 p-2 border rounded-md"
-            required
-          >
-            <option value="upper">Upper</option>
-            <option value="lower">Lower</option>
-          </select>
-        </div>
-
-        <!-- Required Measurements -->
-        <div class="flex flex-col">
-          <label for="required_measurements" class="font-semibold text-lg">Required Measurements</label>
-          <textarea
-            v-model="form.required_measurements"
-            id="required_measurements"
-            class="mt-2 p-2 border rounded-md"
-            placeholder="Enter required measurements (JSON format)"
-            rows="4"
-            required
-          ></textarea>
-        </div>
-
-        <!-- Submit Button -->
-        <div class="flex justify-end gap-4 mt-4">
-          <Button @click="handleSubmit" :color="'primary'">Save Changes</Button>
-        </div>
-      </div>
-    </div>
-  </AppLayout>
+    </AppLayout>
 </template>
-

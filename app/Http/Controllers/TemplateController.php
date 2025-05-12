@@ -59,31 +59,31 @@ class TemplateController extends Controller
         try {
             DB::beginTransaction();
 
-        Template::create([
-            'user_id' => Auth::user()->id,
-            'name' => $validated['name'],
-            'gender' => $validated['gender'],
-            'body_part' => $validated['body_part'],
-            'svg_logo' => $validated['svg_logo'],
-        ]);
+            Template::create([
+                'user_id' => Auth::user()->id,
+                'name' => $validated['name'],
+                'gender' => $validated['gender'],
+                'body_part' => $validated['body_part'],
+                'svg_logo' => $validated['svg_logo'],
+            ]);
 
-        Measurement::create([
-            'slug' => json_encode($validated['required_measurements']), // Store the measurements as JSON
-        ]);
+            Measurement::create([
+                'slug' => json_encode($validated['required_measurements']), // Store the measurements as JSON
+            ]);
 
-        // Get the IDs of the created records
-        $template = Template::all()->last()->id;
-        $measurement = Measurement::all()->last()->id;
-        // dd( $template, $measurement);
-        TemplateMeasurement::create([
-            'template_id' => $template, // Store Template ID
-            'measurements_id' => $measurement, // Store Measurement ID
-        ]);
+            // Get the IDs of the created records
+            $template = Template::all()->last()->id;
+            $measurement = Measurement::all()->last()->id;
+            // dd( $template, $measurement);
+            TemplateMeasurement::create([
+                'template_id' => $template, // Store Template ID
+                'measurements_id' => $measurement, // Store Measurement ID
+            ]);
 
-        DB::commit();
+            DB::commit();
 
-        // Redirect with flash message
-        return redirect()->route('items.index')->with('success', 'Item created successfully!');
+            // Redirect with flash message
+            return redirect()->route('items.index')->with('success', 'Item created successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
             dd($e->getMessage());
@@ -105,25 +105,68 @@ class TemplateController extends Controller
     public function edit($id)
     {
         $item = Template::findOrFail($id);
-
+        $measurements = Measurement::findOrFail($id);
         return Inertia::render('items/Edit', [
             'item' => $item,
+            'measurements' => $measurements,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'gender' => 'required|in:m,f,o',
+            'body_part' => 'required|in:upper,lower',
+            'svg_logo' => 'required|string',
+            'required_measurements' => 'required|array',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $template = Template::findOrFail($id);
+            $template->update([
+                'name' => $validated['name'],
+                'gender' => $validated['gender'],
+                'body_part' => $validated['body_part'],
+                'svg_logo' => $validated['svg_logo'],
+            ]);
+
+            // Update related measurements
+            $templateMeasurement = TemplateMeasurement::where('template_id', $template->id)->first();
+
+            if ($templateMeasurement) {
+                $measurement = Measurement::find($templateMeasurement->measurements_id);
+                if ($measurement) {
+                    $measurement->update([
+                        'slug' => json_encode($validated['required_measurements']),
+                    ]);
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('items.index')->with('success', 'Item updated successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Update failed: ' . $e->getMessage());
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        $template = Template::find($id);
+        if (!$template) {
+            return redirect()->route('items.index')->with('error', 'Customer not found!');
+        }
+        $template->delete();
+        return redirect()->route('items.index')->with('status', 'Customer deleted successfully!');
     }
 }
