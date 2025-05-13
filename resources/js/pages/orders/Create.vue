@@ -84,8 +84,10 @@ let disabled = computed(() => {
     // );
 });
 const deleteItem = (index) => {
-    this.items.splice(index, 1);
-}
+    items.value.splice(index, 1);
+    form.order_items = items.value;
+};
+
 
 let create = () => {
     form.post(route('orders.store'), {
