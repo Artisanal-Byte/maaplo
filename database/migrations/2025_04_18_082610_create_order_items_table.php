@@ -15,7 +15,7 @@ return new class extends Migration {
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('item_template_id')->constrained()->cascadeOnUpdate();
+            $table->foreignId('template_id')->constrained()->cascadeOnUpdate();
             $table->json('measurements');
             $table->json('design_detail_ids');
             $table->string('colors');
@@ -29,6 +29,7 @@ return new class extends Migration {
             $table->decimal('item_cost', 10, 2)->nullable();
             $table->json("notes")->nullable();
             $table->date('trial_dates');
+            $table->date('delivery_date');
             $table->enum('status', ["created", "in process", "processed", "delivered", "completed", "cancelled"])->default("created");
             $table->timestamps();
             $table->softDeletes();

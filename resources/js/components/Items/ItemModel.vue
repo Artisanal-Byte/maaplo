@@ -12,133 +12,141 @@ import Button from '../Button.vue';
 import { ref, defineProps, defineEmits, watch, reactive } from 'vue';
 import TrialAndDeliveryDate from '../TrialAndDeliveryDate.vue';
 const notes = ref([{ label: '', text: '' }]);
-const props = defineProps(['showModal', 'measurements', 'form', "itemType"]);
-const emit = defineEmits(['close', 'setFormData']);
+const props = defineProps(['showModal', 'form', 'itemType', 'itemIndex', 'measurements']);
+const emit = defineEmits(['close', 'setOrderItemsData']);
 
-let orderItems = reactive({
-    item_template_id: [],
+let data =  reactive({
+    template_id: null,
     measurements: [],
-    design_details_ids: null,
-    colors: null,
-    work_type: null,
-    material_type: null,
-    material_code: null,
-    refrence_dress: null,
-    is_urgent: null,
+    design_details_ids: [],
+    colors: '',
+    work_type: '',
+    material_type: '',
+    material_code: '',
+    refrence_dress: '',
+    is_urgent: '',
     material_cost: null,
     stiching_cost: null,
-    item_cost: null,
-    notes: null,
-    trial_dates: null,
-    status: null,
+    cost: null,
+    notes: [{}],
+    trial_dates: '',
+    status: '',
     cloth_img1: null,
     cloth_img2: null,
     Pattern_img1: null,
     Pattern_img2: null
 })
 
-let data = props.form
+// const form = reactive({
+//     template_id: null,
+//     measurements: [],
+//     design_details_ids: [],
+//     colors: '',
+//     work_type: '',
+//     material_type: '',
+//     material_code: '',
+//     refrence_dress: '',
+//     is_urgent: '',
+//     material_cost: null,
+//     stiching_cost: null,
+//     cost: null,
+//     notes: [{}],
+//     trial_dates: '',
+//     status: '',
+//     cloth_img1: null,
+//     cloth_img2: null,
+//     Pattern_img1: null,
+//     Pattern_img2: null
+// })
+
+const resetData = () => {
+    data = {
+        template_id: null,
+        measurements: [],
+        design_details_ids: [],
+        colors: '',
+        work_type: '',
+        material_type: '',
+        material_code: '',
+        refrence_dress: '',
+        is_urgent: '',
+        material_cost: null,
+        stiching_cost: null,
+        cost: null,
+        notes: [{}],
+        trial_dates: '',
+        status: '',
+        cloth_img1: null,
+        cloth_img2: null,
+        Pattern_img1: null,
+        Pattern_img2: null
+    }
+}
+
+
 // Save and emit
 function saveItem() {
-    // if (!validateOrderItemValue()) {
-    //     alert('Please Fill The All Fields Of Order Item')
-    //     return false
-    // }
-
-    console.log(orderItems);
-    data.order_items.push(orderItems)
-    console.log('work type:', data.order_items);
-    emit('setFormData', data);
-    emit('close');
+    // each items added in order items
+    emit('setOrderItemsData', JSON.parse(JSON.stringify(data)))
+    resetData();
+    // emit('setOrderItemsData', data)
+    emit('close')
 }
 
-// const validateOrderItemValue = () => {
-//     return
-//     !orderItems.name
-//         || !orderItems.measurements
-//         || !orderItems.design_details
-//         || !orderItems.colors
-//         || !orderItems.notes
-//         || !orderItems.trial_dates
-//         || !orderItems.price
-//         || !orderItems.work_type
-//         || !orderItems.material_code
-//         || !orderItems.material
-//         || !orderItems.refrence_dress
-//         || !orderItems.material_cost
-//         || !orderItems.stiching_cost
-//         || !orderItems.item_cost
-// }
-
-watch(
-    orderItems,
-    (newVal, oldVal) => { data.order_items.work_type = newVal.work_type },
-    { deep: true }
-)
-
-const setItemTemplateId = (id) => {
-    orderItems.item_template_id = id
+const setItemId = (id) => {
+    console.log('checking data:', data);
+    data.template_id = id
 }
 
-const setColor = (colorValue) => {
-    orderItems.colors = colorValue
+const setMaterialCode = (materialCode) => {
+    data.material_code = materialCode
 }
 
+const setMaterialCost = (materialCost) => {
+    data.material_cost = materialCost
+}
+const setAlteringCost = (materialCost) => {
+    // data.material_cost = materialCost
+}
+const setStichingCost = (stichingCost) => {
+    data.stiching_cost = stichingCost
+}
+const setMaterialType = (materialType) => {
+    data.material_type = materialType
+}
+const setPrice = (price) => {
+    data.cost = price
+}
+const setColor = (color) => {
+    data.colors = color
+}
 const setNotes = (notes) => {
-    orderItems.notes = notes
+    data.notes = notes
 }
-
-const setIfReferenceDress = (isReferenceDress) => {
-    orderItems.refrence_dress = isReferenceDress
+const setIfReferenceDress = (val) => {
+    data.refrence_dress = val
 }
-
-const setIfUrgent = (isUrgent) => {
-    orderItems.is_urgent = isUrgent
+const setIfUrgent = (val) => {
+    data.is_urgent = val
 }
-
-const setdDeliveryDate = (dateVal) => {
-    orderItems.deliveryDate = dateVal
+const setClothImage1 = (imgPath) => {
+    data.cloth_img1 = imgPath
 }
-
-const setTrialDate = (dateVal) => {
-    orderItems.trial_dates = dateVal
+const setClothImage2 = (imgPath) => {
+    data.cloth_img2 = imgPath
 }
-
-const setClothImage1 = (img) => {
-    orderItems.cloth_img1 = img
+const setPatternImage1 = (imgPath) => {
+    data.Pattern_img1 = imgPath
 }
-const setClothImage2 = (img) => {
-    orderItems.cloth_img2 = img
+const setPatternImage2 = (imgPath) => {
+    data.Pattern_img2 = imgPath
 }
-const setPatternImage1 = (img) => {
-    orderItems.Pattern_img1 = img
+const setTrialDate = (date) => {
+    data.trial_dates = date
 }
-const setPatternImage2 = (img) => {
-    orderItems.Pattern_img2 = img
+const setdDeliveryDate = (imgPath) => {
+    data.delivery_date = imgPath
 }
-
-const setPrice = (val) => {
-    orderItems.price = val
-}
-const setMaterialCode = (val) => {
-    orderItems.material_code = val
-}
-const setMaterial = (val) => {
-    orderItems.material = val
-}
-const setMaterialCost = (val) => {
-    orderItems.material_cost = val
-}
-const setStichingCost = (val) => {
-    orderItems.stiching_cost = val
-}
-const setItemCost = (val) => {
-    orderItems.item_cost = val
-}
-const setMaterialType = (val) => {
-    // orderItems. = val
-}
-
 </script>
 
 <template>
@@ -166,21 +174,18 @@ const setMaterialType = (val) => {
                     </div>
                 </div>
                 <!-- Scrollable Content -->
-                <div class=" max-h-[75vh] space-y-5">
-                    <WorkType v-model="orderItems.work_type" @setPrice="setPrice" @setMaterialCode="setMaterialCode"
-                        @setMaterial="setMaterial" @setMaterialCost="setMaterialCost" @setStichingCost="setStichingCost"
-                        @setItemCost="setItemCost" />
-                    <pre>
-                        {{ orderItems }}
-                    </pre>
-                    <ItemType v-model="orderItems.item_type" :itemType="itemType"
-                        @setItemTemplateId="setItemTemplateId" />
+                <div class=" max-h-[75vh] pr-2 space-y-5">
+                    <!-- done -->
+                    <WorkType :formData="data" @setMaterialCode="setMaterialCode" @setMaterialCost="setMaterialCost"
+                        @setAlteringCost="setAlteringCost" @setStichingCost="setStichingCost"
+                        @setMaterialType="setMaterialType" @setPrice="setPrice" />
+                    <ItemType :itemType="itemType" @setItemId="setItemId" />
                     <Measurements :measurements="measurements" />
                     <DesignDetails />
 
                     <div class="flex flex-col">
                         <Colors @setColor="setColor" />
-                        <Notes class="mt-5" v-model:notes="notes" @setNotes="setNotes" />
+                        <Notes v-model:notes="notes" @setNotes="setNotes" class="mt-5" />
                     </div>
 
                     <div class="flex items-center gap-4">
@@ -190,7 +195,7 @@ const setMaterialType = (val) => {
 
                     <!-- Trail Date && Delivery Date  -->
 
-                    <TrialAndDeliveryDate @setdDeliveryDate="setdDeliveryDate" @setTrialDate="setTrialDate" />
+                    <TrialAndDeliveryDate @setTrialDate="setTrialDate" @setdDeliveryDate="setdDeliveryDate" />
 
                     <div class="flex items-center gap-4">
                         <h1 class="text-[16px] font-normal font-lato">Mark as Urgent</h1>
