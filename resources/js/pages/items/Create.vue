@@ -58,7 +58,7 @@ const submitForm = () => {
                 <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                     Add New Template
                 </h1>
-                  <div class="text-gray-600">
+                <div class="text-gray-600">
                     <Link :href="route('items.index')" class="flex items-center gap-1 hover:text-black">
                     <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
                     <span class="text-[16px] font-medium">Back</span>
@@ -73,7 +73,7 @@ const submitForm = () => {
                 </div>
                 <div>
                     <Input v-model="form.name" label="Template Name" modelValue="" placeholder="Enter Template Name"
-                        margin="md" width="full" fonttype="normal" textSize="base" rounded="md" error="" />
+                        margin="md" width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.name" />
                 </div>
                 <div class="mt-2 lg:mt-4 flex flex-row gap-2 gap-4">
                     <div>
@@ -105,6 +105,7 @@ const submitForm = () => {
                         </label>
                     </div>
                 </div>
+                <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.gender }}</div>
 
 
                 <div class="mt-2 lg:mt-4 flex flex-row gap-2 gap-4">
@@ -124,6 +125,7 @@ const submitForm = () => {
                             </div>
                         </label>
 
+
                         <label>
                             <input type="radio" name="bodyPart" v-model="form.body_part" class="hidden" value="lower" />
                             <div :class="[
@@ -137,9 +139,10 @@ const submitForm = () => {
                         </label>
                     </div>
                 </div>
+                <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.gender }}</div>
                 <div>
-                    <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here"
-                        margin="md" width="full" fonttype="normal" textSize="base" rounded="md" error="" />
+                    <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
+                        width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo" />
                 </div>
                 <div class="mb-5">
                     <h1 class="mb-2 text-md mt-2">Required Measurements :</h1>
@@ -150,7 +153,7 @@ const submitForm = () => {
                                 @update:modelValue="toggleMeasurement(measurement)" width="sm" error="" />
                         </div>
                     </div>
-
+                    <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.required_measurements }}</div>
                 </div>
 
                 <Button @click="submitForm" color="primary" textSize="lg" padding="md" rounded="full">

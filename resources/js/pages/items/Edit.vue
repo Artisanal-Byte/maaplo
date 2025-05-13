@@ -4,6 +4,7 @@ import { Link, useForm } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
+import SearchSelect from '@/components/SearchSelect.vue';
 
 const toast = new ToastMagic();
 
@@ -86,9 +87,14 @@ const updateTemplate = () => {
 
             <div class="flex flex-col mt-10 gap-4 rounded-lg border border-primary p-4">
 
+
+                <div>
+                    <label class="text-md">Select Base Template</label>
+                    <SearchSelect v-model="selectedTemplate" :public-templates="templates" />
+                </div>
                 <!-- Name -->
                 <Input v-model="form.name" label="Template Name" placeholder="Enter Template Name" margin="md"
-                    width="full" fonttype="normal" textSize="base" rounded="md" error="" />
+                    width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.name" />
 
                 <!-- Gender -->
                 <div class="flex flex-col">
@@ -114,6 +120,7 @@ const updateTemplate = () => {
                         </label>
                     </div>
                 </div>
+                <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.gender }}</div>
 
                 <!-- Body Part -->
                 <div class="flex flex-col mt-4">
@@ -139,10 +146,10 @@ const updateTemplate = () => {
                         </label>
                     </div>
                 </div>
-
+                <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.gender }}</div>
                 <!-- SVG Logo -->
                 <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
-                    width="full" fonttype="normal" textSize="base" rounded="md" error="" />
+                    width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo" />
 
                 <!-- Required Measurements -->
                 <div>
@@ -155,6 +162,7 @@ const updateTemplate = () => {
                             <label :for="measurement">{{ measurement }}</label>
                         </div>
                     </div>
+                    <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.required_measurements }}</div>
                 </div>
 
                 <!-- Submit Button -->

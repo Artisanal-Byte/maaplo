@@ -28,14 +28,12 @@ class TemplateController extends Controller
         ]);
     }
 
-
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
         $publicTemplates = Template::whereNull('user_id')->get();
-        // dd($publicTemplates);
         return Inertia::render('items/Create', [
             'publicTemplates' => $publicTemplates,
         ]);
@@ -55,7 +53,6 @@ class TemplateController extends Controller
             'required_measurements' => 'required|array',
         ]);
 
-        // dd($validated);
         try {
             DB::beginTransaction();
 
@@ -91,14 +88,12 @@ class TemplateController extends Controller
         }
     }
 
-
     /**
      * Show the form for editing the specified resource.
      */
     public function edit($id)
     {
         $item = Template::findOrFail($id);
-        // dd( $item);
         $measurements = Measurement::findOrFail($id);
         return Inertia::render('items/Edit', [
             'item' => $item,
@@ -111,7 +106,6 @@ class TemplateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f',
@@ -129,7 +123,6 @@ class TemplateController extends Controller
                 'body_part' => $validated['body_part'],
                 'svg_logo' => $validated['svg_logo'],
             ]);
-            // dd($template);
             // Update related measurements
             $templateMeasurement = TemplateMeasurement::where('template_id', $template->id)->first();
             $measurement = Measurement::find($templateMeasurement->measurements_id);
@@ -138,7 +131,6 @@ class TemplateController extends Controller
                     'slug' => json_encode($validated['required_measurements']), // Only encode once
                 ]);
             }
-
             DB::commit();
             return redirect()->route('items.index')->with('success', 'Item updated successfully!');
         } catch (\Exception $e) {
@@ -147,21 +139,16 @@ class TemplateController extends Controller
         }
     }
 
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
         $template = Template::find($id);
-
         if (!$template) {
             return redirect()->route('items.index')->with('error', 'Item not found!');
         }
-
-        // Soft delete the template
         $template->delete();
-
         return redirect()->route('items.index')->with('status', 'Item soft deleted successfully!');
     }
 }

@@ -9,7 +9,8 @@ const searchQuery = ref('');
 const props = defineProps({
   publicTemplates: {
     type: Array,
-    required: true
+    required: true,
+    default: () => []
   }
 });
 
