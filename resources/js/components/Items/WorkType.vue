@@ -89,7 +89,7 @@ watch(()=>material.type,(val)=>{
           <div class="flex flex-col ml-2 gap-3 text-black mt-2">
             <div class="flex gap-2">
               <Input type="radio" id="new-from-material" name="work-type" radioValue="New from Material"
-                v-model="modelValue" label="New from Material" />
+                v-model="modelValue" label="New from Material" error="error.work-type" />
 
             </div>
             <div class="flex gap-2">

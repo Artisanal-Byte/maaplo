@@ -6,12 +6,20 @@ import CustomerListDropdown from '@/components/Items/CustomerListDropdown.vue';
 import { computed, reactive, ref } from 'vue';
 import ItemModel from '@/components/Items/ItemModel.vue';
 import Button from '@/components/Button.vue';
-import { useForm } from '@inertiajs/vue3';
+import { router, useForm } from '@inertiajs/vue3';
 import Notes from '@/components/Items/Notes.vue';
 import Input from '@/components/InputWithLabel.vue';
-const props = defineProps(["users", "customers", "itemType"])
+// const props = defineProps(["users", "customers", "itemType"])
+const props = defineProps({
+    users: Array,
+    customers: Array,
+    itemType: String,
+    errors: Object,
+    user_id: Number
+});
 const showModal = ref(false);
 const toast = new ToastMagic();
+
 const notes = ref([{ label: '', text: '' }]);
 let form = useForm({
     user_id: null,
@@ -26,17 +34,11 @@ let form = useForm({
     order_items: [],
 });
 
-
 const items = ref([]);
-
-
 let measurements = reactive({});
-
 let setMeasurements = (value) => {
     measurements = value
 }
-
-
 // set data which is set by child components 
 let setFormData = (data) => {
     // console.log('form data:', data);
@@ -51,7 +53,6 @@ let setFormData = (data) => {
     form.close_date = data.close_date
     form.notes = data.notes
     console.log('check:', data.order_items.length > 0);
-
     data.order_items && items.value.push({ ...data.order_items });
     form.order_items = items.value
     showModal.value = false;
@@ -96,6 +97,21 @@ let create = () => {
         }
     })
 }
+const submitForm = () => {
+    router.post('/orders', {
+        ...form,
+        notes: notes.value,
+    }, {
+        onSuccess: () => {
+            toast.success("order created successfully!");
+        },
+        onError: (errors) => {
+            toast.error("Failed to create order. please fill the all the required fields.");
+            console.error(errors);
+        },
+    });
+};
+
 
 
 </script>
@@ -118,11 +134,11 @@ let create = () => {
                 <h1 class="text-xl font-bold lg:mb-6 lg:mt-0 mt-6">Enter Details</h1>
 
                 <!-- selected customer list -->
-                <CustomerListDropdown :customers="customers" @setMeasurements="setMeasurements" :form="form"
+                <CustomerListDropdown :customers="customers" :errors="errors" @setMeasurements="setMeasurements" :form="form"
                     @setFormData="setFormData" />
 
                 <!-- Delivery Date -->
-                <DateIcon :form="form" @setFormData="setFormData" />
+                <DateIcon :form="form" :errors="errors" @setFormData="setFormData" />
 
                 <!-- items -->
                 <div class="mt-5">
@@ -178,8 +194,8 @@ let create = () => {
                         </div>
 
                         <div class="mt-5">
-                            <Input type="number" label="Advance Paid" :required="true" color="grayBorder"
-                                placeholder="Enter Advance Paid">
+                            <Input type="number" label="Advance Paid" :error="errors.advance_paid" :required="true"
+                                color="grayBorder" placeholder="Enter Advance Paid">
                             <template #icon>
                                 <Icon icon="mdi:rupee" width="18" height="18" />
                             </template>
@@ -194,7 +210,7 @@ let create = () => {
                 </div>
                 <!-- Submit Button (Full Width Below) -->
 
-                <Button :color="'primary'" :padding="'md'" :rounded="'full'" :textSize="'sm'">
+                <Button :color="'primary'" @click="submitForm" :padding="'md'" :rounded="'full'" :textSize="'sm'">
                     Save
                 </Button>
 

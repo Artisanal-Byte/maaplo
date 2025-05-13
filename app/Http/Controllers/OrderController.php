@@ -6,6 +6,7 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Models\ItemTemplate;
 use App\Models\Order;
 use App\Models\OrderItem;
+use Devrabiul\ToastMagic\Facades\ToastMagic;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -92,9 +93,8 @@ class OrderController extends Controller
             OrderItem::insert($validatedOrderItemsData);
 
             DB::commit();
-
+            ToastMagic::success('Order created successfully!');
             return redirect()->route('orders.index')->with('success', 'Order created successfully.');
-
         } catch (Exception $exception) {
 
             DB::rollBack();

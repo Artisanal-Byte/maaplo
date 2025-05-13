@@ -62,7 +62,7 @@ class ItemTemplateController extends Controller
             ]);
 
             DB::commit();
-
+            ToastMagic::success('Item created successfully!');
             // Redirect with flash message
             return redirect()->route('items.index')->with('success', 'Item created successfully!');
         } catch (\Exception $e) {
