@@ -1,47 +1,69 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { router, usePage } from '@inertiajs/vue3';
-import { reactive } from 'vue';
+import { useForm } from '@inertiajs/vue3';
 import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
 
 const toast = new ToastMagic();
-const { item } = usePage().props;
 
-const measurements = [
+const props = defineProps<{
+    errors: Record<string, string>,
+    item: {
+        id: number;
+        name: string;
+        svg_logo: string;
+        gender: string;
+        body_part: string;
+    },
+    measurements: {
+        slug: string[]; // JSON-encoded array of strings
+    }
+}>();
+
+const form = useForm({
+    name: props.item.name,
+    svg_logo: props.item.svg_logo,
+    gender: props.item.gender === "Male" ? "m" : (props.item.gender === "Female" ? "f" : "o"),
+    body_part: props.item.body_part === "Upper" ? "upper" : "lower",
+    required_measurements: JSON.parse(props.measurements.slug),
+});
+
+const allMeasurements = [
     'Length', 'Arms', 'Back Neck', 'Waist', 'Sleeve Circle',
     'Chest', 'Sleeve Length', 'Shoulder', 'Seat', 'Front Neck'
 ];
 
-const form = reactive({
-    name: item.name,
-    gender: item.gender,
-    body_part: item.body_part,
-    svg_logo: item.svg_logo ?? '',
-    required_measurements: item.required_measurements ?? [],
-});
-
 const toggleMeasurement = (label: string) => {
-    const index = form.required_measurements.indexOf(label);
+    // Instead of mutating the array directly, create a new array
+    const updatedMeasurements = [...form.required_measurements];
+    const index = updatedMeasurements.indexOf(label);
     if (index > -1) {
-        form.required_measurements.splice(index, 1);
+        updatedMeasurements.splice(index, 1);
     } else {
-        form.required_measurements.push(label);
+        updatedMeasurements.push(label);
     }
+    form.required_measurements = updatedMeasurements;
 };
 
-const submitForm = () => {
-    router.put(route('items.update', item.id), form, {
+const updateTemplate = () => {
+    const dataToSend = {
+        ...form.data(),
+        required_measurements: JSON.stringify(form.required_measurements)
+    };
+
+    form.transform(data => ({
+        ...dataToSend,
+        _method: 'put',
+    })).post(route('items.update', props.item.id), {
         onSuccess: () => {
-            toast.success("Item updated successfully!");
-            router.visit(route('items.index'));
+            toast.success('Template updated successfully!');
         },
-        onError: (error) => {
-            toast.error("Failed to update item. Please fix errors and try again.");
-            console.error(error);
-        },
+        onError: () => {
+            toast.error('Update failed. Please try again.');
+        }
     });
 };
+
 </script>
 
 <template>
@@ -67,7 +89,7 @@ const submitForm = () => {
                             <input type="radio" name="gender" value="f" v-model="form.gender" class="hidden" />
                             <div :class="[
                                 'px-4 py-1 rounded border text-sm cursor-pointer',
-                                form.gender === 'f'
+                                form.gender === 'Female'
                                     ? 'bg-primary text-white'
                                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
                             ]">Female</div>
@@ -76,7 +98,7 @@ const submitForm = () => {
                             <input type="radio" name="gender" value="m" v-model="form.gender" class="hidden" />
                             <div :class="[
                                 'px-4 py-1 rounded border text-sm cursor-pointer',
-                                form.gender === 'm'
+                                form.gender === 'Male'
                                     ? 'bg-primary text-white'
                                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
                             ]">Male</div>
@@ -92,7 +114,7 @@ const submitForm = () => {
                             <input type="radio" name="bodyPart" value="upper" v-model="form.body_part" class="hidden" />
                             <div :class="[
                                 'px-4 py-1 rounded border text-sm cursor-pointer',
-                                form.body_part === 'upper'
+                                form.body_part === 'Upper'
                                     ? 'bg-primary text-white'
                                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
                             ]">Upper</div>
@@ -101,7 +123,7 @@ const submitForm = () => {
                             <input type="radio" name="bodyPart" value="lower" v-model="form.body_part" class="hidden" />
                             <div :class="[
                                 'px-4 py-1 rounded border text-sm cursor-pointer',
-                                form.body_part === 'lower'
+                                form.body_part === 'Lower'
                                     ? 'bg-primary text-white'
                                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
                             ]">Lower</div>
@@ -117,24 +139,19 @@ const submitForm = () => {
                 <div>
                     <label class="text-md mb-2">Required Measurements:</label>
                     <div class="grid grid-cols-2 gap-4">
-                        <div v-for="measurement in measurements" :key="measurement">
-                            <Input type="checkbox" :label="measurement"
-                                :modelValue="form.required_measurements.includes(measurement)" @update:modelValue="checked => {
-                                    if (checked && !form.required_measurements.includes(measurement)) {
-                                        form.required_measurements.push(measurement);
-                                    } else if (!checked) {
-                                        form.required_measurements = form.required_measurements.filter(m => m !== measurement);
-                                    }
-                                }" width="sm" error="" />
+                        <div v-for="measurement in allMeasurements" :key="measurement" class="flex items-center gap-2">
+                            <input type="checkbox" :id="measurement" :value="measurement"
+                                :checked="form.required_measurements.includes(measurement)"
+                                @change="toggleMeasurement(measurement)" />
+                            <label :for="measurement">{{ measurement }}</label>
                         </div>
                     </div>
                 </div>
 
-
                 <!-- Submit Button -->
-                    <Button @click="submitForm" color="primary" textSize="lg" padding="md" rounded="full">
-                        Save Changes
-                    </Button>
+                <Button @click="updateTemplate" color="primary" textSize="lg" padding="md" rounded="full">
+                    Save Changes
+                </Button>
             </div>
         </div>
     </AppLayout>

@@ -105,6 +105,7 @@ class TemplateController extends Controller
     public function edit($id)
     {
         $item = Template::findOrFail($id);
+        // dd( $item);
         $measurements = Measurement::findOrFail($id);
         return Inertia::render('items/Edit', [
             'item' => $item,
@@ -117,14 +118,15 @@ class TemplateController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'gender' => 'required|in:m,f,o',
+            'gender' => 'required|in:m,f',
             'body_part' => 'required|in:upper,lower',
             'svg_logo' => 'required|string',
-            'required_measurements' => 'required|array',
+             'required_measurements' => 'required|string',
         ]);
-
+        // dd($validated);
         try {
             DB::beginTransaction();
 
@@ -135,7 +137,7 @@ class TemplateController extends Controller
                 'body_part' => $validated['body_part'],
                 'svg_logo' => $validated['svg_logo'],
             ]);
-
+            // dd($template);
             // Update related measurements
             $templateMeasurement = TemplateMeasurement::where('template_id', $template->id)->first();
 

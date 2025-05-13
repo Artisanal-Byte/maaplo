@@ -17,7 +17,7 @@ class Measurement extends Model
     ];
 
     protected $casts = [
-        'slug' => 'integer'
+        'slug' => 'array'
     ];
 
 
