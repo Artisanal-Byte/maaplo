@@ -2,7 +2,7 @@
 import { reactive, ref, watch } from 'vue';
 import { Icon } from '@iconify/vue';
 import Input from '../InputWithLabel.vue';
-const props = defineProps(["errors"])
+
 const emits = defineEmits(['setPrice', 'setMaterialCode', 'setMaterial', 'setMaterialCost', 'setStichingCost', 'setItemCost','setMaterialType'])
 const modelValue = defineModel(); // enables v-model binding
 
@@ -11,6 +11,8 @@ const showDropdownWorkType = ref(false);
 function toggleDropdownWorkType() {
   showDropdownWorkType.value = !showDropdownWorkType.value;
 }
+
+
 let material = reactive({
   code: '',
   cost: 0,
@@ -75,8 +77,7 @@ watch(()=>material.type,(val)=>{
 <template>
   <div>
     <div @click="toggleDropdownWorkType" class="flex cursor-pointer">
-      <h1 class="font-normal text-md font-lato">Work Type<span class="text-red-500 text-lg">*</span>
-         <p class="text-red-600 text-sm">{{ errors?.work_type }}</p></h1>
+      <h1 class="font-normal text-md font-lato">Work Type<span class="text-red-500 text-lg">*</span></h1>
       <Icon :icon="showDropdownWorkType ? 'icon-park-outline:up' : 'icon-park-outline:down'" width="20" height="20"
         class="text-black ml-2 mt-1" />
     </div>

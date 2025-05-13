@@ -46,10 +46,8 @@ function saveItem() {
     // }
 
     console.log(orderItems);
-
     data.order_items.push(orderItems)
     console.log('work type:', data.order_items);
-
     emit('setFormData', data);
     emit('close');
 }
@@ -150,18 +148,25 @@ const setMaterialType = (val) => {
         <div class="fixed inset-0 bg-black/50 z-40" @click.self="$emit('close')"></div>
 
         <!-- Modal Container -->
-        <div class="fixed z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+        <div class="fixed inset-0 bg-black bg-opacity-50 z-50"></div>
+        <div class="fixed z-[999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
                w-full lg:max-w-6xl 
        max-w-[calc(100%-2.5rem)] bg-white shadow-lg rounded-[10px] overflow-hidden">
             <!-- Close Button -->
-            <div class="lg:pl-6 px-6 py-6 lg:pr-10 overflow-y-auto max-h-[80vh]">
-                <Button @click="$emit('close')" color="gray" padding="sm" rounded="full" textSize="xl"
-                    class="absolute lg:right-4 right-1 top-4">
-                    &times;
-                </Button>
-                <h1 class="font-medium text-2xl mb-5">Add Items</h1>
+            <div class=" px-4 lg:px-6 py-6 overflow-y-auto max-h-[80vh]">
+                <div class="flex justify-between">
+                    <div>
+                        <h1 class="font-medium text-2xl mb-5">Add Items</h1>
+                    </div>
+                    <div>
+                        <Button @click="$emit('close')" color="gray" padding="sm" rounded="full" textSize="xl"
+                            class=" lg:right-4 right-1 top-4">
+                            &times;
+                        </Button>
+                    </div>
+                </div>
                 <!-- Scrollable Content -->
-                <div class=" max-h-[75vh] pr-2 space-y-5">
+                <div class=" max-h-[75vh] space-y-5">
                     <WorkType v-model="orderItems.work_type" @setPrice="setPrice" @setMaterialCode="setMaterialCode"
                         @setMaterial="setMaterial" @setMaterialCost="setMaterialCost" @setStichingCost="setStichingCost"
                         @setItemCost="setItemCost" />

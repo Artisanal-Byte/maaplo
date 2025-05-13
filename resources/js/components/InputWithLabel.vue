@@ -132,7 +132,7 @@ const widthClass = {
 
         <!-- INPUT (text, email, etc.) -->
         <template v-else>
-            <div class="relative w-full">
+            <div class="relative">
                 <label v-if="label" :for="id" :class="[textSizeClass, fonttype]">
                     {{ label }}
                     <span v-if="required" class="text-red-500 text-lg">*</span>
