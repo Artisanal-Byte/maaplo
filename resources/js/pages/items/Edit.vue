@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { useForm } from '@inertiajs/vue3';
+import { Link, useForm } from '@inertiajs/vue3';
+import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
 
@@ -69,10 +70,16 @@ const updateTemplate = () => {
 <template>
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
-            <div>
+            <div class="flex justify-between items-center mb-6">
                 <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                     Edit Template
                 </h1>
+                 <div class="text-gray-600">
+                    <Link :href="route('items.index')" class="flex items-center gap-1 hover:text-black">
+                    <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
+                    <span class="text-[16px] font-medium">Back</span>
+                    </Link>
+                </div>
             </div>
 
             <div class="flex flex-col mt-10 gap-4 rounded-lg border border-primary p-4">
@@ -89,7 +96,7 @@ const updateTemplate = () => {
                             <input type="radio" name="gender" value="f" v-model="form.gender" class="hidden" />
                             <div :class="[
                                 'px-4 py-1 rounded border text-sm cursor-pointer',
-                                form.gender === 'Female'
+                                form.gender === 'f'
                                     ? 'bg-primary text-white'
                                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
                             ]">Female</div>
@@ -98,7 +105,7 @@ const updateTemplate = () => {
                             <input type="radio" name="gender" value="m" v-model="form.gender" class="hidden" />
                             <div :class="[
                                 'px-4 py-1 rounded border text-sm cursor-pointer',
-                                form.gender === 'Male'
+                                form.gender === 'm'
                                     ? 'bg-primary text-white'
                                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
                             ]">Male</div>
@@ -114,7 +121,7 @@ const updateTemplate = () => {
                             <input type="radio" name="bodyPart" value="upper" v-model="form.body_part" class="hidden" />
                             <div :class="[
                                 'px-4 py-1 rounded border text-sm cursor-pointer',
-                                form.body_part === 'Upper'
+                                form.body_part === 'upper'
                                     ? 'bg-primary text-white'
                                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
                             ]">Upper</div>
@@ -123,7 +130,7 @@ const updateTemplate = () => {
                             <input type="radio" name="bodyPart" value="lower" v-model="form.body_part" class="hidden" />
                             <div :class="[
                                 'px-4 py-1 rounded border text-sm cursor-pointer',
-                                form.body_part === 'Lower'
+                                form.body_part === 'lower'
                                     ? 'bg-primary text-white'
                                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
                             ]">Lower</div>

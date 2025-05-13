@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { router } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import { reactive, ref } from 'vue';
+import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import SearchSelect from '@/components/SearchSelect.vue';
 import Button from '@/components/Button.vue';
@@ -53,10 +54,16 @@ const submitForm = () => {
 <template>
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
-            <div>
+            <div class="flex justify-between items-center mb-6">
                 <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                     Add New Template
                 </h1>
+                  <div class="text-gray-600">
+                    <Link :href="route('items.index')" class="flex items-center gap-1 hover:text-black">
+                    <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
+                    <span class="text-[16px] font-medium">Back</span>
+                    </Link>
+                </div>
             </div>
             <div class="flex flex-col lg:mt-5 gap-3 mt-10 lg:gap-4 rounded-lg lg:border lg:border-primary p-0 lg:p-4">
                 <!-- <h1>Select Base Template</h1> -->
