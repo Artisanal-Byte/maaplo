@@ -73,14 +73,14 @@ const widthClass = {
 </script>
 
 <template>
-    <div class="flex flex-col" :class="{ 'flex-row items-center space-x-2': type === 'radio' }">
+    <div class="flex flex-col" :class="{ 'flex-row space-x-2': type === 'radio' }">
         <!-- RADIO BUTTON -->
 
         <template v-if="type === 'radio'">
-            <div class="flex  gap-2">
+            <div class="flex gap-2">
                 <input :type="type" :id="id" :name="name" :value="radioValue" v-model="model" :disabled="disabled"
                     :class="[
-                        'transition duration-200 focus:outline-none',
+                        'transition duration-200 focus:outline-none accent-[#167893]',
                         colorClass,
                         paddingClass,
                         roundedClass,

@@ -38,6 +38,7 @@ html {
 @layer base {
     :root {
         --color-primary: #167893;
+        --accent-primary:#167893;
         --color-secondary: #837200;
         --text-primary: #167893;
         --text-secondary: #837200;
