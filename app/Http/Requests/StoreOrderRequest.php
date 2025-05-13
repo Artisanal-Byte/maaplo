@@ -35,7 +35,7 @@ class StoreOrderRequest extends FormRequest
             //- This Rules Is Defined For Order Items
             'order_items' => ['required', 'array'],
             'order_items.*.order_id' => ['required', 'string'],
-            'order_items.*.item_template_id' => ['required', 'numeric'],
+            'order_items.*.template_id' => ['required', 'numeric'],
             'order_items.*.measurements' => ['required', 'array'],
             'order_items.*.design_details_ids' => ['required', 'array'],
             'order_items.*.colors' => ['required', 'string', 'max:256'],
@@ -85,8 +85,8 @@ class StoreOrderRequest extends FormRequest
             // Order Items
             'order_items.required' => 'At least one order item is required.',
             'order_items.*.order_id.required' => 'The order ID is required for each item.',
-            'order_items.*.item_template_id.required' => 'The item template ID is required.',
-            'order_items.*.item_template_id.numeric' => 'The item template ID must be a number.',
+            'order_items.*.template_id.required' => 'The item template ID is required.',
+            'order_items.*.template_id.numeric' => 'The item template ID must be a number.',
 
             'order_items.*.measurements.required' => 'Measurements are required.',
             'order_items.*.design_details_ids.required' => 'Design details are required.',

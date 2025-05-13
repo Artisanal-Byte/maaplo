@@ -3,86 +3,34 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Icon } from '@iconify/vue';
 import DateIcon from '@/components/DateIcon.vue';
 import CustomerListDropdown from '@/components/Items/CustomerListDropdown.vue';
-import { computed, reactive, ref } from 'vue';
+import { ref, watch } from 'vue';
 import ItemModel from '@/components/Items/ItemModel.vue';
 import Button from '@/components/Button.vue';
 import { useForm } from '@inertiajs/vue3';
 import Notes from '@/components/Items/Notes.vue';
 import Input from '@/components/InputWithLabel.vue';
+import { useOrder } from '@/composables/useOrderData';
 const props = defineProps(["users", "customers", "itemType"])
 const showModal = ref(false);
+const disabled = ref(false);
 const toast = new ToastMagic();
-const notes = ref([{ label: '', text: '' }]);
-let form = useForm({
-    user_id: null,
-    customer_id: null,
-    order_number: null,
-    status: 'create',
-    total_amount: null,
-    advance_paid: null,
-    delivery_date: '',
-    close_date: '',
-    notes: [],
-    order_items: [],
-});
 
-
-const items = ref([]);
-
-
-let measurements = reactive({});
-
-let setMeasurements = (value) => {
-    measurements = value
-}
+const orderData = useOrder()
+let form = useForm(orderData);
 
 
 
 // set data which is set by child components 
-let setFormData = (data) => {
-    // console.log('form data:', data);
-
-    form.user_id = data.user_id //done
-    form.customer_id = data.customer_id //done
-    // form.order_number = data.order_number 
-    // form.status = data.status
-    form.total_amount = data.total_amount
-    form.advance_paid = data.advance_paid
-    form.delivery_date = data.delivery_date
-    form.close_date = data.close_date
-    form.notes = data.notes
-    console.log('check:', data.order_items.length > 0);
-
-    data.order_items && items.value.push({ ...data.order_items });
-    form.order_items = items.value
-    showModal.value = false;
+let setOrderData = (data) => {
+    form = data
 }
 
-// check if any required field is blank or null so create order button does not be active
-// Disable button if any required field is empty
-let disabled = computed(() => {
-    return false
-    // return (
-    //     !form.user_id ||
-    //     !form.customer_id ||
-    //     !form.order_number ||
-    //     !form.status ||
-    //     !form.total_amount ||
-    //     !form.advance_paid ||
-    //     !form.delivery_date //||
-    //     // !form.order_items
-    //     //  ||
-    //     // form.order_items.length === 0 ||
-    //     // form.order_items.some(item =>
-    //     //     !item.name ||
-    //     //     !item.colors ||
-    //     //     item.price == null || // use `==` to catch both null and undefined
-    //     //     !item.work_type ||
-    //     //     !item.material_code ||
-    //     //     !item.material
-    //     // )
-    // );
-});
+let i = 0
+
+let setOrderItemsData = (data) => {
+    form.order_items[i] = data
+    i++
+}
 
 let create = () => {
     form.post(route('orders.store'), {
@@ -94,6 +42,20 @@ let create = () => {
         }
     })
 }
+
+
+//total amount of order
+watch(form.order_items,(items)=>{
+    let t = 0
+    items.forEach(item => {
+        t += item.cost
+    });
+    form.total_amount = t
+})
+const closeModel = () => {
+    showModal.value = false
+}
+
 
 
 </script>
@@ -113,14 +75,17 @@ let create = () => {
             </div>
             <div class="flex flex-col lg:mt-5 rounded-lg lg:border lg:border-primary p-0 lg:p-4">
 
+                <pre>
+                    {{ form }}
+                </pre>
+
                 <h1 class="text-xl font-bold lg:mb-6 lg:mt-0 mt-6">Enter Details</h1>
 
                 <!-- selected customer list -->
-                <CustomerListDropdown :customers="customers" @setMeasurements="setMeasurements" :form="form"
-                    @setFormData="setFormData" />
+                <CustomerListDropdown :customers="customers" :form="form" @setOrderData="setOrderData" />
 
                 <!-- Delivery Date -->
-                <DateIcon :form="form" @setFormData="setFormData" />
+                <DateIcon :form="form" @setOrderData="setOrderData" />
 
                 <!-- items -->
                 <div class="mt-5">
@@ -141,8 +106,8 @@ let create = () => {
                         </div>
 
                         <!-- Modal Content -->
-                        <ItemModel :measurements="measurements" :showModal="showModal" @close="showModal = false"
-                            :form="form" @setFormData="setFormData" :itemType="itemType" />
+                        <ItemModel :itemIndex="i" :showModal="showModal" @close="closeModel" :form="form.order_items"
+                            @setOrderItemsData="setOrderItemsData" :itemType="itemType" :measurements="customers.base_measurements ?? []" />
 
                         <!-- table -->
                         <!-- Items Table -->
@@ -157,10 +122,11 @@ let create = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(item, index) in items" :key="index">
-                                        <td class="p-2 border">{{ item.workType }}</td>
-                                        <td class="p-2 border">{{ item.itemType }}</td>
-                                        <td class="p-2 border">{{ item.deliveryDate }}</td>
+                                    <tr v-for="(order_item, index) in form.order_items" :key="index">
+                                        <td class="p-2 border">{{ order_item.work_type }}</td>
+                                        <td class="p-2 border">{{itemType.find(item => item.id ===
+                                            order_item.template_id)?.name }}</td>
+                                        <td class="p-2 border">{{ order_item.delivery_date }}</td>
                                         <td class="p-2 border">
                                             <div class="flex gap-4">
                                                 <Icon icon="material-symbols:edit-rounded" width="24" height="24"
@@ -176,14 +142,14 @@ let create = () => {
 
                         <div class="mt-5">
                             <Input type="number" label="Advance Paid" :required="true" color="grayBorder"
-                                placeholder="Enter Advance Paid">
+                                placeholder="Enter Advance Paid" v-model="form.advance_paid">
                             <template #icon>
                                 <Icon icon="mdi:rupee" width="18" height="18" />
                             </template>
                             </Input>
                         </div>
                         <div class="mt-5">
-                            <Notes v-model:notes="notes" />
+                            <Notes v-model:notes="form.notes" />
                         </div>
                     </div>
                 </div>

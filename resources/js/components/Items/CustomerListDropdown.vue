@@ -4,7 +4,7 @@ import { Icon } from '@iconify/vue';
 import { Link } from '@inertiajs/vue3';
 
 let props = defineProps(["customers", "form"]);
-let emit = defineEmits(["setMeasurements", "setFormData"]);
+let emit = defineEmits(["setMeasurements", "setOrderData"]);
 const selectedCustomer = ref('Select Customer');
 const showDropdown = ref(false);
 function toggleDropdown() {
@@ -18,7 +18,7 @@ function selectOption(customer) {
     emit('setMeasurements', customer.base_measurements)
     data.user_id = customer.user_id
     data.customer_id = customer.id
-    emit('setFormData', data)
+    emit('setOrderData', data)
     showDropdown.value = false;
 
 }
@@ -35,7 +35,7 @@ function asset(path) {
             <button @click="toggleDropdown"
                 class="flex cursor-pointer items-center justify-between gap-2 py-2 bg-white rounded-md focus:outline-none">
                 <span class="font-lato text-base font-normal leading-4 tracking-normal">{{ selectedCustomer
-                }}</span>
+                    }}</span>
                 <Icon :icon="showDropdown ? 'icon-park-outline:up' : 'icon-park-outline:down'" width="20" height="20" />
             </button>
 
@@ -45,8 +45,7 @@ function asset(path) {
                 <ul class="py-1 text-sm text-gray-700">
                     <!-- Static Customer Option -->
                     <li v-for="customer in customers">
-                        <div @click="selectOption(customer)"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100">
+                        <div @click="selectOption(customer)" class="w-full text-left px-4 py-2 hover:bg-gray-100">
                             <div class="flex items-center justify-between">
                                 <div>
                                     <h1 class="text-gray-800 font-medium text-[18px]">{{ customer.name }}</h1>

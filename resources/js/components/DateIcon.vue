@@ -3,7 +3,7 @@ import { computed, ref, defineProps, defineEmits } from 'vue'
 import { Icon } from '@iconify/vue';
 
 let props = defineProps(["form"])
-let emits = defineEmits(["setFormData"])
+let emits = defineEmits(["setOrderData"])
 const selectedDate = ref('')
 const dateInput = ref(null)
 
@@ -23,7 +23,7 @@ const formattedDate = computed(() => {
     const d = new Date(selectedDate.value)
 
     data.delivery_date = d
-    emits('setFormData', data)
+    emits('setOrderData', data)
     return d.toLocaleDateString(undefined, {
         year: 'numeric',
         month: 'short',

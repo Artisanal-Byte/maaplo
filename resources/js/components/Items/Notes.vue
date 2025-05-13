@@ -44,7 +44,7 @@ watch(()=>notes.value,(val)=>{
         <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3 mb-3">
                 <label class="">Notes</label>
-                <span class="text-sm text-gray-600">Total: {{ notes.length }}</span>
+                <span class="text-sm text-gray-600">Total: {{ notes?.length ?? 0 }}</span>
 
                 <!-- Add Note Button -->
                 <button type="button" @click="addNote"

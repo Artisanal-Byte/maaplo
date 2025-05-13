@@ -53,13 +53,16 @@ class OrderController extends Controller
          * 
          */
 
-        // Fetch all users and customers to populate the select options
         $user = Auth::user();
-
+        
+        // Fetch all customers of Users 
         $user->load('customers');
 
         //-- item which have a global scope or created by Authentic user
         $itemType = ItemTemplate::where('user_id', $user->id)->orWhere('user_id', null)->get();
+        
+        // $designDetails = DesignDetails
+        // $measurements = Measurement
         return Inertia::render('orders/Create', [
             'customers' => $user->customers,
             'itemType' => $itemType
