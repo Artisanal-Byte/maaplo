@@ -94,7 +94,7 @@ const widthClass = {
         </template>
 
         <template v-else-if="type === 'checkbox'">
-            <div class="flex  gap-2">
+            <div class="flex gap-2">
                 <input :type="type" :id="id" :name="name" :value="radioValue" v-model="model" :disabled="disabled"
                     :class="[
                         'transition duration-200 focus:outline-none',
