@@ -91,13 +91,6 @@ class TemplateController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -124,9 +117,8 @@ class TemplateController extends Controller
             'gender' => 'required|in:m,f',
             'body_part' => 'required|in:upper,lower',
             'svg_logo' => 'required|string',
-             'required_measurements' => 'required|string',
+            'required_measurements' => 'required|array',
         ]);
-        // dd($validated);
         try {
             DB::beginTransaction();
 
@@ -140,14 +132,11 @@ class TemplateController extends Controller
             // dd($template);
             // Update related measurements
             $templateMeasurement = TemplateMeasurement::where('template_id', $template->id)->first();
-
-            if ($templateMeasurement) {
-                $measurement = Measurement::find($templateMeasurement->measurements_id);
-                if ($measurement) {
-                    $measurement->update([
-                        'slug' => json_encode($validated['required_measurements']),
-                    ]);
-                }
+            $measurement = Measurement::find($templateMeasurement->measurements_id);
+            if ($measurement) {
+                $measurement->update([
+                    'slug' => json_encode($validated['required_measurements']), // Only encode once
+                ]);
             }
 
             DB::commit();
@@ -165,10 +154,14 @@ class TemplateController extends Controller
     public function destroy(string $id)
     {
         $template = Template::find($id);
+
         if (!$template) {
-            return redirect()->route('items.index')->with('error', 'Customer not found!');
+            return redirect()->route('items.index')->with('error', 'Item not found!');
         }
+
+        // Soft delete the template
         $template->delete();
-        return redirect()->route('items.index')->with('status', 'Customer deleted successfully!');
+
+        return redirect()->route('items.index')->with('status', 'Item soft deleted successfully!');
     }
 }

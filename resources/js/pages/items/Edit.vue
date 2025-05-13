@@ -26,7 +26,8 @@ const form = useForm({
     svg_logo: props.item.svg_logo,
     gender: props.item.gender === "Male" ? "m" : (props.item.gender === "Female" ? "f" : "o"),
     body_part: props.item.body_part === "Upper" ? "upper" : "lower",
-    required_measurements: JSON.parse(props.measurements.slug),
+    required_measurements: props.measurements.slug ? JSON.parse(props.measurements.slug) : [],
+    _method: 'put',
 });
 
 const allMeasurements = [
@@ -35,7 +36,6 @@ const allMeasurements = [
 ];
 
 const toggleMeasurement = (label: string) => {
-    // Instead of mutating the array directly, create a new array
     const updatedMeasurements = [...form.required_measurements];
     const index = updatedMeasurements.indexOf(label);
     if (index > -1) {
@@ -49,7 +49,7 @@ const toggleMeasurement = (label: string) => {
 const updateTemplate = () => {
     const dataToSend = {
         ...form.data(),
-        required_measurements: JSON.stringify(form.required_measurements)
+        required_measurements: form.required_measurements, // This should be an array
     };
 
     form.transform(data => ({
@@ -65,6 +65,8 @@ const updateTemplate = () => {
     });
 };
 
+
+
 </script>
 
 <template>
@@ -74,7 +76,7 @@ const updateTemplate = () => {
                 <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                     Edit Template
                 </h1>
-                 <div class="text-gray-600">
+                <div class="text-gray-600">
                     <Link :href="route('items.index')" class="flex items-center gap-1 hover:text-black">
                     <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
                     <span class="text-[16px] font-medium">Back</span>
