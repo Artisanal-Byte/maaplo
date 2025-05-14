@@ -2,7 +2,7 @@
 import { computed, ref, defineProps, defineEmits } from 'vue'
 import { Icon } from '@iconify/vue';
 
-let props = defineProps(["form"])
+let props = defineProps(["form","errors"])
 let emits = defineEmits(["setOrderData"])
 const selectedDate = ref('')
 const dateInput = ref(null)
@@ -35,7 +35,7 @@ const formattedDate = computed(() => {
     <div class="mt-5 flex items-center gap-3">
         <label class="font-lato text-base font-normal leading-4 tracking-normal">
             Delivery Date <span class="text-red-500">*</span>
-            <p class="text-red-600 text-sm">{{ errors.delivery_date }}</p>
+            <p class="text-red-600 text-sm">{{ errors?.delivery_date }}</p>
         </label>
 
         <!-- Calendar icon acts as the “open picker” trigger -->

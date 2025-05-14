@@ -3,7 +3,7 @@ import { ref, defineProps } from 'vue';
 import { Icon } from '@iconify/vue';
 import { Link } from '@inertiajs/vue3';
 
-let props = defineProps(["customers", "form"]);
+let props = defineProps(["customers", "form","errors"]);
 let emit = defineEmits(["setMeasurements", "setOrderData"]);
 const selectedCustomer = ref('Select Customer');
 const showDropdown = ref(false);
@@ -38,7 +38,7 @@ function asset(path) {
                     }}</span>
                 <Icon :icon="showDropdown ? 'icon-park-outline:up' : 'icon-park-outline:down'" width="20" height="20" />
             </button>
-            <p class="text-red-600 text-sm">{{ errors.customer_id }}</p>
+            <p class="text-red-600 text-sm">{{ errors?.customer_id }}</p>
 
             <!-- Dropdown Menu -->
             <div v-if="showDropdown"

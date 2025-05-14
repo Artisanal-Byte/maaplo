@@ -15,7 +15,7 @@ return new class extends Migration {
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('template_id')->constrained()->cascadeOnUpdate();
+            // $table->foreignId('template_id')->constrained()->cascadeOnUpdate();
             $table->json('measurements');
             $table->json('design_detail_ids');
             $table->string('colors');

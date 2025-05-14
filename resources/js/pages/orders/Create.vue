@@ -10,7 +10,7 @@ import { router, useForm } from '@inertiajs/vue3';
 import Notes from '@/components/Items/Notes.vue';
 import Input from '@/components/InputWithLabel.vue';
 import { useOrder } from '@/composables/useOrderData';
-const props = defineProps(["users", "customers", "itemType"])
+const props = defineProps(["users", "customers", "itemType" ,"errors"])
 const showModal = ref(false);
 const disabled = ref(false);
 const toast = new ToastMagic();
@@ -45,7 +45,7 @@ let create = () => {
 const submitForm = () => {
     router.post('/orders', {
         ...form,
-        notes: notes.value,
+        // notes: notes.value,
     }, {
         onSuccess: () => {
             toast.success("order created successfully!");
@@ -97,10 +97,10 @@ const closeModel = () => {
                 <h1 class="text-xl font-bold lg:mb-6 lg:mt-0 mt-6">Enter Details</h1>
 
                 <!-- selected customer list -->
-                <CustomerListDropdown :customers="customers" :form="form" @setOrderData="setOrderData" />
+                <CustomerListDropdown :customers="customers" :errors="errors" :form="form" @setOrderData="setOrderData" />
 
                 <!-- Delivery Date -->
-                <DateIcon :form="form" @setOrderData="setOrderData" />
+                <DateIcon :form="form" :errors="errors" @setOrderData="setOrderData" />
 
                 <!-- items -->
                 <div class="mt-5">
@@ -157,7 +157,7 @@ const closeModel = () => {
                         </div>
 
                         <div class="mt-5">
-                            <Input type="number" label="Advance Paid" :required="true" color="grayBorder"
+                            <Input type="number" label="Advance Paid" :error="errors.advance_paid" :required="true" color="grayBorder"
                                 placeholder="Enter Advance Paid" v-model="form.advance_paid">
                             <template #icon>
                                 <Icon icon="mdi:rupee" width="18" height="18" />

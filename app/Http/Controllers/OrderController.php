@@ -55,13 +55,13 @@ class OrderController extends Controller
          */
 
         $user = Auth::user();
-        
+
         // Fetch all customers of Users 
         $user->load('customers');
 
         //-- item which have a global scope or created by Authentic user
         $itemType = ItemTemplate::where('user_id', $user->id)->orWhere('user_id', null)->get();
-        
+
         // $designDetails = DesignDetails
         // $measurements = Measurement
         return Inertia::render('orders/Create', [
@@ -101,7 +101,7 @@ class OrderController extends Controller
         } catch (Exception $exception) {
 
             DB::rollBack();
-
+            ToastMagic::success('Customer created successfully!');
             return redirect()->back()->withErrors(['error' => $exception->getMessage()]);
         }
     }
