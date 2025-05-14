@@ -72,13 +72,8 @@ const submitForm = () => {
                     <SearchSelect class="mt-2" :public-templates="props.publicTemplates" />
                 </div>
                 <div>
-<<<<<<< HEAD
                     <Input  v-model="form.name"  label="Template Name" placeholder="Enter Template Name"
                         margin="md" width="full" fonttype="normal" textSize="base" rounded="md" error="" />
-=======
-                    <Input v-model="form.name" label="Template Name" modelValue="" placeholder="Enter Template Name"
-                        margin="md" width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.name" />
->>>>>>> sahil
                 </div>
                 <div class="mt-2 lg:mt-4 flex flex-row gap-2 gap-4">
                     <div>
