@@ -125,7 +125,7 @@ const visible = ref(false);
                         </div>
                     </li>
                     <li>
-                        <Link :href="route('items.create')" @click="visible = false"
+                        <Link :href="route('items.index')" @click="visible = false"
                             class="flex items-center p-2 rounded hover:bg-gray-200 text-black ml-1">
                         <Icon icon="qlementine-icons:items-list-16" width="16" height="16" />
                         <span class="ml-3 font-inter font-medium text-[16px] leading-[16px] tracking-[0]">Items</span>
