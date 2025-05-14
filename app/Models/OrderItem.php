@@ -45,9 +45,9 @@ class OrderItem extends Model
     /**
      * Get the item template associated with the order item.
      */
-    public function itemTemplate()
+    public function Template()
     {
-        return $this->belongsTo(ItemTemplate::class);
+        return $this->belongsTo(Template::class);
     }
 
     // Accessors & Mutators

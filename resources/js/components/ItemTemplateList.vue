@@ -43,36 +43,77 @@ const proceedDelete = () => {
 
 <template>
     <div class="relative mt-5 h-full rounded-[10px] px-[10px] py-[17px] bg-[#DEEFF4]">
-        <div class="flex justify-between gap-4">
-            <!-- Left Section -->
-            <div class="flex-1">
+        <!-- Table for Desktop View -->
+        <div class="hidden md:block">
+            <table class="min-w-full border-collapse border border-gray-200">
+                <thead>
+                    <tr>
+                        <th class="border border-gray-300 p-2 text-left">Item</th>
+                        <th class="border border-gray-300 p-2 text-left">Gender</th>
+                        <th class="border border-gray-300 p-2 text-left">Body Part</th>
+                        <th class="border border-gray-300 p-2 text-left">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="border border-gray-300 p-2">{{ item.name }}</td>
+                        <td class="border border-gray-300 p-2">{{ item.gender }}</td>
+                        <td class="border border-gray-300 p-2">{{ item.body_part }}</td>
+                        <td class="border border-gray-300 p-2">
+                            <div v-if="item.user_id === authUser.id" class="flex justify-end gap-3">
+                                <!-- Edit Icon -->
+                                <div class="relative group">
+                                    <Link :href="route('items.edit', props.item.id)">
+                                        <Icon icon="ri:edit-fill" width="20" height="20" class="text-[#005FAF]" />
+                                    </Link>
+                                    <div class="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition bg-gray-800 text-white text-xs rounded py-1 px-2 pointer-events-none z-10">
+                                        Edit
+                                    </div>
+                                </div>
+
+                                <!-- Delete Icon -->
+                                <div class="relative group">
+                                    <button @click="confirmDelete" class="flex items-center text-red-500 hover:text-red-600 transition">
+                                        <Icon icon="ic:baseline-delete" width="20" height="20" class="text-[#E73939]" />
+                                    </button>
+                                    <div class="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition bg-gray-800 text-white text-xs rounded py-1 px-2 pointer-events-none z-10">
+                                        Delete
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Card for Mobile View -->
+        <div class="block md:hidden space-y-4">
+            <div class="bg-white shadow-lg rounded-lg p-4 border border-gray-200">
                 <h1 class="text-[22px] font-semibold tracking-wide text-gray-900">{{ item.name }}</h1>
                 <h2 class="font-[Lato] font-medium text-[18px] text-black mt-3">Gender: {{ item.gender }}</h2>
                 <h2 class="font-[Lato] font-medium text-[18px] text-black mt-2">Body Part: {{ item.body_part }}</h2>
-            </div>
-        </div>
 
-        <!-- Edit & Delete Icons -->
-        <div v-if="item.user_id === authUser.id" class="flex justify-end gap-3 mt-3">
-            <!-- Edit -->
-            <div class="relative group">
-                <Link :href="route('items.edit', props.item.id)">
-                <Icon icon="ri:edit-fill" width="20" height="20" class="text-[#005FAF]" />
-                </Link>
-                <div
-                    class="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition bg-gray-800 text-white text-xs rounded py-1 px-2 pointer-events-none z-10">
-                    Edit
-                </div>
-            </div>
+                <div v-if="item.user_id === authUser.id" class="flex justify-end gap-3 mt-4">
+                    <!-- Edit Icon -->
+                    <div class="relative group">
+                        <Link :href="route('items.edit', props.item.id)">
+                            <Icon icon="ri:edit-fill" width="20" height="20" class="text-[#005FAF]" />
+                        </Link>
+                        <div class="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition bg-gray-800 text-white text-xs rounded py-1 px-2 pointer-events-none z-10">
+                            Edit
+                        </div>
+                    </div>
 
-            <!-- Delete -->
-            <div class="relative group">
-                <button @click="confirmDelete" class="flex items-center text-red-500 hover:text-red-600 transition">
-                    <Icon icon="ic:baseline-delete" width="20" height="20" class="text-[#E73939]" />
-                </button>
-                <div
-                    class="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition bg-gray-800 text-white text-xs rounded py-1 px-2 pointer-events-none z-10">
-                    Delete
+                    <!-- Delete Icon -->
+                    <div class="relative group">
+                        <button @click="confirmDelete" class="flex items-center text-red-500 hover:text-red-600 transition">
+                            <Icon icon="ic:baseline-delete" width="20" height="20" class="text-[#E73939]" />
+                        </button>
+                        <div class="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition bg-gray-800 text-white text-xs rounded py-1 px-2 pointer-events-none z-10">
+                            Delete
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

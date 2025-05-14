@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { router } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import { reactive, ref } from 'vue';
+import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import SearchSelect from '@/components/SearchSelect.vue';
 import Button from '@/components/Button.vue';
@@ -9,15 +10,16 @@ import Button from '@/components/Button.vue';
 const toast = new ToastMagic();
 
 const props = defineProps<{
-    errors: Record<string, string>
+    errors: Record<string, string>;
+    publicTemplates: Array<{ id: number; name: string }>;
 }>();
-
 const form = reactive({
     name: '',
     gender: '',
     body_part: '',
     required_measurements: [] as string[],
     custom_template: false,
+    svg_logo: '',
 });
 
 const measurements = [
@@ -42,7 +44,7 @@ const submitForm = () => {
             router.visit(route('items.index'));
         },
         onError: (error) => {
-            toast.error("Failed to create Item. Please fill in all the required fields."+error);
+            toast.error("Failed to create Item. Please fill in all the required fields." + error);
             console.error(error);
         },
     });
@@ -52,20 +54,31 @@ const submitForm = () => {
 <template>
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
-            <div>
+            <div class="flex justify-between items-center mb-6">
                 <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                     Add New Template
                 </h1>
+                <div class="text-gray-600">
+                    <Link :href="route('items.index')" class="flex items-center gap-1 hover:text-black">
+                    <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
+                    <span class="text-[16px] font-medium">Back</span>
+                    </Link>
+                </div>
             </div>
             <div class="flex flex-col lg:mt-5 gap-3 mt-10 lg:gap-4 rounded-lg lg:border lg:border-primary p-0 lg:p-4">
                 <!-- <h1>Select Base Template</h1> -->
                 <div>
                     <label class="text-md">Select Base Template</label>
-                    <SearchSelect class="mt-2" />
+                    <SearchSelect class="mt-2" :public-templates="props.publicTemplates" />
                 </div>
                 <div>
+<<<<<<< HEAD
                     <Input  v-model="form.name"  label="Template Name" placeholder="Enter Template Name"
                         margin="md" width="full" fonttype="normal" textSize="base" rounded="md" error="" />
+=======
+                    <Input v-model="form.name" label="Template Name" modelValue="" placeholder="Enter Template Name"
+                        margin="md" width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.name" />
+>>>>>>> sahil
                 </div>
                 <div class="mt-2 lg:mt-4 flex flex-row gap-2 gap-4">
                     <div>
@@ -73,7 +86,7 @@ const submitForm = () => {
                     </div>
                     <div class="flex gap-4">
                         <label>
-                            <input type="radio" name="gender"  value="f" v-model="form.gender" class="hidden" />
+                            <input type="radio" name="gender" value="f" v-model="form.gender" class="hidden" />
                             <div :class="[
                                 'px-4 py-1 rounded border text-sm cursor-pointer',
                                 form.gender === 'f'
@@ -85,7 +98,7 @@ const submitForm = () => {
                         </label>
 
                         <label>
-                            <input type="radio" name="gender"  value="m" v-model="form.gender" class="hidden" />
+                            <input type="radio" name="gender" value="m" v-model="form.gender" class="hidden" />
                             <div :class="[
                                 'px-4 py-1 rounded border text-sm cursor-pointer',
                                 form.gender === 'm'
@@ -97,6 +110,8 @@ const submitForm = () => {
                         </label>
                     </div>
                 </div>
+                <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.gender }}</div>
+
 
                 <div class="mt-2 lg:mt-4 flex flex-row gap-2 gap-4">
                     <div>
@@ -107,7 +122,7 @@ const submitForm = () => {
                             <input type="radio" name="bodyPart" value="upper" v-model="form.body_part" class="hidden" />
                             <div :class="[
                                 'px-4 py-1 rounded border text-sm cursor-pointer',
-                               form.body_part === 'upper'
+                                form.body_part === 'upper'
                                     ? 'bg-primary text-white'
                                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
                             ]">
@@ -115,8 +130,9 @@ const submitForm = () => {
                             </div>
                         </label>
 
+
                         <label>
-                            <input type="radio" name="bodyPart"  v-model="form.body_part" class="hidden" value="lower" />
+                            <input type="radio" name="bodyPart" v-model="form.body_part" class="hidden" value="lower" />
                             <div :class="[
                                 'px-4 py-1 rounded border text-sm cursor-pointer',
                                 form.body_part === 'lower'
@@ -128,17 +144,21 @@ const submitForm = () => {
                         </label>
                     </div>
                 </div>
-
+                <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.gender }}</div>
+                <div>
+                    <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
+                        width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo" />
+                </div>
                 <div class="mb-5">
                     <h1 class="mb-2 text-md mt-2">Required Measurements :</h1>
                     <div class="grid grid-cols-2 gap-4">
                         <div v-for="measurement in measurements" :key="measurement">
-                            <Input type="checkbox"  :label="measurement"
+                            <Input type="checkbox" :label="measurement"
                                 :modelValue="form.required_measurements.includes(measurement)"
                                 @update:modelValue="toggleMeasurement(measurement)" width="sm" error="" />
                         </div>
                     </div>
-
+                    <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.required_measurements }}</div>
                 </div>
 
                 <Button @click="submitForm" color="primary" textSize="lg" padding="md" rounded="full">

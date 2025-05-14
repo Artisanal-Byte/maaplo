@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('item_templates', function (Blueprint $table) {
+        Schema::create('templates', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->nullable(true);
             $table->string('name');
@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->enum('gender', ["m", "f", "o"]);
             $table->enum('body_part', ["upper", "lower"]);
             // $table->enum('global_scope', ["y","n"])->default("n");
-            $table->json('required_measurements');
+            // $table->json('required_measurements');
             // $table->boolean("custom_template")->default(false);
             $table->timestamps();
             $table->softDeletes();
@@ -34,6 +34,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('item_templates');
+        Schema::dropIfExists('templates');
     }
 };

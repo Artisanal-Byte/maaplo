@@ -6,24 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
-class ItemTemplate extends Model
+class Template extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'item_templates';
+    protected $table = 'templates';
 
     protected $fillable = [
         'name',
         'gender',
-        'required_measurements',
-        // 'custom_template',
         'body_part',
-        // 'global_scope',
+        'svg_logo',
         'user_id',
     ];
 
     protected $casts = [
-        'required_measurements' => 'array',
         'custom_template' => 'boolean',
     ];
 
@@ -36,6 +33,15 @@ class ItemTemplate extends Model
                     'f' => 'Female',
                     'o' => 'Other',
                 };
+            },
+        );
+    }
+
+    protected function bodyPart(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                return ucfirst(strtolower($value));
             },
         );
     }
