@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreOrderRequest;
-use App\Models\ItemTemplate;
+use App\Models\Template;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Devrabiul\ToastMagic\Facades\ToastMagic;
@@ -60,7 +60,7 @@ class OrderController extends Controller
         $user->load('customers');
 
         //-- item which have a global scope or created by Authentic user
-        $itemType = ItemTemplate::where('user_id', $user->id)->orWhere('user_id', null)->get();
+        $itemType = Template::where('user_id', $user->id)->orWhere('user_id', null)->get();
 
         // $designDetails = DesignDetails
         // $measurements = Measurement
