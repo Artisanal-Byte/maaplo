@@ -65,21 +65,18 @@ class TemplateController extends Controller
             ]);
 
             Measurement::create([
-                'slug' => json_encode($validated['required_measurements']), // Store the measurements as JSON
+                'slug' => json_encode($validated['required_measurements']),
             ]);
 
-            // Get the IDs of the created records
             $template = Template::all()->last()->id;
             $measurement = Measurement::all()->last()->id;
-            // dd( $template, $measurement);
             TemplateMeasurement::create([
-                'template_id' => $template, // Store Template ID
-                'measurements_id' => $measurement, // Store Measurement ID
+                'template_id' => $template,
+                'measurements_id' => $measurement,
             ]);
 
             DB::commit();
 
-            // Redirect with flash message
             return redirect()->route('items.index')->with('success', 'Item created successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -123,12 +120,11 @@ class TemplateController extends Controller
                 'body_part' => $validated['body_part'],
                 'svg_logo' => $validated['svg_logo'],
             ]);
-            // Update related measurements
             $templateMeasurement = TemplateMeasurement::where('template_id', $template->id)->first();
             $measurement = Measurement::find($templateMeasurement->measurements_id);
             if ($measurement) {
                 $measurement->update([
-                    'slug' => json_encode($validated['required_measurements']), // Only encode once
+                    'slug' => json_encode($validated['required_measurements']),
                 ]);
             }
             DB::commit();

@@ -5,7 +5,7 @@ import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
 import SearchSelect from '@/components/SearchSelect.vue';
-
+import { ref } from 'vue';
 const toast = new ToastMagic();
 
 const props = defineProps<{
@@ -18,10 +18,11 @@ const props = defineProps<{
         body_part: string;
     },
     measurements: {
-        slug: string[]; // JSON-encoded array of strings
+        slug: string[];
     }
 }>();
-
+const selectedTemplate = ref(null);
+const templates = ref([]);
 const form = useForm({
     name: props.item.name,
     svg_logo: props.item.svg_logo,
@@ -50,7 +51,7 @@ const toggleMeasurement = (label: string) => {
 const updateTemplate = () => {
     const dataToSend = {
         ...form.data(),
-        required_measurements: form.required_measurements, // This should be an array
+        required_measurements: form.required_measurements,
     };
 
     form.transform(data => ({
@@ -65,9 +66,6 @@ const updateTemplate = () => {
         }
     });
 };
-
-
-
 </script>
 
 <template>
@@ -86,8 +84,6 @@ const updateTemplate = () => {
             </div>
 
             <div class="flex flex-col mt-10 gap-4 rounded-lg border border-primary p-4">
-
-
                 <div>
                     <label class="text-md">Select Base Template</label>
                     <SearchSelect v-model="selectedTemplate" :public-templates="templates" />
