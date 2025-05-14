@@ -5,10 +5,9 @@ import { Link } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 defineProps({
     items: Array,
-    authUser: Object  // Ensure authUser is passed down here
+    authUser: Object
 });
 </script>
-
 
 <template>
     <AppLayout>
@@ -21,9 +20,6 @@ defineProps({
 
                 </div>
                 <div class="flex gap-4 text-gray-600">
-                    <div>
-                        <SearchList :showable="showable" />
-                    </div>
                     <div class="mx-auto max-w-7xl w-full">
                         <!-- add customer details -->
                         <div class="relative group mt-1">
@@ -37,9 +33,7 @@ defineProps({
                             </div>
                         </div>
                     </div>
-
                 </div>
-
             </div>
 
             <!-- Grid Layout to display 3x3 -->

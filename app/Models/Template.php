@@ -37,6 +37,14 @@ class Template extends Model
         );
     }
 
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => ucfirst(strtolower($value)),
+            set: fn($value) => ucfirst(strtolower($value))
+        );
+    }
+
     protected function bodyPart(): Attribute
     {
         return Attribute::make(
