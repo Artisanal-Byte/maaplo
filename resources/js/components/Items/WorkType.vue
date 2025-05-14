@@ -3,9 +3,9 @@ import { reactive, ref, watch, defineProps, defineEmits } from 'vue';
 import { Icon } from '@iconify/vue';
 import Input from '../InputWithLabel.vue';
 
-const props = defineProps(['formData', 'index'])
+const props = defineProps(['formData', 'index', 'errorMessage2'])
 
-const emits = defineEmits(['setPrice','setAlteringCost', 'setMaterialCode', 'setMaterial', 'setMaterialCost', 'setStichingCost', 'setItemCost', 'setMaterialType', 'setdataData'])
+const emits = defineEmits(['setPrice', 'setAlteringCost', 'setMaterialCode', 'setMaterial', 'setMaterialCost', 'setStichingCost', 'setItemCost', 'setMaterialType', 'setdataData'])
 const modelValue = defineModel(); // enables v-model binding
 const data = props.formData
 const showDropdownWorkType = ref(false);
@@ -26,6 +26,7 @@ let cost = reactive({
   altering: 0,
   total: null
 })
+
 
 
 //reset cost value on change work type
@@ -93,6 +94,9 @@ watch(() => material.type, (val) => {
       <Icon :icon="showDropdownWorkType ? 'icon-park-outline:up' : 'icon-park-outline:down'" width="20" height="20"
         class="text-black ml-2 mt-1" />
     </div>
+    <div v-if="props.errorMessage2" class="text-red-500 text-sm mt-2">
+        {{ props.errorMessage2 }}
+      </div>
 
     <div v-show="showDropdownWorkType" class="z-10 mt-2">
       <ul class="text-md text-black">
@@ -127,6 +131,7 @@ watch(() => material.type, (val) => {
           placeholder="Enter material type" />
         <Input v-model="cost.stitching" type="number" label="Stitching Cost" :required="true"
           placeholder="Enter stitching cost" />
+        <h1>Total Cost:{{ cost.total }}</h1>
       </div>
 
       <div v-if="modelValue === 'Only Stitching'" class="mt-4 ml-2">
@@ -136,7 +141,7 @@ watch(() => material.type, (val) => {
       <div v-if="modelValue === 'Only Altering'" class="mt-4 ml-2">
         <Input v-model="cost.altering" type="text" label="Cost" :required="true" placeholder="Enter Cost" />
       </div>
-      <h1>Total Cost:{{ cost.total }}</h1>
+
     </div>
   </div>
 </template>
