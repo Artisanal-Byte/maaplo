@@ -139,7 +139,7 @@ const submitForm = () => {
                         </label>
                     </div>
                 </div>
-                <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.gender }}</div>
+                <div v-if="errors.body_part" class="text-red-600 text-sm">{{ errors.body_part }}</div>
                 <div>
                     <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
                         width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo" />
