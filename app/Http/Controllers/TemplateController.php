@@ -66,6 +66,8 @@ class TemplateController extends Controller
 
             Measurement::create([
                 'slug' => json_encode($validated['required_measurements']),
+                // 'slug' => json_encode(array_map(fn($m) => strtolower(str_replace(' ', '_', $m)), $validated['required_measurements'])),
+
             ]);
 
             $template = Template::all()->last()->id;
@@ -125,6 +127,7 @@ class TemplateController extends Controller
             if ($measurement) {
                 $measurement->update([
                     'slug' => json_encode($validated['required_measurements']),
+                    // 'slug' => json_encode(array_map(fn($m) => strtolower(str_replace(' ', '_', $m)), $validated['required_measurements'])),
                 ]);
             }
             DB::commit();
