@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DesignDetailsController;
 use App\Http\Controllers\ItemTemplateController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,8 @@ Route::middleware(["auth", "verified"])->group(function () {
     Route::resource('customers', CustomerController::class);
     // Route::resource('orders', OrderController::class)->names(["index"]);
     Route::resource('items', ItemTemplateController::class);
+
+    Route::resource('design-details', DesignDetailsController::class);
 
 });
 
