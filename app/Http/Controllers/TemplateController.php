@@ -18,7 +18,7 @@ class TemplateController extends Controller
      */
     public function index()
     {
-        $items = Template::all();
+        $items = Template::latest()->get();
         $authUser = Auth::user();
 
         return Inertia::render('items/Index', [
