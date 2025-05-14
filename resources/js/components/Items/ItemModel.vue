@@ -11,11 +11,17 @@ import PatternImage from './PatternImage.vue';
 import Button from '../Button.vue';
 import { ref, defineProps, defineEmits, watch, reactive } from 'vue';
 import TrialAndDeliveryDate from '../TrialAndDeliveryDate.vue';
+const errorMessage = ref('');
+const errorMessage1 = ref('')
+const errorMessage2 = ref('')
+const errorMessage3 = ref('')
+const errorMessage4 = ref('')
+const errorMessage5 = ref('')
 const notes = ref([{ label: '', text: '' }]);
-const props = defineProps(['showModal', 'form', 'itemType', 'itemIndex', 'measurements']);
+const props = defineProps(['showModal', 'form', 'itemType', 'itemIndex', 'measurements', 'errorMessage5']);
 const emit = defineEmits(['close', 'setOrderItemsData']);
 
-let data =  reactive({
+let data = reactive({
     template_id: null,
     measurements: [],
     design_details_ids: [],
@@ -30,6 +36,7 @@ let data =  reactive({
     cost: null,
     notes: [{}],
     trial_dates: '',
+    delivery_date: '',
     status: '',
     cloth_img1: null,
     cloth_img2: null,
@@ -37,27 +44,7 @@ let data =  reactive({
     Pattern_img2: null
 })
 
-// const form = reactive({
-//     template_id: null,
-//     measurements: [],
-//     design_details_ids: [],
-//     colors: '',
-//     work_type: '',
-//     material_type: '',
-//     material_code: '',
-//     refrence_dress: '',
-//     is_urgent: '',
-//     material_cost: null,
-//     stiching_cost: null,
-//     cost: null,
-//     notes: [{}],
-//     trial_dates: '',
-//     status: '',
-//     cloth_img1: null,
-//     cloth_img2: null,
-//     Pattern_img1: null,
-//     Pattern_img2: null
-// })
+
 
 const resetData = () => {
     data = {
@@ -75,6 +62,7 @@ const resetData = () => {
         cost: null,
         notes: [{}],
         trial_dates: '',
+        delivery_date: '',
         status: '',
         cloth_img1: null,
         cloth_img2: null,
@@ -86,11 +74,46 @@ const resetData = () => {
 
 // Save and emit
 function saveItem() {
+    //    errorMessage.value = '';
+    //    errorMessage1.value = '';
+    //    WorkType.value = '';
+    let isValid = true;
+    // Validate trial date
+    if (!data.trial_dates) {
+        errorMessage.value = 'The Trial Date is required.';
+        isValid = false;
+    }
+    // Validate delivery date
+    if (!data.delivery_date) {
+        errorMessage1.value = 'The Delivery Date is required.';
+        isValid = false;
+    }
+    if (!data.work_type) {
+        errorMessage2.value = 'The WorkType is required.';
+        isValid = false;
+    }
+    // if (!data.template_id) {
+    //     errorMessage3.value = 'The ItemType is required.';
+    //     isValid = false;
+    // }
+    // if (!data.measurements || data.measurements.length === 0) {
+    //     errorMessage4.value = 'The Measurements are required.';
+    //     isValid = false; 
+    // }
+
+
+    if (!data.design_details_ids || data.design_details_ids.length === 0) {
+        errorMessage5.value = 'The Design Details are required.';
+   
+    }
+    if (!isValid) return;
+
     // each items added in order items
     emit('setOrderItemsData', JSON.parse(JSON.stringify(data)))
     resetData();
     // emit('setOrderItemsData', data)
     emit('close')
+
 }
 
 const setItemId = (id) => {
@@ -147,19 +170,22 @@ const setTrialDate = (date) => {
 const setdDeliveryDate = (imgPath) => {
     data.delivery_date = imgPath
 }
+
 </script>
 
 <template>
 
     <div v-if="showModal">
+        <!-- <pre>
+            {{ data }}
+        </pre> -->
         <!-- Backdrop -->
         <div class="fixed inset-0 bg-black/50 z-40" @click.self="$emit('close')"></div>
 
         <!-- Modal Container -->
         <div class="fixed inset-0 bg-black bg-opacity-50 z-50"></div>
-        <div class="fixed z-[999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
-               w-full lg:max-w-6xl 
-       max-w-[calc(100%-2.5rem)] bg-white shadow-lg rounded-[10px] overflow-hidden">
+        <div
+            class="fixed z-[999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full lg:max-w-6xl max-w-[calc(100%-2.5rem)] bg-white shadow-lg rounded-[10px] overflow-hidden">
             <!-- Close Button -->
             <div class=" px-4 lg:px-6 py-6 overflow-y-auto max-h-[80vh]">
                 <div class="flex justify-between">
@@ -176,12 +202,12 @@ const setdDeliveryDate = (imgPath) => {
                 <!-- Scrollable Content -->
                 <div class=" max-h-[75vh] pr-2 space-y-5">
                     <!-- done -->
-                    <WorkType :formData="data" @setMaterialCode="setMaterialCode" @setMaterialCost="setMaterialCost"
-                        @setAlteringCost="setAlteringCost" @setStichingCost="setStichingCost"
-                        @setMaterialType="setMaterialType" @setPrice="setPrice" />
-                    <ItemType :itemType="itemType" @setItemId="setItemId" />
-                    <Measurements :measurements="measurements" />
-                    <DesignDetails />
+                    <WorkType :formData="data" :errorMessage2="errorMessage2" @setMaterialCode="setMaterialCode"
+                        @setMaterialCost="setMaterialCost" @setAlteringCost="setAlteringCost"
+                        @setStichingCost="setStichingCost" @setMaterialType="setMaterialType" @setPrice="setPrice" />
+                    <ItemType :itemType="itemType" :errorMessage3="errorMessage3" @setItemId="setItemId" />
+                    <Measurements :measurements="measurements" :errorMessage4="errorMessage4" />
+                    <DesignDetails :errorMessage5="errorMessage5" />
 
                     <div class="flex flex-col">
                         <Colors @setColor="setColor" />
@@ -195,7 +221,8 @@ const setdDeliveryDate = (imgPath) => {
 
                     <!-- Trail Date && Delivery Date  -->
 
-                    <TrialAndDeliveryDate @setTrialDate="setTrialDate" @setdDeliveryDate="setdDeliveryDate" />
+                    <TrialAndDeliveryDate @setTrialDate="setTrialDate" :errorMessage="errorMessage"
+                        :errorMessage1="errorMessage1" @setdDeliveryDate="setdDeliveryDate" />
 
                     <div class="flex items-center gap-4">
                         <h1 class="text-[16px] font-normal font-lato">Mark as Urgent</h1>

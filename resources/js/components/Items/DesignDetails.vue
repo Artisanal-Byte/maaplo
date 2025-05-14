@@ -9,6 +9,7 @@ const showDropdownDesignDetails = ref(false);
 const showDropdownFrontNeckDesign = ref(true);
 const showDropdownBackNeckDesign = ref(false);
 const showDropdownSleeveType = ref(false);
+const props = (['errorMessage5'])
 function toggleDropdownDesignDetails() {
     showDropdownDesignDetails.value = !showDropdownDesignDetails.value;
 }
@@ -21,6 +22,7 @@ function toggleDropdownBackNeckDesign() {
 function toggleDropdownSleeveType() {
     showDropdownSleeveType.value = !showDropdownSleeveType.value;
 }
+
 
 const neckTypes = [
     { name: 'u-neck', label: 'U Neck' },
@@ -54,6 +56,9 @@ const sleeveType = [
         <div @click="toggleDropdownDesignDetails()" class="flex">
             <h1 class="font-normal text-md leading-4 tracking-normal font-lato"> Design Details<span class="text-red-500 text-lg">*</span>
             </h1>
+             <div v-if="props.errorMessage5" class="text-red-500 text-sm mt-2">
+                {{ props.errorMessage5 }}
+            </div>
             <Icon v-if="showDropdownDesignDetails == false" icon="icon-park-outline:down" width="20" height="20"
                 class="text-black ml-2" />
             <Icon v-if="showDropdownDesignDetails == true" icon="icon-park-outline:up" width="20" height="20"

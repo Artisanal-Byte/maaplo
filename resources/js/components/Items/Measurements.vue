@@ -6,6 +6,7 @@ import Input from '../InputWithLabel.vue';
 
 const props = defineProps<{
     measurements: Record<string, string> | null;
+    errorMessage4: string
 }>();
 
 const emit = defineEmits<{
@@ -63,18 +64,23 @@ function toggleDropdownMeasurements() {
 <template>
     <div class="mt-2">
         <div @click="toggleDropdownMeasurements()" class="flex">
-            <h1 class="font-normal text-md leading-4 tracking-normal font-lato">Measurements<span class="text-red-500 text-lg">*</span>
+            <h1 class="font-normal text-md leading-4 tracking-normal font-lato">Measurements<span
+                    class="text-red-500 text-lg">*</span>
             </h1>
             <Icon v-if="showDropdownMeasurements == false" icon="icon-park-outline:down" width="20" height="20"
                 class="text-black ml-2 mt-1" />
             <Icon v-if="showDropdownMeasurements == true" icon="icon-park-outline:up" width="20" height="20"
                 class="text-black ml-2 mt-1" />
         </div>
+        <div v-if="props.errorMessage4" class="text-red-500 text-sm mt-2">
+            {{ props.errorMessage4 }}
+        </div>
         <!-- Dropdown -->
         <div v-show="showDropdownMeasurements" class="z-10">
             <div class="flex items-center gap-3 mt-2 ml-2">
                 <SvgIcon :name="'unit'" />
-                <span class="font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Unit</span>
+                <span
+                    class="font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Unit</span>
                 <div class="flex border border-gray-300 rounded overflow-hidden text-sm">
                     <button :class="[
                         'px-4 py-1 focus:outline-none',
@@ -110,7 +116,7 @@ function toggleDropdownMeasurements() {
                             <span
                                 class="w-32 font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Chest</span>
                             <Input v-model="measurements.chest" type="text" width="md" color="grayBorder" padding="sm"
-                                rounded="sm"/>
+                                rounded="sm" />
                             <span class="text-sm text-gray-500">{{ unit }}</span>
                         </div>
 
@@ -120,7 +126,7 @@ function toggleDropdownMeasurements() {
                             <span
                                 class="w-32 font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Arms</span>
                             <Input v-model="measurements.arms" type="text" width="md" color="grayBorder" padding="sm"
-                                rounded="sm"/>
+                                rounded="sm" />
                             <span class="text-sm text-gray-500">{{ unit }}</span>
                         </div>
 
@@ -131,7 +137,7 @@ function toggleDropdownMeasurements() {
                                 class="w-32 font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Sleeve
                                 length</span>
                             <Input v-model="measurements.sleeve_length" type="text" width="md" color="grayBorder"
-                                padding="sm" rounded="sm"/>
+                                padding="sm" rounded="sm" />
                             <span class="text-sm text-gray-500">{{ unit }}</span>
                         </div>
 
@@ -142,7 +148,7 @@ function toggleDropdownMeasurements() {
                                 class="w-32 font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Back
                                 Neck</span>
                             <Input v-model="measurements.back_neck" type="text" width="md" color="grayBorder"
-                                padding="sm" rounded="sm"/>
+                                padding="sm" rounded="sm" />
                             <span class="text-sm text-gray-500">{{ unit }}</span>
                         </div>
 
@@ -152,7 +158,7 @@ function toggleDropdownMeasurements() {
                             <span
                                 class="w-32 font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Shoulder</span>
                             <Input v-model="measurements.shoulder" type="text" width="md" color="grayBorder"
-                                padding="sm" rounded="sm"/>
+                                padding="sm" rounded="sm" />
                             <span class="text-sm text-gray-500">{{ unit }}</span>
                         </div>
 
@@ -162,7 +168,7 @@ function toggleDropdownMeasurements() {
                             <span
                                 class="w-32 font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Waist</span>
                             <Input v-model="measurements.waist" type="text" width="md" color="grayBorder" padding="sm"
-                                rounded="sm"/>
+                                rounded="sm" />
                             <span class="text-sm text-gray-500">{{ unit }}</span>
                         </div>
 
@@ -172,7 +178,7 @@ function toggleDropdownMeasurements() {
                             <span
                                 class="w-32 font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Seat</span>
                             <Input v-model="measurements.seat" type="text" width="md" color="grayBorder" padding="sm"
-                                rounded="sm"/>
+                                rounded="sm" />
                             <span class="text-sm text-gray-500">{{ unit }}</span>
                         </div>
 
@@ -183,7 +189,7 @@ function toggleDropdownMeasurements() {
                                 class="w-32 font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Sleeve
                                 Circle</span>
                             <Input v-model="measurements.sleeve_circle" type="text" width="md" color="grayBorder"
-                                padding="sm" rounded="sm"/>
+                                padding="sm" rounded="sm" />
                             <span class="text-sm text-gray-500">{{ unit }}</span>
                         </div>
 
