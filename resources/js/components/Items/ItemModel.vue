@@ -1,6 +1,7 @@
 <script setup>
 import ToggleButton from '../ToggleButton.vue';
 import Colors from './Colors.vue';
+import { Icon } from '@iconify/vue';
 import DesignDetails from './DesignDetails.vue';
 import ItemType from './ItemType.vue';
 import Measurements from './Measurements.vue';
@@ -11,6 +12,8 @@ import PatternImage from './PatternImage.vue';
 import Button from '../Button.vue';
 import { ref, defineProps, defineEmits, watch, reactive } from 'vue';
 import TrialAndDeliveryDate from '../TrialAndDeliveryDate.vue';
+const previewImage1 = ref(null)
+const fileInput1 = ref(null)
 const errorMessage = ref('');
 const errorMessage1 = ref('')
 const errorMessage2 = ref('')
@@ -20,7 +23,7 @@ const errorMessage5 = ref('')
 const notes = ref([{ label: '', text: '' }]);
 const props = defineProps(['showModal', 'form', 'itemType', 'itemIndex', 'measurements', 'errorMessage5']);
 const emit = defineEmits(['close', 'setOrderItemsData']);
-
+const showImageUpload = ref(false)
 let data = reactive({
     template_id: null,
     measurements: [],
@@ -104,7 +107,7 @@ function saveItem() {
 
     if (!data.design_details_ids || data.design_details_ids.length === 0) {
         errorMessage5.value = 'The Design Details are required.';
-   
+
     }
     if (!isValid) return;
 
@@ -148,6 +151,7 @@ const setNotes = (notes) => {
 }
 const setIfReferenceDress = (val) => {
     data.refrence_dress = val
+    showImageUpload.value = val
 }
 const setIfUrgent = (val) => {
     data.is_urgent = val
@@ -169,6 +173,20 @@ const setTrialDate = (date) => {
 }
 const setdDeliveryDate = (imgPath) => {
     data.delivery_date = imgPath
+}
+
+// Trigger function for each input
+function triggerFileInput(index) {
+    if (index === 1) fileInput1.value.click()
+}
+
+// Change handler for each file input
+function onFileChange(event, index) {
+    const file = event.target.files[0]
+    if (file && file.type.startsWith('image/')) {
+        const url = URL.createObjectURL(file)
+        if (index === 1) previewImage1.value = url
+    }
 }
 
 </script>
@@ -219,6 +237,32 @@ const setdDeliveryDate = (imgPath) => {
                         <ToggleButton @setIfReferenceDress="setIfReferenceDress" />
                     </div>
 
+                    <div v-if="showImageUpload" class="mt-4">
+                        <!-- <label class="flex items-center gap-2 cursor-pointer">
+                            <Icon icon="mdi:upload" width="24" height="24" class="text-blue-500" />
+                            <input type="file" class="hidden" @change="handleImageUpload" />
+                            <span class="text-sm">Upload Reference Image</span>
+                        </label> -->
+                        <div class="w-40 mt-5 h-full rounded-md gap-[10px] p-2 shadow-[0px_0px_6.1px_0px_#00000040]">
+                            <div class="flex items-center justify-between mb-2">
+                                <h1
+                                    class="font-normal text-[14px] leading-[8px] tracking-[0%] text-[#8C8C8C] font-lato block">
+                                    Cloth 1</h1>
+                                <button @click="triggerFileInput(1)"
+                                    class="flex justify-center cursor-pointer border border-gray-400 rounded-full">
+                                    <Icon icon="material-symbols:add-rounded" width="14" height="14" />
+                                </button>
+                            </div>
+                            <div class="mb-2">
+                                <div class="bg-[#BDDBDB3D] p-2 rounded h-24">
+                                    <img v-if="previewImage1" :src="previewImage1" alt="Preview"
+                                        class="w-32 h-20 object-cover rounded" />
+                                </div>
+                                <input ref="fileInput1" type="file" class="hidden" @change="e => onFileChange(e, 1)"
+                                    accept="image/*" />
+                            </div>
+                        </div>
+                    </div>
                     <!-- Trail Date && Delivery Date  -->
 
                     <TrialAndDeliveryDate @setTrialDate="setTrialDate" :errorMessage="errorMessage"
@@ -228,6 +272,8 @@ const setdDeliveryDate = (imgPath) => {
                         <h1 class="text-[16px] font-normal font-lato">Mark as Urgent</h1>
                         <ToggleButton @setIfUrgent="setIfUrgent" />
                     </div>
+                    <!-- Upload icon, only shown when toggle is ON -->
+
 
                     <div class="flex flex-col lg:flex-row justify-between gap-4">
                         <ClothImage @setClothImage1="setClothImage1" @setClothImage2="setClothImage2" />
