@@ -12,17 +12,10 @@ import PatternImage from './PatternImage.vue';
 import Button from '../Button.vue';
 import { ref, defineProps, defineEmits, watch, reactive } from 'vue';
 import TrialAndDeliveryDate from '../TrialAndDeliveryDate.vue';
-const previewImage1 = ref(null)
-const fileInput1 = ref(null)
-const errorMessage = ref('');
-const errorMessage1 = ref('')
-const errorMessage2 = ref('')
-const errorMessage3 = ref('')
-const errorMessage4 = ref('')
-const errorMessage5 = ref('')
-const errorMessage6 = ref('')
+const previewImage = ref(null)
+const fileInput = ref(null)
 const notes = ref([{ label: '', text: '' }]);
-const props = defineProps(['showModal', 'form', 'itemType', 'itemIndex', 'measurements', 'errorMessage5']);
+const props = defineProps(['showModal', 'form', 'itemType', 'itemIndex', 'measurements', 'errorMessage5', 'errors']);
 const emit = defineEmits(['close', 'setOrderItemsData']);
 const showImageUpload = ref(false)
 let data = reactive({
@@ -73,34 +66,10 @@ const resetData = () => {
 }
 // Save and emit
 function saveItem() {
-    let isValid = true;
-    // Validate trial date
-    if (!data.trial_dates) {
-        errorMessage.value = 'The Trial Date is required.';
-        isValid = false;
-    }
-    // Validate delivery date
-    if (!data.delivery_date) {
-        errorMessage1.value = 'The Delivery Date is required.';
-        isValid = false;
-    }
-    if (!data.work_type) {
-        errorMessage2.value = 'The WorkType is required.';
-        isValid = false;
-    }
-     if (showImageUpload.value && !previewImage1.value) {
-    errorMessage6.value = 'The Reference Dress image is required.';
-    isValid = false;
-  }
-
-    if (!isValid) return;
-
-    // each items added in order items
     emit('setOrderItemsData', JSON.parse(JSON.stringify(data)))
     resetData();
     // emit('setOrderItemsData', data)
     emit('close')
-
 }
 
 const setItemId = (id) => {
@@ -158,7 +127,7 @@ const setdDeliveryDate = (imgPath) => {
 
 // Trigger function for each input
 function triggerFileInput(index) {
-    if (index === 1) fileInput1.value.click()
+    if (index === 1) fileInput.value.click()
 }
 
 // Change handler for each file input
@@ -166,7 +135,7 @@ function onFileChange(event, index) {
     const file = event.target.files[0]
     if (file && file.type.startsWith('image/')) {
         const url = URL.createObjectURL(file)
-        if (index === 1) previewImage1.value = url
+        if (index === 1) previewImage.value = url
     }
 }
 </script>
@@ -174,10 +143,10 @@ function onFileChange(event, index) {
 <template>
     <div v-if="showModal">
         <!-- Backdrop -->
-        <div class="fixed inset-0 bg-black/50 z-40" @click.self="$emit('close')"></div>
+        <div class="fixed inset-0 bg-white/25 z-40" @click.self="$emit('close')"></div>
 
         <!-- Modal Container -->
-        <div class="fixed inset-0 bg-black bg-opacity-50 z-50"></div>
+        <div class="fixed inset-0 bg-black bg-opacity-25 z-50"></div>
         <div
             class="fixed z-[999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full lg:max-w-6xl max-w-[calc(100%-2.5rem)] bg-white shadow-lg rounded-[10px] overflow-hidden">
             <!-- Close Button -->
@@ -226,21 +195,21 @@ function onFileChange(event, index) {
                             </div>
                             <div class="mb-2">
                                 <div class="bg-[#BDDBDB3D] p-2 rounded h-24">
-                                    <img v-if="previewImage1" :src="previewImage1" alt="Preview"
+                                    <img v-if="previewImage" :src="previewImage" alt="Preview"
                                         class="w-32 h-20 object-cover rounded" />
                                 </div>
-                                <input ref="fileInput1" type="file" class="hidden" @change="e => onFileChange(e, 1)"
+                                <input ref="fileInput" type="file" class="hidden" @change="e => onFileChange(e, 1)"
                                     accept="image/*" />
                             </div>
                         </div>
                         <div v-if="errorMessage6" class="text-red-500 text-sm mt-2">
-                            {{errorMessage6 }}
+                            {{ errorMessage6 }}
                         </div>
                     </div>
                     <!-- Trail Date && Delivery Date  -->
 
-                    <TrialAndDeliveryDate @setTrialDate="setTrialDate" :errorMessage="errorMessage"
-                        :errorMessage1="errorMessage1" @setdDeliveryDate="setdDeliveryDate" />
+                    <TrialAndDeliveryDate :errors="errors" @setTrialDate="setTrialDate" :errorMessage="errorMessage"
+                        @setdDeliveryDate="setdDeliveryDate" />
 
                     <div class="flex items-center gap-4">
                         <h1 class="text-[16px] font-normal font-lato">Mark as Urgent</h1>

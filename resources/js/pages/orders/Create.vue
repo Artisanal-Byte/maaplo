@@ -97,9 +97,9 @@ const proceedDelete = () => {
             </div>
             <div class="flex flex-col lg:mt-5 rounded-lg lg:border lg:border-primary p-0 lg:p-4">
 
-                <pre>
+                <!-- <pre>
                     {{ form }}
-                </pre>
+                </pre> -->
 
                 <h1 class="text-xl font-bold lg:mb-6 lg:mt-0 mt-6">Enter Details</h1>
 
@@ -129,7 +129,7 @@ const proceedDelete = () => {
                         </div>
 
                         <!-- Modal Content -->
-                        <ItemModel :errors="form.errors.order_items" :itemIndex="i" :showModal="showModal"
+                        <ItemModel :errors="form.errors?.order_items" :itemIndex="i" :showModal="showModal"
                             @close="closeModel" :form="form.order_items" @setOrderItemsData="setOrderItemsData"
                             :itemType="itemType" :measurements="customers.base_measurements ?? []" />
                             <p class="text-red-600 text-sm">
