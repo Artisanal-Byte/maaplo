@@ -2,7 +2,7 @@
 import { ref, computed, watch, defineProps } from 'vue';
 import { Icon } from '@iconify/vue';
 
-const emits = defineEmits(['setItemId'])
+const emits = defineEmits(['setItemId', 'templateSelected'])
 const modelValue = defineModel();
 const showDropdown = ref(false);
 const searchQuery = ref('');
@@ -48,7 +48,8 @@ const showClearIcon = computed(() => {
 });
 
 function selectOption(option) {
-    emits('setItemId', option.id)
+    emits('setItemId', option.id);
+    emits('templateSelected', option);
     modelValue.value = option.name;
     searchQuery.value = option.name;
     showDropdown.value = false;
@@ -63,6 +64,11 @@ function clearSelection() {
 watch(modelValue, (val) => {
     searchQuery.value = val || '';
 });
+function handleBlur() {
+    setTimeout(() => {
+        showDropdown.value = false;
+    }, 200);
+}
 </script>
 
 <template>
@@ -74,7 +80,7 @@ watch(modelValue, (val) => {
             <Icon v-if="showClearIcon" icon="mdi:close-circle" width="20" height="20"
                 class="absolute top-2.5 right-8 text-gray-500 cursor-pointer" @click="clearSelection" />
             <input type="text" v-model="searchQuery" @focus="showDropdown = true"
-                @blur="setTimeout(() => showDropdown = false, 200)" placeholder="Search Item Type"
+                @blur="handleBlur" placeholder="Search Item Type"
                 class="w-full border rounded px-3 py-2 focus:outline-none" :class="{ 'border-red-500': isInvalid }" />
 
             <!-- Clear Icon -->
