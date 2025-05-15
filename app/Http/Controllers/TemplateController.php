@@ -96,14 +96,18 @@ class TemplateController extends Controller
     public function edit($id)
     {
         $item = Template::findOrFail($id);
-        $measurementSlugs = $item->measurements()->pluck('slug')->toArray();
+        $selectedMeasurementSlugs = $item->measurements()->pluck('slug')->toArray();
+        $allMeasurements = Measurement::select('id', 'slug')->get();
+
         return Inertia::render('items/Edit', [
             'item' => $item,
             'measurements' => [
-                'slug' => $measurementSlugs,
+                'all' => $allMeasurements,
+                'selected' => $selectedMeasurementSlugs,
             ],
         ]);
     }
+
 
     /**
      * Update the specified resource in storage.

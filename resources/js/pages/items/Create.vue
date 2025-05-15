@@ -12,7 +12,7 @@ const toast = new ToastMagic();
 const props = defineProps<{
     errors: Record<string, string>;
     publicTemplates: Array<{ id: number; name: string }>;
-     measurements: Array<{ id: number; slug: string; }>;
+    measurements: Array<{ id: number; slug: string; }>;
 }>();
 const form = reactive({
     name: '',
@@ -22,11 +22,6 @@ const form = reactive({
     custom_template: false,
     svg_logo: '',
 });
-
-const measurements = [
-    'Length', 'Arms', 'Back Neck', 'Waist', 'Sleeve Circle',
-    'Chest', 'Sleeve Length', 'Shoulder', 'Seat', 'Front Neck'
-];
 
 const toggleMeasurement = (label: string) => {
     const index = form.required_measurements.indexOf(label);
@@ -145,10 +140,17 @@ const submitForm = () => {
                     <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
                         width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo" />
                 </div>
-                <div v-for="measurement in props.measurements" :key="measurement.id" class="flex items-center gap-2">
-                    <input type="checkbox" :id="measurement.slug" :value="measurement.slug"
-                        v-model="form.required_measurements" class="form-checkbox" />
-                    <label :for="measurement.slug">{{ measurement.slug }}</label>
+                <!--Measurements -->
+                <div class="mt-4">
+                    <label class="text-md mb-2 block">Required Measurements:</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div v-for="measurement in props.measurements" :key="measurement.id"
+                            class="flex items-center gap-2">
+                            <input type="checkbox" :id="measurement.slug" :value="measurement.slug"
+                                v-model="form.required_measurements" class="form-checkbox" />
+                            <label :for="measurement.slug">{{ measurement.slug }}</label>
+                        </div>
+                    </div>
                 </div>
 
 
