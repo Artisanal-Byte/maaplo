@@ -46,10 +46,24 @@ const isInvalid = computed(() => {
 const showClearIcon = computed(() => {
     return filteredOptions.value.length > 0;
 });
+function formatLabel(option) {
+    console.log('option', option);
+
+    // Adjust the gender map to handle full names like 'Male' and 'Female'
+    const genderMap = { Male: 'Male', Female: 'Female' };
+
+    // Use the gender map correctly based on the case of the option.gender
+    const genderLabel = option.gender ? genderMap[option.gender] || 'Unknown' : 'Unknown';
+
+    console.log('Gender Label', genderLabel);  // Ensure that the gender is correctly mapped
+
+    return `${option.name} (${genderLabel})`;
+}
 
 function selectOption(option) {
     emits('setItemId', option.id);
     emits('templateSelected', option);
+    const label = formatLabel(option);
     modelValue.value = option.name;
     searchQuery.value = option.name;
     showDropdown.value = false;
@@ -79,9 +93,9 @@ function handleBlur() {
             <!-- Clear Icon -->
             <Icon v-if="showClearIcon" icon="mdi:close-circle" width="20" height="20"
                 class="absolute top-2.5 right-8 text-gray-500 cursor-pointer" @click="clearSelection" />
-            <input type="text" v-model="searchQuery" @focus="showDropdown = true"
-                @blur="handleBlur" placeholder="Search Item Type"
-                class="w-full border rounded px-3 py-2 focus:outline-none" :class="{ 'border-red-500': isInvalid }" />
+            <input type="text" v-model="searchQuery" @focus="showDropdown = true" @blur="handleBlur"
+                placeholder="Search Item Type" class="w-full border rounded px-3 py-2 focus:outline-none"
+                :class="{ 'border-red-500': isInvalid }" />
 
             <!-- Clear Icon -->
             <Icon v-if="showClearIcon" icon="mdi:close-circle" width="20" height="20"
@@ -96,17 +110,7 @@ function handleBlur() {
                 class="absolute z-10 mt-1 w-full bg-white border rounded shadow max-h-40 overflow-auto">
                 <li v-if="filteredOptions.length" v-for="option in filteredOptions" :key="option.name"
                     @click="selectOption(option)" class="px-4 py-2 cursor-pointer hover:bg-gray-100">
-                    {{ option.name }}
-                </li>
-                <li v-else class="px-4 py-2 text-gray-500 italic">
-                    No matching items
-                </li>
-            </ul>
-            <ul v-if="showDropdown"
-                class="absolute z-10 mt-1 w-full bg-white border rounded shadow max-h-40 overflow-auto">
-                <li v-if="filteredOptions.length" v-for="option in filteredOptions" :key="option"
-                    @click="selectOption(option)" class="px-4 py-2 cursor-pointer hover:bg-gray-100">
-                    {{ option.name }}
+                    {{ formatLabel(option) }}
                 </li>
                 <li v-else class="px-4 py-2 text-gray-500 italic">
                     No matching items
