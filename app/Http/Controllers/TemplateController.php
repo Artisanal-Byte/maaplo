@@ -35,7 +35,6 @@ class TemplateController extends Controller
     {
         $publicTemplates = Template::whereNull('user_id')->get();
         $allMeasurements = Measurement::select('id', 'slug')->get();
-        // dd($allMeasurements);
         return Inertia::render('items/Create', [
             'publicTemplates' => $publicTemplates,
             'measurements' => $allMeasurements,  // Pass the measurements with 'slug' and 'name'
