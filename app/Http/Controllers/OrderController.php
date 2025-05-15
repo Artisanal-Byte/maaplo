@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\UniqueOrderNumber;
+use App\Helpers\UniqueOrderNumber; // Ensure this class exists in the specified namespace or create it if missing
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\Template;
 use App\Models\Order;
 use App\Models\OrderItem;
-use Devrabiul\ToastMagic\Facades\ToastMagic;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -77,16 +76,17 @@ class OrderController extends Controller
     public function store(StoreOrderRequest $storeOrderRequest)
     {
 
-        //-- Make A unique a combination of Order number And User Id
-        $validatedOrderData = $storeOrderRequest->validated();
-
-        $validatedOrderData['order_number'] = new UniqueOrderNumber()->make();
-
-        $validatedOrderData['status'] = 'created';
-
-        $validatedOrderItemsData = $validatedOrderData['order_items'];
-
+        
         try {
+
+            //-- Make A unique a combination of Order number And User Id
+            $validatedOrderData = $storeOrderRequest->validated();
+            $uniqueOrderNumber = new UniqueOrderNumber();
+            $validatedOrderData['order_number'] = $uniqueOrderNumber->make(); // Ensure the make method is static or adjust accordingly
+    
+            $validatedOrderData['status'] = 'created';
+    
+            $validatedOrderItemsData = $validatedOrderData['order_items'];
 
             DB::beginTransaction();
 
