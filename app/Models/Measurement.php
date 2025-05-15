@@ -16,9 +16,8 @@ class Measurement extends Model
         'slug'
     ];
 
-    protected $casts = [
-        'slug' => 'array'
-    ];
-
+    // protected $casts = [
+    //     'slug' => 'array'
+    // ];
 
 }
