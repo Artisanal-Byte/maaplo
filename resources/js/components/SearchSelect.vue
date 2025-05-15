@@ -12,25 +12,32 @@ const props = defineProps({
         type: Array,
         required: true,
         default: () => []
+    },
+    privateTemplates: {
+        type: Array,
+        required: false,
+        default: () => []
     }
 });
-
+const combinedTemplates = computed(() => {
+    return [...props.publicTemplates, ...props.privateTemplates];
+});
 // const options = ['Kurta', 'Shirt', 'Kurti', 'Pajama'];
 
 // Show all options until user types 3 or more characters
 const filteredOptions = computed(() => {
-    if (searchQuery.value.length < 3) return props.publicTemplates;
-    return props.publicTemplates.filter(opt =>
-        opt.name.toLowerCase().includes(searchQuery.value.toLowerCase()) // assuming `name` is the field to search
+    if (searchQuery.value.length < 3) return combinedTemplates.value;
+    return combinedTemplates.value.filter(opt =>
+        opt.name.toLowerCase().includes(searchQuery.value.toLowerCase())
     );
 });
 
-let check = props.publicTemplates.map(item => item.name);
+let check = computed(() => combinedTemplates.value.map(item => item.name));
 
 const isInvalid = computed(() => {
     return (
         searchQuery.value.length >= 3 &&
-        !check.includes(searchQuery.value) &&
+        !check.value.includes(searchQuery.value) &&
         !filteredOptions.value.some(opt => opt.name.toLowerCase() === searchQuery.value.toLowerCase())
     );
 });

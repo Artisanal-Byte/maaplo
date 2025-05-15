@@ -11,6 +11,7 @@ const toast = new ToastMagic();
 
 const props = defineProps<{
     errors: Record<string, string>;
+    privateTemplates: Array<{ id: number; name: string }>;
     publicTemplates: Array<{ id: number; name: string }>;
     measurements: Array<{ id: number; slug: string; }>;
 }>();
@@ -71,7 +72,7 @@ const formatSlug = (slug: string): string => {
                 <!-- <h1>Select Base Template</h1> -->
                 <div>
                     <label class="text-md">Select Base Template</label>
-                    <SearchSelect class="mt-2" :public-templates="props.publicTemplates" />
+                    <SearchSelect class="mt-2" :public-templates="props.publicTemplates" :private-templates="props.privateTemplates" />
                 </div>
                 <div>
                     <Input v-model="form.name" label="Template Name" placeholder="Enter Template Name" margin="md"

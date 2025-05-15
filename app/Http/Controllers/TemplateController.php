@@ -33,13 +33,23 @@ class TemplateController extends Controller
      */
     public function create()
     {
+        $currentUserId = auth()->id();
+
+        // Public templates: user_id is NULL
         $publicTemplates = Template::whereNull('user_id')->get();
+        // Private templates: created by current user only
+        $privateTemplates = Template::where('user_id', $currentUserId)->get();
+// dd( $publicTemplates,$publicTemplates);
+
         $allMeasurements = Measurement::select('id', 'slug')->get();
+
         return Inertia::render('items/Create', [
             'publicTemplates' => $publicTemplates,
-            'measurements' => $allMeasurements,  // Pass the measurements with 'slug' and 'name'
+            'privateTemplates' => $privateTemplates,
+            'measurements' => $allMeasurements,
         ]);
     }
+
 
 
     /**
