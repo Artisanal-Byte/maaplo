@@ -20,6 +20,7 @@ const errorMessage2 = ref('')
 const errorMessage3 = ref('')
 const errorMessage4 = ref('')
 const errorMessage5 = ref('')
+const errorMessage6 = ref('')
 const notes = ref([{ label: '', text: '' }]);
 const props = defineProps(['showModal', 'form', 'itemType', 'itemIndex', 'measurements', 'errorMessage5']);
 const emit = defineEmits(['close', 'setOrderItemsData']);
@@ -46,9 +47,6 @@ let data = reactive({
     Pattern_img1: null,
     Pattern_img2: null
 })
-
-
-
 const resetData = () => {
     data = {
         template_id: null,
@@ -73,8 +71,6 @@ const resetData = () => {
         Pattern_img2: null
     }
 }
-
-
 // Save and emit
 function saveItem() {
     //    errorMessage.value = '';
@@ -95,6 +91,10 @@ function saveItem() {
         errorMessage2.value = 'The WorkType is required.';
         isValid = false;
     }
+     if (showImageUpload.value && !previewImage1.value) {
+    errorMessage6.value = 'The Reference Dress image is required.';
+    isValid = false;
+  }
     // if (!data.template_id) {
     //     errorMessage3.value = 'The ItemType is required.';
     //     isValid = false;
@@ -103,12 +103,6 @@ function saveItem() {
     //     errorMessage4.value = 'The Measurements are required.';
     //     isValid = false; 
     // }
-
-
-    if (!data.design_details_ids || data.design_details_ids.length === 0) {
-        errorMessage5.value = 'The Design Details are required.';
-
-    }
     if (!isValid) return;
 
     // each items added in order items
@@ -188,11 +182,9 @@ function onFileChange(event, index) {
         if (index === 1) previewImage1.value = url
     }
 }
-
 </script>
 
 <template>
-
     <div v-if="showModal">
         <!-- <pre>
             {{ data }}
@@ -238,16 +230,11 @@ function onFileChange(event, index) {
                     </div>
 
                     <div v-if="showImageUpload" class="mt-4">
-                        <!-- <label class="flex items-center gap-2 cursor-pointer">
-                            <Icon icon="mdi:upload" width="24" height="24" class="text-blue-500" />
-                            <input type="file" class="hidden" @change="handleImageUpload" />
-                            <span class="text-sm">Upload Reference Image</span>
-                        </label> -->
                         <div class="w-40 mt-5 h-full rounded-md gap-[10px] p-2 shadow-[0px_0px_6.1px_0px_#00000040]">
                             <div class="flex items-center justify-between mb-2">
                                 <h1
                                     class="font-normal text-[14px] leading-[8px] tracking-[0%] text-[#8C8C8C] font-lato block">
-                                    Cloth 1</h1>
+                                    image</h1>
                                 <button @click="triggerFileInput(1)"
                                     class="flex justify-center cursor-pointer border border-gray-400 rounded-full">
                                     <Icon icon="material-symbols:add-rounded" width="14" height="14" />
@@ -262,6 +249,9 @@ function onFileChange(event, index) {
                                     accept="image/*" />
                             </div>
                         </div>
+                        <div v-if="errorMessage6" class="text-red-500 text-sm mt-2">
+                            {{errorMessage6 }}
+                        </div>
                     </div>
                     <!-- Trail Date && Delivery Date  -->
 
@@ -273,8 +263,6 @@ function onFileChange(event, index) {
                         <ToggleButton @setIfUrgent="setIfUrgent" />
                     </div>
                     <!-- Upload icon, only shown when toggle is ON -->
-
-
                     <div class="flex flex-col lg:flex-row justify-between gap-4">
                         <ClothImage @setClothImage1="setClothImage1" @setClothImage2="setClothImage2" />
                         <PatternImage @setPatternImage1="setPatternImage1" @setPatternImage2="setPatternImage2" />
@@ -284,10 +272,8 @@ function onFileChange(event, index) {
                             Save
                         </Button>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
-
 </template>
