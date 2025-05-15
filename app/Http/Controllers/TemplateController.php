@@ -37,12 +37,13 @@ class TemplateController extends Controller
         // Eager load related measurements with only 'slug' field
         $publicTemplates = Template::with(['measurements:id,slug'])
             ->whereNull('user_id')
+            ->select('id', 'name', 'gender', 'body_part', 'svg_logo')
             ->get();
 
         $privateTemplates = Template::with(['measurements:id,slug'])
             ->where('user_id', $currentUserId)
+            ->select('id', 'name', 'gender', 'body_part', 'svg_logo')
             ->get();
-
         $allMeasurements = Measurement::select('id', 'slug')->get();
 
         return Inertia::render('items/Create', [
