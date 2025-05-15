@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->softDeletes();
 
             //-- unique constraint
-            $table->unique(['user_id','order_id']);
+            $table->unique(['user_id','order_number']);
         });
     }
 
