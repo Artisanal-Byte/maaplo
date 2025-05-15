@@ -37,7 +37,6 @@ const toggleMeasurement = (label: string) => {
 };
 
 const submitForm = () => {
-    console.log(form);
     router.post(route('items.store'), form, {
         onSuccess: () => {
             toast.success("Item created successfully!");
