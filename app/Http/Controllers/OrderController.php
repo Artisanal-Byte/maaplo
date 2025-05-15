@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\UniqueOrderNumber;
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\Template;
 use App\Models\Order;
@@ -75,7 +76,11 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $storeOrderRequest)
     {
+
+        //-- Make A unique a combination of Order number And User Id
         $validatedOrderData = $storeOrderRequest->validated();
+
+        $validatedOrderData['order_number'] = new UniqueOrderNumber()->make();
 
         $validatedOrderData['status'] = 'created';
 
@@ -96,12 +101,10 @@ class OrderController extends Controller
             OrderItem::insert($validatedOrderItemsData);
 
             DB::commit();
-            ToastMagic::success('Order created successfully!');
             return redirect()->route('orders.index')->with('success', 'Order created successfully.');
         } catch (Exception $exception) {
 
             DB::rollBack();
-            ToastMagic::success('Customer created successfully!');
             return redirect()->back()->withErrors(['error' => $exception->getMessage()]);
         }
     }

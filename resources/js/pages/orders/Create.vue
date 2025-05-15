@@ -38,7 +38,7 @@ let create = () => {
             toast.success('Order Created Successfully');
         },
         onError: (error) => {
-            toast.error('failed To create order! reason:' + error);
+            toast.error('failed To create order' + error);
         }
     })
 }
@@ -48,10 +48,10 @@ const submitForm = () => {
         // notes: notes.value,
     }, {
         onSuccess: () => {
-            toast.success("order created successfully!");
+            // toast.success("order created successfully!");
         },
         onError: (errors) => {
-            toast.error("Failed to create order. please fill the all the required fields.");
+            // toast.error("Failed to create order. please fill the all the required fields.");
             console.error(errors);
         },
     });
