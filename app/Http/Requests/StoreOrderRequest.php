@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreOrderRequest extends FormRequest
 {
@@ -11,7 +12,6 @@ class StoreOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // dd($this->all());
         return \Illuminate\Support\Facades\Auth::check();
     }
 
@@ -25,7 +25,9 @@ class StoreOrderRequest extends FormRequest
         return [
             'user_id' => ['required', 'exists:users,id'],
             'customer_id' => ['required', 'exists:customers,id'],
-            'order_number' => ['required', 'string', 'unique:orders,order_number'],
+            'order_number' => ['required', 'string',  Rule::unique('orders')->where(function ($query) {
+                return $query->where('user_id', $this->user_id);
+            })],
             'total_amount' => ['required', 'numeric', 'min:0'],
             'advance_paid' => ['required', 'numeric', 'min:0', 'lte:total_amount'],
             'delivery_date' => ['required', 'date', 'after_or_equal:today'],

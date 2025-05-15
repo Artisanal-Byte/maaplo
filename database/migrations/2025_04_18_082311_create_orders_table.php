@@ -23,6 +23,9 @@ return new class extends Migration {
             $table->json('notes');
             $table->timestamps();
             $table->softDeletes();
+
+            //-- unique constraint
+            $table->unique(['user_id','order_id']);
         });
     }
 
