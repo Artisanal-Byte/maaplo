@@ -47,9 +47,9 @@ const submitForm = () => {
 
 const formatSlug = (slug: string): string => {
     return slug
-        .split('_')                          // Split on underscores
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize first letter
-        .join(' ');                          // Join back with space
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
 };
 </script>
 
@@ -158,6 +158,9 @@ const formatSlug = (slug: string): string => {
                         </div>
                     </div>
                 </div>
+                <div v-if="errors.required_measurements" class="text-red-600 text-sm">{{ errors.required_measurements }}
+                </div>
+
 
 
                 <Button @click="submitForm" color="primary" textSize="lg" padding="md" rounded="full">
