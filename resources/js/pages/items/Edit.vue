@@ -16,11 +16,14 @@ const props = defineProps<{
         svg_logo: string;
         gender: string;
         body_part: string;
+        measurements: Array<{ id: number; slug: string; }>;
     },
     measurements: {
-        slug: string[];
+        all: Array<{ id: number, slug: string }>,
+        selected: string[]
     }
 }>();
+console.log(props.measurements);
 const selectedTemplate = ref(null);
 const templates = ref([]);
 const form = useForm({
@@ -28,14 +31,9 @@ const form = useForm({
     svg_logo: props.item.svg_logo,
     gender: props.item.gender === "Male" ? "m" : (props.item.gender === "Female" ? "f" : "o"),
     body_part: props.item.body_part === "Upper" ? "upper" : "lower",
-    required_measurements: props.measurements.slug ? JSON.parse(props.measurements.slug) : [],
+    required_measurements: props.measurements.selected,
     _method: 'put',
 });
-
-const allMeasurements = [
-    'Length', 'Arms', 'Back Neck', 'Waist', 'Sleeve Circle',
-    'Chest', 'Sleeve Length', 'Shoulder', 'Seat', 'Front Neck'
-];
 
 const toggleMeasurement = (label: string) => {
     const updatedMeasurements = [...form.required_measurements];
@@ -142,24 +140,25 @@ const updateTemplate = () => {
                         </label>
                     </div>
                 </div>
-                <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.gender }}</div>
+                <div v-if="errors.body_part" class="text-red-600 text-sm">{{ errors.body_part }}</div>
                 <!-- SVG Logo -->
                 <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
                     width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo" />
 
                 <!-- Required Measurements -->
-                <div>
-                    <label class="text-md mb-2">Required Measurements:</label>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div v-for="measurement in allMeasurements" :key="measurement" class="flex items-center gap-2">
-                            <input type="checkbox" :id="measurement" :value="measurement"
-                                :checked="form.required_measurements.includes(measurement)"
-                                @change="toggleMeasurement(measurement)" />
-                            <label :for="measurement">{{ measurement }}</label>
+                <div class="mt-4">
+                    <label class="text-md mb-2 block">Required Measurements:</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div v-for="measurement in props.measurements.all" :key="measurement.slug"
+                            class="flex items-center gap-2">
+                            <input type="checkbox" :id="measurement.slug" :value="measurement.slug"
+                                :checked="form.required_measurements.includes(measurement.slug)"
+                                @change="toggleMeasurement(measurement.slug)" />
+                            <label :for="measurement.slug">{{ measurement.slug }}</label>
                         </div>
                     </div>
-                    <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.required_measurements }}</div>
                 </div>
+
 
                 <!-- Submit Button -->
                 <Button @click="updateTemplate" color="primary" textSize="lg" padding="md" rounded="full">

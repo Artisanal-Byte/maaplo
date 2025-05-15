@@ -68,4 +68,14 @@ class Template extends Model
             }
         });
     }
+
+    public function measurements()
+    {
+        return $this->belongsToMany(
+            Measurement::class,
+            'templates_measurements',
+            'template_id',
+            'measurements_id'
+        );
+    }
 }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('measurements', function (Blueprint $table) {
             $table->id();
-            $table->json('slug');
+            $table->string('slug');
             $table->timestamps();
 
         });

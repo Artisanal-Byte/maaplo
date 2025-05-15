@@ -34,10 +34,13 @@ class TemplateController extends Controller
     public function create()
     {
         $publicTemplates = Template::whereNull('user_id')->get();
+        $allMeasurements = Measurement::select('id', 'slug')->get();
         return Inertia::render('items/Create', [
             'publicTemplates' => $publicTemplates,
+            'measurements' => $allMeasurements,  // Pass the measurements with 'slug' and 'name'
         ]);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -45,6 +48,7 @@ class TemplateController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f,o',
@@ -52,11 +56,11 @@ class TemplateController extends Controller
             'svg_logo' => 'required|string',
             'required_measurements' => 'required|array',
         ]);
-
+        // dd($validated);
         try {
             DB::beginTransaction();
 
-            Template::create([
+            $template = Template::create([
                 'user_id' => Auth::user()->id,
                 'name' => $validated['name'],
                 'gender' => $validated['gender'],
@@ -64,18 +68,16 @@ class TemplateController extends Controller
                 'svg_logo' => $validated['svg_logo'],
             ]);
 
-            Measurement::create([
-                'slug' => json_encode($validated['required_measurements']),
-                // 'slug' => json_encode(array_map(fn($m) => strtolower(str_replace(' ', '_', $m)), $validated['required_measurements'])),
-
-            ]);
-
-            $template = Template::all()->last()->id;
-            $measurement = Measurement::all()->last()->id;
-            TemplateMeasurement::create([
-                'template_id' => $template,
-                'measurements_id' => $measurement,
-            ]);
+            // Get the IDs of the selected measurements by slug
+            $measurementIds = Measurement::whereIn('slug', $validated['required_measurements'])->pluck('id');
+            // dd($measurementIds);
+            // Insert into templates_measurements table
+            foreach ($measurementIds as $measurementId) {
+                TemplateMeasurement::create([
+                    'template_id' => $template->id,
+                    'measurements_id' => $measurementId,
+                ]);
+            }
 
             DB::commit();
 
@@ -93,18 +95,25 @@ class TemplateController extends Controller
     public function edit($id)
     {
         $item = Template::findOrFail($id);
-        $measurements = Measurement::findOrFail($id);
+        $selectedMeasurementSlugs = $item->measurements()->pluck('slug')->toArray();
+        $allMeasurements = Measurement::select('id', 'slug')->get();
+
         return Inertia::render('items/Edit', [
             'item' => $item,
-            'measurements' => $measurements,
+            'measurements' => [
+                'all' => $allMeasurements,
+                'selected' => $selectedMeasurementSlugs,
+            ],
         ]);
     }
+
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f',
@@ -122,14 +131,11 @@ class TemplateController extends Controller
                 'body_part' => $validated['body_part'],
                 'svg_logo' => $validated['svg_logo'],
             ]);
-            $templateMeasurement = TemplateMeasurement::where('template_id', $template->id)->first();
-            $measurement = Measurement::find($templateMeasurement->measurements_id);
-            if ($measurement) {
-                $measurement->update([
-                    'slug' => json_encode($validated['required_measurements']),
-                    // 'slug' => json_encode(array_map(fn($m) => strtolower(str_replace(' ', '_', $m)), $validated['required_measurements'])),
-                ]);
-            }
+            // Get the IDs of the selected measurements by slug
+            $measurementIds = Measurement::whereIn('slug', $validated['required_measurements'])->pluck('id')->toArray();
+
+            // Sync pivot table (replaces old with new)
+            $template->measurements()->sync($measurementIds);
             DB::commit();
             return redirect()->route('items.index')->with('success', 'Item updated successfully!');
         } catch (\Exception $e) {

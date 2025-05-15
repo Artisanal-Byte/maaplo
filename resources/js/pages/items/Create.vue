@@ -12,6 +12,7 @@ const toast = new ToastMagic();
 const props = defineProps<{
     errors: Record<string, string>;
     publicTemplates: Array<{ id: number; name: string }>;
+    measurements: Array<{ id: number; slug: string; }>;
 }>();
 const form = reactive({
     name: '',
@@ -21,11 +22,6 @@ const form = reactive({
     custom_template: false,
     svg_logo: '',
 });
-
-const measurements = [
-    'Length', 'Arms', 'Back Neck', 'Waist', 'Sleeve Circle',
-    'Chest', 'Sleeve Length', 'Shoulder', 'Seat', 'Front Neck'
-];
 
 const toggleMeasurement = (label: string) => {
     const index = form.required_measurements.indexOf(label);
@@ -71,8 +67,8 @@ const submitForm = () => {
                     <SearchSelect class="mt-2" :public-templates="props.publicTemplates" />
                 </div>
                 <div>
-                    <Input  v-model="form.name"  label="Template Name" placeholder="Enter Template Name"
-                        margin="md" width="full" fonttype="normal" textSize="base" rounded="md" error="" />
+                    <Input v-model="form.name" label="Template Name" placeholder="Enter Template Name" margin="md"
+                        width="full" fonttype="normal" textSize="base" rounded="md" error="" />
                 </div>
                 <div class="mt-2 lg:mt-4 flex flex-row gap-2 gap-4">
                     <div>
@@ -138,22 +134,24 @@ const submitForm = () => {
                         </label>
                     </div>
                 </div>
-                <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.gender }}</div>
+                <div v-if="errors.body_part" class="text-red-600 text-sm">{{ errors.body_part }}</div>
                 <div>
                     <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
                         width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo" />
                 </div>
-                <div class="mb-5">
-                    <h1 class="mb-2 text-md mt-2">Required Measurements :</h1>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div v-for="measurement in measurements" :key="measurement">
-                            <Input type="checkbox" :label="measurement"
-                                :modelValue="form.required_measurements.includes(measurement)"
-                                @update:modelValue="toggleMeasurement(measurement)" width="sm" error="" />
+                <!--Measurements -->
+                <div class="mt-4">
+                    <label class="text-md mb-2 block">Required Measurements:</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div v-for="measurement in props.measurements" :key="measurement.id"
+                            class="flex items-center gap-2">
+                            <input type="checkbox" :id="measurement.slug" :value="measurement.slug"
+                                v-model="form.required_measurements" class="form-checkbox" />
+                            <label :for="measurement.slug">{{ measurement.slug }}</label>
                         </div>
                     </div>
-                    <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.required_measurements }}</div>
                 </div>
+
 
                 <Button @click="submitForm" color="primary" textSize="lg" padding="md" rounded="full">
                     Save
