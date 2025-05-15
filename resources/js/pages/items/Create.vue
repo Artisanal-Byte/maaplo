@@ -58,6 +58,7 @@ const fillFormFromTemplate = (template: any) => {
     form.body_part = template.body_part;
     form.svg_logo = template.svg_logo;
     form.required_measurements = template.measurements.map((m: any) => m.slug);
+
 };
 
 </script>
@@ -87,6 +88,7 @@ const fillFormFromTemplate = (template: any) => {
                     <Input v-model="form.name" label="Template Name" placeholder="Enter Template Name" margin="md"
                         width="full" fonttype="normal" textSize="base" rounded="md" error="" />
                 </div>
+
                 <div class="mt-2 lg:mt-4 flex flex-row gap-2 gap-4">
                     <div>
                         <h1 class="lg:mb-2 text-md">Gender:</h1>
