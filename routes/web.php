@@ -35,7 +35,10 @@ Route::middleware(["auth", "verified"])->group(function () {
     Route::resource('items', TemplateController::class);
 
     Route::resource('design-details', DesignDetailsController::class);
-
+    // Route::resource('admin', DesignDetailsController::class);
+    Route::get('admin', function () {
+        return Inertia::render('admin/Index');
+    });
 });
 
 require __DIR__ . '/settings.php';

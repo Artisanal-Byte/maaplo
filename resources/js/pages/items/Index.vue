@@ -1,17 +1,21 @@
 <script setup>
 import ItemTemplateList from '@/components/ItemTemplateList.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Link } from '@inertiajs/vue3';
+import { ref } from 'vue';
+import { router, Link } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
+import Button from '@/components/Button.vue';
+
 defineProps({
     items: Array,
-    authUser: Object
+    authUser: Object  // Ensure authUser is passed down here
 });
 </script>
 
 <template>
     <AppLayout>
-        <div class="lg:mx-auto max-w-7xl py-8 px-4">
+        <div class="max-w-7xl mx-auto py-8 px-4">
+            <!-- Header Section -->
             <div class="flex flex-row justify-between mb-6">
                 <div>
                     <h1 class="text-[24px] mt-3 leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
@@ -20,6 +24,9 @@ defineProps({
 
                 </div>
                 <div class="flex gap-4 text-gray-600">
+                    <div>
+                        <SearchList :showable="showable" />
+                    </div>
                     <div class="mx-auto max-w-7xl w-full">
                         <!-- add customer details -->
                         <div class="relative group mt-1">
@@ -34,6 +41,7 @@ defineProps({
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <!-- Grid Layout to display 3x3 -->
