@@ -10,15 +10,15 @@ import { router, useForm } from '@inertiajs/vue3';
 import Notes from '@/components/Items/Notes.vue';
 import Input from '@/components/InputWithLabel.vue';
 import { useOrder } from '@/composables/useOrderData';
-const props = defineProps(["users", "customers", "itemType" ,"errors"])
+const props = defineProps(["users", "customers", "itemType", "errors"])
 const showModal = ref(false);
 const disabled = ref(false);
 const toast = new ToastMagic();
-
+const showDeletePopup = ref(false);
 const orderData = useOrder()
 let form = useForm(orderData);
 
-
+const itemToDelete = ref(null);
 
 // set data which is set by child components 
 let setOrderData = (data) => {
@@ -60,7 +60,7 @@ const submitForm = () => {
 
 
 //total amount of order
-watch(form.order_items,(items)=>{
+watch(form.order_items, (items) => {
     let t = 0
     items.forEach(item => {
         t += item.cost
@@ -71,6 +71,28 @@ const closeModel = () => {
     showModal.value = false
 }
 
+const confirmDelete = (item) => {
+    itemToDelete.value = item;
+    showDeletePopup.value = true;
+};
+
+const cancelDelete = () => {
+    showDeletePopup.value = false;
+    itemToDelete.value = null;
+};
+
+const proceedDelete = () => {
+    router.delete(route('orders.destroy', itemToDelete.value.id), {
+        onSuccess: () => {
+            toast.success('Item deleted successfully!');
+            showDeletePopup.value = false;
+        },
+        onError: () => {
+            toast.error('Failed to delete item.');
+            alert('Delete failed');
+        }
+    });
+};
 
 
 </script>
@@ -97,7 +119,8 @@ const closeModel = () => {
                 <h1 class="text-xl font-bold lg:mb-6 lg:mt-0 mt-6">Enter Details</h1>
 
                 <!-- selected customer list -->
-                <CustomerListDropdown :customers="customers" :errors="errors" :form="form" @setOrderData="setOrderData" />
+                <CustomerListDropdown :customers="customers" :errors="errors" :form="form"
+                    @setOrderData="setOrderData" />
 
                 <!-- Delivery Date -->
                 <DateIcon :form="form" :errors="errors" @setOrderData="setOrderData" />
@@ -122,7 +145,8 @@ const closeModel = () => {
 
                         <!-- Modal Content -->
                         <ItemModel :itemIndex="i" :showModal="showModal" @close="closeModel" :form="form.order_items"
-                            @setOrderItemsData="setOrderItemsData" :itemType="itemType" :measurements="customers.base_measurements ?? []" />
+                            @setOrderItemsData="setOrderItemsData" :itemType="itemType"
+                            :measurements="customers.base_measurements ?? []" />
 
                         <!-- table -->
                         <!-- Items Table -->
@@ -140,7 +164,7 @@ const closeModel = () => {
                                     <tr v-for="(order_item, index) in form.order_items" :key="index">
                                         <td class="p-2 border">{{ order_item.work_type }}</td>
                                         <td class="p-2 border">{{itemType.find(item => item.id ===
-                                            order_item.template_id)?.name }}</td>
+                                            order_item.template_id)?.name}}</td>
                                         <td class="p-2 border">{{ order_item.delivery_date }}</td>
                                         <td class="p-2 border">
                                             <div class="flex gap-4">
@@ -148,7 +172,7 @@ const closeModel = () => {
                                                     class="text-primary cursor-pointer hover:text-blue-700" />
                                                 <Icon icon="mingcute:delete-fill" width="24" height="24"
                                                     class="text-red-500 cursor-pointer hover:text-red-700"
-                                                    @click="deleteItem(index)" />
+                                                    @click="confirmDelete(order_item)" />
                                             </div>
                                         </td>
                                     </tr>
@@ -156,9 +180,25 @@ const closeModel = () => {
                             </table>
                         </div>
 
+                        <!-- Delete Confirmation Modal -->
+                        <div v-if="showDeletePopup"
+                            class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                            <div class="bg-white p-6 rounded shadow-lg w-11/12 max-w-md">
+                                <h2 class="text-xl font-bold mb-3">Are you sure?</h2>
+                                <p class="text-gray-700 mb-4">
+                                    <span class="text-red-600 font-semibold">Warning:</span>
+                                    This will delete <strong>{{ itemToDelete?.name }}</strong>.
+                                </p>
+                                <div class="flex justify-end gap-3">
+                                    <Button @click="cancelDelete" color="gray">Cancel</Button>
+                                    <Button @click="proceedDelete" color="danger">Delete</Button>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="mt-5">
-                            <Input type="number" label="Advance Paid" :error="errors.advance_paid" :required="true" color="grayBorder"
-                                placeholder="Enter Advance Paid" v-model="form.advance_paid">
+                            <Input type="number" label="Advance Paid" :error="errors.advance_paid" :required="true"
+                                color="grayBorder" placeholder="Enter Advance Paid" v-model="form.advance_paid">
                             <template #icon>
                                 <Icon icon="mdi:rupee" width="18" height="18" />
                             </template>
@@ -179,5 +219,6 @@ const closeModel = () => {
 
             </div>
         </div>
+
     </AppLayout>
 </template>
