@@ -96,10 +96,12 @@ class TemplateController extends Controller
     public function edit($id)
     {
         $item = Template::findOrFail($id);
-        $measurements = Measurement::findOrFail($id);
+         $measurementSlugs = $item->measurements()->pluck('slug')->toArray();
         return Inertia::render('items/Edit', [
             'item' => $item,
-            'measurements' => $measurements,
+             'measurements' => [
+            'slug' => $measurementSlugs,
+        ],
         ]);
     }
 

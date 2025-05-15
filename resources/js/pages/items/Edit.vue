@@ -28,7 +28,7 @@ const form = useForm({
     svg_logo: props.item.svg_logo,
     gender: props.item.gender === "Male" ? "m" : (props.item.gender === "Female" ? "f" : "o"),
     body_part: props.item.body_part === "Upper" ? "upper" : "lower",
-    required_measurements: props.measurements.slug ? JSON.parse(props.measurements.slug) : [],
+    required_measurements: props.measurements.slug || [],
     _method: 'put',
 });
 
@@ -158,7 +158,7 @@ const updateTemplate = () => {
                             <label :for="measurement">{{ measurement }}</label>
                         </div>
                     </div>
-                    <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.required_measurements }}</div>
+                    <div v-if="errors.required_measurements" class="text-red-600 text-sm">{{ errors.required_measurements }}</div>
                 </div>
 
                 <!-- Submit Button -->
