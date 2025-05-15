@@ -38,26 +38,11 @@ let create = () => {
             toast.success('Order Created Successfully');
         },
         onError: (error) => {
-            toast.error('failed To create order' + error);
+            console.log('validation errors:', error);
+            toast.error('failed To create order.');
         }
     })
 }
-const submitForm = () => {
-    router.post('/orders', {
-        ...form,
-        // notes: notes.value,
-    }, {
-        onSuccess: () => {
-            // toast.success("order created successfully!");
-        },
-        onError: (errors) => {
-            // toast.error("Failed to create order. please fill the all the required fields.");
-            console.error(errors);
-        },
-    });
-};
-
-
 
 //total amount of order
 watch(form.order_items, (items) => {
@@ -144,9 +129,12 @@ const proceedDelete = () => {
                         </div>
 
                         <!-- Modal Content -->
-                        <ItemModel :itemIndex="i" :showModal="showModal" @close="closeModel" :form="form.order_items"
-                            @setOrderItemsData="setOrderItemsData" :itemType="itemType"
-                            :measurements="customers.base_measurements ?? []" />
+                        <ItemModel :errors="form.errors.order_items" :itemIndex="i" :showModal="showModal"
+                            @close="closeModel" :form="form.order_items" @setOrderItemsData="setOrderItemsData"
+                            :itemType="itemType" :measurements="customers.base_measurements ?? []" />
+                            <p class="text-red-600 text-sm">
+                                {{ form.errors.order_items }}
+                            </p>
 
                         <!-- table -->
                         <!-- Items Table -->
@@ -213,7 +201,7 @@ const proceedDelete = () => {
                 </div>
                 <!-- Submit Button (Full Width Below) -->
 
-                <Button :color="'primary'" @click="submitForm" :padding="'md'" :rounded="'full'" :textSize="'sm'">
+                <Button :color="'primary'" @click="create" :padding="'md'" :rounded="'full'" :textSize="'sm'">
                     Save
                 </Button>
 

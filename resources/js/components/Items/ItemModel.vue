@@ -73,9 +73,6 @@ const resetData = () => {
 }
 // Save and emit
 function saveItem() {
-    //    errorMessage.value = '';
-    //    errorMessage1.value = '';
-    //    WorkType.value = '';
     let isValid = true;
     // Validate trial date
     if (!data.trial_dates) {
@@ -95,14 +92,7 @@ function saveItem() {
     errorMessage6.value = 'The Reference Dress image is required.';
     isValid = false;
   }
-    // if (!data.template_id) {
-    //     errorMessage3.value = 'The ItemType is required.';
-    //     isValid = false;
-    // }
-    // if (!data.measurements || data.measurements.length === 0) {
-    //     errorMessage4.value = 'The Measurements are required.';
-    //     isValid = false; 
-    // }
+
     if (!isValid) return;
 
     // each items added in order items
@@ -114,7 +104,6 @@ function saveItem() {
 }
 
 const setItemId = (id) => {
-    console.log('checking data:', data);
     data.template_id = id
 }
 
@@ -125,9 +114,7 @@ const setMaterialCode = (materialCode) => {
 const setMaterialCost = (materialCost) => {
     data.material_cost = materialCost
 }
-const setAlteringCost = (materialCost) => {
-    // data.material_cost = materialCost
-}
+
 const setStichingCost = (stichingCost) => {
     data.stiching_cost = stichingCost
 }
@@ -186,9 +173,6 @@ function onFileChange(event, index) {
 
 <template>
     <div v-if="showModal">
-        <!-- <pre>
-            {{ data }}
-        </pre> -->
         <!-- Backdrop -->
         <div class="fixed inset-0 bg-black/50 z-40" @click.self="$emit('close')"></div>
 
