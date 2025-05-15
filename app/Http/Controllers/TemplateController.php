@@ -20,7 +20,6 @@ class TemplateController extends Controller
     {
         $items = Template::latest()->get();
         $authUser = Auth::user();
-
         return Inertia::render('items/Index', [
             'items' => $items,
             'authUser' => $authUser,
@@ -33,22 +32,32 @@ class TemplateController extends Controller
      */
     public function create()
     {
-        $publicTemplates = Template::whereNull('user_id')->get();
+        $currentUserId = auth()->id();
+
+        // Eager load related measurements with only 'slug' field
+        $publicTemplates = Template::with(['measurements:id,slug'])
+            ->whereNull('user_id')
+            ->select('id', 'name', 'gender', 'body_part', 'svg_logo')
+            ->get();
+
+        $privateTemplates = Template::with(['measurements:id,slug'])
+            ->where('user_id', $currentUserId)
+            ->select('id', 'name', 'gender', 'body_part', 'svg_logo')
+            ->get();
         $allMeasurements = Measurement::select('id', 'slug')->get();
+
         return Inertia::render('items/Create', [
             'publicTemplates' => $publicTemplates,
-            'measurements' => $allMeasurements,  // Pass the measurements with 'slug' and 'name'
+            'privateTemplates' => $privateTemplates,
+            'measurements' => $allMeasurements,
         ]);
     }
-
 
     /**
      * Store a newly created resource in storage.
      */
-
     public function store(Request $request)
     {
-        // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f,o',
@@ -56,10 +65,8 @@ class TemplateController extends Controller
             'svg_logo' => 'required|string',
             'required_measurements' => 'required|array',
         ]);
-        // dd($validated);
         try {
             DB::beginTransaction();
-
             $template = Template::create([
                 'user_id' => Auth::user()->id,
                 'name' => $validated['name'],
@@ -67,11 +74,7 @@ class TemplateController extends Controller
                 'body_part' => $validated['body_part'],
                 'svg_logo' => $validated['svg_logo'],
             ]);
-
-            // Get the IDs of the selected measurements by slug
             $measurementIds = Measurement::whereIn('slug', $validated['required_measurements'])->pluck('id');
-            // dd($measurementIds);
-            // Insert into templates_measurements table
             foreach ($measurementIds as $measurementId) {
                 TemplateMeasurement::create([
                     'template_id' => $template->id,
@@ -80,7 +83,6 @@ class TemplateController extends Controller
             }
 
             DB::commit();
-
             return redirect()->route('items.index')->with('success', 'Item created successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -97,7 +99,6 @@ class TemplateController extends Controller
         $item = Template::findOrFail($id);
         $selectedMeasurementSlugs = $item->measurements()->pluck('slug')->toArray();
         $allMeasurements = Measurement::select('id', 'slug')->get();
-
         return Inertia::render('items/Edit', [
             'item' => $item,
             'measurements' => [
@@ -107,13 +108,11 @@ class TemplateController extends Controller
         ]);
     }
 
-
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
     {
-        // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f',

@@ -11,6 +11,7 @@ const toast = new ToastMagic();
 
 const props = defineProps<{
     errors: Record<string, string>;
+    privateTemplates: Array<{ id: number; name: string }>;
     publicTemplates: Array<{ id: number; name: string }>;
     measurements: Array<{ id: number; slug: string; }>;
 }>();
@@ -47,10 +48,19 @@ const submitForm = () => {
 
 const formatSlug = (slug: string): string => {
     return slug
-        .split('_')                          // Split on underscores
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize first letter
-        .join(' ');                          // Join back with space
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
 };
+const fillFormFromTemplate = (template: any) => {
+    form.name = template.name;
+    form.gender = template.gender;
+    form.body_part = template.body_part;
+    form.svg_logo = template.svg_logo;
+    form.required_measurements = template.measurements.map((m: any) => m.slug);
+
+};
+
 </script>
 
 <template>
@@ -71,12 +81,14 @@ const formatSlug = (slug: string): string => {
                 <!-- <h1>Select Base Template</h1> -->
                 <div>
                     <label class="text-md">Select Base Template</label>
-                    <SearchSelect class="mt-2" :public-templates="props.publicTemplates" />
+                    <SearchSelect class="mt-2" :public-templates="props.publicTemplates"
+                        :private-templates="props.privateTemplates" @templateSelected="fillFormFromTemplate" />
                 </div>
                 <div>
                     <Input v-model="form.name" label="Template Name" placeholder="Enter Template Name" margin="md"
                         width="full" fonttype="normal" textSize="base" rounded="md" error="" />
                 </div>
+
                 <div class="mt-2 lg:mt-4 flex flex-row gap-2 gap-4">
                     <div>
                         <h1 class="lg:mb-2 text-md">Gender:</h1>
@@ -158,6 +170,9 @@ const formatSlug = (slug: string): string => {
                         </div>
                     </div>
                 </div>
+                <div v-if="errors.required_measurements" class="text-red-600 text-sm">{{ errors.required_measurements }}
+                </div>
+
 
 
                 <Button @click="submitForm" color="primary" textSize="lg" padding="md" rounded="full">

@@ -67,19 +67,19 @@ const proceedDelete = () => {
                 <table class="min-w-full border border-gray-300">
                     <thead class="bg-[#DEEFF4]">
                         <tr>
-                            <th class="p-2 border border-gray-300 text-left">Item</th>
-                            <th class="p-2 border border-gray-300 text-left">Gender</th>
-                            <th class="p-2 border border-gray-300 text-left">Body Part</th>
-                            <th class="p-2 border border-gray-300 text-left">Actions</th>
+                            <th class="p-2 border border-gray-300 text-center">Item</th>
+                            <th class="p-2 border border-gray-300 text-center">Gender</th>
+                            <th class="p-2 border border-gray-300 text-center">Body Part</th>
+                            <th class="p-2 border border-gray-300 text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="item in items" :key="item.id" class="hover:bg-gray-100 transition">
-                            <td class="p-2 border border-gray-300">{{ item.name }}</td>
-                            <td class="p-2 border border-gray-300">{{ item.gender }}</td>
-                            <td class="p-2 border border-gray-300">{{ item.body_part }}</td>
-                            <td class="p-2 border border-gray-300 text-right">
-                                <div v-if="item.user_id === authUser.id" class="flex justify-end gap-3">
+                            <td class="p-2 border border-gray-300 text-center">{{ item.name }}</td>
+                            <td class="p-2 border border-gray-300 text-center">{{ item.gender }}</td>
+                            <td class="p-2 border border-gray-300 text-center">{{ item.body_part }}</td>
+                            <td class="p-2 border border-gray-300 text-center">
+                                <div v-if="item.user_id === authUser.id" class="flex justify-center gap-3">
                                     <Link :href="route('items.edit', item.id)">
                                     <Icon icon="ri:edit-fill" class="text-[#005FAF]" width="20" height="20" />
                                     </Link>
