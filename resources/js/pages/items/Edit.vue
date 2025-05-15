@@ -64,6 +64,13 @@ const updateTemplate = () => {
         }
     });
 };
+
+const formatSlug = (slug: string): string => {
+    return slug
+        .split('_')                          // Split on underscores
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize first letter
+        .join(' ');                          // Join back with space
+};
 </script>
 
 <template>
@@ -154,7 +161,7 @@ const updateTemplate = () => {
                             <input type="checkbox" :id="measurement.slug" :value="measurement.slug"
                                 :checked="form.required_measurements.includes(measurement.slug)"
                                 @change="toggleMeasurement(measurement.slug)" />
-                            <label :for="measurement.slug">{{ measurement.slug }}</label>
+                            <label :for="measurement.slug">{{ formatSlug(measurement.slug) }}</label>
                         </div>
                     </div>
                 </div>

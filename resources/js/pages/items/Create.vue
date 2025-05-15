@@ -44,6 +44,13 @@ const submitForm = () => {
         },
     });
 };
+
+const formatSlug = (slug: string): string => {
+    return slug
+        .split('_')                          // Split on underscores
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize first letter
+        .join(' ');                          // Join back with space
+};
 </script>
 
 <template>
@@ -147,7 +154,7 @@ const submitForm = () => {
                             class="flex items-center gap-2">
                             <input type="checkbox" :id="measurement.slug" :value="measurement.slug"
                                 v-model="form.required_measurements" class="form-checkbox" />
-                            <label :for="measurement.slug">{{ measurement.slug }}</label>
+                            <label :for="measurement.slug">{{ formatSlug(measurement.slug) }}</label>
                         </div>
                     </div>
                 </div>
