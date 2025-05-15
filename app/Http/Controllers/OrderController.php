@@ -74,9 +74,7 @@ class OrderController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StoreOrderRequest $storeOrderRequest)
-    {
-
-        
+    {        
         try {
 
             //-- Make A unique a combination of Order number And User Id
