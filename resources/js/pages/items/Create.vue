@@ -52,6 +52,14 @@ const formatSlug = (slug: string): string => {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 };
+const fillFormFromTemplate = (template: any) => {
+    form.name = template.name;
+    form.gender = template.gender;
+    form.body_part = template.body_part;
+    form.svg_logo = template.svg_logo;
+    form.required_measurements = template.measurements.map((m: any) => m.slug);
+};
+
 </script>
 
 <template>
@@ -72,7 +80,8 @@ const formatSlug = (slug: string): string => {
                 <!-- <h1>Select Base Template</h1> -->
                 <div>
                     <label class="text-md">Select Base Template</label>
-                    <SearchSelect class="mt-2" :public-templates="props.publicTemplates" :private-templates="props.privateTemplates" />
+                    <SearchSelect class="mt-2" :public-templates="props.publicTemplates"
+                        :private-templates="props.privateTemplates" @templateSelected="fillFormFromTemplate" />
                 </div>
                 <div>
                     <Input v-model="form.name" label="Template Name" placeholder="Enter Template Name" margin="md"
