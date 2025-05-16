@@ -61,7 +61,6 @@ class OrderController extends Controller
 
         //-- item which have a global scope or created by Authentic user
         $itemType = Template::where('user_id', $user->id)->orWhere('user_id', null)->get();
-
         // $designDetails = DesignDetails
         // $measurements = Measurement
         return Inertia::render('orders/Create', [
@@ -80,7 +79,7 @@ class OrderController extends Controller
             //-- Make A unique a combination of Order number And User Id
             $validatedOrderData = $storeOrderRequest->validated();
             $uniqueOrderNumber = new UniqueOrderNumber();
-            $validatedOrderData['order_number'] = $uniqueOrderNumber->make(); // Ensure the make method is static or adjust accordingly
+            $validatedOrderData['order_number'] = $uniqueOrderNumber->make(); 
     
             $validatedOrderData['status'] = 'created';
     
