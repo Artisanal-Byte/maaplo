@@ -16,16 +16,17 @@ const props = defineProps<{
         svg_logo: string;
         gender: string;
         body_part: string;
-        measurements: Array<{ id: number; slug: string; }>;
     },
+    publicTemplates: Array<{ id: number; name: string }>,
+    privateTemplates: Array<{ id: number; name: string }>,
     measurements: {
         all: Array<{ id: number, slug: string }>,
         selected: string[]
     }
 }>();
-console.log(props.measurements);
+
 const selectedTemplate = ref(null);
-const templates = ref([]);
+
 const form = useForm({
     name: props.item.name,
     svg_logo: props.item.svg_logo,
@@ -64,12 +65,19 @@ const updateTemplate = () => {
         }
     });
 };
+const fillFormFromTemplate = (selectedTemplate: any) => {
+    form.name = selectedTemplate.name;
+    form.svg_logo = selectedTemplate.svg_logo;
+    form.gender = selectedTemplate.gender;
+    form.body_part = selectedTemplate.body_part;
+    form.required_measurements = [...selectedTemplate.required_measurements]; // Ensuring reactivity
+};
 
 const formatSlug = (slug: string): string => {
     return slug
-        .split('_')                          // Split on underscores
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize first letter
-        .join(' ');                          // Join back with space
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
 };
 </script>
 
@@ -91,7 +99,8 @@ const formatSlug = (slug: string): string => {
             <div class="flex flex-col mt-10 gap-4 rounded-lg border border-primary p-4">
                 <div>
                     <label class="text-md">Select Base Template</label>
-                    <SearchSelect v-model="selectedTemplate" :public-templates="templates" />
+                    <SearchSelect class="mt-2" :public-templates="props.publicTemplates"
+                        :private-templates="props.privateTemplates" @templateSelected="fillFormFromTemplate" />
                 </div>
                 <!-- Name -->
                 <Input v-model="form.name" label="Template Name" placeholder="Enter Template Name" margin="md"

@@ -96,11 +96,27 @@ class TemplateController extends Controller
      */
     public function edit($id)
     {
+        $currentUserId = auth()->id();
+
+        // Eager load related measurements with only 'slug' field
+        $publicTemplates = Template::with(['measurements:id,slug'])
+            ->whereNull('user_id')
+            ->select('id', 'name', 'gender', 'body_part', 'svg_logo')
+            ->get();
+
+        $privateTemplates = Template::with(['measurements:id,slug'])
+            ->where('user_id', $currentUserId)
+            ->select('id', 'name', 'gender', 'body_part', 'svg_logo')
+            ->get();
+
+        // dd($publicTemplates, $privateTemplates);
         $item = Template::findOrFail($id);
         $selectedMeasurementSlugs = $item->measurements()->pluck('slug')->toArray();
         $allMeasurements = Measurement::select('id', 'slug')->get();
         return Inertia::render('items/Edit', [
             'item' => $item,
+            'publicTemplates' => $publicTemplates,
+            'privateTemplates' => $privateTemplates,
             'measurements' => [
                 'all' => $allMeasurements,
                 'selected' => $selectedMeasurementSlugs,
