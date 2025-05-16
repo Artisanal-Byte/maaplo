@@ -8,8 +8,11 @@ use App\Models\Measurement;
 class GetTemplateHelper
 {
 
-    public static function getTemplateData($userId)
+    public static function getTemplateData($userId = null)
     {
+        if(!$userId) {
+            $userId = auth()->id();
+        }
         // Fetch public templates (where user_id is null)
         $publicTemplates = Template::with(['measurements:id,slug'])
             ->whereNull('user_id')
