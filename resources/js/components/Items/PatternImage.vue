@@ -1,10 +1,7 @@
 <script setup>
 import { ref, defineEmits, watch } from 'vue'
 import { Icon } from '@iconify/vue'
-import Button from '../Button.vue'
-
-const emits = defineEmits(['setClothImage1', 'setClothImage2'])
-
+const emits = defineEmits(['setPatternImage1', 'setPatternImage1'])
 const fileInputGallery1 = ref(null)
 const fileInputCamera1 = ref(null)
 const fileInputGallery2 = ref(null)
@@ -33,8 +30,8 @@ function onFileChange(event, index) {
   }
 }
 
-watch(() => previewImage1.value, val => emits('setClothImage1', val))
-watch(() => previewImage2.value, val => emits('setClothImage2', val))
+watch(() => previewImage1.value, val => emits('setPatternImage1', val))
+watch(() => previewImage2.value, val => emits('setPatternImage1', val))
 </script>
 
 <template>

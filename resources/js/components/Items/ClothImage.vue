@@ -1,15 +1,11 @@
 <script setup>
 import { ref, defineEmits, watch } from 'vue'
 import { Icon } from '@iconify/vue'
-import Button from '../Button.vue'
-
 const emits = defineEmits(['setClothImage1', 'setClothImage2'])
-
 const fileInputGallery1 = ref(null)
 const fileInputCamera1 = ref(null)
 const fileInputGallery2 = ref(null)
 const fileInputCamera2 = ref(null)
-
 const previewImage1 = ref(null)
 const previewImage2 = ref(null)
 
