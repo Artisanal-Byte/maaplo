@@ -208,7 +208,7 @@ function onFileChange(event, index) {
                     </div>
                     <!-- Trail Date && Delivery Date  -->
 
-                    <TrialAndDeliveryDate :errors="errors" @setTrialDate="setTrialDate" :errorMessage="errorMessage"
+                    <TrialAndDeliveryDate @setTrialDate="setTrialDate" :errorMessage="errorMessage"
                         @setdDeliveryDate="setdDeliveryDate" />
 
                     <div class="flex items-center gap-4">
