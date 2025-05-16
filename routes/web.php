@@ -39,6 +39,10 @@ Route::middleware(["auth", "verified"])->group(function () {
     Route::get('admin', function () {
         return Inertia::render('admin/Index');
     });
+    Route::get('user-create',function(){
+        return Inertia::render('admin/UserCreate');
+    });
+
 });
 
 require __DIR__ . '/settings.php';
