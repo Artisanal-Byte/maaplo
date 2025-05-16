@@ -12,8 +12,9 @@ import PatternImage from './PatternImage.vue';
 import Button from '../Button.vue';
 import { ref, defineProps, defineEmits, watch, reactive } from 'vue';
 import TrialAndDeliveryDate from '../TrialAndDeliveryDate.vue';
+const fileInputGallery = ref(null)
+const fileInputCamera = ref(null)
 const previewImage = ref(null)
-const fileInput = ref(null)
 const notes = ref([{ label: '', text: '' }]);
 const props = defineProps(['showModal', 'form', 'itemType', 'itemIndex', 'measurements', 'errorMessage5', 'errors']);
 
@@ -128,18 +129,24 @@ const setdDeliveryDate = (imgPath) => {
 }
 
 // Trigger function for each input
-function triggerFileInput(index) {
-    if (index === 1) fileInput.value.click()
-}
-
-// Change handler for each file input
-function onFileChange(event, index) {
-    const file = event.target.files[0]
-    if (file && file.type.startsWith('image/')) {
-        const url = URL.createObjectURL(file)
-        if (index === 1) previewImage.value = url
+function triggerUpload(type, index) {
+    if (type === 'gallery' && index === 1) {
+        fileInputGallery.value.click();
+    } else if (type === 'camera' && index === 1) {
+        fileInputCamera.value.click();
     }
 }
+
+function onFileChange(event, index) {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+        const url = URL.createObjectURL(file);
+        if (index === 1) {
+            previewImage.value = url;
+        }
+    }
+}
+
 </script>
 
 <template>
@@ -159,7 +166,7 @@ function onFileChange(event, index) {
                     </div>
                     <div>
                         <Button @click="$emit('close')" color="gray" padding="sm" rounded="full" textSize="xl"
-                            class=" lg:right-4 right-1 top-4">
+                            class="lg:right-4 right-1 top-4">
                             &times;
                         </Button>
                     </div>
@@ -167,8 +174,7 @@ function onFileChange(event, index) {
                 <!-- Scrollable Content -->
                 <div class=" max-h-[75vh] pr-2 space-y-5">
                     <!-- done -->
-                    <WorkType :formData="data" @setMaterialCode="setMaterialCode"
-                        @setMaterialCost="setMaterialCost" @setAlteringCost="setAlteringCost"
+                    <WorkType :formData="data" @setMaterialCode="setMaterialCode" @setMaterialCost="setMaterialCost"
                         @setStichingCost="setStichingCost" @setMaterialType="setMaterialType" @setPrice="setPrice" />
                     <ItemType :itemType="itemType" @setItemId="setItemId" />
                     <Measurements :measurements="measurements" />
@@ -184,32 +190,43 @@ function onFileChange(event, index) {
                         <ToggleButton @setIfReferenceDress="setIfReferenceDress" />
                     </div>
 
-                    <div v-if="showImageUpload" class="mt-4">
-                        <div class="w-40 mt-5 h-full rounded-md gap-[10px] p-2 shadow-[0px_0px_6.1px_0px_#00000040]">
-                            <div class="flex items-center justify-between mb-2">
-                                <h1
-                                    class="font-normal text-[14px] leading-[8px] tracking-[0%] text-[#8C8C8C] font-lato block">
-                                    image</h1>
-                                <button @click="triggerFileInput(1)"
-                                    class="flex justify-center cursor-pointer border border-gray-400 rounded-full">
-                                    <Icon icon="material-symbols:add-rounded" width="14" height="14" />
+                    <div v-if="showImageUpload"
+                        class="w-40 mt-5 h-full rounded-md p-2 shadow-[0px_0px_6.1px_0px_#00000040]">
+                        <div class="flex items-center justify-between mb-2">
+                            <h1 class="font-normal text-[14px] leading-[8px] text-[#8C8C8C] font-lato">Cloth 1</h1>
+                            <div class="flex gap-2">
+                                <button @click="triggerUpload('gallery', 1)" class="relative group">
+                                    <Icon icon="material-symbols:upload" width="16" height="16"
+                                        class="text-primary hover:text-gray-700" />
+                                    <div
+                                        class="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition bg-gray-800 text-white text-xs rounded py-1 px-2 pointer-events-none z-10">
+                                        upload
+                                    </div>
+                                </button>
+
+                                <button @click="triggerUpload('camera', 1)" class="relative group">
+                                    <Icon icon="tabler:capture" width="16" height="16"
+                                        class="text-primary hover:text-gray-700" />
+                                    <div
+                                        class="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition bg-gray-800 text-white text-xs rounded py-1 px-2 pointer-events-none z-10">
+                                        capture
+                                    </div>
                                 </button>
                             </div>
-                            <div class="mb-2">
-                                <div class="bg-[#BDDBDB3D] p-2 rounded h-24">
-                                    <img v-if="previewImage" :src="previewImage" alt="Preview"
-                                        class="w-32 h-20 object-cover rounded" />
-                                </div>
-                                <input ref="fileInput" type="file" class="hidden" @change="e => onFileChange(e, 1)"
-                                    accept="image/*" />
-                            </div>
+
                         </div>
-                       
+                        <div class="bg-[#BDDBDB3D] p-2 rounded h-24 mb-2">
+                            <img v-if="previewImage" :src="previewImage" alt="Preview"
+                                class="w-32 h-20 object-cover rounded" />
+                        </div>
+                        <input ref="fileInputGallery" type="file" class="hidden" accept="image/*"
+                            @change="e => onFileChange(e, 1)" />
+                        <input ref="fileInputCamera" type="file" class="hidden" accept="image/*" capture="environment"
+                            @change="e => onFileChange(e, 1)" />
                     </div>
                     <!-- Trail Date && Delivery Date  -->
 
-                    <TrialAndDeliveryDate @setTrialDate="setTrialDate" :errorMessage="errorMessage"
-                        @setdDeliveryDate="setdDeliveryDate" />
+                    <TrialAndDeliveryDate @setTrialDate="setTrialDate" @setdDeliveryDate="setdDeliveryDate" />
 
                     <div class="flex items-center gap-4">
                         <h1 class="text-[16px] font-normal font-lato">Mark as Urgent</h1>
