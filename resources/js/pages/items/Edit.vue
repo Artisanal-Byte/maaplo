@@ -66,7 +66,6 @@ const updateTemplate = () => {
     });
 };
 const fillFormFromTemplate = (selectedTemplate: any) => {
-    console.log("Selected Template:", selectedTemplate);  // Check the structure of the selectedTemplate
 
     // Check if required_measurements exists and is an array
     if (Array.isArray(selectedTemplate.required_measurements)) {
@@ -74,7 +73,6 @@ const fillFormFromTemplate = (selectedTemplate: any) => {
     } else {
         // Handle the case where required_measurements is not valid
         form.required_measurements = [];
-        console.warn("Invalid or missing required_measurements in selected template");
     }
 
     form.name = selectedTemplate.name;
