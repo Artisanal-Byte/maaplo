@@ -66,11 +66,21 @@ const updateTemplate = () => {
     });
 };
 const fillFormFromTemplate = (selectedTemplate: any) => {
+    console.log("Selected Template:", selectedTemplate);  // Check the structure of the selectedTemplate
+
+    // Check if required_measurements exists and is an array
+    if (Array.isArray(selectedTemplate.required_measurements)) {
+        form.required_measurements = [...selectedTemplate.required_measurements];  // Ensuring reactivity
+    } else {
+        // Handle the case where required_measurements is not valid
+        form.required_measurements = [];
+        console.warn("Invalid or missing required_measurements in selected template");
+    }
+
     form.name = selectedTemplate.name;
     form.svg_logo = selectedTemplate.svg_logo;
     form.gender = selectedTemplate.gender;
     form.body_part = selectedTemplate.body_part;
-    form.required_measurements = [...selectedTemplate.required_measurements]; // Ensuring reactivity
 };
 
 const formatSlug = (slug: string): string => {
@@ -174,6 +184,7 @@ const formatSlug = (slug: string): string => {
                         </div>
                     </div>
                 </div>
+                <div v-if="errors.required_measurements" class="text-red-600 text-sm">{{ errors.required_measurements }}</div>
 
 
                 <!-- Submit Button -->

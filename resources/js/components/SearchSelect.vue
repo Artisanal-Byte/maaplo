@@ -20,7 +20,13 @@ const props = defineProps({
     }
 });
 const combinedTemplates = computed(() => {
-    return [...props.publicTemplates, ...props.privateTemplates];
+    return [
+        ...props.publicTemplates,
+        ...props.privateTemplates
+    ].map(template => ({
+        ...template,
+        required_measurements: template.required_measurements || []  // Ensure required_measurements is always an array
+    }));
 });
 // const options = ['Kurta', 'Shirt', 'Kurti', 'Pajama'];
 
@@ -61,6 +67,8 @@ function formatLabel(option) {
 }
 
 function selectOption(option) {
+    console.log("Selected Option:", option);
+
     emits('setItemId', option.id);
     emits('templateSelected', option);
     const label = formatLabel(option);
