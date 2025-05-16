@@ -20,7 +20,13 @@ const props = defineProps({
     }
 });
 const combinedTemplates = computed(() => {
-    return [...props.publicTemplates, ...props.privateTemplates];
+    return [
+        ...props.publicTemplates,
+        ...props.privateTemplates
+    ].map(template => ({
+        ...template,
+        required_measurements: template.required_measurements || []  // Ensure required_measurements is always an array
+    }));
 });
 // const options = ['Kurta', 'Shirt', 'Kurti', 'Pajama'];
 
@@ -47,20 +53,17 @@ const showClearIcon = computed(() => {
     return filteredOptions.value.length > 0;
 });
 function formatLabel(option) {
-    console.log('option', option);
-
     // Adjust the gender map to handle full names like 'Male' and 'Female'
     const genderMap = { Male: 'Male', Female: 'Female' };
 
     // Use the gender map correctly based on the case of the option.gender
     const genderLabel = option.gender ? genderMap[option.gender] || 'Unknown' : 'Unknown';
 
-    console.log('Gender Label', genderLabel);  // Ensure that the gender is correctly mapped
-
     return `${option.name} (${genderLabel})`;
 }
 
 function selectOption(option) {
+
     emits('setItemId', option.id);
     emits('templateSelected', option);
     const label = formatLabel(option);

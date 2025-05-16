@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\GetTemplateHelper;
 use App\Models\Measurement;
 use App\Models\Template;
 use App\Models\TemplateMeasurement;
@@ -32,24 +33,12 @@ class TemplateController extends Controller
      */
     public function create()
     {
-        $currentUserId = auth()->id();
-
-        // Eager load related measurements with only 'slug' field
-        $publicTemplates = Template::with(['measurements:id,slug'])
-            ->whereNull('user_id')
-            ->select('id', 'name', 'gender', 'body_part', 'svg_logo')
-            ->get();
-
-        $privateTemplates = Template::with(['measurements:id,slug'])
-            ->where('user_id', $currentUserId)
-            ->select('id', 'name', 'gender', 'body_part', 'svg_logo')
-            ->get();
-        $allMeasurements = Measurement::select('id', 'slug')->get();
+        $data = GetTemplateHelper::getTemplateData(auth()->id());
 
         return Inertia::render('items/Create', [
-            'publicTemplates' => $publicTemplates,
-            'privateTemplates' => $privateTemplates,
-            'measurements' => $allMeasurements,
+            'publicTemplates' => $data['publicTemplates'],
+            'privateTemplates' => $data['privateTemplates'],
+            'measurements' => $data['allMeasurements'],
         ]);
     }
 
@@ -96,13 +85,21 @@ class TemplateController extends Controller
      */
     public function edit($id)
     {
+        $currentUserId = auth()->id();
+
+        // Use the helper method to fetch the necessary data
+        $data = GetTemplateHelper::getTemplateData($currentUserId);
         $item = Template::findOrFail($id);
+
         $selectedMeasurementSlugs = $item->measurements()->pluck('slug')->toArray();
-        $allMeasurements = Measurement::select('id', 'slug')->get();
+
+        // Pass the necessary data to the view
         return Inertia::render('items/Edit', [
             'item' => $item,
+            'publicTemplates' => $data['publicTemplates'],
+            'privateTemplates' => $data['privateTemplates'],
             'measurements' => [
-                'all' => $allMeasurements,
+                'all' => $data['allMeasurements'],
                 'selected' => $selectedMeasurementSlugs,
             ],
         ]);
