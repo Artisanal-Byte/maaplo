@@ -16,6 +16,8 @@ const previewImage = ref(null)
 const fileInput = ref(null)
 const notes = ref([{ label: '', text: '' }]);
 const props = defineProps(['showModal', 'form', 'itemType', 'itemIndex', 'measurements', 'errorMessage5', 'errors']);
+
+
 const emit = defineEmits(['close', 'setOrderItemsData']);
 const showImageUpload = ref(false)
 let data = reactive({
