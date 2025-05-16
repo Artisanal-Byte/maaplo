@@ -13,6 +13,7 @@ watch(()=>setTogle.value,(val)=>{
 
 </script>
 <template>
+    
     <label class="relative inline-flex items-center cursor-pointer">
         <input type="checkbox" v-model="setTogle" class="sr-only peer">
         <div

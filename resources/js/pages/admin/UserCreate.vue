@@ -1,7 +1,9 @@
 <script setup>
 import Button from '@/components/Button.vue';
 import Input from '@/components/InputWithLabel.vue';
+import ToggleButton from '@/components/ToggleButton.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { ref } from 'vue'
 
 </script>
 
@@ -34,6 +36,10 @@ import AppLayout from '@/layouts/AppLayout.vue';
                 <div>
                     <Input type="date" label="Validity" color="grayBorder" :required="true" />
                 </div>
+                 <div class="flex items-center gap-4">
+                        <h1 class="text-[16px] font-normal font-lato">Disable user :</h1>
+                        <ToggleButton/>
+                    </div>
                 <Button :color="'primary'" :padding="'md'" :rounded="'full'" :textSize="'sm'">
                     Submit
                 </Button>
