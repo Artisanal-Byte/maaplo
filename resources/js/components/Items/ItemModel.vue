@@ -165,12 +165,12 @@ function onFileChange(event, index) {
                 <!-- Scrollable Content -->
                 <div class=" max-h-[75vh] pr-2 space-y-5">
                     <!-- done -->
-                    <WorkType :formData="data" :errorMessage2="errorMessage2" @setMaterialCode="setMaterialCode"
+                    <WorkType :formData="data" @setMaterialCode="setMaterialCode"
                         @setMaterialCost="setMaterialCost" @setAlteringCost="setAlteringCost"
                         @setStichingCost="setStichingCost" @setMaterialType="setMaterialType" @setPrice="setPrice" />
-                    <ItemType :itemType="itemType" :errorMessage3="errorMessage3" @setItemId="setItemId" />
-                    <Measurements :measurements="measurements" :errorMessage4="errorMessage4" />
-                    <DesignDetails :errorMessage5="errorMessage5" />
+                    <ItemType :itemType="itemType" @setItemId="setItemId" />
+                    <Measurements :measurements="measurements" />
+                    <DesignDetails />
 
                     <div class="flex flex-col">
                         <Colors @setColor="setColor" />
@@ -202,9 +202,7 @@ function onFileChange(event, index) {
                                     accept="image/*" />
                             </div>
                         </div>
-                        <div v-if="errorMessage6" class="text-red-500 text-sm mt-2">
-                            {{ errorMessage6 }}
-                        </div>
+                       
                     </div>
                     <!-- Trail Date && Delivery Date  -->
 

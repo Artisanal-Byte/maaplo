@@ -6,7 +6,6 @@ import Input from '../InputWithLabel.vue';
 
 const props = defineProps<{
     measurements: Record<string, string> | null;
-    errorMessage4: string
 }>();
 
 const emit = defineEmits<{
@@ -71,9 +70,6 @@ function toggleDropdownMeasurements() {
                 class="text-black ml-2 mt-1" />
             <Icon v-if="showDropdownMeasurements == true" icon="icon-park-outline:up" width="20" height="20"
                 class="text-black ml-2 mt-1" />
-        </div>
-        <div v-if="props.errorMessage4" class="text-red-500 text-sm mt-2">
-            {{ props.errorMessage4 }}
         </div>
         <!-- Dropdown -->
         <div v-show="showDropdownMeasurements" class="z-10">
