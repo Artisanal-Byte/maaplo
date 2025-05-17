@@ -59,7 +59,12 @@ function formatLabel(option) {
 
 function selectOption(option) {
   emits('setItemId', option.id);
-  emits('templateSelected', option);
+   emits('templateSelected', {
+    ...option,
+    required_measurements: Array.isArray(option.required_measurements)
+      ? option.required_measurements
+      : []
+  });
   const label = formatLabel(option);
   modelValue.value = option.name;
   searchQuery.value = option.name;

@@ -63,8 +63,7 @@ function toggleDropdownMeasurements() {
 <template>
     <div class="mt-2">
         <div @click="toggleDropdownMeasurements()" class="flex">
-            <h1 class="font-normal text-md leading-4 tracking-normal font-lato">Measurements<span
-                    class="text-red-500 text-lg">*</span>
+            <h1 class="font-normal text-md leading-4 tracking-normal font-lato">Measurements
             </h1>
             <Icon v-if="showDropdownMeasurements == false" icon="icon-park-outline:down" width="20" height="20"
                 class="text-black ml-2 mt-1" />

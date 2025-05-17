@@ -65,7 +65,7 @@ const proceedDelete = () => {
             <!-- Desktop View: Table Layout -->
             <div class="hidden md:block mt-6">
                 <table class="min-w-full border border-gray-300">
-                    <thead class="bg-[#DEEFF4]">
+                    <thead class="bg-primary text-white">
                         <tr>
                             <th class="p-2 border border-gray-300 text-center">Item</th>
                             <th class="p-2 border border-gray-300 text-center">Gender</th>
