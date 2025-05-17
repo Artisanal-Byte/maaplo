@@ -54,8 +54,8 @@ const formatSlug = (slug: string): string => {
 };
 const fillFormFromTemplate = (template: any) => {
     form.name = template.name;
-    form.gender = template.gender;
-    form.body_part = template.body_part;
+    form.gender = template.gender === 'Male' ? 'm' : (template.gender === 'Female' ? 'f' : '');
+    form.body_part = template.body_part === 'Upper' ? 'upper' : (template.body_part === 'Lower' ? 'lower' : '');
     form.svg_logo = template.svg_logo;
     form.required_measurements = template.measurements.map((m: any) => m.slug);
 
