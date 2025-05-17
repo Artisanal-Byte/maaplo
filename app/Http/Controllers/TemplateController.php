@@ -19,12 +19,14 @@ class TemplateController extends Controller
      */
     public function index()
     {
-        $items = Template::latest()->get();
         $authUser = Auth::user();
+        $items = Template::where('user_id', $authUser->id)
+            ->orWhereNull('user_id')
+            ->latest()
+            ->get();
         return Inertia::render('items/Index', [
             'items' => $items,
             'authUser' => $authUser,
-            'publicTemplates' => $items,
         ]);
     }
 
