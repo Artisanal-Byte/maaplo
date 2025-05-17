@@ -85,26 +85,24 @@ class TemplateController extends Controller
      */
     public function edit($id)
     {
-        $currentUserId = auth()->id();
-
-        // Use the helper method to fetch the necessary data
-        $data = GetTemplateHelper::getTemplateData($currentUserId);
         $item = Template::findOrFail($id);
+        $measurements = [
+            'all' => Measurement::all(['id', 'slug']),
+            'selected' => $item->measurements()->pluck('slug')->toArray(),
+        ];
 
-        $selectedMeasurementSlugs = $item->measurements()->pluck('slug')->toArray();
+        // Fetch template data using the helper
+        $templateData = GetTemplateHelper::getTemplateData(auth()->id());
 
-        // Pass the necessary data to the view
         return Inertia::render('items/Edit', [
             'item' => $item,
-            'publicTemplates' => $data['publicTemplates'],
-            'privateTemplates' => $data['privateTemplates'],
-            'measurements' => [
-                'all' => $data['allMeasurements'],
-                'selected' => $selectedMeasurementSlugs,
-            ],
+            'errors' => [],
+            'measurements' => $measurements,
+            'publicTemplates' => $templateData['publicTemplates'],
+            'privateTemplates' => $templateData['privateTemplates'],
+            'allMeasurements' => $templateData['allMeasurements'], // Pass the measurements too
         ]);
     }
-
     /**
      * Update the specified resource in storage.
      */
