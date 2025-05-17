@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Link, useForm } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
 import SearchSelect from '@/components/SearchSelect.vue';
-import { ref } from 'vue';
+import { nextTick, ref } from 'vue';
 const toast = new ToastMagic();
 
 const props = defineProps<{
@@ -24,6 +24,8 @@ const props = defineProps<{
         selected: string[]
     }
 }>();
+console.log('publicTemplates:', props.publicTemplates);
+console.log('privateTemplates:', props.privateTemplates);
 
 const selectedTemplate = ref(null);
 
@@ -47,6 +49,7 @@ const toggleMeasurement = (label: string) => {
     form.required_measurements = updatedMeasurements;
 };
 
+
 const updateTemplate = () => {
     const dataToSend = {
         ...form.data(),
@@ -59,6 +62,7 @@ const updateTemplate = () => {
     })).post(route('items.update', props.item.id), {
         onSuccess: () => {
             toast.success('Template updated successfully!');
+            setTimeout(() => router.visit(route('items.index')), 1000);
         },
         onError: () => {
             toast.error('Update failed. Please try again.');
@@ -66,21 +70,23 @@ const updateTemplate = () => {
     });
 };
 const fillFormFromTemplate = (selectedTemplate: any) => {
+    console.log('Selected Template:', selectedTemplate);
 
-    // Check if required_measurements exists and is an array
-    if (Array.isArray(selectedTemplate.required_measurements)) {
-        form.required_measurements = [...selectedTemplate.required_measurements];  // Ensuring reactivity
-    } else {
-        // Handle the case where required_measurements is not valid
-        form.required_measurements = [];
-    }
+    form.name = selectedTemplate.name || '';
+    form.svg_logo = selectedTemplate.svg_logo || '';
+    form.gender = selectedTemplate.gender || 'o';
+    form.body_part = selectedTemplate.body_part || 'upper';
 
-    form.name = selectedTemplate.name;
-    form.svg_logo = selectedTemplate.svg_logo;
-    form.gender = selectedTemplate.gender;
-    form.body_part = selectedTemplate.body_part;
+    // If template.measurements is an array of objects, map them to slugs
+    form.required_measurements = Array.isArray(selectedTemplate.measurements)
+        ? selectedTemplate.measurements.map((m: any) => m.slug)
+        : [];
+
+    console.log('Measurements updated:', form.required_measurements);
 };
 
+
+console.log('Form data:', form.data());
 const formatSlug = (slug: string): string => {
     return slug
         .split('_')
@@ -112,11 +118,11 @@ const formatSlug = (slug: string): string => {
                 </div>
                 <!-- Name -->
                 <Input v-model="form.name" label="Template Name" placeholder="Enter Template Name" margin="md"
-                    width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.name" />
+                    width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.name" required="true" />
 
                 <!-- Gender -->
                 <div class="flex flex-col">
-                    <label class="text-md mb-2">Gender:</label>
+                    <label class="text-md mb-2">Gender <span class="text-red-500">*</span></label>
                     <div class="flex gap-4">
                         <label>
                             <input type="radio" name="gender" value="f" v-model="form.gender" class="hidden" />
@@ -142,7 +148,7 @@ const formatSlug = (slug: string): string => {
 
                 <!-- Body Part -->
                 <div class="flex flex-col mt-4">
-                    <label class="text-md mb-2">Body Part:</label>
+                    <label class="text-md mb-2">Body Part <span class="text-red-500">*</span></label>
                     <div class="flex gap-4">
                         <label>
                             <input type="radio" name="bodyPart" value="upper" v-model="form.body_part" class="hidden" />
@@ -167,22 +173,25 @@ const formatSlug = (slug: string): string => {
                 <div v-if="errors.body_part" class="text-red-600 text-sm">{{ errors.body_part }}</div>
                 <!-- SVG Logo -->
                 <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
-                    width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo" />
+                    width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo"
+                    required="true" />
 
                 <!-- Required Measurements -->
                 <div class="mt-4">
-                    <label class="text-md mb-2 block">Required Measurements:</label>
+                    <label class="text-md mb-2 block">Required Measurements <span class="text-red-500">*</span></label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div v-for="measurement in props.measurements.all" :key="measurement.slug"
-                            class="flex items-center gap-2">
-                            <input type="checkbox" :id="measurement.slug" :value="measurement.slug"
-                                :checked="form.required_measurements.includes(measurement.slug)"
-                                @change="toggleMeasurement(measurement.slug)" />
-                            <label :for="measurement.slug">{{ formatSlug(measurement.slug) }}</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div v-for="measurement in props.measurements.all" :key="measurement.slug"
+                                class="flex items-center gap-2">
+                                <input type="checkbox" :id="measurement.slug" :value="measurement.slug"
+                                    v-model="form.required_measurements" />
+                                <label :for="measurement.slug">{{ formatSlug(measurement.slug) }}</label>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div v-if="errors.required_measurements" class="text-red-600 text-sm">{{ errors.required_measurements }}</div>
+                <div v-if="errors.required_measurements" class="text-red-600 text-sm">{{ errors.required_measurements }}
+                </div>
 
 
                 <!-- Submit Button -->

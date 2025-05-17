@@ -86,12 +86,12 @@ const fillFormFromTemplate = (template: any) => {
                 </div>
                 <div>
                     <Input v-model="form.name" label="Template Name" placeholder="Enter Template Name" margin="md"
-                        width="full" fonttype="normal" textSize="base" rounded="md" error="" />
+                        width="full" fonttype="normal" textSize="base" rounded="md" error="" required="true" />
                 </div>
 
                 <div class="mt-2 lg:mt-4 flex flex-row gap-2 gap-4">
                     <div>
-                        <h1 class="lg:mb-2 text-md">Gender:</h1>
+                        <h1 class="lg:mb-2 text-md">Gender <span class="text-red-500">*</span></h1>
                     </div>
                     <div class="flex gap-4">
                         <label>
@@ -124,7 +124,7 @@ const fillFormFromTemplate = (template: any) => {
 
                 <div class="mt-2 lg:mt-4 flex flex-row gap-2 gap-4">
                     <div>
-                        <h1 class="lg:mb-2 text-md">Body Part:</h1>
+                        <h1 class="lg:mb-2 text-md">Body Part <span class="text-red-500">*</span></h1>
                     </div>
                     <div class="flex gap-4">
                         <label>
@@ -156,11 +156,12 @@ const fillFormFromTemplate = (template: any) => {
                 <div v-if="errors.body_part" class="text-red-600 text-sm">{{ errors.body_part }}</div>
                 <div>
                     <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
-                        width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo" />
+                        width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo"
+                        required="true" />
                 </div>
                 <!--Measurements -->
                 <div class="mt-4">
-                    <label class="text-md mb-2 block">Required Measurements:</label>
+                    <label class="text-md mb-2 block">Required Measurements <span class="text-red-500">*</span></label>
                     <div class="grid grid-cols-2 gap-2">
                         <div v-for="measurement in props.measurements" :key="measurement.id"
                             class="flex items-center gap-2">
