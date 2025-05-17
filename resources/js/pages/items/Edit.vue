@@ -24,8 +24,6 @@ const props = defineProps<{
         selected: string[]
     }
 }>();
-console.log('publicTemplates:', props.publicTemplates);
-console.log('privateTemplates:', props.privateTemplates);
 
 const selectedTemplate = ref(null);
 
@@ -49,7 +47,6 @@ const toggleMeasurement = (label: string) => {
     form.required_measurements = updatedMeasurements;
 };
 
-
 const updateTemplate = () => {
     const dataToSend = {
         ...form.data(),
@@ -70,23 +67,19 @@ const updateTemplate = () => {
     });
 };
 const fillFormFromTemplate = (selectedTemplate: any) => {
-    console.log('Selected Template:', selectedTemplate);
 
     form.name = selectedTemplate.name || '';
     form.svg_logo = selectedTemplate.svg_logo || '';
-    form.gender = selectedTemplate.gender || 'o';
-    form.body_part = selectedTemplate.body_part || 'upper';
+    form.gender = selectedTemplate.gender === 'Male' ? 'm' : (selectedTemplate.gender === 'Female' ? 'f' : '');
+    form.body_part = selectedTemplate.body_part === 'Upper' ? 'upper' : (selectedTemplate.body_part === 'Lower' ? 'lower' : '');
 
     // If template.measurements is an array of objects, map them to slugs
     form.required_measurements = Array.isArray(selectedTemplate.measurements)
         ? selectedTemplate.measurements.map((m: any) => m.slug)
         : [];
 
-    console.log('Measurements updated:', form.required_measurements);
 };
 
-
-console.log('Form data:', form.data());
 const formatSlug = (slug: string): string => {
     return slug
         .split('_')
