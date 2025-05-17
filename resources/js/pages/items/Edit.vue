@@ -119,7 +119,7 @@ const formatSlug = (slug: string): string => {
                 <!-- Name -->
                 <Input v-model="form.name" label="Template Name" placeholder="Enter Template Name" margin="md"
                     width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.name" required="true" />
-
+                <div v-if="errors.name" class="text-red-600 text-sm">{{ errors.name }}</div>
                 <!-- Gender -->
                 <div class="flex flex-col">
                     <label class="text-md mb-2">Gender <span class="text-red-500">*</span></label>
