@@ -29,15 +29,6 @@ const form = reactive({
     } as Record<string, boolean>,
 });
 
-const toggleMeasurement = (label: string) => {
-    const index = form.required_measurements.indexOf(label);
-    if (index > -1) {
-        form.required_measurements.splice(index, 1);
-    } else {
-        form.required_measurements.push(label);
-    }
-};
-
 const submitForm = () => {
     router.post(route('items.store'), form, {
         onSuccess: () => {
@@ -65,15 +56,7 @@ const fillFormFromTemplate = (template: any) => {
     form.required_measurements = template.measurements.map((m: any) => m.slug);
 
 };
-// const processedLogo = (logo: string): string => {
-//     if (!logo.includes('<svg')) return logo;
 
-//     // Remove any existing width and height
-//     logo = logo.replace(/\s(width|height)="[^"]*"/g, '');
-
-//     // Inject consistent width and height (5x5)
-//     return logo.replace('<svg', '<svg width="20" height="20"');
-// };
 const formatLabel = (key: string): string => {
     return key
         .split('_')
