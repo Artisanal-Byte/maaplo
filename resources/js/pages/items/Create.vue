@@ -23,9 +23,9 @@ const form = reactive({
     custom_template: false,
     svg_logo: '',
     design_details: {
-        'Front Neck Design': false,
-        'Back Neck Design': false,
-        'Sleeve Type': false,
+        front_neck_design: false,
+        back_neck_design: false,
+        sleeve_type: false,
     } as Record<string, boolean>,
 });
 
@@ -73,6 +73,12 @@ const processedLogo = (logo: string): string => {
 
     // Inject consistent width and height (5x5)
     return logo.replace('<svg', '<svg width="20" height="20"');
+};
+const formatLabel = (key: string): string => {
+    return key
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
 };
 </script>
 
@@ -199,7 +205,8 @@ const processedLogo = (logo: string): string => {
                     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div v-for="(value, key) in form.design_details" :key="key"
                             class="flex items-center gap-3 p-2 border border-gray-200 rounded-md">
-                            <span class="font-normal text-[16px] tracking-normal font-lato">{{ key }}</span>
+                            <span class="font-normal text-[16px] tracking-normal font-lato">{{ formatLabel(key)
+                            }}</span>
 
                             <div class="flex border border-gray-300 rounded overflow-hidden text-sm ml-auto">
                                 <button :class="[
