@@ -56,6 +56,7 @@ class TemplateController extends Controller
             'required_measurements' => 'required|array',
             'design_details' => 'required|array',
         ]);
+
         try {
             DB::beginTransaction();
             $template = Template::create([
