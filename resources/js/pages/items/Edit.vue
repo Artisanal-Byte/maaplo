@@ -91,15 +91,7 @@ const fillFormFromTemplate = (selectedTemplate: any) => {
         : [];
 
 };
-const processedLogo = (logo: string): string => {
-    if (!logo.includes('<svg')) return logo;
 
-    // Remove any existing width and height
-    logo = logo.replace(/\s(width|height)="[^"]*"/g, '');
-
-    // Inject consistent width and height (5x5)
-    return logo.replace('<svg', '<svg width="20" height="20"');
-};
 const formatSlug = (slug: string): string => {
     return slug
         .split('_')
@@ -218,8 +210,6 @@ console.log('form data', form.design_details);
                 <div v-if="errors.required_measurements" class="text-red-600 text-sm mt-1">
                     {{ errors.required_measurements }}
                 </div>
-
-
 
                 <!-- Design Details -->
                 <div class="mt-6">
