@@ -53,7 +53,7 @@ class TemplateController extends Controller
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f,o',
             'body_part' => 'required|in:upper,lower',
-            'svg_logo' => 'nullable|string',
+            'svg_logo' => 'nullable|string|regex:/<svg.*<\/svg>/',
             'required_measurements' => 'required|array',
         ]);
         // dd($validated);

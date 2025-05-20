@@ -163,8 +163,8 @@ const processedLogo = (logo: string): string => {
                 </div>
                 <div v-if="errors.body_part" class="text-red-600 text-sm">{{ errors.body_part }}</div>
                 <div>
-                    <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
-                        width="full" fonttype="normal" textSize="base" rounded="md" />
+                    <Input v-model="form.svg_logo" label="Template Logo" placeholder="Only Paste SVG path here" margin="md"
+                        width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo" />
                 </div>
                 <!--Measurements -->
                 <div class="grid grid-cols-2 gap-2">
