@@ -13,7 +13,8 @@ class Measurement extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'slug'
+        'slug',
+        'logo',
     ];
 
     // protected $casts = [

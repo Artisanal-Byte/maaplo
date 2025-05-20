@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId("user_id")->nullable(true);
             $table->string('name');
-            $table->text('svg_logo');
+            $table->text('svg_logo')->nullable(true);
             $table->enum('gender', ["m", "f", "o"]);
             $table->enum('body_part', ["upper", "lower"]);
             // $table->enum('global_scope', ["y","n"])->default("n");
