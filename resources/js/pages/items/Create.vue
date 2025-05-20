@@ -173,27 +173,28 @@ const processedLogo = (logo: string): string => {
                         :error="errors.svg_logo" />
                 </div>
                 <!--Measurements -->
-                <div class="grid grid-cols-2 gap-2">
-                    <div v-for="measurement in props.measurements" :key="measurement.id"
-                        class="flex items-center gap-2">
-                        <input type="checkbox" :id="measurement.slug" :value="measurement.slug"
-                            v-model="form.required_measurements" class="form-checkbox" />
-                        <label :for="measurement.slug" class="flex items-center gap-2">
-                            <span>{{ formatSlug(measurement.slug) }}</span>
+                <h1 class="text-md font-semibold mb-2">Measurement Ask :</h1>
+                <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 items-center gap-x-16 gap-y-4">
+                    <label v-for="measurement in props.measurements" :key="measurement.id"
+                        class="flex items-center gap-3 cursor-pointer rounded w-full">
+                        <!-- SVG icon -->
+                        <div v-if="measurement.measurements_logo" class="shrink-0"
+                            v-html="processedLogo(measurement.measurements_logo)"></div>
 
-                            <!-- Render the actual SVG, sized -->
-                            <div v-if="measurement.measurements_logo" class="inline-block"
-                                v-html="processedLogo(measurement.measurements_logo)">
-                            </div>
-                        </label>
-                    </div>
+                        <!-- Text and checkbox -->
+                        <div class="flex justify-between items-center lg:w-full w-80">
+                            <span class="text-[16px]">{{ formatSlug(measurement.slug) }}</span>
+                            <input type="checkbox" :id="measurement.slug" :value="measurement.slug"
+                                v-model="form.required_measurements" class="form-checkbox w-4 h-4" />
+                        </div>
+                    </label>
                 </div>
 
                 <div v-if="errors.required_measurements" class="text-red-600 text-sm">{{ errors.required_measurements }}
                 </div>
                 <!-- Design Details -->
-                <div class="mt-6">
-                    <h2 class="text-md font-semibold mb-2">Design Details</h2>
+                <div class="mt-2">
+                    <h2 class="text-md font-semibold mb-4">Design Details Ask:</h2>
 
                     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div v-for="(value, key) in form.design_details" :key="key"
@@ -219,7 +220,7 @@ const processedLogo = (logo: string): string => {
                 </div>
 
 
-                <Button @click="submitForm" color="primary" textSize="lg" padding="md" rounded="full">
+                <Button @click="submitForm" color="primary" textSize="lg" padding="sm" rounded="full">
                     Save
                 </Button>
 
