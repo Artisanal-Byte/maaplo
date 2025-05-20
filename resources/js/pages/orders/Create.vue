@@ -116,9 +116,19 @@ const proceedDelete = () => {
                                 </label>
                             </div>
                             <!-- Add Icon -->
-                            <div @click="showModal = true" class="cursor-pointer inline-block">
-                                <Icon icon="material-symbols:add-rounded" width="20" height="20" />
+                            <div class="relative group">
+                                <!-- Add Icon -->
+                                <div @click="showModal = true" class="cursor-pointer inline-block">
+                                    <Icon icon="material-symbols:add-rounded" width="20" height="20" />
+                                </div>
+
+                                <!-- Tooltip -->
+                                <div
+                                    class="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition bg-gray-800 text-white text-xs rounded py-1 px-2 pointer-events-none z-10">
+                                    Create Item
+                                </div>
                             </div>
+
                         </div>
                         <!-- Modal Backdrop -->
                         <div v-if="showModal" class="fixed inset-0 bg-black/50 z-40" @click.self="showModal = false">
@@ -128,9 +138,9 @@ const proceedDelete = () => {
                         <ItemModel :errors="form.errors?.order_items" :itemIndex="i" :showModal="showModal"
                             @close="closeModel" :form="form.order_items" @setOrderItemsData="setOrderItemsData"
                             :itemType="itemType" :measurements="customers.base_measurements ?? []" />
-                            <p class="text-red-600 text-sm">
-                                {{ form.errors.order_items }}
-                            </p>
+                        <p class="text-red-600 text-sm">
+                            {{ form.errors.order_items }}
+                        </p>
 
                         <!-- table -->
                         <!-- Items Table -->
@@ -139,7 +149,7 @@ const proceedDelete = () => {
                                 <thead class="bg-gray-100">
                                     <tr>
                                         <th class="p-2 border">Work Type</th>
-                                        <th class="p-2 border">Item type</th>
+                                        <th class="p-2 border">Item Type</th>
                                         <th class="p-2 border">Delivery Date</th>
                                         <th class="p-2 border">Action</th>
                                     </tr>

@@ -3,7 +3,7 @@ import { ref, defineProps } from 'vue';
 import { Icon } from '@iconify/vue';
 import { Link } from '@inertiajs/vue3';
 
-let props = defineProps(["customers", "form","errors"]);
+let props = defineProps(["customers", "form", "errors"]);
 let emit = defineEmits(["setMeasurements", "setOrderData"]);
 const selectedCustomer = ref('Select Customer');
 const showDropdown = ref(false);
@@ -35,7 +35,7 @@ function asset(path) {
             <button @click="toggleDropdown"
                 class="flex cursor-pointer items-center justify-between gap-2 py-2 bg-white rounded-md focus:outline-none">
                 <span class="font-lato text-base font-normal leading-4 tracking-normal">{{ selectedCustomer
-                    }}</span>
+                }}</span>
                 <Icon :icon="showDropdown ? 'icon-park-outline:up' : 'icon-park-outline:down'" width="20" height="20" />
             </button>
             <p class="text-red-600 text-sm">{{ errors?.customer_id }}</p>
@@ -63,10 +63,16 @@ function asset(path) {
             </div>
         </div>
         <!-- Add Icon -->
-        <div>
-            <Link :href="route('customers.create')">
-            <Icon icon="material-symbols:add-rounded" width="20" height="20" />
-            </Link>
+        <div class="relative group">
+            <div>
+                <Link :href="route('customers.create')">
+                <Icon icon="material-symbols:add-rounded" width="20" height="20" />
+                </Link>
+            </div>
+            <div
+                class="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition bg-gray-800 text-white text-xs rounded py-1 px-2 pointer-events-none z-10">
+                Create Customer
+            </div>
         </div>
     </div>
 </template>
