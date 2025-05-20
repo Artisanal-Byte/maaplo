@@ -145,7 +145,6 @@ class CustomerController extends Controller
             return redirect()->route('customers.index')->with('success', 'Customer created successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
-            // dd('Customer creation failed: ' . $e->getMessage());
             return redirect()->back()->withInput()->with('error', 'There was an error: ' . $e->getMessage());
         }
     }
@@ -242,7 +241,6 @@ class CustomerController extends Controller
                 );
             }
 
-
             if ($request->hasFile('full_image')) {
                 // Delete previous full image
                 $oldFullImage = CustomerPhoto::where('customer_id', $customer->id)
@@ -273,7 +271,6 @@ class CustomerController extends Controller
                     ['image_url' => $fullImagePath]
                 );
             }
-
 
             return redirect()->route('customers.index')->with('success', 'Customer updated successfully.');
         } catch (\Exception $e) {
