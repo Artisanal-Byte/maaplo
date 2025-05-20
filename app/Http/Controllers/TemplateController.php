@@ -36,7 +36,6 @@ class TemplateController extends Controller
     public function create()
     {
         $data = GetTemplateHelper::getTemplateData();
-        // dd($data);
         return Inertia::render('items/Create', [
             'publicTemplates' => $data['publicTemplates'],
             'privateTemplates' => $data['privateTemplates'],
@@ -49,7 +48,6 @@ class TemplateController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f,o',
@@ -58,7 +56,6 @@ class TemplateController extends Controller
             'required_measurements' => 'required|array',
             'design_details' => 'required|array',
         ]);
-        // dd($validated);
         try {
             DB::beginTransaction();
             $template = Template::create([
@@ -92,12 +89,10 @@ class TemplateController extends Controller
     public function edit($id)
     {
         $item = Template::findOrFail($id);
-        // dd( $item);
         $measurements = [
             'all' => Measurement::all(['id', 'slug', 'measurements_logo']),
             'selected' => $item->measurements()->pluck('slug')->toArray(),
         ];
-
         // Fetch template data using the helper
         $templateData = GetTemplateHelper::getTemplateData(auth()->id());
         return Inertia::render('items/Edit', [
@@ -115,7 +110,6 @@ class TemplateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f',
@@ -124,7 +118,6 @@ class TemplateController extends Controller
             'required_measurements' => 'required|array',
             'design_details' => 'required|array',
         ]);
-        // dd($validated);
         try {
             DB::beginTransaction();
 
