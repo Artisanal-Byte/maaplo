@@ -17,14 +17,19 @@ const props = defineProps<{
         gender: string;
         body_part: string;
     },
+    designDetails: {
+        front_neck_design: boolean,
+        back_neck_design: boolean,
+        sleeve_type: boolean
+    },
     publicTemplates: Array<{ id: number; name: string }>,
     privateTemplates: Array<{ id: number; name: string }>,
     measurements: {
         all: Array<{ id: number, slug: string }>,
-        selected: string[]
+        selected: string[], measurements_logo: string
     }
 }>();
-
+console.log('props', props.measurements.measurements_logo);
 const selectedTemplate = ref(null);
 
 const form = useForm({
@@ -33,6 +38,12 @@ const form = useForm({
     gender: props.item.gender === "Male" ? "m" : (props.item.gender === "Female" ? "f" : "o"),
     body_part: props.item.body_part === "Upper" ? "upper" : "lower",
     required_measurements: props.measurements.selected,
+    design_details: {
+        front_neck_design: props.designDetails?.front_neck_design ?? false,
+        back_neck_design: props.designDetails?.back_neck_design ?? false,
+        sleeve_type: props.designDetails?.sleeve_type ?? false,
+    },
+
     _method: 'put',
 });
 
@@ -51,6 +62,7 @@ const updateTemplate = () => {
     const dataToSend = {
         ...form.data(),
         required_measurements: form.required_measurements,
+        design_details: form.design_details,
     };
 
     form.transform(data => ({
@@ -79,13 +91,29 @@ const fillFormFromTemplate = (selectedTemplate: any) => {
         : [];
 
 };
+const processedLogo = (logo: string): string => {
+    if (!logo.includes('<svg')) return logo;
 
+    // Remove any existing width and height
+    logo = logo.replace(/\s(width|height)="[^"]*"/g, '');
+
+    // Inject consistent width and height (5x5)
+    return logo.replace('<svg', '<svg width="20" height="20"');
+};
 const formatSlug = (slug: string): string => {
     return slug
         .split('_')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 };
+
+const formatLabel = (key: string): string => {
+    return key
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+};
+console.log('form data', form.design_details);
 </script>
 
 <template>
@@ -169,20 +197,59 @@ const formatSlug = (slug: string): string => {
                     width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo" />
 
                 <!-- Required Measurements -->
-                <div class="mt-4">
-                    <label class="text-md mb-2 block">Required Measurements <span class="text-red-500">*</span></label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div class="grid grid-cols-2 gap-2">
-                            <div v-for="measurement in props.measurements.all" :key="measurement.slug"
-                                class="flex items-center gap-2">
-                                <input type="checkbox" :id="measurement.slug" :value="measurement.slug"
-                                    v-model="form.required_measurements" />
-                                <label :for="measurement.slug">{{ formatSlug(measurement.slug) }}</label>
+                <h1 class="text-md font-semibold mb-2 mt-4">Measurement Ask:</h1>
+
+                <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 items-center gap-x-16 gap-y-4">
+                    <label v-for="measurement in props.measurements.all" :key="measurement.id || measurement.slug"
+                        class="flex items-center gap-3 cursor-pointer rounded w-full">
+                        <!-- SVG icon -->
+                       <div v-if="measurement.measurements_logo" class="shrink-0"
+                            v-html="measurement.measurements_logo"></div>
+
+                        <!-- Text and checkbox -->
+                        <div class="flex justify-between items-center lg:w-full w-80">
+                            <span class="text-[16px]">{{ formatSlug(measurement.slug) }}</span>
+                            <input type="checkbox" :id="measurement.slug" :value="measurement.slug"
+                                v-model="form.required_measurements" class="form-checkbox w-4 h-4" />
+                        </div>
+                    </label>
+                </div>
+
+                <div v-if="errors.required_measurements" class="text-red-600 text-sm mt-1">
+                    {{ errors.required_measurements }}
+                </div>
+
+
+
+                <!-- Design Details -->
+                <div class="mt-6">
+                    <h2 class="text-md font-semibold mb-2">Design Details</h2>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div v-for="(value, key) in form.design_details" :key="key"
+                            class="flex items-center gap-3 p-2 border border-gray-200 rounded-md">
+                            <span class="font-normal text-[16px] tracking-normal font-lato">
+                                {{ formatLabel(key) }}
+                            </span>
+
+                            <div class="flex border border-gray-300 rounded overflow-hidden text-sm ml-auto">
+                                <button :class="[
+                                    'px-4 py-1 focus:outline-none',
+                                    form.design_details[key] === true ? 'bg-primary text-white' : 'bg-white text-black'
+                                ]" @click="form.design_details[key] = true">
+                                    Yes
+                                </button>
+                                <button :class="[
+                                    'px-4 py-1 focus:outline-none',
+                                    form.design_details[key] === false ? 'bg-primary text-white' : 'bg-white text-black'
+                                ]" @click="form.design_details[key] = false">
+                                    No
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div v-if="errors.required_measurements" class="text-red-600 text-sm">{{ errors.required_measurements }}
+                <div v-if="errors.design_details" class="text-red-600 text-sm">{{ errors.design_details }}
                 </div>
 
 

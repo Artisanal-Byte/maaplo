@@ -65,15 +65,15 @@ const fillFormFromTemplate = (template: any) => {
     form.required_measurements = template.measurements.map((m: any) => m.slug);
 
 };
-const processedLogo = (logo: string): string => {
-    if (!logo.includes('<svg')) return logo;
+// const processedLogo = (logo: string): string => {
+//     if (!logo.includes('<svg')) return logo;
 
-    // Remove any existing width and height
-    logo = logo.replace(/\s(width|height)="[^"]*"/g, '');
+//     // Remove any existing width and height
+//     logo = logo.replace(/\s(width|height)="[^"]*"/g, '');
 
-    // Inject consistent width and height (5x5)
-    return logo.replace('<svg', '<svg width="20" height="20"');
-};
+//     // Inject consistent width and height (5x5)
+//     return logo.replace('<svg', '<svg width="20" height="20"');
+// };
 const formatLabel = (key: string): string => {
     return key
         .split('_')
@@ -108,6 +108,8 @@ const formatLabel = (key: string): string => {
                         width="full" fonttype="normal" textSize="base" rounded="md" error="" required="true" />
                 </div>
                 <div v-if="errors.name" class="text-red-600 text-sm">{{ errors.name }}</div>
+
+                <!-- Gender -->
                 <div class="mt-2 lg:mt-4 flex flex-row gap-2 gap-4">
                     <div>
                         <h1 class="lg:mb-2 text-md">Gender <span class="text-red-500">*</span></h1>
@@ -140,7 +142,7 @@ const formatLabel = (key: string): string => {
                 </div>
                 <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.gender }}</div>
 
-
+                <!-- Body Part -->
                 <div class="mt-2 lg:mt-4 flex flex-row gap-2 gap-4">
                     <div>
                         <h1 class="lg:mb-2 text-md">Body Part <span class="text-red-500">*</span></h1>
@@ -173,6 +175,8 @@ const formatLabel = (key: string): string => {
                     </div>
                 </div>
                 <div v-if="errors.body_part" class="text-red-600 text-sm">{{ errors.body_part }}</div>
+
+                <!-- temolate logo -->
                 <div>
                     <Input v-model="form.svg_logo" label="Template Logo" placeholder="Only Paste SVG path here"
                         margin="md" width="full" fonttype="normal" textSize="base" rounded="md"
@@ -185,7 +189,7 @@ const formatLabel = (key: string): string => {
                         class="flex items-center gap-3 cursor-pointer rounded w-full">
                         <!-- SVG icon -->
                         <div v-if="measurement.measurements_logo" class="shrink-0"
-                            v-html="processedLogo(measurement.measurements_logo)"></div>
+                            v-html="measurement.measurements_logo"></div>
 
                         <!-- Text and checkbox -->
                         <div class="flex justify-between items-center lg:w-full w-80">
@@ -200,13 +204,13 @@ const formatLabel = (key: string): string => {
                 </div>
                 <!-- Design Details -->
                 <div class="mt-2">
-                    <h2 class="text-md font-semibold mb-4">Design Details Ask:</h2>
+                    <h2 class="text-md font-semibold mb-4">Design Details Ask :</h2>
 
                     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div v-for="(value, key) in form.design_details" :key="key"
                             class="flex items-center gap-3 p-2 border border-gray-200 rounded-md">
                             <span class="font-normal text-[16px] tracking-normal font-lato">{{ formatLabel(key)
-                            }}</span>
+                                }}</span>
 
                             <div class="flex border border-gray-300 rounded overflow-hidden text-sm ml-auto">
                                 <button :class="[
@@ -225,6 +229,7 @@ const formatLabel = (key: string): string => {
                         </div>
                     </div>
                 </div>
+               <div v-if="errors.design_details" class="text-red-600 text-sm">{{ errors.design_details }}</div>
 
 
                 <Button @click="submitForm" color="primary" textSize="lg" padding="sm" rounded="full">
