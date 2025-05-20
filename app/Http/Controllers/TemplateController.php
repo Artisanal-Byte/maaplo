@@ -53,9 +53,10 @@ class TemplateController extends Controller
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f,o',
             'body_part' => 'required|in:upper,lower',
-            'svg_logo' => 'required|string',
+            'svg_logo' => 'nullable|string',
             'required_measurements' => 'required|array',
         ]);
+        // dd($validated);
         try {
             DB::beginTransaction();
             $template = Template::create([
@@ -114,7 +115,7 @@ class TemplateController extends Controller
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f',
             'body_part' => 'required|in:upper,lower',
-            'svg_logo' => 'required|string',
+            'svg_logo' => 'string',
             'required_measurements' => 'required|array',
         ]);
         try {

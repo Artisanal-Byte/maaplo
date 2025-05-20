@@ -156,8 +156,8 @@ const fillFormFromTemplate = (template: any) => {
                 <div v-if="errors.body_part" class="text-red-600 text-sm">{{ errors.body_part }}</div>
                 <div>
                     <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
-                        width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo"
-                        required="true" />
+                        width="full" fonttype="normal" textSize="base" rounded="md"
+                         />
                 </div>
                 <!--Measurements -->
                 <div class="mt-4">
