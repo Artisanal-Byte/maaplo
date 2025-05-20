@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('measurements', function (Blueprint $table) {
             $table->id();
             $table->string('slug');
+            $table->string('measurements_logo')->nullable();
             $table->timestamps();
 
         });
