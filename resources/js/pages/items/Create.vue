@@ -79,7 +79,7 @@ const processedLogo = (logo: string): string => {
 <template>
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
-            <div class="flex justify-between items-center mb-6">
+            <div class="flex justify-between items-center">
                 <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                     Add New Template
                 </h1>
@@ -90,7 +90,7 @@ const processedLogo = (logo: string): string => {
                     </Link>
                 </div>
             </div>
-            <div class="flex flex-col lg:mt-5 gap-3 mt-10 lg:gap-4 rounded-lg lg:border lg:border-primary p-0 lg:p-4">
+            <div class="flex flex-col lg:mt-5 gap-3 mt-6 lg:gap-4 rounded-lg lg:border lg:border-primary p-0 lg:p-4">
                 <!-- <h1>Select Base Template</h1> -->
                 <div>
                     <label class="text-md">Select Base Template</label>
@@ -220,7 +220,7 @@ const processedLogo = (logo: string): string => {
                 </div>
 
 
-                <Button @click="submitForm" color="primary" padding="md" rounded="full" textSize="sm">
+                <Button @click="submitForm" color="primary" padding="md" rounded="full" textSize="sm" class="lg:mt-5 mt-3">
                     Save
                 </Button>
 
