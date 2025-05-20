@@ -73,7 +73,7 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
     <Head title="Costomer" />
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
-            <div class="flex justify-between items-center mb-6">
+            <div class="flex justify-between items-center">
                 <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                     New Customer
                 </h1>
@@ -136,7 +136,7 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                 <!-- Measurements -->
                 <div>
                     <!-- <label class="block font-[Lato] text-[18px] leading-[16px] tracking-[0] mb-2">Measurements</label> -->
-                    <Measurements class="" v-model:measurements="form.measurements" />
+                    <Measurements v-model:measurements="form.measurements" />
                 </div>
 
                 <!-- Notes Section -->
