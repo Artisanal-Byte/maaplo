@@ -22,6 +22,11 @@ const form = reactive({
     required_measurements: [] as string[],
     custom_template: false,
     svg_logo: '',
+    design_details: {
+        'Front Neck Design': false,
+        'Back Neck Design': false,
+        'Sleeve Type': false,
+    } as Record<string, boolean>,
 });
 
 const toggleMeasurement = (label: string) => {
@@ -163,8 +168,9 @@ const processedLogo = (logo: string): string => {
                 </div>
                 <div v-if="errors.body_part" class="text-red-600 text-sm">{{ errors.body_part }}</div>
                 <div>
-                    <Input v-model="form.svg_logo" label="Template Logo" placeholder="Only Paste SVG path here" margin="md"
-                        width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo" />
+                    <Input v-model="form.svg_logo" label="Template Logo" placeholder="Only Paste SVG path here"
+                        margin="md" width="full" fonttype="normal" textSize="base" rounded="md"
+                        :error="errors.svg_logo" />
                 </div>
                 <!--Measurements -->
                 <div class="grid grid-cols-2 gap-2">
@@ -175,7 +181,7 @@ const processedLogo = (logo: string): string => {
                         <label :for="measurement.slug" class="flex items-center gap-2">
                             <span>{{ formatSlug(measurement.slug) }}</span>
 
-                            <!-- Render the actual SVG, sized 5x5 -->
+                            <!-- Render the actual SVG, sized -->
                             <div v-if="measurement.measurements_logo" class="inline-block"
                                 v-html="processedLogo(measurement.measurements_logo)">
                             </div>
@@ -185,7 +191,32 @@ const processedLogo = (logo: string): string => {
 
                 <div v-if="errors.required_measurements" class="text-red-600 text-sm">{{ errors.required_measurements }}
                 </div>
+                <!-- Design Details -->
+                <div class="mt-6">
+                    <h2 class="text-md font-semibold mb-2">Design Details</h2>
 
+                    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div v-for="(value, key) in form.design_details" :key="key"
+                            class="flex items-center gap-3 p-2 border border-gray-200 rounded-md">
+                            <span class="font-normal text-[16px] tracking-normal font-lato">{{ key }}</span>
+
+                            <div class="flex border border-gray-300 rounded overflow-hidden text-sm ml-auto">
+                                <button :class="[
+                                    'px-4 py-1 focus:outline-none',
+                                    form.design_details[key] === true ? 'bg-primary text-white' : 'bg-white text-black'
+                                ]" @click="form.design_details[key] = true">
+                                    Yes
+                                </button>
+                                <button :class="[
+                                    'px-4 py-1 focus:outline-none',
+                                    form.design_details[key] === false ? 'bg-primary text-white' : 'bg-white text-black'
+                                ]" @click="form.design_details[key] = false">
+                                    No
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
                 <Button @click="submitForm" color="primary" textSize="lg" padding="md" rounded="full">
