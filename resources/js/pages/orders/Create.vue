@@ -207,7 +207,7 @@ const proceedDelete = () => {
                 </div>
                 <!-- Submit Button (Full Width Below) -->
 
-                <Button :color="'primary'" @click="create" :padding="'md'" :rounded="'full'" :textSize="'sm'">
+                <Button :color="'primary'" @click="create" :padding="'md'" :rounded="'full'" :textSize="'sm'" class="lg:mt-5 mt-3">
                     Save
                 </Button>
 

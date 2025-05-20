@@ -189,7 +189,7 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                 </div>
 
                 <!-- Submit Button (Full Width Below) -->
-                <Button @click="submitForm" :color="'primary'" :padding="'md'" :rounded="'full'" :textSize="'sm'">
+                <Button @click="submitForm" :color="'primary'" :padding="'md'" :rounded="'full'" :textSize="'sm'" class="lg:mt-5 mt-3">
                     Save & Continue
                 </Button>
             </div>
