@@ -17,6 +17,7 @@ class Template extends Model
         'gender',
         'body_part',
         // 'svg_logo',
+        'design_details',
         'user_id',
     ];
 
