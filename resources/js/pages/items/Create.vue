@@ -36,8 +36,7 @@ const submitForm = () => {
             router.visit(route('items.index'));
         },
         onError: (error) => {
-            toast.error("Failed to create Item. Please fill in all the required fields." + error);
-            console.error(error);
+            toast.error("Failed to create Item. Please fill in all the required fields.");
         },
     });
 };
@@ -54,7 +53,6 @@ const fillFormFromTemplate = (template: any) => {
     form.body_part = template.body_part === 'Upper' ? 'upper' : (template.body_part === 'Lower' ? 'lower' : '');
     form.svg_logo = template.svg_logo;
     form.required_measurements = template.measurements.map((m: any) => m.slug);
-
 };
 
 const formatLabel = (key: string): string => {
