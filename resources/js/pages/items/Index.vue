@@ -87,7 +87,9 @@ const proceedDelete = () => {
                                         <Icon icon="ic:baseline-delete" class="text-[#E73939]" width="20" height="20" />
                                     </button>
                                 </div>
+                                <div v-else class="text-gray-500"> 🔒 Not Editable</div>
                             </td>
+
                         </tr>
                     </tbody>
                 </table>
