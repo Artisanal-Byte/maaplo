@@ -79,16 +79,34 @@ const proceedDelete = () => {
                             <td class="p-2 border border-gray-300 text-center">{{ item.gender }}</td>
                             <td class="p-2 border border-gray-300 text-center">{{ item.body_part }}</td>
                             <td class="p-2 border border-gray-300 text-center">
-                                <div v-if="item.user_id === authUser.id" class="flex justify-center gap-3">
-                                    <Link :href="route('items.edit', item.id)">
-                                    <Icon icon="ri:edit-fill" class="text-[#005FAF]" width="20" height="20" />
-                                    </Link>
-                                    <button @click="confirmDelete(item)">
-                                        <Icon icon="ic:baseline-delete" class="text-[#E73939]" width="20" height="20" />
-                                    </button>
+                                <div v-if="item.user_id === authUser.id" class="flex justify-center gap-4">
+                                    <!-- Edit Button with Tooltip -->
+                                    <div class="relative group">
+                                        <Link :href="route('items.edit', item.id)">
+                                        <Icon icon="ri:edit-fill" class="text-[#005FAF]" width="20" height="20" />
+                                        </Link>
+                                        <span
+                                            class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none z-10">
+                                            Edit Template
+                                        </span>
+                                    </div>
+
+                                    <!-- Delete Button with Tooltip -->
+                                    <div class="relative group">
+                                        <button @click="confirmDelete(item)">
+                                            <Icon icon="ic:baseline-delete" class="text-[#E73939]" width="20"
+                                                height="20" />
+                                        </button>
+                                        <span
+                                            class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none z-10">
+                                            Delete Template
+                                        </span>
+                                    </div>
                                 </div>
-                                <div v-else class="text-gray-500"> 🔒 Not Editable</div>
+
+                                <div v-else class="text-gray-500">🔒 Not Editable</div>
                             </td>
+
 
                         </tr>
                     </tbody>
