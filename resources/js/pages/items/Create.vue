@@ -197,13 +197,13 @@ const formatLabel = (key: string): string => {
                             <div class="flex rounded overflow-hidden text-sm">
                                 <button :class="[
                                     'px-4 py-1 focus:outline-none transition',
-                                    form.design_details[key] === true ? 'bg-primary text-white' : 'bg-white text-black'
+                                    form.design_details[key] === true ? 'bg-primary text-white' : 'bg-gray-200 text-black'
                                 ]" @click="form.design_details[key] = true">
                                     Yes
                                 </button>
                                 <button :class="[
                                     'px-4 py-1 focus:outline-none transition',
-                                    form.design_details[key] === false ? 'bg-primary text-white' : 'bg-white text-black'
+                                    form.design_details[key] === false ? 'bg-primary text-white' : 'bg-gray-200 text-black'
                                 ]" @click="form.design_details[key] = false">
                                     No
                                 </button>
