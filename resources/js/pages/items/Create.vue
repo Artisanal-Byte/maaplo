@@ -220,7 +220,7 @@ const processedLogo = (logo: string): string => {
                 </div>
 
 
-                <Button @click="submitForm" color="primary" textSize="lg" padding="sm" rounded="full">
+                <Button @click="submitForm" color="primary" padding="md" rounded="full" textSize="sm">
                     Save
                 </Button>
 
