@@ -54,7 +54,7 @@ const visible = ref(false);
                     </li>
                     <li>
                         <div @click="toggleDropdownCustomer()" class="flex rounded hover:bg-gray-200 text-black">
-                            <Link :href="route('customers.index')" class="flex items-center p-2 rounded ">
+                            <Link class="flex items-center p-2 rounded ">
                             <Icon icon="mdi:user" width="24" height="24" />
                             <span class="ml-2 font-inter font-medium text-[16px] leading-[16px] tracking-[0]">Customer
                             </span>
@@ -90,7 +90,7 @@ const visible = ref(false);
                     </li>
                     <li>
                         <div @click="toggleDropdown()" class="flex rounded hover:bg-gray-200 text-black">
-                            <Link :href="route('orders.index')" @click="visible = false"
+                            <Link @click="visible = false"
                                 class="flex items-center p-2 rounded ">
                             <Icon icon="lets-icons:order-fill" width="24" height="24" />
                             <span
