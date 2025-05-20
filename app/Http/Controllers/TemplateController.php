@@ -36,7 +36,7 @@ class TemplateController extends Controller
     public function create()
     {
         $data = GetTemplateHelper::getTemplateData();
-
+// dd($data);
         return Inertia::render('items/Create', [
             'publicTemplates' => $data['publicTemplates'],
             'privateTemplates' => $data['privateTemplates'],

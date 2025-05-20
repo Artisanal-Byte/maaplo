@@ -13,7 +13,7 @@ const props = defineProps<{
     errors: Record<string, string>;
     privateTemplates: Array<{ id: number; name: string }>;
     publicTemplates: Array<{ id: number; name: string }>;
-    measurements: Array<{ id: number; slug: string; }>;
+    measurements: Array<{ id: number; slug: string; measurements_logo: string }>;
 }>();
 const form = reactive({
     name: '',
@@ -60,7 +60,15 @@ const fillFormFromTemplate = (template: any) => {
     form.required_measurements = template.measurements.map((m: any) => m.slug);
 
 };
+const processedLogo = (logo: string): string => {
+    if (!logo.includes('<svg')) return logo;
 
+    // Remove any existing width and height
+    logo = logo.replace(/\s(width|height)="[^"]*"/g, '');
+
+    // Inject consistent width and height (5x5)
+    return logo.replace('<svg', '<svg width="20" height="20"');
+};
 </script>
 
 <template>
@@ -156,21 +164,25 @@ const fillFormFromTemplate = (template: any) => {
                 <div v-if="errors.body_part" class="text-red-600 text-sm">{{ errors.body_part }}</div>
                 <div>
                     <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
-                        width="full" fonttype="normal" textSize="base" rounded="md"
-                         />
+                        width="full" fonttype="normal" textSize="base" rounded="md" />
                 </div>
                 <!--Measurements -->
-                <div class="mt-4">
-                    <label class="text-md mb-2 block">Required Measurements <span class="text-red-500">*</span></label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div v-for="measurement in props.measurements" :key="measurement.id"
-                            class="flex items-center gap-2">
-                            <input type="checkbox" :id="measurement.slug" :value="measurement.slug"
-                                v-model="form.required_measurements" class="form-checkbox" />
-                            <label :for="measurement.slug">{{ formatSlug(measurement.slug) }}</label>
-                        </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div v-for="measurement in props.measurements" :key="measurement.id"
+                        class="flex items-center gap-2">
+                        <input type="checkbox" :id="measurement.slug" :value="measurement.slug"
+                            v-model="form.required_measurements" class="form-checkbox" />
+                        <label :for="measurement.slug" class="flex items-center gap-2">
+                            <span>{{ formatSlug(measurement.slug) }}</span>
+
+                            <!-- Render the actual SVG, sized 5x5 -->
+                            <div v-if="measurement.measurements_logo" class="inline-block"
+                                v-html="processedLogo(measurement.measurements_logo)">
+                            </div>
+                        </label>
                     </div>
                 </div>
+
                 <div v-if="errors.required_measurements" class="text-red-600 text-sm">{{ errors.required_measurements }}
                 </div>
 
