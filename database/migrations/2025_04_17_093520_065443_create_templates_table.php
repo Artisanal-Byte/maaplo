@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->text('svg_logo')->nullable(true);
             $table->enum('gender', ["m", "f", "o"]);
             $table->enum('body_part', ["upper", "lower"]);
+            $table->json('design_details');
             // $table->enum('global_scope', ["y","n"])->default("n");
             // $table->json('required_measurements');
             // $table->boolean("custom_template")->default(false);

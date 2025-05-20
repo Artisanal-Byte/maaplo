@@ -49,12 +49,14 @@ class TemplateController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f,o',
             'body_part' => 'required|in:upper,lower',
             'svg_logo' => 'nullable|string|regex:/<svg.*<\/svg>/',
             'required_measurements' => 'required|array',
+            'design_details' => 'required|array',
         ]);
         // dd($validated);
         try {
@@ -65,6 +67,7 @@ class TemplateController extends Controller
                 'gender' => $validated['gender'],
                 'body_part' => $validated['body_part'],
                 'svg_logo' => $validated['svg_logo'],
+                'design_details' => $validated['design_details'],
             ]);
             $measurementIds = Measurement::whereIn('slug', $validated['required_measurements'])->pluck('id');
             foreach ($measurementIds as $measurementId) {
