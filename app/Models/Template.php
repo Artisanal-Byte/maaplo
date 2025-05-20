@@ -23,6 +23,7 @@ class Template extends Model
 
     protected $casts = [
         'custom_template' => 'boolean',
+        'design_details' => 'array',
     ];
 
     protected function gender(): Attribute
