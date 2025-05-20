@@ -223,24 +223,24 @@ console.log('form data', form.design_details);
 
                 <!-- Design Details -->
                 <div class="mt-6">
-                    <h2 class="text-md font-semibold mb-2">Design Details</h2>
+                    <h2 class="text-md font-semibold mb-4">Design Details</h2>
 
                     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div v-for="(value, key) in form.design_details" :key="key"
-                            class="flex items-center gap-3 p-2 border border-gray-200 rounded-md">
+                            class="flex items-center justify-between bg-gray-50 p-2 rounded-md">
                             <span class="font-normal text-[16px] tracking-normal font-lato">
                                 {{ formatLabel(key) }}
                             </span>
 
-                            <div class="flex border border-gray-300 rounded overflow-hidden text-sm ml-auto">
+                            <div class="flex rounded overflow-hidden text-sm">
                                 <button :class="[
-                                    'px-4 py-1 focus:outline-none',
+                                    'px-4 py-1 focus:outline-none transition',
                                     form.design_details[key] === true ? 'bg-primary text-white' : 'bg-white text-black'
                                 ]" @click="form.design_details[key] = true">
                                     Yes
                                 </button>
                                 <button :class="[
-                                    'px-4 py-1 focus:outline-none',
+                                    'px-4 py-1 focus:outline-none transition',
                                     form.design_details[key] === false ? 'bg-primary text-white' : 'bg-white text-black'
                                 ]" @click="form.design_details[key] = false">
                                     No
