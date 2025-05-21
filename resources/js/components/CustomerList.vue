@@ -1,16 +1,21 @@
-<script setup>
+<script setup lang="ts">
 import { Icon } from '@iconify/vue';
 import { Link, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import Button from './Button.vue';
 const toast = new ToastMagic();
 
-const props = defineProps({
+const props = defineProps<{
     customer: {
-        type: Object,
-        required: true
-    }
-});
+        id: number;
+        name: string;
+        phone: string;
+        email?: string;
+        active_orders?: number;
+        payment_due?: number;
+        face_image?: string;
+    };
+}>();
 
 const showDropdown = ref(false);
 const showDeletePopup = ref(false);
@@ -24,18 +29,19 @@ const cancelDelete = () => {
 };
 
 const proceedDelete = () => {
-    softDeleteCustomer(props.customer.id);
+    deleteCustomer(props.customer.id);
     showDeletePopup.value = false;
 };
+
 
 const toggleDropdown = () => {
     showDropdown.value = !showDropdown.value;
 };
 
-const softDeleteCustomer = (customerId) => {
+const deleteCustomer = (customerId: number) => {
     router.delete(route('customers.destroy', customerId), {
         onSuccess: () => {
-            toast.success('Customer deleted successfully!');
+            toast.success('Customer permanently deleted!');
             router.reload();
         },
         onError: () => {
@@ -43,6 +49,7 @@ const softDeleteCustomer = (customerId) => {
         }
     });
 };
+
 </script>
 
 <template>
@@ -120,19 +127,34 @@ const softDeleteCustomer = (customerId) => {
 
         <!-- Delete Popup (optional, same as before) -->
         <div v-if="showDeletePopup"
-            class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
-            <div class="bg-white p-6 rounded-lg shadow-lg mx-5 lg:w-1/3">
-                <h2 class="text-xl font-bold mb-4">Are you sure ?</h2>
-                <p class="mb-4 text-md lg:text-lg text-black font-semibold">
-                    <span class="text-md text-red-600 lg:text-xl">Warning :</span> Are you sure you want to delete
-                    Customer
-                    <span class="font-bold text-primary">{{ props.customer.name }}</span> ?
-                </p>
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm transition-all">
+            <div
+                class="bg-white p-8 rounded-2xl shadow-xl mx-4 lg:mx-0 lg:w-1/3 max-w-lg text-gray-800 animate-fade-in">
+                <!-- Modal Header -->
+                <div class="flex items-center mb-4">
+                    <Icon icon="ic:baseline-warning" class="text-red-500 mr-2" width="28" height="28" />
+                    <h2 class="text-2xl font-bold text-red-600">Delete Customer ?</h2>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="mb-6 space-y-3">
+                    <p class="text-md lg:text-lg leading-relaxed">
+                        You're about to <strong class="text-red-600">permanently delete</strong> customer
+                        <strong class="text-primary">{{ props.customer.name }}</strong>.
+                    </p>
+                    <p class="text-sm text-gray-600">
+                        This action will remove all data associated with this customer and
+                        <span class="font-semibold text-red-600">cannot be undone.</span>
+                    </p>
+                </div>
+
+                <!-- Modal Footer -->
                 <div class="flex justify-end gap-4">
                     <Button @click="cancelDelete" :color="'gray'">Cancel</Button>
-                    <Button @click="proceedDelete" :color="'danger'">OK</Button>
+                    <Button @click="proceedDelete" :color="'danger'">Delete</Button>
                 </div>
             </div>
         </div>
+
     </div>
 </template>
