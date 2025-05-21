@@ -296,4 +296,43 @@ class CustomerController extends Controller
         $customer->delete();
         return redirect()->route('customers.index')->with('status', 'Customer deleted successfully!');
     }
+
+
+    // this delete function is used to delete the customer images from the database and storage
+    //   public function destroy($id)
+    // {
+    //     $customer = Customer::find($id);
+
+    //     if (!$customer) {
+    //         return redirect()->route('customers.index')->with('error', 'Customer not found!');
+    //     }
+
+    //     try {
+    //         DB::beginTransaction();
+
+    //         // Delete associated photos from storage and DB
+    //         $photos = CustomerPhoto::where('customer_id', $customer->id)->get();
+
+    //         foreach ($photos as $photo) {
+    //             $relativePath = Str::after($photo->image_url, 'storage/');
+    //             if (Storage::disk('public')->exists($relativePath)) {
+    //                 Storage::disk('public')->delete($relativePath);
+    //             }
+    //             $photo->delete(); // Delete DB record
+    //         }
+
+    //         // Delete pivot relationship
+    //         UserCustomer::where('customer_id', $customer->id)->delete();
+
+    //         // Finally delete customer
+    //         $customer->delete();
+
+    //         DB::commit();
+
+    //         return redirect()->route('customers.index')->with('success', 'Customer permanently deleted.');
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         return redirect()->route('customers.index')->with('error', 'Failed to delete customer: ' . $e->getMessage());
+    //     }
+    // }
 }
