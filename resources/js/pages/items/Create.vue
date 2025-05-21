@@ -188,7 +188,7 @@ const formatLabel = (key: string): string => {
                     <h2 class="text-md font-semibold mb-4">Design Details Ask:</h2>
 
                     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div v-for="(value, key) in form.design_details" :key="key"
+                    <div v-for="(value, key) in form.design_details" :key="key"
                             class="flex items-center justify-between bg-gray-50 p-2 rounded-md">
                             <span class="font-normal text-[16px] tracking-normal font-lato">
                                 {{ formatLabel(key) }}

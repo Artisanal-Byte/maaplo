@@ -23,9 +23,9 @@ const setItemTemplateId = (id) => {
             <h1 class="font-normal text-md leading-4 tracking-normal font-lato">Item Type<span
                     class="text-red-500 text-lg">*</span></h1>
             <Icon v-if="showDropdownItemType == false" icon="icon-park-outline:down" width="20" height="20"
-                class="text-black ml-2" />
+                class="text-black ml-2 mt-1" />
             <Icon v-if="showDropdownItemType == true" icon="icon-park-outline:up" width="20" height="20"
-                class="text-black ml-2" />
+                class="text-black ml-2 mt-1" />
         </div>
         <!-- Dropdown -->
         <div v-show="showDropdownItemType" class="z-10">

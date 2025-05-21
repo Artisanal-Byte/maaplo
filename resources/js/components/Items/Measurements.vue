@@ -72,7 +72,7 @@ function toggleDropdownMeasurements() {
         </div>
         <!-- Dropdown -->
         <div v-show="showDropdownMeasurements" class="z-10">
-            <div class="flex items-center gap-3 mt-2 ml-2">
+            <div class="flex items-center gap-3 mt-2 ml-1">
                 <SvgIcon :name="'unit'" />
                 <span
                     class="font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Unit</span>
