@@ -14,6 +14,9 @@ const form = useForm({
   subscription_plan: props.user.subscription_plan || '',
   validity: props.user.validity || ''
 });
+console.log('Form Data:', form);
+
+
 
 function submit() {
   //i want save this data in the database
@@ -59,12 +62,9 @@ function submit() {
         </div>
         <div>
           <Input type="text" label="Subscription Plan" color="grayBorder" :required="true" v-model="form.subscription_plan" :error="errors.subscription_plan" />
-          <!-- <Button :color="'primary'" :padding="'md'" :rounded="'full'" :textSize="'sm'" @click="submit">
-            Upgrade Plan
-          </Button> -->
         </div>
         <div>
-          <Input type="date" label="Validity" color="grayBorder"  v-model="form.validity" />
+          <Input type="date" label="Validity" color="grayBorder" v-model="form.validity" />
         </div>
         <Button :color="'primary'" :padding="'md'" :rounded="'full'" :textSize="'sm'" @click="submit">
           Submit
