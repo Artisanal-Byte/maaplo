@@ -207,14 +207,14 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                         </div>
 
                         <!-- Full Image Upload -->
-                        <div class="w-32 h-full gap-[10px]  p-2 shadow-[0px_0px_6.1px_0px_#00000040]">
+                        <div class="w-32 h-full gap-[10px] p-2 shadow-[0px_0px_6.1px_0px_#00000040]">
                             <div class="flex">
                                 <label class="block font-semibold mb-2 item-center">Full Image</label>
-                                <Icon icon="gridicons:image" width="24" height="24" />
+                                <Icon icon="gridicons:image" width="24" height="24" class="ml-2" />
                             </div>
                             <label class="upload-box cursor-pointer">
                                 <img :src="form.full_image_preview || '/images/full-coustomer.jpeg'"
-                                    alt="Full Image Preview" class="w-24 h-24 object-cover mb-2" />
+                                    alt="Full Image Preview" class="w-28 h-24 object-fit mb-2" />
 
                                 <input type="file" class="hidden" accept="image/*"
                                     @change="handleImageUpload($event, 'full_image')" />
