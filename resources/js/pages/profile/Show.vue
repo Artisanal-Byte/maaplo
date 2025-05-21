@@ -4,7 +4,7 @@ import Input from '@/components/InputWithLabel.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { useForm } from '@inertiajs/vue3';
 
-const props = defineProps(['user'])
+const props = defineProps(['user','errors'])
 const form = useForm({
   name: props.user.name || '',
   email: props.user.email || '',
@@ -14,6 +14,9 @@ const form = useForm({
   subscription_plan: props.user.subscription_plan || '',
   validity: props.user.validity || ''
 });
+console.log('Form Data:', form);
+
+
 
 function submit() {
   //i want save this data in the database
@@ -43,28 +46,25 @@ function submit() {
         <div>
           <!-- <span class="text-red-500">*</span> -->
           <Input type="text" label="Name" color="grayBorder" :required="true" placeholder="Enter Customer Name"
-            v-model="form.name" />
+            v-model="form.name" :error="errors.name" />
         </div>
         <div>
-          <Input type="email" label="Email" color="grayBorder" :required="true" v-model="form.email" />
+          <Input type="email" label="Email" color="grayBorder" :required="true" v-model="form.email" :error="errors.email" />
         </div>
         <div>
           <Input type="text" label="Phone" color="grayBorder" :required="true" v-model="form.phone" />
         </div>
         <div>
-          <Input type="text" label="Organization Name" color="grayBorder" :required="true" v-model="form.organization_name" />
+          <Input type="text" label="Organization Name" color="grayBorder" v-model="form.organization_name" />
         </div>
         <div>
-          <Input type="file" label="Organization Logo" color="grayBorder" :required="true" v-model="form.organization_logo" />
+          <Input type="file" label="Organization Logo" color="grayBorder"  v-model="form.organization_logo" />
         </div>
         <div>
-          <Input type="text" label="Subscription Plan" color="grayBorder" :required="true" v-model="form.subscription_plan" />
-          <!-- <Button :color="'primary'" :padding="'md'" :rounded="'full'" :textSize="'sm'" @click="submit">
-            Upgrade Plan
-          </Button> -->
+          <Input type="text" label="Subscription Plan" color="grayBorder" :required="true" v-model="form.subscription_plan" :error="errors.subscription_plan" />
         </div>
         <div>
-          <Input type="date" label="Validity" color="grayBorder" :required="true" v-model="form.validity" />
+          <Input type="date" label="Validity" color="grayBorder" v-model="form.validity" />
         </div>
         <Button :color="'primary'" :padding="'md'" :rounded="'full'" :textSize="'sm'" @click="submit">
           Submit

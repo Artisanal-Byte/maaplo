@@ -2,6 +2,7 @@
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItemType } from '@/types';
+import { Link } from '@inertiajs/vue3';
 
 defineProps<{
     breadcrumbs?: BreadcrumbItemType[];
@@ -18,7 +19,9 @@ defineProps<{
             </template>
         </div>
         <div class="mt-3 lg:mx-10 mx-0">
-            <img src="/images/Profile.png" alt="Profile Image">
+            <Link :href="route('profile.show')">
+            <img src="/images/Profile.png" alt="Profile Image" />
+            </Link>
         </div>
 
     </header>
