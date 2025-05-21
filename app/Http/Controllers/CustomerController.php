@@ -20,9 +20,6 @@ class CustomerController extends Controller
     // Display a listing of the customers
     public function index()
     {
-        $user = auth()->user();
-        $customerCount = Customer::where('user_id', $user->id)->count();
-        $customerLimitExceeded = $user->subscription_plan === 'free' && $customerCount >= 5;
         $customers = Auth::user()->customers()->with(['photos' => fn($q) => $q->where('label', 'Faceimage')])
             ->get()
             ->map(fn($c) => [
@@ -39,16 +36,20 @@ class CustomerController extends Controller
 
         return Inertia::render('customer/Index', [
             'customers' => $customers,
-            'customer_limit_exceeded' => $customerLimitExceeded,
         ]);
     }
 
     // Show the form for creating a new customer
     public function create()
     {
+        $user = auth()->user();
+        $customerCount = Customer::where('user_id', $user->id)->count();
+        $customerLimitExceeded = $user->subscription_plan === 'free' && $customerCount >= 5;
+
         $user_id = auth()->id();
         return Inertia::render('customer/Create', [
             'user_id' => $user_id,
+            'customer_limit_exceeded' => $customerLimitExceeded,
         ]);
     }
 

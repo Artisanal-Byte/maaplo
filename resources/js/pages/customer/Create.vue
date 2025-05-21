@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
-import { reactive, ref, computed } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
 import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
 import Input from '@/components/InputWithLabel.vue';
@@ -10,7 +10,8 @@ import Measurements from '@/components/Items/Measurements.vue';
 const customerMeasurements = ref({});
 const props = defineProps<{
     errors: Record<string, string>,
-    user_id: number
+    user_id: number,
+    customer_limit_exceeded: boolean
 }>();
 
 const toast = new ToastMagic();
@@ -32,11 +33,14 @@ const form = reactive({
 
 // Notes
 const notes = ref([{ label: '', text: '' }]);
+const showLimitModal = ref(false);
 
+onMounted(() => {
+    if (props.customer_limit_exceeded) {
+        showLimitModal.value = true;
+    }
+});
 const submitForm = () => {
-    // console.log('Form submitted:', form);
-    // if (!validateNotes()) return;
-    // console.log('Notes:', notes.value);
 
     router.post('/customers', {
         ...form,
@@ -72,6 +76,41 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
 
     <Head title="Costomer" />
     <AppLayout>
+        <!-- Limit Reached Modal -->
+        <div v-if="showLimitModal"
+            class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50">
+            <div class="bg-white mx-4 rounded-xl shadow-lg max-w-md w-full p-6 text-center relative">
+                <button @click="router.visit(route('customers.index'))"
+                    class="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl font-semibold">
+                    &times;
+                </button>
+
+                <div class="flex justify-center mb-4">
+                    <div class="bg-red-100 text-red-600 w-14 h-14 flex items-center justify-center rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4m0 4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                        </svg>
+                    </div>
+                </div>
+
+                <h2 class="text-xl font-bold text-red-600 mb-2">Limit Reached</h2>
+                <p class="text-gray-700 mb-2">
+                    You’re currently on a <strong class="text-primary">Free</strong> plan and can create up to <strong>5
+                        customers</strong> only.
+                </p>
+                <p class="text-gray-600 mb-6">
+                    To add more customers, please upgrade your subscription.
+                </p>
+
+                <button @click="router.visit('/upgrade')"
+                    class="bg-primary hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-full shadow transition">
+                    Upgrade Plan
+                </button>
+            </div>
+        </div>
+
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex justify-between items-center">
                 <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
@@ -189,7 +228,8 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                 </div>
 
                 <!-- Submit Button (Full Width Below) -->
-                <Button @click="submitForm" :color="'primary'" :padding="'md'" :rounded="'full'" :textSize="'sm'" class="lg:mt-5 mt-3">
+                <Button @click="submitForm" :color="'primary'" :padding="'md'" :rounded="'full'" :textSize="'sm'"
+                    class="lg:mt-5 mt-3">
                     Save & Continue
                 </Button>
             </div>
