@@ -212,7 +212,7 @@ console.log('form data', form.design_details);
                 </div>
 
                 <!-- Design Details -->
-                <div class="mt-6">
+                <div class="mt-2">
                     <h2 class="text-md font-semibold mb-4">Design Details</h2>
 
                     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -225,13 +225,13 @@ console.log('form data', form.design_details);
                             <div class="flex rounded overflow-hidden text-sm">
                                 <button :class="[
                                     'px-4 py-1 focus:outline-none transition',
-                                    form.design_details[key] === true ? 'bg-primary text-white' : 'bg-white text-black'
+                                    form.design_details[key] === true ? 'bg-primary text-white' : 'bg-gray-200 text-black'
                                 ]" @click="form.design_details[key] = true">
                                     Yes
                                 </button>
                                 <button :class="[
                                     'px-4 py-1 focus:outline-none transition',
-                                    form.design_details[key] === false ? 'bg-primary text-white' : 'bg-white text-black'
+                                    form.design_details[key] === false ? 'bg-primary text-white' : 'bg-gray-200 text-black'
                                 ]" @click="form.design_details[key] = false">
                                     No
                                 </button>
