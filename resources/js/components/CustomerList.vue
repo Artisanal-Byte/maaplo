@@ -126,7 +126,7 @@ const softDeleteCustomer = (customerId) => {
                 <p class="mb-4 text-md lg:text-lg text-black font-semibold">
                     <span class="text-md text-red-600 lg:text-xl">Warning :</span> Are you sure you want to delete
                     Customer
-                    <span class="font-bold text-blue-600">{{ props.customer.name }}</span> ?
+                    <span class="font-bold text-primary">{{ props.customer.name }}</span> ?
                 </p>
                 <div class="flex justify-end gap-4">
                     <Button @click="cancelDelete" :color="'gray'">Cancel</Button>

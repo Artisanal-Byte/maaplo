@@ -45,8 +45,8 @@ function myFn(val: string) {
     <AppLayout>
         <!-- Limit Reached Modal -->
         <div v-if="showLimitModal"
-            class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity">
-            <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-8 text-center relative animate-fade-in">
+            class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity transition-transform duration-200 transform hover:scale-105">
+            <div class="bg-white mx-10 lg:mx-0 rounded-xl shadow-2xl max-w-md w-full p-8 text-center relative animate-blink-loop">
                 <!-- Close Button -->
                 <button @click="showLimitModal = false"
                     class="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl font-semibold">
@@ -70,7 +70,7 @@ function myFn(val: string) {
 
                 <!-- Message -->
                 <p class="text-gray-700 mb-4">
-                    You’re currently on a <strong class="text-blue-600">Free</strong> plan and can create up to
+                    You’re currently on a <strong class="text-primary">Free</strong> plan and can create up to
                     <strong>5 customers</strong> only.
                 </p>
                 <p class="text-gray-600 mb-6">
@@ -79,7 +79,7 @@ function myFn(val: string) {
 
                 <!-- Upgrade Button -->
                 <button @click="router.visit('/upgrade')"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-full shadow transition">
+                    class="bg-primary hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-full shadow transition">
                     Upgrade Plan
                 </button>
             </div>
@@ -129,3 +129,22 @@ function myFn(val: string) {
         </div>
     </AppLayout>
 </template>
+<style>
+@keyframes blink-loop {
+
+    0%,
+    100% {
+        /* opacity: 1; */
+        transform: scale(1);
+    }
+
+    50% {
+        /* opacity: 0.85; */
+        transform: scale(1.03);
+    }
+}
+
+.animate-blink-loop {
+    animation: blink-loop 1s ease-in-out infinite;
+}
+</style>
