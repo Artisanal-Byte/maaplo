@@ -30,18 +30,61 @@ const showLimitModal = ref(false);
 
 function handleCreateClick(event: Event) {
     if (props.customer_limit_exceeded) {
-        event.preventDefault();
+        event.preventDefault(); // Block the navigation
         showLimitModal.value = true;
     }
 }
 
 function myFn(val: string) {
     searchTerm.value = val
+    // console.log('Searching  brj:', val)
 }
 
 </script>
 <template>
     <AppLayout>
+        <!-- Limit Reached Modal -->
+        <div v-if="showLimitModal"
+            class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity transition-transform duration-200 transform hover:scale-105">
+            <div class="bg-white mx-10 lg:mx-0 rounded-xl shadow-2xl max-w-md w-full p-8 text-center relative animate-blink-loop">
+                <!-- Close Button -->
+                <button @click="showLimitModal = false"
+                    class="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl font-semibold">
+                    &times;
+                </button>
+
+                <!-- Icon -->
+                <div class="flex justify-center mb-4">
+                    <div
+                        class="bg-red-100 text-red-600 w-14 h-14 flex items-center justify-center rounded-full shadow-inner">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4m0 4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Title -->
+                <h2 class="text-xl font-bold text-red-600 mb-2">Limit Reached</h2>
+
+                <!-- Message -->
+                <p class="text-gray-700 mb-4">
+                    You’re currently on a <strong class="text-primary">Free</strong> plan and can create up to
+                    <strong>5 customers</strong> only.
+                </p>
+                <p class="text-gray-600 mb-6">
+                    To add more customers, please upgrade your subscription.
+                </p>
+
+                <!-- Upgrade Button -->
+                <button @click="router.visit('/upgrade')"
+                    class="bg-primary hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-full shadow transition">
+                    Upgrade Plan
+                </button>
+            </div>
+        </div>
+
         <!-- Main Content -->
         <div class="lg:mx-auto max-w-7xl py-8 px-4">
             <div class="flex flex-row justify-between mb-6">
