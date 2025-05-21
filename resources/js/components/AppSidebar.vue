@@ -54,11 +54,12 @@ const visible = ref(false);
                     </li>
                     <li>
                         <div @click="toggleDropdownCustomer()" class="flex rounded hover:bg-gray-200 text-black">
-                            <Link class="flex items-center p-2 rounded ">
-                            <Icon icon="mdi:user" width="24" height="24" />
-                            <span class="ml-2 font-inter font-medium text-[16px] leading-[16px] tracking-[0]">Customer
-                            </span>
-                            </Link>
+                            <div class="flex items-center p-2 rounded ">
+                                <Icon icon="mdi:user" width="24" height="24" />
+                                <span
+                                    class="ml-2 font-inter font-medium text-[16px] leading-[16px] tracking-[0]">Customer
+                                </span>
+                            </div>
                             <Icon v-if="showDropdownCustomer == false" icon="icon-park-outline:down" width="20"
                                 height="20" class="mt-[12px]" />
                             <Icon v-if="showDropdownCustomer == true" icon="icon-park-outline:up" width="20" height="20"
@@ -80,7 +81,7 @@ const visible = ref(false);
                                 <li>
                                     <div class="flex flex-row py-2 mt-2 rounded hover:bg-gray-100 p-2">
                                         <Link :href="route('customers.create')" class="block text-black">Create
-                                        Customers
+                                        Customer
                                         </Link>
                                     </div>
                                 </li>
@@ -90,12 +91,11 @@ const visible = ref(false);
                     </li>
                     <li>
                         <div @click="toggleDropdown()" class="flex rounded hover:bg-gray-200 text-black">
-                            <Link @click="visible = false"
-                                class="flex items-center p-2 rounded ">
+                            <div class="flex items-center p-2 rounded">
                             <Icon icon="lets-icons:order-fill" width="24" height="24" />
                             <span
                                 class="ml-2 font-inter font-medium text-[16px] leading-[16px] tracking-[0]">Order</span>
-                            </Link>
+                            </div>
                             <Icon v-if="showDropdown == false" icon="icon-park-outline:down" width="20" height="20"
                                 class="mt-[12px]" />
                             <Icon v-if="showDropdown == true" icon="icon-park-outline:up" width="20" height="20"
@@ -116,7 +116,7 @@ const visible = ref(false);
 
                                 <li>
                                     <div class="flex flex-row py-2 mt-2 rounded hover:bg-gray-100 p-2">
-                                        <Link :href="route('orders.create')" class="block text-black">Create Orders
+                                        <Link :href="route('orders.create')" class="block text-black">Create Order
                                         </Link>
                                     </div>
                                 </li>
