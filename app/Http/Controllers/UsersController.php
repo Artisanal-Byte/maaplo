@@ -86,4 +86,18 @@ class UsersController extends Controller
     {
         //
     }
+
+    public function toggleStatus(Request $request, $id)
+{
+    $user = User::findOrFail($id);
+
+    $validated = $request->validate([
+        'status' => 'required|boolean',
+    ]);
+
+    $user->status = $validated['status'];
+    $user->save();
+
+    return redirect()->back()->with('success', 'User status updated successfully.');
+}
 }

@@ -14,9 +14,10 @@ const props = defineProps<{
         organization_name: string,
         subscription_plan: string,
         validity: string,
+        status:boolean,
     }>,
 }>();
-
+console.log(props);
 const showModal = ref(false);
 const selectedUser = ref<any>(null);
 const selectedStatus = ref<boolean>(false);
@@ -88,7 +89,6 @@ function toggleStatus(userId: number, currentStatus: boolean) {
                         Total Users: {{ users.length }}
                     </p>
                 </div>
-
                 <!-- Create Admin Button -->
                 <div class="relative group mt-1">
                     <Link :href="route('user.create')" class="cursor-pointer">
@@ -115,6 +115,7 @@ function toggleStatus(userId: number, currentStatus: boolean) {
                         <h1 class="font-[Lato] font-medium text-[18px] text-black mt-2">
                             Contact: {{ user.phone ?? 'N/A' }}
                         </h1>
+
                         <h1 class="font-[Lato] font-medium text-[18px] text-black mt-2">
                             Organization Name: {{ user.organization_name ?? 'N/A' }}
                         </h1>
@@ -142,8 +143,8 @@ function toggleStatus(userId: number, currentStatus: boolean) {
                         <div class="relative group">
                             <button @click="openConfirmationModal(user)"
                                 class="flex items-center text-white px-3 py-1 rounded-full text-sm font-medium"
-                                :class="user.status ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'">
-                                {{ user.status ? 'Deactive' : 'Active' }}
+                                :class="user.status ? 'bg-green-500 hover:bg-green-600': 'bg-red-500 hover:bg-red-600'">
+                                {{ user.status ? 'Active' : 'Deactivated' }}
                             </button>
                             <div
                                 class="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition bg-gray-800 text-white text-xs rounded py-1 px-2 pointer-events-none z-10">

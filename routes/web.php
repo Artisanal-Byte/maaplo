@@ -35,16 +35,15 @@ Route::middleware(["auth", "verified"])->group(function () {
     // Route::resource('orders', OrderController::class)->names(["index"]);
     Route::resource('items', TemplateController::class);
     Route::resource('user', UsersController::class);
-
+    Route::post('/admin/users/{id}/toggle-status', [UsersController::class, 'toggleStatus'])->name('admin.toggleStatus');
     Route::resource('design-details', DesignDetailsController::class);
     // Route::resource('admin', DesignDetailsController::class);
     Route::get('admin', function () {
         return Inertia::render('admin/Index');
     });
-    Route::get('user-create',function(){
+    Route::get('user-create', function () {
         return Inertia::render('admin/UserCreate');
     });
-
 });
 
 require __DIR__ . '/settings.php';
