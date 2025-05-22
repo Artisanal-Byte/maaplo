@@ -17,12 +17,13 @@ const form = useForm({
     subscription_plan: '',
     validity: '',
     password: '',
-    organization_logo: '',
+    organization_logo: null,
     status: true,
 });
 
 const createUser = () => {
     form.post(route('user.store'), {
+        forceFormData: true,
         onSuccess: () => {
             toast.success("User created successfully!");
         },
@@ -81,8 +82,8 @@ const createUser = () => {
                         placeholder="Enter Password" />
                 </div>
                 <div>
-                    <Input type="text" v-model="form.organization_logo" label="Organization Logo URL"
-                        :error="form.errors.organization_logo" placeholder="https://logo.url/image.png" />
+                    <Input type="file" @change="(e) => form.organization_logo = e.target.files[0]"
+                        label="Organization Logo" :error="form.errors.organization_logo" />
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-700">Status</label>
