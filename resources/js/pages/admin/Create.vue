@@ -38,68 +38,88 @@ const createUser = () => {
 <template>
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h1 class="text-[24px] font-bold text-gray-800 font-[Convergence]">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 font-[Convergence] flex items-center gap-2">
+                    <Icon icon="mdi:account-plus" width="28" height="28" />
                     Create User
                 </h1>
-                <div class="text-gray-600">
-                    <Link :href="route('user.index')" class="flex items-center gap-1 hover:text-black">
-                    <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
-                    <span class="text-[16px] font-medium">Back</span>
-                    </Link>
-                </div>
+                <Link :href="route('user.index')" class="flex items-center gap-2 text-gray-600 hover:text-black">
+                <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
+                <span class="text-md font-medium">Back</span>
+                </Link>
             </div>
 
-            <div class="space-y-5 bg-white p-6 rounded-lg shadow">
+            <!-- Form -->
+            <div class="bg-white p-8 rounded-lg shadow-md space-y-8">
+                <!-- Section: User Info -->
                 <div>
-                    <Input type="text" v-model="form.name" label="User Name" :required="true" :error="form.errors.name"
-                        placeholder="Enter User Name" />
-                </div>
-                <div>
-                    <Input type="email" v-model="form.email" label="Email" :error="form.errors.email"
-                        placeholder="example@mail.com" :required="true" />
-                </div>
-                <div>
-                    <Input type="text" v-model="form.phone" label="Contact Number" :required="true"
-                        :error="form.errors.phone" placeholder="Enter Phone Number" />
-                </div>
-                <div>
-                    <Input type="textarea" v-model="form.address" label="Address" :error="form.errors.address" />
-                </div>
-                <div>
-                    <Input type="textarea" v-model="form.organization_name" label="Organization Name"
-                        :error="form.errors.organization_name" />
-                </div>
-                <div>
-                    <Input type="textarea" v-model="form.subscription_plan" label="Subscription Plan"
-                        :error="form.errors.subscription_plan" />
-                </div>
-                <div>
-                    <Input type="date" v-model="form.validity" label="Validity" :error="form.errors.validity" />
-                </div>
-                <div>
-                    <Input type="password" v-model="form.password" label="Password" :error="form.errors.password"
-                        placeholder="Enter Password" />
-                </div>
-                <div>
-                    <Input type="file" @change="(e) => form.organization_logo = e.target.files[0]"
-                        label="Organization Logo" :error="form.errors.organization_logo" />
-                </div>
-                <div>
-                    <label class="text-sm font-medium text-gray-700">Status</label>
-                    <select v-model="form.status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                        <option :value="true">Active</option>
-                        <option :value="false">Inactive</option>
-                    </select>
+                    <h2 class="text-lg font-semibold text-gray-700 mb-4">User Information</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <Input type="text" v-model="form.name" label="User Name" :required="true"
+                            :error="form.errors.name" placeholder="Enter User Name" />
+                        <Input type="email" v-model="form.email" label="Email" :error="form.errors.email"
+                            placeholder="example@mail.com" :required="true" />
+                        <Input type="text" v-model="form.phone" label="Contact Number" :required="true"
+                            :error="form.errors.phone" placeholder="Enter Phone Number" />
+                        <Input type="password" v-model="form.password" label="Password" :error="form.errors.password"
+                            placeholder="Enter Password" />
+                    </div>
                 </div>
 
-                <!-- Submit Button (Full Width Below) -->
-                <Button @click="createUser" :color="'primary'" :padding="'md'" :rounded="'full'" :textSize="'sm'"
-                    class="lg:mt-5 mt-3">
-                    Save & Continue
-                </Button>
+                <!-- Section: Organization Info -->
+                <div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <Input type="textarea" v-model="form.address" label="Address" :error="form.errors.address" />
+                        <Input type="textarea" v-model="form.organization_name" label="Organization Name"
+                            :error="form.errors.organization_name" />
+                        <Input type="textarea" v-model="form.subscription_plan" label="Subscription Plan"
+                            :error="form.errors.subscription_plan" />
+                        <Input type="date" v-model="form.validity" label="Validity" :error="form.errors.validity" />
+                    </div>
+                </div>
+
+                <!-- Section: Logo Upload & Status -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <div>
+                        <Input type="file" @change="(e) => form.organization_logo = e.target.files[0]"
+                            label="Organization Logo" :error="form.errors.organization_logo" />
+                        <p v-if="form.organization_logo" class="text-sm text-gray-500 mt-1">
+                            Selected: {{ form.organization_logo.name }}
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 mt-2 ml-1">
+                        <Icon icon="mdi:account-check" class="text-gray-700" width="20" height="20" />
+                        <span class="text-[16px] font-bold text-gray-800">Status</span>
+
+                        <div class="flex border border-gray-300 rounded overflow-hidden text-sm">
+                            <button :class="[
+                                'px-4 py-1 focus:outline-none',
+                                form.status ? 'bg-primary text-white' : 'bg-white text-gray-800'
+                            ]" @click="form.status = true">
+                                Active
+                            </button>
+                            <button :class="[
+                                'px-4 py-1 focus:outline-none',
+                                !form.status ? 'bg-red-500 text-white' : 'bg-white text-gray-800'
+                            ]" @click="form.status = false">
+                                Inactive
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex w-full">
+                    <Button @click="createUser" :color="'primary'" :padding="'md'" :rounded="'full'" :textSize="'sm'"
+                        class="w-full flex justify-center items-center hover:scale-105 transition-transform duration-200">
+                        <Icon icon="mdi:check-bold" width="20" height="30" class="mr-2" />
+                        Save & Continue
+                    </Button>
+                </div>
+
             </div>
-
         </div>
     </AppLayout>
 </template>
