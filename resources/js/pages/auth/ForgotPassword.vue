@@ -29,8 +29,8 @@ const submit = () => {
             {{ status }}
         </div>
 
-        <div class="space-y-6">
-            <form @submit.prevent="submit">
+        <div class="space-y-6 border border-primary p-4 rounded-md" >
+            <form @submit.prevent="submit" >
                 <div class="grid gap-2">
                     <Label for="email">Email address</Label>
                     <Input id="email" type="email" name="email" autocomplete="off" v-model="form.email" autofocus placeholder="email@example.com" />

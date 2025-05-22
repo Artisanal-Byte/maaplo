@@ -96,7 +96,7 @@ function handleBlur() {
           class="absolute top-2.5 right-8 text-gray-500 cursor-pointer" @click="clearSelection" />
 
     <input type="text" v-model="searchQuery" @focus="showDropdown = true" @blur="handleBlur"
-           placeholder="Search Item Type" class="w-full border rounded px-3 py-2 focus:outline-none"
+           placeholder="Search Item Type" class="w-full border border-primary rounded px-3 py-2 focus:outline-none"
            :class="{ 'border-red-500': isInvalid }" />
 
     <!-- Dropdown Icon -->
