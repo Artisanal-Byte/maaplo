@@ -18,10 +18,13 @@ const props = defineProps<{
         address: string,
         organization_name: string,
         subscription_plan: string,
-        validity: string
+        validity: Date,
+        password?: string,
+        organization_logo?: string,
+        status?: boolean,
     }
 }>();
-
+console.log('user data',props);
 const form = useForm({
     name: props.user.name,
     email: props.user.email,
@@ -30,6 +33,9 @@ const form = useForm({
     organization_name: props.user.organization_name,
     subscription_plan: props.user.subscription_plan,
     validity: props.user.validity,
+    password: props.user.password ?? '',
+    organization_logo: props.user.organization_logo ?? '',
+    status: props.user.status ?? true,
 });
 
 const updateUser = () => {
@@ -59,7 +65,7 @@ const updateUser = () => {
                     Edit User
                 </h1>
                 <div class="text-gray-600">
-                    <Link :href="route('user.index')"  class="flex items-center gap-1 hover:text-black">
+                    <Link :href="route('user.index')" class="flex items-center gap-1 hover:text-black">
                     <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
                     <span class="text-[16px] font-medium">Back</span>
                     </Link>
@@ -100,16 +106,38 @@ const updateUser = () => {
                     </div>
 
                     <div>
-                        <Input type="textarea" v-model="form.validity" color="grayBorder" :required="true"
-                            label="Validity" :error="errors.validity"></Input>
+                        <Input type="date" v-model="form.validity" color="grayBorder" :required="true" label="Validity"
+                            :error="errors.validity"></Input>
                     </div>
 
-                    <!-- Update Button -->
+                    <!-- Password Field -->
+                    <div>
+                        <Input type="password" v-model="form.password" label="Password" color="grayBorder"
+                            :error="errors.password" placeholder="Enter Password (optional)" />
+                    </div>
+
+                    <!-- Organization Logo Field -->
+                    <div>
+                        <Input type="text" v-model="form.organization_logo" label="Organization Logo URL"
+                            color="grayBorder" :error="errors.organization_logo"
+                            placeholder="https://logo.url/image.png" />
+                    </div>
+
+                    <!-- Status Field -->
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Status</label>
+                        <select v-model="form.status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                            <option :value="true">Active</option>
+                            <option :value="false">Inactive</option>
+                        </select>
+                    </div>
+
+                </div>
+                <!-- Update Button -->
                 <Button @click="updateUser" :disabled="form.processing" :color="'primary'" :padding="'md'"
                     :rounded="'full'" :textSize="'sm'">
                     Update User
                 </Button>
-                </div>
             </div>
         </div>
     </AppLayout>

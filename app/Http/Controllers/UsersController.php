@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ImageHelper;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
+use Devrabiul\ToastMagic\Facades\ToastMagic;
+use Illuminate\Support\Facades\DB;
 
 class UsersController extends Controller
 {
@@ -33,7 +37,47 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
+            'organization_name' => 'nullable|string|max:255',
+            'subscription_plan' => 'nullable|string|max:255',
+            'validity' => 'nullable|date',
+            'password' => 'required|string|min:6',
+            'organization_logo' => 'nullable|file|image|max:2048',
+            'status' => 'boolean',
+        ]);
+        $validated['password'] = bcrypt($validated['password']);
+        try {
+            DB::beginTransaction();
+            // temporary store user
+            $tempUser = User::create([
+                ...$validated,
+                'organization_logo' => '',
+            ]);
+            // If logo image exists, process and update
+            if ($request->hasFile('organization_logo')) {
+                $file = $request->file('organization_logo');
+                $username = Str::slug($validated['name']);
+                $userId = $tempUser->id;
+                $customerName = $username;
+                $customerId = $userId;
+
+                $path = ImageHelper::imageProccess($file, $customerId, $username, $userId, $customerName, 'org_logo');
+                $tempUser->update(['organization_logo' => $path]);
+            }
+            $userFind = User::find($tempUser->id);
+            $userFind->update(['id' => $tempUser->id], $validated);
+
+            DB::commit();
+            ToastMagic::success('User created successfully!');
+            return redirect()->route('user.index')->with('success', 'User created successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('error', 'There was an error: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -47,10 +91,10 @@ class UsersController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
         $user = User::findOrFail($id);
-
+        // dd($user->all());
         return Inertia::render('admin/Edit', [
             'user' => $user
         ]);
@@ -62,7 +106,7 @@ class UsersController extends Controller
     public function update(Request $request, string $id)
     {
         $user = User::findOrFail($id);
-        dd($request);
+        // dd($request);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
@@ -70,8 +114,16 @@ class UsersController extends Controller
             'address' => 'nullable|string|max:255',
             'organization_name' => 'nullable|string|max:255',
             'subscription_plan' => 'nullable|string|max:255',
-            'validity' => 'nullable|string|max:255',
+            'validity' => 'nullable|date',
+            'password' => 'nullable|string|min:6',
+            'organization_logo' => 'nullable|string|max:255',
+            'status' => 'boolean',
         ]);
+        if ($request->filled('password')) {
+            $validated['password'] = bcrypt($request->password);
+        } else {
+            unset($validated['password']);
+        }
 
         $user->update($validated);
 
@@ -88,16 +140,13 @@ class UsersController extends Controller
     }
 
     public function toggleStatus(Request $request, $id)
-{
-    $user = User::findOrFail($id);
-
-    $validated = $request->validate([
-        'status' => 'required|boolean',
-    ]);
-
-    $user->status = $validated['status'];
-    $user->save();
-
-    return redirect()->back()->with('success', 'User status updated successfully.');
-}
+    {
+        $user = User::findOrFail($id);
+        $validated = $request->validate([
+            'status' => 'required|boolean',
+        ]);
+        $user->status = $validated['status'];
+        $user->save();
+        return redirect()->back()->with('success', 'User status updated successfully.');
+    }
 }
