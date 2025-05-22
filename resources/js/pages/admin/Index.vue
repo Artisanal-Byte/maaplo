@@ -29,7 +29,7 @@ function openConfirmationModal(user: any) {
 function confirmToggleStatus() {
     if (!selectedUser.value) return;
 
-    router.post(route('user.toggleStatus', selectedUser.value.id), {
+    router.post(route('admin.toggleStatus', selectedUser.value.id), {
         status: !selectedUser.value.status
     });
 
@@ -43,7 +43,7 @@ function toggleStatus(userId: number, currentStatus: boolean) {
 
     if (!confirmed) return;
 
-    router.post(route('user.toggleStatus', userId), {
+    router.post(route('admin.toggleStatus', userId), {
         status: !currentStatus
     });
 }
@@ -82,10 +82,10 @@ function toggleStatus(userId: number, currentStatus: boolean) {
             <div class="flex justify-between items-center mb-6">
                 <div>
                     <h1 class="text-[24px] mt-3 leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
-                        Admin
+                        User's
                     </h1>
                     <p class="text-sm text-gray-700 text-right mt-2">
-                        Total Admins: {{ users.length }}
+                        Total Users: {{ users.length }}
                     </p>
                 </div>
 
@@ -96,7 +96,7 @@ function toggleStatus(userId: number, currentStatus: boolean) {
                     </Link>
                     <div
                         class="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition bg-gray-800 text-white text-xs rounded py-1 px-2 pointer-events-none z-10">
-                        Create Admin
+                        Create User
                     </div>
                 </div>
             </div>
