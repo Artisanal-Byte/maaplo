@@ -33,8 +33,28 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
+            'organization_name' => 'nullable|string|max:255',
+            'subscription_plan' => 'nullable|string|max:255',
+            'validity' => 'nullable|date',
+            'password' => 'required|string|min:6',
+            'organization_logo' => 'nullable|string|max:255',
+            'status' => 'boolean',
+        ]);
+// dd($validated);
+        $validated['password'] = bcrypt($validated['password']);
+// dd($validated);
+
+        User::create($validated);
+
+        return redirect()->route('user.index')->with('success', 'User created successfully.');
     }
+
 
     /**
      * Display the specified resource.
@@ -47,10 +67,10 @@ class UsersController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
         $user = User::findOrFail($id);
-
+        // dd($user->all());
         return Inertia::render('admin/Edit', [
             'user' => $user
         ]);
@@ -62,7 +82,7 @@ class UsersController extends Controller
     public function update(Request $request, string $id)
     {
         $user = User::findOrFail($id);
-        dd($request);
+        // dd($request);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
@@ -71,7 +91,15 @@ class UsersController extends Controller
             'organization_name' => 'nullable|string|max:255',
             'subscription_plan' => 'nullable|string|max:255',
             'validity' => 'nullable|date',
+            'password' => 'nullable|string|min:6',
+            'organization_logo' => 'nullable|string|max:255',
+            'status' => 'boolean',
         ]);
+        if ($request->filled('password')) {
+            $validated['password'] = bcrypt($request->password);
+        } else {
+            unset($validated['password']);
+        }
 
         $user->update($validated);
 
@@ -88,16 +116,16 @@ class UsersController extends Controller
     }
 
     public function toggleStatus(Request $request, $id)
-{
-    $user = User::findOrFail($id);
+    {
+        $user = User::findOrFail($id);
 
-    $validated = $request->validate([
-        'status' => 'required|boolean',
-    ]);
+        $validated = $request->validate([
+            'status' => 'required|boolean',
+        ]);
 
-    $user->status = $validated['status'];
-    $user->save();
+        $user->status = $validated['status'];
+        $user->save();
 
-    return redirect()->back()->with('success', 'User status updated successfully.');
-}
+        return redirect()->back()->with('success', 'User status updated successfully.');
+    }
 }
