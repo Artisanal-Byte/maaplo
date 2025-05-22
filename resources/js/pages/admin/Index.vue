@@ -41,28 +41,24 @@ function confirmToggleStatus() {
                 <h1 class="text-2xl font-bold text-gray-800">Users</h1>
                 <div class="flex gap-4 items-center text-gray-600">
                     <Link :href="route('user.create')" class="relative group">
-                        <Icon icon="material-symbols:add-rounded" width="30" height="30" />
-                        <div
-                            class="absolute top-full mt-1 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-gray-800 text-white text-xs rounded px-2 py-1 transition pointer-events-none z-10">
-                            Create User
-                        </div>
+                    <Icon icon="material-symbols:add-rounded" width="30" height="30" />
+                    <div
+                        class="absolute top-full mt-1 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-gray-800 text-white text-xs rounded px-2 py-1 transition pointer-events-none z-10">
+                        Create User
+                    </div>
                     </Link>
                 </div>
             </div>
 
             <!-- Mobile View (Card Layout) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:hidden">
-                <UserTemplateList
-                    v-for="user in users"
-                    :key="user.id"
-                    :user="user"
-                    @toggleStatus="openConfirmationModal"
-                />
+                <UserTemplateList v-for="user in users" :key="user.id" :user="user"
+                    @toggleStatus="openConfirmationModal" />
             </div>
 
             <!-- Desktop View (Table Layout) -->
-            <div class="hidden md:block mt-6">
-                <table class="min-w-full border border-gray-300">
+            <div class="hidden md:block mt-6 overflow-hidden rounded-lg">
+                <table class="min-w-full">
                     <thead class="bg-primary text-white">
                         <tr>
                             <th class="p-2 border border-gray-300 text-center">Name</th>
@@ -89,15 +85,17 @@ function confirmToggleStatus() {
                             <td class="p-2 border text-center">
                                 <div class="flex justify-center gap-4">
                                     <Link :href="route('user.edit', user.id)" class="relative group">
-                                        <Icon icon="ri:edit-fill" class="text-blue-700" width="20" height="20" />
-                                        <div
-                                            class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 z-10">
-                                            Edit
-                                        </div>
+                                    <Icon icon="ri:edit-fill" class="text-blue-700" width="20" height="20" />
+                                    <div
+                                        class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 z-10">
+                                        Edit
+                                    </div>
                                     </Link>
 
                                     <button @click="openConfirmationModal(user)" class="relative group">
-                                        <Icon icon="mdi:account-lock" :class="user.status ? 'text-green-600' : 'text-red-600'" width="20" height="20" />
+                                        <Icon icon="mdi:account-lock"
+                                            :class="user.status ? 'text-green-600' : 'text-red-600'" width="20"
+                                            height="20" />
                                         <div
                                             class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 z-10">
                                             Toggle Status
@@ -116,7 +114,8 @@ function confirmToggleStatus() {
                     <h2 class="text-xl font-bold mb-3">Are you sure?</h2>
                     <p class="text-gray-700 mb-4">
                         You are about to
-                        <span class="font-semibold text-red-500">{{ selectedUser?.status ? 'deactivate' : 'activate' }}</span>
+                        <span class="font-semibold text-red-500">{{ selectedUser?.status ? 'deactivate' : 'activate'
+                            }}</span>
                         <strong>{{ selectedUser?.name }}</strong>.
                     </p>
                     <div class="flex justify-end gap-3">
