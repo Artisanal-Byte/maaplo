@@ -1,59 +1,152 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Http\Controllers;
 
-use Illuminate\Http\UploadedFile;
-use Intervention\Image\ImageManager;
+use App\Helpers\ImageHelper;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Illuminate\Support\Str;
+use Devrabiul\ToastMagic\Facades\ToastMagic;
+use Illuminate\Support\Facades\DB;
 
-class ImageHelper
+class UsersController extends Controller
 {
     /**
-     * Save the customer image and return its storage path.
-     *
-     * @param UploadedFile $image
-     * @param int $customerId
-     * @param string $username
-     * @param int $userId
-     * @param string $customerName
-     * @param string $label
-     * @return string
+     * Display a listing of the resource.
      */
-    public static function imageProccess(UploadedFile $image, $customerId, $username, $userId, $customerName, $label = 'organization_logo', $type = 'user')
+    public function index()
     {
+        $users = User::all();
+        // dd($users);
+        return Inertia::render('admin/Index', [
+            'users' => $users
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return Inertia::render('admin/Create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
+            'organization_name' => 'nullable|string|max:255',
+            'subscription_plan' => 'nullable|string|max:255',
+            'validity' => 'nullable|date',
+            'password' => 'required|string|min:6',
+            'organization_logo' => 'nullable|file|image|max:2048',
+            'status' => 'boolean',
+        ]);
+        $validated['password'] = bcrypt($validated['password']);
         try {
-            $timestamp = time();
-            $fileName = "{$label}_{$timestamp}.webp";
+            DB::beginTransaction();
+            // temporary store user
+            $tempUser = User::create([
+                ...$validated,
+                'organization_logo' => '',
+            ]);
+            // If logo image exists, process and update
+            if ($request->hasFile('organization_logo')) {
+                $file = $request->file('organization_logo');
+                $username = Str::slug($validated['name']);
+                $userId = $tempUser->id;
+                $customerName = $username;
+                $customerId = $userId;
 
-            // Conditional folder path
-            if ($type === 'customer') {
-                $folderPath = "customers/{$username}_{$userId}/images";
-            } else {
-                $folderPath = "users_organization_logo/{$username}_{$userId}";
+                $path = ImageHelper::imageProccess($file, $customerId, $username, $userId, $customerName, 'org_logo');
+                $tempUser->update(['organization_logo' => $path]);
             }
+            $userFind = User::find($tempUser->id);
+            $userFind->update(['id' => $tempUser->id], $validated);
 
-            // $folderPath = "  customers/{$username}_{$userId}/{$customerName}_{$customerId}/images";
-            $fullPath = "{$folderPath}/{$fileName}";
-            $directory = storage_path("app/public/{$folderPath}/");
-
-            // Define storage path
-            if (!file_exists($directory)) {
-                mkdir($directory, 0755, true);
-            }
-            $storagePath = $directory . $fileName;
-
-            // Use configured image driver (from config/image.php)
-            $manager = new ImageManager(config('image.driver'));
-            $image = $manager->read($image);
-
-            $image = $image->scaleDown(width: 2000, height: 2000);
-            // Read and encode image
-            $image = $manager->read($image);
-            $encoded = $image->toWebp(60);
-            $encoded->save($storagePath);
-
-            return "storage/{$fullPath}";
+            DB::commit();
+            ToastMagic::success('User created successfully!');
+            return redirect()->route('user.index')->with('success', 'User created successfully.');
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('error', 'There was an error: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id)
+    {
+        $user = User::findOrFail($id);
+        // dd($user->all());
+        return Inertia::render('admin/Edit', [
+            'user' => $user
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        $user = User::findOrFail($id);
+        // dd($request);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
+            'organization_name' => 'nullable|string|max:255',
+            'subscription_plan' => 'nullable|string|max:255',
+            'validity' => 'nullable|date',
+            'password' => 'nullable|string|min:6',
+            'organization_logo' => 'nullable|string|max:255',
+            'status' => 'boolean',
+        ]);
+        if ($request->filled('password')) {
+            $validated['password'] = bcrypt($request->password);
+        } else {
+            unset($validated['password']);
+        }
+
+        $user->update($validated);
+
+        return redirect()->route('user.index')->with('success', 'User updated successfully.');
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+
+    public function toggleStatus(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $validated = $request->validate([
+            'status' => 'required|boolean',
+        ]);
+        $user->status = $validated['status'];
+        $user->save();
+        return redirect()->back()->with('success', 'User status updated successfully.');
     }
 }
