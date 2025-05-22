@@ -45,15 +45,16 @@ const visible = ref(false);
                 <ul class="space-y-1 p-4">
                     <li>
                         <a href="/dashboard" @click="visible = false"
-                            class="flex items-center p-2 rounded hover:bg-gray-200 text-black">
+                            class="flex items-center p-2 rounded hover:bg-gray-200 text-gray-700 hover:text-black cursor-pointer">
                             <Icon icon="ic:round-dashboard" width="20" height="20" />
                             <span
-                                class="ml-2 font-inter font-medium text-[16px] leading-[16px] tracking-[0]">Dashboard</span>
+                                class="ml-3 font-inter font-medium text-gray-700 hover:text-black leading-[16px] tracking-[0]">Dashboard</span>
 
                         </a>
                     </li>
                     <li>
-                        <div @click="toggleDropdownCustomer()" class="flex rounded hover:bg-gray-200 text-black">
+                        <div @click="toggleDropdownCustomer()"
+                            class="flex rounded hover:bg-gray-200 text-gray-700 hover:text-black cursor-pointer">
                             <div class="flex items-center p-2 rounded ">
                                 <Icon icon="mdi:user" width="24" height="24" />
                                 <span
@@ -67,34 +68,30 @@ const visible = ref(false);
                         </div>
                         <!-- Dropdown -->
                         <div v-show="showDropdownCustomer" class="mt-2 z-10 ml-5">
-                            <ul class="ml-8 list-disc list-insid font-inter font-medium text-[16px] leading-[16px] tracking-[0]"
+                            <ul class="ml-6 list-disc list-insid font-inter font-medium text-[16px] leading-[16px] tracking-[0]"
                                 aria-labelledby="dropdownTrigger">
+                                <div class="flex flex-row rounded hover:bg-gray-100 p-2">
+                                    <Link :href="route('customers.index')" class="text-gray-700 hover:text-black">
+                                    All Customers
+                                    </Link>
+                                </div>
 
-                                <li>
-                                    <div class="flex flex-row rounded hover:bg-gray-100 p-2">
-                                        <Link :href="route('customers.index')" class="text-black ">
-                                        All Customers
-                                        </Link>
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <div class="flex flex-row py-2 mt-2 rounded hover:bg-gray-100 p-2">
-                                        <Link :href="route('customers.create')" class="block text-black">Create
-                                        Customer
-                                        </Link>
-                                    </div>
-                                </li>
-
+                                <div class="flex flex-row py-2 mt-2 rounded hover:bg-gray-100 p-2">
+                                    <Link :href="route('customers.create')"
+                                        class="block text-gray-700 hover:text-black">Create
+                                    Customer
+                                    </Link>
+                                </div>
                             </ul>
                         </div>
                     </li>
                     <li>
-                        <div @click="toggleDropdown()" class="flex rounded hover:bg-gray-200 text-black">
+                        <div @click="toggleDropdown()"
+                            class="flex rounded hover:bg-gray-200 text-gray-700 hover:text-black cursor-pointer">
                             <div class="flex items-center p-2 rounded">
-                            <Icon icon="lets-icons:order-fill" width="24" height="24" />
-                            <span
-                                class="ml-2 font-inter font-medium text-[16px] leading-[16px] tracking-[0]">Order</span>
+                                <Icon icon="lets-icons:order-fill" width="24" height="24" />
+                                <span
+                                    class="ml-2 font-inter font-medium text-[16px] leading-[16px] tracking-[0]">Order</span>
                             </div>
                             <Icon v-if="showDropdown == false" icon="icon-park-outline:down" width="20" height="20"
                                 class="mt-[12px]" />
@@ -103,30 +100,31 @@ const visible = ref(false);
                         </div>
                         <!-- Dropdown -->
                         <div v-show="showDropdown" class="mt-2 z-10 ml-5">
-                            <ul class="ml-8 list-disc list-insid font-inter font-medium text-[16px] leading-[16px] tracking-[0]"
+                            <ul class="ml-6 list-disc list-insid font-inter font-medium text-[16px] leading-[16px] tracking-[0]"
                                 aria-labelledby="dropdownTrigger">
 
-                                <li>
-                                    <div class="flex flex-row rounded hover:bg-gray-100 p-2">
-                                        <Link :href="route('orders.index')" class="text-black">
-                                        All Orders
-                                        </Link>
-                                    </div>
-                                </li>
+                                <!-- <li> -->
+                                <div class="flex flex-row rounded hover:bg-gray-100 p-2">
+                                    <Link :href="route('orders.index')" class="text-gray-700 hover:text-black">
+                                    All Orders
+                                    </Link>
+                                </div>
+                                <!-- </li> -->
 
-                                <li>
-                                    <div class="flex flex-row py-2 mt-2 rounded hover:bg-gray-100 p-2">
-                                        <Link :href="route('orders.create')" class="block text-black">Create Order
-                                        </Link>
-                                    </div>
-                                </li>
+                                <!-- <li> -->
+                                <div class="flex flex-row py-2 mt-2 rounded hover:bg-gray-100 p-2">
+                                    <Link :href="route('orders.create')" class="block text-gray-700 hover:text-black">
+                                    Create Order
+                                    </Link>
+                                </div>
+                                <!-- </li> -->
 
                             </ul>
                         </div>
                     </li>
                     <li>
                         <Link :href="route('items.index')" @click="visible = false"
-                            class="flex items-center p-2 rounded hover:bg-gray-200 text-black ml-1">
+                            class="flex items-center p-2 rounded hover:bg-gray-200 text-gray-700 hover:text-black ml-1">
                         <Icon icon="qlementine-icons:items-list-16" width="16" height="16" />
                         <span class="ml-3 font-inter font-medium text-[16px] leading-[16px] tracking-[0]">Items</span>
                         </Link>
@@ -135,7 +133,7 @@ const visible = ref(false);
                 </ul>
                 <!-- Bottom "Preference" Link -->
                 <div class="p-4 absolute inset-x-0 bottom-0">
-                    <a href="#" class="flex items-center p-2 rounded hover:bg-gray-100 text-black">
+                    <a href="#" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700 hover:text-black">
                         <Icon icon="lets-icons:setting-fill" width="20" height="20" />
                         <span
                             class="ml-2 font-inter font-medium text-[16px] leading-[16px] tracking-[0]">Preference</span>
