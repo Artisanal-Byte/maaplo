@@ -157,12 +157,12 @@ function onFileChange(event, index) {
         <!-- Modal Container -->
         <div class="fixed inset-0 bg-black bg-opacity-25 z-50"></div>
         <div
-            class="fixed z-[999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full lg:max-w-6xl max-w-[calc(100%-2.5rem)] bg-white shadow-lg rounded-[10px] overflow-hidden">
+            class="fixed z-[999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full lg:max-w-6xl max-w-[calc(100%-2.5rem)] bg-[#DEEFF4] shadow-lg rounded-[10px] overflow-hidden">
             <!-- Close Button -->
             <div class=" px-4 lg:px-6 py-6 overflow-y-auto max-h-[80vh]">
                 <div class="flex justify-between">
                     <div>
-                        <h1 class="font-medium text-2xl mb-5">Add Items</h1>
+                        <h1 class="font-medium text-primary text-2xl mb-5">Add Items</h1>
                     </div>
                     <div>
                         <Button @click="$emit('close')" color="gray" padding="sm" rounded="full" textSize="xl"
@@ -186,12 +186,12 @@ function onFileChange(event, index) {
                     </div>
 
                     <div class="flex items-center gap-4">
-                        <h1 class="text-[16px] font-normal font-lato">Reference dress given?</h1>
+                        <h1 class="font-medium font-lato">Reference dress given?</h1>
                         <ToggleButton @setIfReferenceDress="setIfReferenceDress" />
                     </div>
 
                     <div v-if="showImageUpload"
-                        class="w-40 mt-5 h-full rounded-md p-2 shadow-[0px_0px_6.1px_0px_#00000040]">
+                        class="w-40 mt-5 h-full rounded-md p-2 shadow-[0px_0px_6.1px_0px_#00000040] bg-white">
                         <div class="flex items-center justify-between mb-2">
                             <h1 class="font-normal text-[14px] leading-[8px] text-[#8C8C8C] font-lato">Cloth 1</h1>
                             <div class="flex gap-2">
@@ -229,7 +229,7 @@ function onFileChange(event, index) {
                     <TrialAndDeliveryDate @setTrialDate="setTrialDate" @setdDeliveryDate="setdDeliveryDate" />
 
                     <div class="flex items-center gap-4">
-                        <h1 class="text-[16px] font-normal font-lato">Mark as Urgent</h1>
+                        <h1 class="font-medium font-lato">Mark as Urgent</h1>
                         <ToggleButton @setIfUrgent="setIfUrgent" />
                     </div>
                     <!-- Upload icon, only shown when toggle is ON -->

@@ -35,10 +35,10 @@ watch(() => previewImage2.value, val => emits('setClothImage2', val))
 
 <template>
   <div>
-    <h1 class="font-normal text-[16px] leading-4 tracking-normal font-lato">Cloth Images</h1>
+    <h1 class="font-medium leading-4 tracking-normal font-lato">Cloth Images</h1>
     <div class="flex gap-10">
       <!-- Cloth 1 -->
-      <div class="w-40 mt-5 h-full rounded-md p-2 shadow-[0px_0px_6.1px_0px_#00000040]">
+      <div class="w-40 mt-5 h-full rounded-md p-2 shadow-[0px_0px_6.1px_0px_#00000040] bg-white">
         <div class="flex items-center justify-between mb-2">
           <h1 class="font-normal text-[14px] leading-[8px] text-[#8C8C8C] font-lato">Cloth 1</h1>
           <div class="flex gap-2">
@@ -69,7 +69,7 @@ watch(() => previewImage2.value, val => emits('setClothImage2', val))
       </div>
 
       <!-- Cloth 2 -->
-      <div class="w-40 mt-5 h-full rounded-md p-2 shadow-[0px_0px_6.1px_0px_#00000040]">
+      <div class="w-40 mt-5 h-full rounded-md p-2 shadow-[0px_0px_6.1px_0px_#00000040] bg-white">
         <div class="flex items-center justify-between mb-2">
           <h1 class="font-normal text-[14px] leading-[8px] text-[#8C8C8C] font-lato">Cloth 2</h1>
           <div class="flex gap-2">

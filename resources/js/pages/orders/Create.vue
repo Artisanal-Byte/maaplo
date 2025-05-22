@@ -87,7 +87,8 @@ const proceedDelete = () => {
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex flex-row justify-between">
                 <div>
-                    <h1 class="text-[24px] mt-3 leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
+                    <h1
+                        class="text-[24px] text-primary mt-3 leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                         New Order
                     </h1>
                 </div>
@@ -97,7 +98,7 @@ const proceedDelete = () => {
             </div>
             <div class="flex flex-col lg:mt-5 rounded-lg lg:border lg:border-primary p-0 lg:p-4">
 
-                <h1 class="text-xl font-bold lg:mb-6 mt-6">Enter Details</h1>
+                <h1 class="text-xl font-bold lg:mb-4 mb-4 lg:mt-0 mt-4">Enter Details</h1>
 
                 <!-- selected customer list -->
                 <CustomerListDropdown :customers="customers" :errors="errors" :form="form"
@@ -107,12 +108,12 @@ const proceedDelete = () => {
                 <DateIcon :form="form" :errors="errors" @setOrderData="setOrderData" />
 
                 <!-- items -->
-                <div class="mt-5">
+                <div class="mt-4">
                     <div>
                         <div class="flex flex-row justify-between items-center">
                             <div>
-                                <label class="font-lato text-base font-normal leading-4 tracking-normal">
-                                    Items
+                                <label class="font-lato text-primary text-[18px] font-medium leading-4 tracking-normal">
+                                    Items :
                                 </label>
                             </div>
                             <!-- Add Icon -->
@@ -146,7 +147,7 @@ const proceedDelete = () => {
                         <!-- Items Table -->
                         <div class="mt-4 overflow-x-auto">
                             <table class="min-w-full border border-gray-300 text-sm text-left">
-                                <thead class="bg-gray-100">
+                                <thead class="bg-[#DEEFF4]">
                                     <tr>
                                         <th class="p-2 border">Work Type</th>
                                         <th class="p-2 border">Item Type</th>
@@ -194,7 +195,7 @@ const proceedDelete = () => {
                             <Input type="number" label="Advance Paid" :error="errors.advance_paid" :required="true"
                                 color="grayBorder" placeholder="Enter Advance Paid" v-model="form.advance_paid">
                             <template #icon>
-                                <Icon icon="mdi:rupee" width="18" height="18" />
+                                <Icon icon="mdi:rupee" width="20" height="20" />
                             </template>
                             </Input>
                         </div>
@@ -207,7 +208,8 @@ const proceedDelete = () => {
                 </div>
                 <!-- Submit Button (Full Width Below) -->
 
-                <Button :color="'primary'" @click="create" :padding="'md'" :rounded="'full'" :textSize="'sm'" class="lg:mt-5 mt-3">
+                <Button :color="'primary'" @click="create" :padding="'md'" :rounded="'full'" :textSize="'sm'"
+                    class="lg:mt-5 mt-3">
                     Save
                 </Button>
 

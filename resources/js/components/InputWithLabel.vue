@@ -29,8 +29,8 @@ const model = defineModel('modelValue');
 const colorClass = {
     primary: 'bg-primary border border-primary text-black focus:border-primary',
     gray: 'border text-gray-800 focus:border-gray-500',
-    grayBorder: 'border border-gray-600 text-gray-800 focus:border-gray-500',
-}[props.color] ?? 'bg-white border border-gray-300 text-black'
+    grayBorder: 'border border-primary text-gray-800 focus:border-gray-500',
+}[props.color] ?? 'bg-white border border-primary text-black'
 
 // Padding classes
 const paddingClass = {
@@ -80,7 +80,7 @@ const widthClass = {
             <div class="flex gap-2">
                 <input :type="type" :id="id" :name="name" :value="radioValue" v-model="model" :disabled="disabled"
                     :class="[
-                        'transition duration-200 focus:outline-none accent-[#167893]',
+                        'transition duration-200 focus:outline-none accent-[#167893] w-4',
                         colorClass,
                         paddingClass,
                         roundedClass,
@@ -112,7 +112,7 @@ const widthClass = {
         </template>
         <!-- TEXTAREA -->
         <template v-else-if="type === 'textarea'">
-            <label v-if="label" :for="id" :class="[textSizeClass, fonttype]">
+            <label v-if="label" :for="id" :class="[textSizeClass, fonttype]" class="font-medium">
                 {{ label }}
                 <span v-if="required" class="text-red-500 text-lg">*</span>
                 <span v-else class="text-gray-400 text-sm">(optional)</span>
@@ -133,15 +133,15 @@ const widthClass = {
         <!-- INPUT (text, email, etc.) -->
         <template v-else>
             <div class="relative">
-                <label v-if="label" :for="id" :class="[textSizeClass, fonttype]">
+                <label v-if="label" :for="id" :class="[textSizeClass, fonttype]" class="font-medium">
                     {{ label }}
-                    <span v-if="required" class="text-red-500 text-lg">*</span>
+                    <span v-if="required" class="text-red-500 text-lg">*</span> 
                     <span v-else class="text-gray-400 text-sm">(optional)</span>
                 </label>
                 <div class="relative">
                     <input :type="type" :id="id" :name="name" :placeholder="placeholder" :disabled="disabled"
                         v-model="model" :class="[
-                            'transition duration-200 focus:outline-none w-full',
+                            'transition duration-200 focus:outline-none w-full pl-9',
                             colorClass,
                             paddingClass,
                             roundedClass,
@@ -153,7 +153,7 @@ const widthClass = {
                         ]" />
 
                     <!-- Icon slot (optional) -->
-                    <div class="absolute top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+                    <div class="absolute top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none pl-2 mb-1">
                         <slot name="icon" />
                     </div>
                 </div>
