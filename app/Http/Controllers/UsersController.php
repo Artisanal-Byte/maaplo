@@ -49,7 +49,11 @@ class UsersController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        return Inertia::render('admin/Edit', [
+            'user' => $user
+        ]);
     }
 
     /**
@@ -57,8 +61,23 @@ class UsersController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        dd($request);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
+            'organization_name' => 'nullable|string|max:255',
+            'subscription_plan' => 'nullable|string|max:255',
+            'validity' => 'nullable|string|max:255',
+        ]);
+
+        $user->update($validated);
+
+        return redirect()->route('user.index')->with('success', 'User updated successfully.');
     }
+
 
     /**
      * Remove the specified resource from storage.
