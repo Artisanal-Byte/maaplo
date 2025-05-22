@@ -32,8 +32,8 @@ const formattedDate = computed(() => {
 })
 </script>
 <template>
-    <div class="mt-5 flex items-center gap-3">
-        <label class="font-lato text-base font-normal leading-4 tracking-normal">
+    <div class="mt-4 flex items-center gap-3">
+        <label class="font-lato text-base font-medium leading-4 tracking-normal">
             Delivery Date <span class="text-red-500">*</span>
             <p class="text-red-600 text-sm">{{ errors?.delivery_date }}</p>
         </label>

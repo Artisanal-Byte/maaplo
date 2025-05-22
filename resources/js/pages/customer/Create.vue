@@ -82,7 +82,7 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
 
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex justify-between items-center">
-                <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
+                <h1 class="text-[24px] text-primary leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                     New Customer
                 </h1>
                 <div class="text-gray-600">
@@ -96,28 +96,43 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                 <h1 class="text-xl font-bold lg:mt-0 mt-6">Enter Details</h1>
                 <!-- Customer Name -->
                 <div>
-                    <!-- <span class="text-red-500">*</span> -->
                     <Input type="text" v-model="form.name" label="Customer Name" color="grayBorder" :required="true"
-                        :error="errors.name" placeholder="Enter Customer Name" />
+                        :error="errors.name" placeholder="Enter Customer Name">
+                    <!-- Icon inside input placeholder -->
+                    <template #icon>
+                        <Icon icon="bitcoin-icons:contacts-filled" width="24" height="24" />
+                    </template>
+                    </Input>
                 </div>
+
 
                 <!-- Contact Number -->
                 <div>
                     <Input type="tel" v-model="form.phone" label="Contact Number" :required="true" :error="errors.phone"
-                        color="grayBorder" placeholder="Enter Phone Number" />
-                    <!-- <div v-if="phoneError" class="text-red-600 text-sm mt-1">{{ phoneError }}</div> -->
+                        color="grayBorder" placeholder="Enter Phone Number">
+                    <template #icon>
+                        <Icon icon="ic:round-phone" width="20" height="20" />
+                    </template>
+                    </Input>
                 </div>
 
                 <!-- Email -->
                 <div>
                     <Input type="email" v-model="form.email" label="Email" color="grayBorder" :error="errors.email"
-                        placeholder="example@mail.com" />
+                        placeholder="example@mail.com">
+                    <template #icon>
+                        <Icon icon="ic:round-email" width="20" height="20" />
+                    </template>
+                    </Input>
                 </div>
 
                 <!-- Date of Birth -->
                 <div>
-                    <Input type="date" v-model="form.dob" :error="errors.dob" label="Date of Birth"
-                        color="grayBorder" />
+                    <Input type="date" v-model="form.dob" :error="errors.dob" label="Date of Birth" color="grayBorder">
+                    <template #icon>
+                        <Icon icon="material-symbols:date-range-outline-rounded" width="20" height="20" />
+                    </template>
+                    </Input>
                 </div>
 
                 <!-- Address -->
@@ -131,7 +146,7 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                 <!-- Gender -->
                 <div class="flex">
                     <div class="mr-3">
-                        <label class="text-[18px]  mb-1">Gender <span class="text-red-500">*</span></label>
+                        <label class="font-medium">Gender <span class="text-red-500">*</span></label>
                     </div>
                     <div class="flex flex-row items-center space-x-6 text-black">
                         <Input type="radio" v-model="form.gender" name="gender" label="Male" radioValue="m" />
@@ -154,7 +169,7 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
 
                 <!-- Upload Section -->
                 <div>
-                    <h2 class="block font-[Lato] text-[18px] leading-[16px] tracking-[0] mb-5">Photos <span
+                    <h2 class="block font-medium leading-[16px] tracking-[0] mb-5 ">Photos <span
                             class="text-red-500">*</span></h2>
                     <div class="flex flex-row justify-center item-center gap-6">
 

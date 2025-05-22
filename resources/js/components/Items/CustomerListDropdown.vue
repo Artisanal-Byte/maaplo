@@ -29,12 +29,12 @@ function asset(path) {
 }
 </script>
 <template>
-    <div class="w-full border-b border-black flex justify-between items-center relative">
+    <div class="w-full border-b border-primary flex justify-between items-center relative">
         <!-- Dropdown Button -->
         <div>
             <button @click="toggleDropdown"
                 class="flex cursor-pointer items-center justify-between gap-2 py-2 bg-white rounded-md focus:outline-none">
-                <span class="font-lato text-base font-normal leading-4 tracking-normal">{{ selectedCustomer
+                <span class="font-lato font-medium text-base leading-4 tracking-normal">{{ selectedCustomer
                 }}</span>
                 <Icon :icon="showDropdown ? 'icon-park-outline:up' : 'icon-park-outline:down'" width="20" height="20" />
             </button>

@@ -53,7 +53,7 @@ const sleeveType = [
 <template>
     <div class="mt-5">
         <div @click="toggleDropdownDesignDetails()" class="flex">
-            <h1 class="font-normal text-md leading-4 tracking-normal font-lato"> Design Details<span class="text-red-500 text-lg">*</span>
+            <h1 class="font-medium leading-4 tracking-normal font-lato"> Design Details<span class="text-red-500 text-lg">*</span>
             </h1>
             <Icon v-if="showDropdownDesignDetails == false" icon="icon-park-outline:down" width="20" height="20"
                 class="text-black ml-2 mt-1" />
@@ -63,7 +63,7 @@ const sleeveType = [
         <!-- Dropdown -->
 
         <div v-show="showDropdownDesignDetails" class="z-10">
-            <div class="bg-[#DEECF0] mt-3 p-4 shadow-[0_0_7.6px_0_#BDDBDB9C]  rounded-[10px] relative">
+            <div class="bg-white mt-3 p-4 shadow-[0_0_7.6px_0_#BDDBDB9C] rounded-[10px] relative">
                 <ul class="text-md text-black dark:text-black" aria-labelledby="dropdownTrigger">
                     <li>
                         <!--  Front Neck Design -->

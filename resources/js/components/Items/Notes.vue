@@ -8,7 +8,7 @@ const props = defineProps<{
     notes: Array<{ label: string; text: string }>;
 }>();
 
-const emit = defineEmits(['update:notes','setNotes']);
+const emit = defineEmits(['update:notes', 'setNotes']);
 const { notes } = toRefs(props);
 
 const addNote = () => {
@@ -34,8 +34,8 @@ const updateText = (index: number, value: string) => {
     emit('update:notes', newNotes);
 };
 
-watch(()=>notes.value,(val)=>{
-    emit('setNotes',val)
+watch(() => notes.value, (val) => {
+    emit('setNotes', val)
 })
 </script>
 
@@ -43,7 +43,7 @@ watch(()=>notes.value,(val)=>{
     <div class="notes-section">
         <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3 mb-3">
-                <label class="">Notes</label>
+                <label class="font-medium">Notes</label>
                 <span class="text-sm text-gray-600">Total: {{ notes?.length ?? 0 }}</span>
 
                 <!-- Add Note Button -->
@@ -59,7 +59,11 @@ watch(()=>notes.value,(val)=>{
                 <div>
                     <Input type="text" :label="`Label ${index + 1}`" :modelValue="note.label"
                         @update:modelValue="updateLabel(index, $event)" :id="`label-${index}`" :name="`label-${index}`"
-                        color="grayBorder" margin="md" placeholder="Write your label" />
+                        color="grayBorder" margin="md" placeholder="Write your label">
+                    <template #icon>
+                        <Icon icon="material-symbols-light:note" width="24" height="24" class="mt-2"/>
+                    </template>
+                    </Input>
                 </div>
                 <div class="mt-3">
                     <Input type="textarea" :label="`Notes ${index + 1}`" :modelValue="note.text"
