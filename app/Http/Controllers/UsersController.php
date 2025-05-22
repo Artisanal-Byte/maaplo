@@ -70,7 +70,7 @@ class UsersController extends Controller
             'address' => 'nullable|string|max:255',
             'organization_name' => 'nullable|string|max:255',
             'subscription_plan' => 'nullable|string|max:255',
-            'validity' => 'nullable|string|max:255',
+            'validity' => 'nullable|date',
         ]);
 
         $user->update($validated);

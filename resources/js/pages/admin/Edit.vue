@@ -18,10 +18,10 @@ const props = defineProps<{
         address: string,
         organization_name: string,
         subscription_plan: string,
-        validity: string
+        validity: Date
     }
 }>();
-
+console.log(props);
 const form = useForm({
     name: props.user.name,
     email: props.user.email,
@@ -59,7 +59,7 @@ const updateUser = () => {
                     Edit User
                 </h1>
                 <div class="text-gray-600">
-                    <Link :href="route('user.index')"  class="flex items-center gap-1 hover:text-black">
+                    <Link :href="route('user.index')" class="flex items-center gap-1 hover:text-black">
                     <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
                     <span class="text-[16px] font-medium">Back</span>
                     </Link>
@@ -100,16 +100,16 @@ const updateUser = () => {
                     </div>
 
                     <div>
-                        <Input type="textarea" v-model="form.validity" color="grayBorder" :required="true"
-                            label="Validity" :error="errors.validity"></Input>
+                        <Input type="date" v-model="form.validity" color="grayBorder" :required="true" label="Validity"
+                            :error="errors.validity"></Input>
                     </div>
 
-                    <!-- Update Button -->
+                </div>
+                <!-- Update Button -->
                 <Button @click="updateUser" :disabled="form.processing" :color="'primary'" :padding="'md'"
                     :rounded="'full'" :textSize="'sm'">
                     Update User
                 </Button>
-                </div>
             </div>
         </div>
     </AppLayout>
