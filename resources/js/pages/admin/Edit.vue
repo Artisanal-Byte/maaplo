@@ -8,6 +8,7 @@ import Button from '@/components/Button.vue';
 import Input from '@/components/InputWithLabel.vue';
 import { ref, computed } from 'vue';
 const toast = new ToastMagic();
+const showPassword = ref(false);
 const logoPreview = ref<string | null>(null);
 const props = defineProps<{
     errors: Record<string, string>,
@@ -135,8 +136,20 @@ const handleLogoChange = (event: Event) => {
 
                     <Input type="date" v-model="form.validity" label="Validity" :error="props.errors.validity"
                         required />
-                    <Input type="password" v-model="form.password" label="Password" :error="props.errors.password"
-                        placeholder="Enter Password (optional)" />
+                    <!-- Password Input with Visibility Toggle -->
+                    <div class="relative">
+                        <Input :type="showPassword ? 'text' : 'password'" v-model="form.password" label="Password"
+                            :error="props.errors.password" placeholder="" />
+                        <button type="button" @click="showPassword = !showPassword"
+                            class="absolute right-3 top-9 text-gray-600 hover:text-black" tabindex="-1">
+                            <Icon :icon="showPassword ? 'mdi:eye-off' : 'mdi:eye'" width="22" height="22" />
+                        </button>
+                        <!-- Hint Text -->
+                        <small class="text-sm text-gray-500 block mt-1">
+                            Leave blank to keep current password.
+                        </small>
+                    </div>
+
                     <!-- Organization Logo Upload -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                         <div>
