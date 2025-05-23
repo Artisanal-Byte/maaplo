@@ -236,7 +236,8 @@ const closeImageModal = () => {
                 <!-- Measurements -->
                 <div>
                     <!-- <label class="block font-[Lato] text-[18px] leading-[16px] tracking-[0] mb-2">Measurements</label> -->
-                    <Measurements class="mb-4" v-model:measurements="form.measurements" />
+                    <Measurements class="mb-4" v-model:measurements="form.measurements" :error="errors.measurements"/>
+                    <div v-if="errors.measurements" class="text-red-600 text-sm mt-2">{{ errors.measurements }}</div>
                 </div>
 
                 <!-- Notes Section -->

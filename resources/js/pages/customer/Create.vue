@@ -159,7 +159,8 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                 <!-- Measurements -->
                 <div>
                     <!-- <label class="block font-[Lato] text-[18px] leading-[16px] tracking-[0] mb-2">Measurements</label> -->
-                    <Measurements v-model:measurements="form.measurements" />
+                    <Measurements v-model:measurements="form.measurements"  :error="errors.measurements"/>
+                    <div v-if="errors.measurements" class="text-red-600 text-sm mt-2">{{ errors.measurements }}</div>
                 </div>
 
                 <!-- Notes Section -->
