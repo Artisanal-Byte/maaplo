@@ -99,57 +99,61 @@ const handleLogoChange = (event: Event) => {
                             placeholder="example@mail.com" />
                         <Input type="text" v-model="form.phone" label="Contact Number" :error="props.errors.phone"
                             required placeholder="Enter Phone Number" />
-                        <Input type="textarea" v-model="form.address" label="Address" :error="props.errors.address"
-                            required />
+                        <!-- Password Input with Visibility Toggle -->
+                        <div class="relative">
+                            <Input :type="showPassword ? 'text' : 'password'" v-model="form.password" label="Password"
+                                :error="props.errors.password" placeholder="Enter Password" />
+                            <button type="button" @click="showPassword = !showPassword"
+                                class="absolute right-3 top-9 text-gray-600 hover:text-black" tabindex="-1">
+                                <Icon :icon="showPassword ? 'mdi:eye-off' : 'mdi:eye'" width="22" height="22" />
+                            </button>
+                            <!-- Hint Text -->
+                            <small class="text-sm text-gray-500 block mt-1">
+                                Leave blank to keep current password.
+                            </small>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Section: Organization Info -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Input type="textarea" v-model="form.organization_name" label="Organization Name"
-                        :error="props.errors.organization_name" required />
-                    <!-- Enhanced Subscription Plan Dropdown -->
-                    <div>
-                        <label for="subscription_plan" class="block text-sm font-medium text-gray-700 mb-1">
-                            Subscription Plan <span class="text-red-500">*</span>
-                        </label>
-                        <div class="relative">
-                            <select id="subscription_plan" v-model="form.subscription_plan" required
-                                class="appearance-none block w-full bg-white border border-gray-300 rounded-md py-2 px-3 pr-10 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                <option disabled value="">Select a plan</option>
-                                <option value="free">Free</option>
-                            </select>
-                            <!-- Dropdown arrow icon -->
-                            <div
-                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
-                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M7 7l3-3 3 3m0 6l-3 3-3-3" />
-                                </svg>
+                <div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <Input type="textarea" v-model="form.address" label="Address" :error="props.errors.address"
+                            required />
+
+
+                        <Input type="textarea" v-model="form.organization_name" label="Organization Name"
+                            :error="props.errors.organization_name" required />
+
+                        <!-- Enhanced Subscription Plan Dropdown -->
+                        <div>
+                            <label for="subscription_plan" class="block text-sm font-medium text-gray-700 mb-1">
+                                Subscription Plan <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <select id="subscription_plan" v-model="form.subscription_plan" required
+                                    class="appearance-none block w-full bg-white border border-gray-300 rounded-md py-2 px-3 pr-10 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option disabled value="">Select a plan</option>
+                                    <option value="free">Free</option>
+                                </select>
+                                <!-- Dropdown arrow icon -->
+                                <div
+                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 20 20" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M7 7l3-3 3 3m0 6l-3 3-3-3" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div v-if="props.errors.subscription_plan" class="text-red-600 text-sm mt-1">
+                                {{ props.errors.subscription_plan }}
                             </div>
                         </div>
-                        <div v-if="props.errors.subscription_plan" class="text-red-600 text-sm mt-1">
-                            {{ props.errors.subscription_plan }}
-                        </div>
+                        <Input type="date" v-model="form.validity" label="Validity" :error="props.errors.validity"
+                            required />
                     </div>
-
-                    <Input type="date" v-model="form.validity" label="Validity" :error="props.errors.validity"
-                        required />
-                    <!-- Password Input with Visibility Toggle -->
-                    <div class="relative">
-                        <Input :type="showPassword ? 'text' : 'password'" v-model="form.password" label="Password"
-                            :error="props.errors.password" placeholder="" />
-                        <button type="button" @click="showPassword = !showPassword"
-                            class="absolute right-3 top-9 text-gray-600 hover:text-black" tabindex="-1">
-                            <Icon :icon="showPassword ? 'mdi:eye-off' : 'mdi:eye'" width="22" height="22" />
-                        </button>
-                        <!-- Hint Text -->
-                        <small class="text-sm text-gray-500 block mt-1">
-                            Leave blank to keep current password.
-                        </small>
                     </div>
-
                     <!-- Organization Logo Upload -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                         <div>
@@ -189,7 +193,6 @@ const handleLogoChange = (event: Event) => {
                             </div>
                         </div>
                     </div>
-                </div>
 
                 <!-- Submit Button -->
                 <div class="flex">
