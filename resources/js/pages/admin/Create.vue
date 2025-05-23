@@ -1,25 +1,38 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { Icon } from '@iconify/vue';
 import { Link, useForm } from '@inertiajs/vue3';
 import Button from '@/components/Button.vue';
 import Input from '@/components/InputWithLabel.vue';
 
 const toast = new ToastMagic();
-
+const logoPreview = ref<string | null>(null);
+const showPassword = ref(false);
 const form = useForm({
     name: '',
     email: '',
     phone: '',
     address: '',
     organization_name: '',
-    subscription_plan: '',
+    subscription_plan: 'free',
     validity: '',
     password: '',
     organization_logo: null,
     status: true,
 });
+
+const logoUrl = computed(() => {
+    return logoPreview.value ? logoPreview.value : null;
+});
+
+const handleLogoChange = (event: Event) => {
+    const file = (event.target as HTMLInputElement)?.files?.[0];
+    if (file) {
+        form.organization_logo = file;
+        logoPreview.value = URL.createObjectURL(file);
+    }
+};
 
 const createUser = () => {
     form.post(route('user.store'), {
@@ -33,6 +46,7 @@ const createUser = () => {
         }
     });
 };
+
 </script>
 
 <template>
@@ -62,32 +76,79 @@ const createUser = () => {
                             placeholder="example@mail.com" :required="true" />
                         <Input type="text" v-model="form.phone" label="Contact Number" :required="true"
                             :error="form.errors.phone" placeholder="Enter Phone Number" />
-                        <Input type="password" v-model="form.password" label="Password" :error="form.errors.password"
-                            placeholder="Enter Password" :required="true"/>
+                        <div class="relative">
+                            <Input :type="showPassword ? 'text' : 'password'" v-model="form.password" label="Password"
+                                :error="form.errors.password" placeholder="Enter Password" :required="true" />
+                            <button type="button" @click="showPassword = !showPassword"
+                                class="absolute right-3 top-10 text-gray-600 hover:text-black" tabindex="-1">
+                                <Icon :icon="showPassword ? 'mdi:eye-off' : 'mdi:eye'" width="22" height="22" />
+                            </button>
+                        </div>
+
+
                     </div>
                 </div>
 
                 <!-- Section: Organization Info -->
                 <div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Input type="textarea" v-model="form.address" label="Address" :error="form.errors.address" :required="true" placeholder="Enter Address"/>
+                        <Input type="textarea" v-model="form.address" label="Address" :error="form.errors.address"
+                            :required="true" placeholder="Enter Address" />
                         <Input type="textarea" v-model="form.organization_name" label="Organization Name"
-                            :error="form.errors.organization_name" :required="true" placeholder="Enter Organization Name"/>
-                        <Input type="textarea" v-model="form.subscription_plan" label="Subscription Plan"
-                            :error="form.errors.subscription_plan" :required="true"/>
-                        <Input type="date" v-model="form.validity" label="Validity" :error="form.errors.validity" :required="true"/>
+                            :error="form.errors.organization_name" :required="true"
+                            placeholder="Enter Organization Name" />
+                        <!-- Subscription Plan Dropdown -->
+                        <div>
+                            <label for="subscription_plan" class="block font-medium text-black mb-1">
+                                Subscription Plan <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <select id="subscription_plan" v-model="form.subscription_plan" required
+                                    class="appearance-none block w-full bg-white border border-gray-300 rounded-md py-2 px-3 pr-10 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option disabled value="">Select a plan</option>
+                                    <option value="free">Free</option>
+                                </select>
+                                <!-- Custom dropdown arrow -->
+                                <div
+                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 20 20" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M7 7l3-3 3 3m0 6l-3 3-3-3" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div v-if="form.errors.subscription_plan" class="text-red-600 text-sm mt-1">
+                                {{ form.errors.subscription_plan }}
+                            </div>
+                        </div>
+
+
+                        <Input type="date" v-model="form.validity" label="Validity" :error="form.errors.validity"
+                            :required="true" />
                     </div>
                 </div>
 
                 <!-- Section: Logo Upload & Status -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                    <!-- Logo Upload with Preview -->
                     <div>
-                        <Input type="file" @change="(e) => form.organization_logo = e.target.files[0]"
-                            label="Organization Logo" :error="form.errors.organization_logo" />
-                        <p v-if="form.organization_logo" class="text-sm text-gray-500 mt-1">
-                            Selected: {{ form.organization_logo.name }}
-                        </p>
+                        <h2 class="text-lg font-semibold text-gray-800 mb-3">Organization Logo</h2>
+                        <div v-if="logoUrl"
+                            class="w-full h-64 bg-gray-50 flex items-center justify-center rounded-md overflow-hidden border mb-3">
+                            <img :src="logoUrl" alt="Organization Logo" class="object-scale-down h-64 w-[500px]" />
+                        </div>
+                        <label>
+                            <span class="text-sm text-gray-600">Upload logo</span>
+                            <input type="file" @change="handleLogoChange"
+                                class="block w-full text-sm text-gray-500 mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
+                        </label>
+                        <div v-if="form.errors.organization_logo" class="text-red-600 text-sm mt-1">
+                            {{ form.errors.organization_logo }}
+                        </div>
                     </div>
+
+                    <!-- Status Switch -->
                     <div class="flex items-center gap-3 mt-2 ml-1">
                         <Icon icon="mdi:account-check" class="text-gray-700" width="20" height="20" />
                         <span class="text-[16px] font-bold text-gray-800">Status</span>
@@ -107,7 +168,6 @@ const createUser = () => {
                             </button>
                         </div>
                     </div>
-
                 </div>
 
                 <!-- Submit Button -->
