@@ -82,7 +82,7 @@ const createUser = () => {
                             <Icon icon="ic:round-email" width="24" height="24" />
                         </template>
                         </Input>
-                        <Input type="text" v-model="form.phone" label="Contact Number" :required="true"
+                        <Input type="rel" v-model="form.phone" label="Contact Number" :required="true"
                             :error="form.errors.phone" placeholder="Enter Phone Number">
                         <template #icon>
                             <Icon icon="ic:round-phone" width="20" height="20" />

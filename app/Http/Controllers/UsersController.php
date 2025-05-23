@@ -41,12 +41,12 @@ class UsersController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'phone' => 'required|string|max:20',
+            'phone' => 'required|regex:/^[0-9]{10}$/',
             'address' => 'required|string|max:255',
             'organization_name' => 'required|string|max:255',
             'subscription_plan' => 'required|string|max:255',
             'validity' => 'required|date',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:8',
             'organization_logo' => 'nullable|file|image|max:2048',
             'status' => 'boolean',
         ]);
@@ -111,12 +111,12 @@ class UsersController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:255',
-            'organization_name' => 'nullable|string|max:255',
+            'phone' => 'required|regex:/^[0-9]{10}$/',
+            'address' => 'required|string|max:255',
+            'organization_name' => 'required|string|max:255',
             'subscription_plan' => 'required|string|in:free',
-            'validity' => 'nullable|date',
-            'password' => 'nullable|string|min:6',
+            'validity' => 'required|date',
+            'password' => 'nullable|string|min:8',
             'organization_logo' => 'nullable|max:2048',
             'status' => 'boolean',
         ]);
