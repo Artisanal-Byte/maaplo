@@ -107,15 +107,39 @@ const handleLogoChange = (event: Event) => {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Input type="textarea" v-model="form.organization_name" label="Organization Name"
                         :error="props.errors.organization_name" required />
-                    <Input type="textarea" v-model="form.subscription_plan" label="Subscription Plan"
-                        :error="props.errors.subscription_plan" required />
+                    <!-- Enhanced Subscription Plan Dropdown -->
+                    <div>
+                        <label for="subscription_plan" class="block text-sm font-medium text-gray-700 mb-1">
+                            Subscription Plan <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <select id="subscription_plan" v-model="form.subscription_plan" required
+                                class="appearance-none block w-full bg-white border border-gray-300 rounded-md py-2 px-3 pr-10 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <option disabled value="">Select a plan</option>
+                                <option value="free">Free</option>
+                            </select>
+                            <!-- Dropdown arrow icon -->
+                            <div
+                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M7 7l3-3 3 3m0 6l-3 3-3-3" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div v-if="props.errors.subscription_plan" class="text-red-600 text-sm mt-1">
+                            {{ props.errors.subscription_plan }}
+                        </div>
+                    </div>
+
                     <Input type="date" v-model="form.validity" label="Validity" :error="props.errors.validity"
                         required />
                     <Input type="password" v-model="form.password" label="Password" :error="props.errors.password"
                         placeholder="Enter Password (optional)" />
                     <!-- Organization Logo Upload -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                        <div >
+                        <div>
                             <h2 class="text-lg font-semibold text-gray-800 mb-3">Organization Logo</h2>
                             <div v-if="logoUrl"
                                 class="w-full h-64 bg-gray-50 flex items-center justify-center rounded-md overflow-hidden border">
