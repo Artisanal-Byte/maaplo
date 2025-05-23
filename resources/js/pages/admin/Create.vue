@@ -71,17 +71,29 @@ const createUser = () => {
                     <h2 class="text-lg font-semibold text-gray-700 mb-4">User Information</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <Input type="text" v-model="form.name" label="User Name" :required="true"
-                            :error="form.errors.name" placeholder="Enter User Name" />
+                            :error="form.errors.name" placeholder="Enter User Name">
+                        <template #icon>
+                            <Icon icon="bitcoin-icons:contacts-filled" width="24" height="24" />
+                        </template>
+                        </Input>
                         <Input type="email" v-model="form.email" label="Email" :error="form.errors.email"
-                            placeholder="example@mail.com" :required="true" />
+                            placeholder="example@mail.com" :required="true">
+                        <template #icon>
+                            <Icon icon="ic:round-email" width="24" height="24" />
+                        </template>
+                        </Input>
                         <Input type="text" v-model="form.phone" label="Contact Number" :required="true"
-                            :error="form.errors.phone" placeholder="Enter Phone Number" />
+                            :error="form.errors.phone" placeholder="Enter Phone Number">
+                        <template #icon>
+                            <Icon icon="ic:round-phone" width="20" height="20" />
+                        </template>
+                        </Input>
                         <div class="relative">
                             <Input :type="showPassword ? 'text' : 'password'" v-model="form.password" label="Password"
                                 :error="form.errors.password" placeholder="Enter Password" :required="true" />
                             <button type="button" @click="showPassword = !showPassword"
                                 class="absolute right-3 top-10 text-gray-600 hover:text-black" tabindex="-1">
-                                <Icon :icon="showPassword ? 'mdi:eye-off' : 'mdi:eye'" width="22" height="22" />
+                                <Icon icon="carbon:password" width="32" height="32"/>
                             </button>
                         </div>
 
@@ -125,7 +137,11 @@ const createUser = () => {
 
 
                         <Input type="date" v-model="form.validity" label="Validity" :error="form.errors.validity"
-                            :required="true" />
+                            :required="true">
+                        <template #icon>
+                            <Icon icon="material-symbols:date-range-outline-rounded" width="20" height="20" />
+                        </template>
+                        </Input>
                     </div>
                 </div>
 
