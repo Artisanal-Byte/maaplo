@@ -10,7 +10,9 @@ import { router, useForm } from '@inertiajs/vue3';
 import Notes from '@/components/Items/Notes.vue';
 import Input from '@/components/InputWithLabel.vue';
 import { useOrder } from '@/composables/useOrderData';
-const props = defineProps(["users", "customers", "itemType", "errors"])
+const props = defineProps(["users", "customers", "itemTypes", "errors"])
+
+
 const showModal = ref(false);
 const disabled = ref(false);
 const toast = new ToastMagic();
@@ -91,6 +93,9 @@ const proceedDelete = () => {
                         class="text-[24px] text-primary mt-3 leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                         New Order
                     </h1>
+                    <pre>
+                        {{ form }}
+                    </pre>
                 </div>
                 <div class="self-center">
                     <Button :disabled="disabled" @click="create">Create Order</Button>
@@ -138,7 +143,7 @@ const proceedDelete = () => {
                         <!-- Modal Content -->
                         <ItemModel :errors="form.errors?.order_items" :itemIndex="i" :showModal="showModal"
                             @close="closeModel" :form="form.order_items" @setOrderItemsData="setOrderItemsData"
-                            :itemType="itemType" :measurements="customers.base_measurements ?? []" />
+                            :itemTypes="itemTypes" :measurements="customers.base_measurements ?? []" />
                         <p class="text-red-600 text-sm">
                             {{ form.errors.order_items }}
                         </p>
@@ -158,8 +163,12 @@ const proceedDelete = () => {
                                 <tbody>
                                     <tr v-for="(order_item, index) in form.order_items" :key="index">
                                         <td class="p-2 border">{{ order_item.work_type }}</td>
-                                        <td class="p-2 border">{{itemType.find(item => item.id ===
-                                            order_item.template_id)?.name}}</td>
+                                        <td class="p-2 border">
+                                            {{itemTypes['privateTemplates'].find(item => item.id ===
+                                                order_item.template_id)?.name ?? itemTypes['publicTemplates'].find(item =>
+                                                    item.id ===
+                                                    order_item.template_id)?.name}}
+                                        </td>
                                         <td class="p-2 border">{{ order_item.delivery_date }}</td>
                                         <td class="p-2 border">
                                             <div class="flex gap-4">

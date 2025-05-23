@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\GetTemplateHelper;
 use App\Helpers\UniqueOrderNumber; // Ensure this class exists in the specified namespace or create it if missing
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\Template;
@@ -36,7 +37,7 @@ class OrderController extends Controller
 
             $orders = $user->load('orders.customer');
 
-            return Inertia::render('orders/Index', ["orders" => $orders]);
+            return Inertia::render('orders/Index', ["Inde" => $orders]);
         }
 
         //-- if User Not Found
@@ -60,11 +61,15 @@ class OrderController extends Controller
         $user->load('customers');
 
         //-- item which have a global scope or created by Authentic user
-        $itemType = Template::where('user_id', $user->id)->orWhere('user_id', null)->get();
-        
+        $itemTypes = $data = GetTemplateHelper::getTemplateData();
+        $itemTypes = [
+            'publicTemplates' => $data['publicTemplates'],
+            'privateTemplates' => $data['privateTemplates'],
+            'measurements' => $data['allMeasurements'],
+        ];
         return Inertia::render('orders/Create', [
             'customers' => $user->customers,
-            'itemType' => $itemType
+            'itemTypes' => $itemTypes
         ]);
     }
 
@@ -72,16 +77,16 @@ class OrderController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StoreOrderRequest $storeOrderRequest)
-    {        
+    {
         try {
 
             //-- Make A unique a combination of Order number And User Id
             $validatedOrderData = $storeOrderRequest->validated();
             $uniqueOrderNumber = new UniqueOrderNumber();
-            $validatedOrderData['order_number'] = $uniqueOrderNumber->make(); 
-    
+            $validatedOrderData['order_number'] = $uniqueOrderNumber->make();
+
             $validatedOrderData['status'] = 'created';
-    
+
             $validatedOrderItemsData = $validatedOrderData['order_items'];
 
             DB::beginTransaction();
