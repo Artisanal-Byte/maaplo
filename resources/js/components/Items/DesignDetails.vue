@@ -1,7 +1,9 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, defineProps, watch } from 'vue';
 import { Icon } from '@iconify/vue';
 import SvgIcon from '../SvgIcon.vue';
+
+const props = defineProps(["designDetails"])
 const selectedNeck = ref('')
 const selectedfrontNeck = ref('')
 const selectedSleeveType = ref('')
@@ -9,6 +11,8 @@ const showDropdownDesignDetails = ref(false);
 const showDropdownFrontNeckDesign = ref(true);
 const showDropdownBackNeckDesign = ref(false);
 const showDropdownSleeveType = ref(false);
+const model = defineModel('modelValue');
+
 function toggleDropdownDesignDetails() {
     showDropdownDesignDetails.value = !showDropdownDesignDetails.value;
 }
@@ -22,6 +26,21 @@ function toggleDropdownSleeveType() {
     showDropdownSleeveType.value = !showDropdownSleeveType.value;
 }
 
+watch(selectedfrontNeck, (newVal) => {
+    console.log(newVal);
+
+    model.value = newVal
+})
+watch(selectedNeck, (newVal) => {
+    console.log(newVal);
+
+    model.value = newVal
+})
+watch(selectedSleeveType, (newVal) => {
+    console.log(newVal);
+
+    model.value = newVal
+})
 
 const neckTypes = [
     { name: 'u-neck', label: 'U Neck' },
@@ -29,12 +48,14 @@ const neckTypes = [
     { name: 'cross-neck', label: 'Cross Neck' },
     { name: 'close-neck', label: 'Close Neck' },
 ]
+
 const frontNeck = [
     { name: 'v-neck', label: 'V Neck' },
     { name: 'square-neck', label: 'Square Neck' },
     { name: 'halter-neck', label: 'Halter Neck' },
     { name: 'round-neck', label: 'Round Neck' },
 ]
+
 const sleeveType = [
     {
         label: 'Full'
@@ -49,11 +70,14 @@ const sleeveType = [
         label: 'No'
     },
 ]
+
+
 </script>
 <template>
     <div class="mt-5">
         <div @click="toggleDropdownDesignDetails()" class="flex">
-            <h1 class="font-medium leading-4 tracking-normal font-lato"> Design Details<span class="text-red-500 text-lg">*</span>
+            <h1 class="font-medium leading-4 tracking-normal font-lato"> Design Details<span
+                    class="text-red-500 text-lg">*</span>
             </h1>
             <Icon v-if="showDropdownDesignDetails == false" icon="icon-park-outline:down" width="20" height="20"
                 class="text-black ml-2 mt-1" />
@@ -67,7 +91,7 @@ const sleeveType = [
                 <ul class="text-md text-black dark:text-black" aria-labelledby="dropdownTrigger">
                     <li>
                         <!--  Front Neck Design -->
-                        <div>
+                        <div v-if="designDetails.front_neck_design">
                             <div @click="toggleDropdownFrontNeckDesign()" class="flex">
                                 <h1 class="font-normal ml-3 text-[16px] leading-4 tracking-normal font-lato">
                                     Front Neck Design
@@ -84,9 +108,9 @@ const sleeveType = [
                                         <div
                                             class="flex flex-row lg:gap-5 gap-2 lg:ml-10 ml-2 py-5 text-black font-lato text-sm">
                                             <div v-for="(neck, index) in frontNeck" :key="index"
-                                                @click="selectedfrontNeck = neck.name" :class="[
+                                                @click="selectedfrontNeck = neck" :class="[
                                                     'cursor-pointer rounded-md lg:p-2',
-                                                    selectedfrontNeck === neck.name
+                                                    selectedfrontNeck.name === neck.name
                                                         ? 'border-2 border-primary bg-[DEECF0)]'
                                                         : ''
                                                 ]">
@@ -103,7 +127,7 @@ const sleeveType = [
                         </div>
 
                         <!--  Back Neck Design -->
-                        <div>
+                        <div v-if="designDetails.back_neck_design">
                             <div @click="toggleDropdownBackNeckDesign()" class="flex">
                                 <h1 class="font-normal ml-3 mt-4 text-[16px] leading-4 tracking-normal font-lato">
                                     Back Neck Design
@@ -119,9 +143,9 @@ const sleeveType = [
                                     <li>
                                         <div class="flex flex-row lg:gap-5 gap-0 lg:ml-10 ml-2 py-5 font-lato text-sm">
                                             <div v-for="(neck, index) in neckTypes" :key="index"
-                                                @click="selectedNeck = neck.name" :class="[
+                                                @click="selectedNeck = neck" :class="[
                                                     'cursor-pointer rounded-md lg:p-2',
-                                                    selectedNeck === neck.name
+                                                    selectedNeck.name === neck.name
                                                         ? 'border-2 border-primary bg-[DEECF0)]'
                                                         : ''
                                                 ]">
@@ -138,7 +162,7 @@ const sleeveType = [
                         </div>
 
                         <!--  Sleeve Type -->
-                        <div>
+                        <div v-if="designDetails.sleeve_type">
                             <div @click="toggleDropdownSleeveType()" class="flex">
                                 <h1 class="font-normal ml-3 mt-4 text-[16px] leading-4 tracking-normal font-lato">
                                     Sleeve Type
@@ -154,14 +178,14 @@ const sleeveType = [
                                     <li>
                                         <div
                                             class="flex flex-row gap-3 lg:ml-10 ml-5 pt-4 text-black font-lato text-sm">
-                                             <div v-for="(neck, index) in sleeveType" :key="index"
-                                                @click="selectedSleeveType = neck.label" :class="[
+                                            <div v-for="(neck, index) in sleeveType" :key="index"
+                                                @click="selectedSleeveType = neck" :class="[
                                                     'cursor-pointer rounded-md p-2',
-                                                    selectedSleeveType === neck.label
+                                                    selectedSleeveType.label === neck.label
                                                         ? 'border-2 border-primary bg-[DEECF0)]'
                                                         : ''
                                                 ]">
-                                               
+
                                                 <h1
                                                     class="font-medium text-[12px] leading-[8px] tracking-normal text-center">
                                                     {{ neck.label }}
@@ -174,6 +198,14 @@ const sleeveType = [
                             </div>
                         </div>
 
+                        <div
+                            v-if="!designDetails.front_neck_design && !designDetails.back_neck_design && !designDetails.sleeve_type">
+                            <div class="flex">
+                                <h1 class="font-normal text-red-500  text-[16px] leading-4 tracking-normal font-lato">
+                                    Please Select Item Type!
+                                </h1>
+                            </div>
+                        </div>
                     </li>
                 </ul>
             </div>

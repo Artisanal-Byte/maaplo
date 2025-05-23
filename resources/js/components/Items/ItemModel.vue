@@ -17,7 +17,7 @@ const fileInputCamera = ref(null)
 const previewImage = ref(null)
 const notes = ref([{ label: '', text: '' }]);
 const props = defineProps(['showModal', 'form', 'itemTypes', 'itemIndex', 'measurements', 'errorMessage', 'errors']);
-
+let findDesign = ref()
 
 const emit = defineEmits(['close', 'setOrderItemsData']);
 
@@ -68,6 +68,7 @@ const resetData = () => {
         Pattern_img2: null
     }
 }
+const designDetails = ref({})
 // Save and emit
 function saveItem() {
     emit('setOrderItemsData', JSON.parse(JSON.stringify(data)))
@@ -147,10 +148,11 @@ function onFileChange(event, index) {
         }
     }
 }
-const setDesignDetails = (details) => {
-    console.log('seted design details:', details);
-    data.design_detail = details
-}
+
+watch(() => data.template_id, (newId) => {
+    designDetails.value = props.itemTypes.privateTemplates.find(item => item.id === newId).design_details
+})
+
 </script>
 
 <template>
@@ -182,7 +184,7 @@ const setDesignDetails = (details) => {
                         @setStichingCost="setStichingCost" @setMaterialType="setMaterialType" @setPrice="setPrice" />
                     <ItemType :itemTypes="itemTypes" @setItemId="setItemId" />
                     <Measurements :measurements="measurements" />
-                    <DesignDetails :designDetails="itemTypes" @setDesignDetails="setDesignDetails" />
+                    <DesignDetails :designDetails="designDetails" v-model="data.design_detail"/>
 
                     <div class="flex flex-col">
                         <Colors @setColor="setColor" />
