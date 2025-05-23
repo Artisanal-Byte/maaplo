@@ -153,46 +153,54 @@ const handleLogoChange = (event: Event) => {
                         <Input type="date" v-model="form.validity" label="Validity" :error="props.errors.validity"
                             required />
                     </div>
-                    </div>
-                    <!-- Organization Logo Upload -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                        <div>
-                            <h2 class="text-lg font-semibold text-gray-800 mb-3">Organization Logo</h2>
-                            <div v-if="logoUrl"
-                                class="w-full h-64 bg-gray-50 flex items-center justify-center rounded-md overflow-hidden border">
-                                <img :src="logoUrl" alt="Organization Logo" class="object-scale-down h-64 w-[500px]" />
-                            </div>
-                            <label class="mt-4 block">
-                                <span class="text-sm text-gray-600">Upload new logo</span>
-                                <input type="file" @change="handleLogoChange"
-                                    class="block w-full text-sm text-gray-500 mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
-                            </label>
-                            <div v-if="props.errors.organization_logo" class="text-red-600 text-sm mt-1">
-                                {{ props.errors.organization_logo }}
-                            </div>
+                </div>
+                <!-- Organization Logo Upload -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <!-- Logo Upload with Preview (Edit Page) -->
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-800 mb-3">Organization Logo</h2>
+
+                        <!-- Logo Preview with Fallback -->
+                        <div
+                            class="w-full h-64 bg-gray-50 flex items-center justify-center rounded-md overflow-hidden border mb-3">
+                            <img :src="logoUrl || '/images/company_logo.png'" alt="Organization Logo"
+                                class="object-scale-down h-64 w-[500px]" />
                         </div>
 
-                        <!-- Status Select -->
-                        <div class="flex items-center gap-3 mt-2 ml-1">
-                            <Icon icon="mdi:account-check" class="text-gray-700" width="20" height="20" />
-                            <span class="text-[16px] font-bold text-gray-800">Status</span>
+                        <!-- Upload Input -->
+                        <label class="block">
+                            <span class="text-sm text-gray-600">Upload new logo</span>
+                            <input type="file" @change="handleLogoChange"
+                                class="block w-full text-sm text-gray-500 mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
+                        </label>
 
-                            <div class="flex border border-gray-300 rounded overflow-hidden text-sm">
-                                <button :class="[
-                                    'px-4 py-1 focus:outline-none',
-                                    form.status ? 'bg-primary text-white' : 'bg-white text-gray-800'
-                                ]" @click="form.status = true">
-                                    Active
-                                </button>
-                                <button :class="[
-                                    'px-4 py-1 focus:outline-none',
-                                    !form.status ? 'bg-red-500 text-white' : 'bg-white text-gray-800'
-                                ]" @click="form.status = false">
-                                    Inactive
-                                </button>
-                            </div>
+                        <!-- Validation Error -->
+                        <div v-if="props.errors.organization_logo" class="text-red-600 text-sm mt-1">
+                            {{ props.errors.organization_logo }}
                         </div>
                     </div>
+
+                    <!-- Status Select -->
+                    <div class="flex items-center gap-3 mt-2 ml-1">
+                        <Icon icon="mdi:account-check" class="text-gray-700" width="20" height="20" />
+                        <span class="text-[16px] font-bold text-gray-800">Status</span>
+
+                        <div class="flex border border-gray-300 rounded overflow-hidden text-sm">
+                            <button :class="[
+                                'px-4 py-1 focus:outline-none',
+                                form.status ? 'bg-primary text-white' : 'bg-white text-gray-800'
+                            ]" @click="form.status = true">
+                                Active
+                            </button>
+                            <button :class="[
+                                'px-4 py-1 focus:outline-none',
+                                !form.status ? 'bg-red-500 text-white' : 'bg-white text-gray-800'
+                            ]" @click="form.status = false">
+                                Inactive
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Submit Button -->
                 <div class="flex">

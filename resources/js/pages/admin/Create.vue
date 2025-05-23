@@ -133,16 +133,22 @@ const createUser = () => {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                     <!-- Logo Upload with Preview -->
                     <div>
-                        <h2 class="text-lg font-semibold text-gray-800 mb-3">Organization Logo</h2>
-                        <div v-if="logoUrl"
-                            class="w-full h-64 bg-gray-50 flex items-center justify-center rounded-md overflow-hidden border mb-3">
-                            <img :src="logoUrl" alt="Organization Logo" class="object-scale-down h-64 w-[500px]" />
-                        </div>
-                        <label>
-                            <span class="text-sm text-gray-600">Upload logo</span>
+                        <h2 class="text-lg font-semibold text-gray-800 mb-3">Add Organization Logo</h2>
+
+                        <!-- Logo Upload Input -->
+                        <label class="block mb-3">
                             <input type="file" @change="handleLogoChange"
                                 class="block w-full text-sm text-gray-500 mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
                         </label>
+
+                        <!-- Logo Preview with Default Fallback -->
+                        <div
+                            class="w-full h-64 bg-gray-50 flex items-center justify-center rounded-md overflow-hidden border mb-3">
+                            <img :src="logoUrl || '/images/organization_logo.png'" alt="Organization Logo"
+                                class="object-scale-down h-64 w-[500px]" />
+                        </div>
+
+                        <!-- Validation Error -->
                         <div v-if="form.errors.organization_logo" class="text-red-600 text-sm mt-1">
                             {{ form.errors.organization_logo }}
                         </div>
