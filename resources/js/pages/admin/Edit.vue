@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { ref } from 'vue';
-import { Icon } from '@iconify/vue';
-import { Link, router, useForm } from '@inertiajs/vue3';
 import { defineProps } from 'vue';
+import { useForm } from '@inertiajs/vue3';
+import { Icon } from '@iconify/vue';
+import { Link } from '@inertiajs/vue3';
 import Button from '@/components/Button.vue';
 import Input from '@/components/InputWithLabel.vue';
 
 const toast = new ToastMagic();
+
 const props = defineProps<{
     errors: Record<string, string>,
     user: {
@@ -24,7 +25,7 @@ const props = defineProps<{
         status?: boolean,
     }
 }>();
-console.log('user data',props);
+
 const form = useForm({
     name: props.user.name,
     email: props.user.email,
@@ -39,19 +40,16 @@ const form = useForm({
 });
 
 const updateUser = () => {
-    form.transform((data) => {
-
-        return {
-            ...data,
-            _method: 'put',
-        };
-    }).post(route('user.update', props.user.id), {
+    form.transform((data) => ({
+        ...data,
+        _method: 'put',
+    })).post(route('user.update', props.user.id), {
         onSuccess: () => {
             toast.success("User updated successfully!");
         },
         onError: (errors) => {
-            console.error('Update failed:', errors);
-            toast.error("Update failed. Please check the fields and try again.");
+            toast.error("Update failed. Please check the fields.");
+            console.error(errors);
         }
     });
 };
@@ -60,84 +58,79 @@ const updateUser = () => {
 <template>
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 font-[Convergence] flex items-center gap-2">
+                    <Icon icon="mdi:account-edit" width="28" height="28" />
                     Edit User
                 </h1>
-                <div class="text-gray-600">
-                    <Link :href="route('user.index')" class="flex items-center gap-1 hover:text-black">
-                    <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
-                    <span class="text-[16px] font-medium">Back</span>
-                    </Link>
-                </div>
+                <Link :href="route('user.index')" class="flex items-center gap-1 hover:text-black text-gray-600">
+                <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
+                <span class="text-md font-medium">Back</span>
+                </Link>
             </div>
-            <!-- Edit User Form -->
-            <div class="flex flex-col lg:mt-5 gap-4 rounded-lg lg:border lg:border-[#167893] p-0 lg:p-4">
 
-                <div class="space-y-5 bg-white p-6 rounded-lg shadow">
-                    <div>
-                        <Input type="text" v-model="form.name" label="User Name" color="grayBorder" :required="true"
-                            :error="errors.name" placeholder="Enter User Name" />
-                    </div>
-
-                    <div>
-                        <Input type="email" v-model="form.email" label="Email" color="grayBorder" :error="errors.email"
+            <!-- Form Card -->
+            <div class="bg-white p-8 rounded-lg shadow-md space-y-10">
+                <!-- Section: User Info -->
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-700 mb-4">User Information</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <Input type="text" v-model="form.name" label="User Name" :error="props.errors.name" required
+                            placeholder="Enter User Name" />
+                        <Input type="email" v-model="form.email" label="Email" :error="props.errors.email" required
                             placeholder="example@mail.com" />
+                        <Input type="text" v-model="form.phone" label="Contact Number" :error="props.errors.phone"
+                            required placeholder="Enter Phone Number" />
+                        <Input type="textarea" v-model="form.address" label="Address" :error="props.errors.address"
+                            required />
                     </div>
-
-                    <div>
-                        <Input type="text" v-model="form.phone" label="Contact Number" :required="true"
-                            :error="errors.phone" color="grayBorder" placeholder="Enter Phone Number" />
-                    </div>
-
-                    <div>
-                        <Input type="textarea" v-model="form.address" color="grayBorder" :required="true"
-                            label="Address" :error="errors.address"></Input>
-                    </div>
-
-                    <div>
-                        <Input type="textarea" v-model="form.organization_name" color="grayBorder" :required="true"
-                            label="Organization Name" :error="errors.organization_name"></Input>
-                    </div>
-
-                    <div>
-                        <Input type="textarea" v-model="form.subscription_plan" color="grayBorder" :required="true"
-                            label="Subscription Plan" :error="errors.subscription_plan"></Input>
-                    </div>
-
-                    <div>
-                        <Input type="date" v-model="form.validity" color="grayBorder" :required="true" label="Validity"
-                            :error="errors.validity"></Input>
-                    </div>
-
-                    <!-- Password Field -->
-                    <div>
-                        <Input type="password" v-model="form.password" label="Password" color="grayBorder"
-                            :error="errors.password" placeholder="Enter Password (optional)" />
-                    </div>
-
-                    <!-- Organization Logo Field -->
-                    <div>
-                        <Input type="text" v-model="form.organization_logo" label="Organization Logo URL"
-                            color="grayBorder" :error="errors.organization_logo"
-                            placeholder="https://logo.url/image.png" />
-                    </div>
-
-                    <!-- Status Field -->
-                    <div>
-                        <label class="text-sm font-medium text-gray-700">Status</label>
-                        <select v-model="form.status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                            <option :value="true">Active</option>
-                            <option :value="false">Inactive</option>
-                        </select>
-                    </div>
-
                 </div>
-                <!-- Update Button -->
-                <Button @click="updateUser" :disabled="form.processing" :color="'primary'" :padding="'md'"
-                    :rounded="'full'" :textSize="'sm'">
-                    Update User
-                </Button>
+
+                <!-- Section: Organization Info -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Input type="textarea" v-model="form.organization_name" label="Organization Name"
+                        :error="props.errors.organization_name" required />
+                    <Input type="textarea" v-model="form.subscription_plan" label="Subscription Plan"
+                        :error="props.errors.subscription_plan" required />
+                    <Input type="date" v-model="form.validity" label="Validity" :error="props.errors.validity"
+                        required />
+                    <Input type="password" v-model="form.password" label="Password" :error="props.errors.password"
+                        placeholder="Enter Password (optional)" />
+                    <Input type="text" v-model="form.organization_logo" label="Organization Logo URL"
+                        :error="props.errors.organization_logo" placeholder="https://logo.url/image.png" />
+
+                    <!-- Status Select -->
+                    <div class="flex items-center gap-3 mt-2 ml-1">
+                        <Icon icon="mdi:account-check" class="text-gray-700" width="20" height="20" />
+                        <span class="text-[16px] font-bold text-gray-800">Status</span>
+
+                        <div class="flex border border-gray-300 rounded overflow-hidden text-sm">
+                            <button :class="[
+                                'px-4 py-1 focus:outline-none',
+                                form.status ? 'bg-primary text-white' : 'bg-white text-gray-800'
+                            ]" @click="form.status = true">
+                                Active
+                            </button>
+                            <button :class="[
+                                'px-4 py-1 focus:outline-none',
+                                !form.status ? 'bg-red-500 text-white' : 'bg-white text-gray-800'
+                            ]" @click="form.status = false">
+                                Inactive
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex">
+                    <Button @click="updateUser" :disabled="form.processing" :color="'primary'" :padding="'md'"
+                        :rounded="'full'" :textSize="'sm'"
+                        class="w-full flex justify-center items-center hover:scale-105 transition-transform duration-200">
+                        <Icon icon="mdi:check-bold" width="20" height="30" class="mr-2" />
+                        Update User
+                    </Button>
+                </div>
             </div>
         </div>
     </AppLayout>
