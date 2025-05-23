@@ -29,7 +29,6 @@ const props = defineProps<{
         selected: string[], measurements_logo: string
     }
 }>();
-console.log('props', props.measurements.measurements_logo);
 const selectedTemplate = ref(null);
 
 const form = useForm({
@@ -105,7 +104,6 @@ const formatLabel = (key: string): string => {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 };
-console.log('form data', form.design_details);
 </script>
 
 <template>
