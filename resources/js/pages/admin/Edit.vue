@@ -93,24 +93,20 @@ const handleLogoChange = (event: Event) => {
                 <div>
                     <h2 class="text-lg font-semibold text-gray-700 mb-4">User Information</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Input type="text" v-model="form.name" label="User Name" :error="props.errors.name" required
+                        <Input type="text" v-model="form.name" label="User Name" :error="props.errors.name" required="true"
                             placeholder="Enter User Name" />
-                        <Input type="email" v-model="form.email" label="Email" :error="props.errors.email" required
+                        <Input type="email" v-model="form.email" label="Email" :error="props.errors.email" required="true"
                             placeholder="example@mail.com" />
                         <Input type="text" v-model="form.phone" label="Contact Number" :error="props.errors.phone"
-                            required placeholder="Enter Phone Number" />
+                            required="true" placeholder="Enter Phone Number" />
                         <!-- Password Input with Visibility Toggle -->
                         <div class="relative">
                             <Input :type="showPassword ? 'text' : 'password'" v-model="form.password" label="Password"
-                                :error="props.errors.password" placeholder="Enter Password" />
+                                :error="props.errors.password" placeholder="Leave blank to keep current password." required="true"/>
                             <button type="button" @click="showPassword = !showPassword"
                                 class="absolute right-3 top-9 text-gray-600 hover:text-black" tabindex="-1">
                                 <Icon :icon="showPassword ? 'mdi:eye-off' : 'mdi:eye'" width="22" height="22" />
                             </button>
-                            <!-- Hint Text -->
-                            <small class="text-sm text-gray-500 block mt-1">
-                                Leave blank to keep current password.
-                            </small>
                         </div>
                     </div>
                 </div>
@@ -119,11 +115,11 @@ const handleLogoChange = (event: Event) => {
                 <div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <Input type="textarea" v-model="form.address" label="Address" :error="props.errors.address"
-                            required />
+                            required="true" />
 
 
                         <Input type="textarea" v-model="form.organization_name" label="Organization Name"
-                            :error="props.errors.organization_name" required />
+                            :error="props.errors.organization_name" required="true" />
 
                         <!-- Enhanced Subscription Plan Dropdown -->
                         <div>
@@ -151,7 +147,7 @@ const handleLogoChange = (event: Event) => {
                             </div>
                         </div>
                         <Input type="date" v-model="form.validity" label="Validity" :error="props.errors.validity"
-                            required />
+                            required="true" />
                     </div>
                 </div>
 
