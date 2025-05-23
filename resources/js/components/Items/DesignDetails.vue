@@ -82,10 +82,10 @@ const sleeveType = [
                                 <ul class="text-md text-black dark:text-black" aria-labelledby="dropdownTrigger">
                                     <li>
                                         <div
-                                            class="flex flex-row lg:gap-5 gap-0 lg:ml-10 ml-2 py-5 text-black font-lato text-sm">
+                                            class="flex flex-row lg:gap-5 gap-2 lg:ml-10 ml-2 py-5 text-black font-lato text-sm">
                                             <div v-for="(neck, index) in frontNeck" :key="index"
                                                 @click="selectedfrontNeck = neck.name" :class="[
-                                                    'cursor-pointer rounded-md p-2',
+                                                    'cursor-pointer rounded-md lg:p-2',
                                                     selectedfrontNeck === neck.name
                                                         ? 'border-2 border-primary bg-[DEECF0)]'
                                                         : ''
@@ -120,7 +120,7 @@ const sleeveType = [
                                         <div class="flex flex-row lg:gap-5 gap-0 lg:ml-10 ml-2 py-5 font-lato text-sm">
                                             <div v-for="(neck, index) in neckTypes" :key="index"
                                                 @click="selectedNeck = neck.name" :class="[
-                                                    'cursor-pointer rounded-md p-2',
+                                                    'cursor-pointer rounded-md lg:p-2',
                                                     selectedNeck === neck.name
                                                         ? 'border-2 border-primary bg-[DEECF0)]'
                                                         : ''
