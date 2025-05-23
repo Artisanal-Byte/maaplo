@@ -6,9 +6,9 @@ import { Icon } from '@iconify/vue';
 import { Link } from '@inertiajs/vue3';
 import Button from '@/components/Button.vue';
 import Input from '@/components/InputWithLabel.vue';
-
+import { ref, computed } from 'vue';
 const toast = new ToastMagic();
-
+const logoPreview = ref<string | null>(null);
 const props = defineProps<{
     errors: Record<string, string>,
     user: {
@@ -52,6 +52,22 @@ const updateUser = () => {
             console.error(errors);
         }
     });
+};
+
+const logoUrl = computed(() => {
+    return logoPreview.value
+        ? logoPreview.value
+        : props.user.organization_logo
+            ? `/storage/${props.user.organization_logo.replace(/^storage\//, '')}`
+            : null;
+});
+
+const handleLogoChange = (event: Event) => {
+    const file = (event.target as HTMLInputElement)?.files?.[0];
+    if (file) {
+        form.organization_logo = file;
+        logoPreview.value = URL.createObjectURL(file);
+    }
 };
 </script>
 
@@ -97,8 +113,22 @@ const updateUser = () => {
                         required />
                     <Input type="password" v-model="form.password" label="Password" :error="props.errors.password"
                         placeholder="Enter Password (optional)" />
-                    <Input type="text" v-model="form.organization_logo" label="Organization Logo URL"
-                        :error="props.errors.organization_logo" placeholder="https://logo.url/image.png" />
+                    <!-- Organization Logo Upload -->
+                    <div class="bg-white shadow-md rounded-lg p-4 border border-gray-200 md:col-span-2">
+                        <h2 class="text-lg font-semibold text-gray-800 mb-3">Organization Logo</h2>
+                        <div v-if="logoUrl"
+                            class="w-full h-64 bg-gray-50 flex items-center justify-center rounded-md overflow-hidden border">
+                            <img :src="logoUrl" alt="Organization Logo" class="object-scale-down h-64 w-[500px]" />
+                        </div>
+                        <label class="mt-4 block">
+                            <span class="text-sm text-gray-600">Upload new logo</span>
+                            <input type="file" @change="handleLogoChange"
+                                class="block w-full text-sm text-gray-500 mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
+                        </label>
+                        <div v-if="props.errors.organization_logo" class="text-red-600 text-sm mt-1">
+                            {{ props.errors.organization_logo }}
+                        </div>
+                    </div>
 
                     <!-- Status Select -->
                     <div class="flex items-center gap-3 mt-2 ml-1">

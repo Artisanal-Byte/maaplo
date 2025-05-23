@@ -9,6 +9,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Str;
 use Devrabiul\ToastMagic\Facades\ToastMagic;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class UsersController extends Controller
 {
@@ -106,7 +107,7 @@ class UsersController extends Controller
     public function update(Request $request, string $id)
     {
         $user = User::findOrFail($id);
-        // dd($request);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
@@ -116,20 +117,49 @@ class UsersController extends Controller
             'subscription_plan' => 'nullable|string|max:255',
             'validity' => 'nullable|date',
             'password' => 'nullable|string|min:6',
-            'organization_logo' => 'nullable|string|max:255',
+            'organization_logo' => 'nullable|max:2048',
             'status' => 'boolean',
         ]);
+
         if ($request->filled('password')) {
             $validated['password'] = bcrypt($request->password);
         } else {
             unset($validated['password']);
         }
 
-        $user->update($validated);
+        try {
+            DB::beginTransaction();
 
-        return redirect()->route('user.index')->with('success', 'User updated successfully.');
+            if ($request->hasFile('organization_logo')) {
+                if ($user->organization_logo) {
+                    // Extract relative path from URL or full path (e.g., 'storage/org_logos/logo.png')
+                    $relativePath = Str::after($user->organization_logo, 'storage/');
+
+                    // Check and delete the file if it exists
+                    if (Storage::disk('public')->exists($relativePath)) {
+                        Storage::disk('public')->delete($relativePath);
+                    }
+                }
+                // Process and save new logo
+                $file = $request->file('organization_logo');
+                $username = Str::slug($validated['name']);
+                $userId = $user->id;
+                $customerName = $username;
+
+                $path = ImageHelper::imageProccess($file, $userId, $username, $userId, $customerName, 'org_logo');
+                $validated['organization_logo'] = $path;
+            }
+
+            $user->update($validated);
+
+            DB::commit();
+            ToastMagic::success('User Updated successfully!');
+            return redirect()->route('user.index')->with('success', 'User updated successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('error', 'There was an error: ' . $e->getMessage());
+        }
     }
-
 
     /**
      * Remove the specified resource from storage.
