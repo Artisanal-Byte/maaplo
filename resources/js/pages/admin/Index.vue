@@ -78,14 +78,14 @@ function confirmToggleStatus() {
                             <td class="p-2 border text-center">{{ user.organization_name ?? 'N/A' }}</td>
                             <td class="p-2 border text-center">{{ user.subscription_plan }}</td>
                             <td class="p-2 border text-center">
-                                <span :class="user.status ? 'text-green-600' : 'text-red-600'">
+                                <span :class="user.status ? 'text-green-600 font-bold' : 'text-red-600'">
                                     {{ user.status ? 'Active' : 'Deactivated' }}
                                 </span>
                             </td>
                             <td class="p-2 border text-center">
                                 <div class="flex justify-center gap-4">
                                     <Link :href="route('user.edit', user.id)" class="relative group">
-                                    <Icon icon="ri:edit-fill" class="text-blue-700" width="20" height="20" />
+                                    <Icon icon="ri:edit-fill" class="text-primary" width="20" height="20" />
                                     <div
                                         class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 z-10">
                                         Edit

@@ -54,7 +54,7 @@ const createUser = () => {
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <!-- Header -->
             <div class="flex justify-between items-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-800 font-[Convergence] flex items-center gap-2">
+                <h1 class="text-3xl text-primary font-bold text-gray-800 font-[Convergence] flex items-center gap-2">
                     <Icon icon="mdi:account-plus" width="28" height="28" />
                     Create User
                 </h1>
@@ -90,10 +90,13 @@ const createUser = () => {
                         </Input>
                         <div class="relative">
                             <Input :type="showPassword ? 'text' : 'password'" v-model="form.password" label="Password"
-                                :error="form.errors.password" placeholder="Enter Password" :required="true" />
+                                :error="form.errors.password" placeholder="Enter Password" :required="true">
+                            <template #icon>
+                                <Icon icon="carbon:password" width="20" height="20" />
+                            </template>
+                            </Input>
                             <button type="button" @click="showPassword = !showPassword"
                                 class="absolute right-3 top-10 text-gray-600 hover:text-black" tabindex="-1">
-                                <Icon icon="carbon:password" width="32" height="32"/>
                             </button>
                         </div>
 
@@ -154,7 +157,7 @@ const createUser = () => {
                         <!-- Logo Upload Input -->
                         <label class="block mb-3">
                             <input type="file" @change="handleLogoChange"
-                                class="block w-full text-sm text-gray-500 mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
+                                class="block w-full text-sm text-gray-500 mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#DEEFF4] file:text-primary  hover:file:bg-indigo-100 cursor-pointer" />
                         </label>
 
                         <!-- Logo Preview with Default Fallback -->
