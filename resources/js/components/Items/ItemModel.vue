@@ -16,15 +16,16 @@ const fileInputGallery = ref(null)
 const fileInputCamera = ref(null)
 const previewImage = ref(null)
 const notes = ref([{ label: '', text: '' }]);
-const props = defineProps(['showModal', 'form', 'itemType', 'itemIndex', 'measurements', 'errorMessage5', 'errors']);
+const props = defineProps(['showModal', 'form', 'itemTypes', 'itemIndex', 'measurements', 'errorMessage', 'errors']);
 
 
 const emit = defineEmits(['close', 'setOrderItemsData']);
+
 const showImageUpload = ref(false)
 let data = reactive({
     template_id: null,
     measurements: [],
-    design_details_ids: [],
+    design_detail: [],
     colors: '',
     work_type: '',
     material_type: '',
@@ -47,7 +48,7 @@ const resetData = () => {
     data = {
         template_id: null,
         measurements: [],
-        design_details_ids: [],
+        design_detail: [],
         colors: '',
         work_type: '',
         material_type: '',
@@ -146,7 +147,10 @@ function onFileChange(event, index) {
         }
     }
 }
-
+const setDesignDetails = (details) => {
+    console.log('seted design details:', details);
+    data.design_detail = details
+}
 </script>
 
 <template>
@@ -176,9 +180,9 @@ function onFileChange(event, index) {
                     <!-- done -->
                     <WorkType :formData="data" @setMaterialCode="setMaterialCode" @setMaterialCost="setMaterialCost"
                         @setStichingCost="setStichingCost" @setMaterialType="setMaterialType" @setPrice="setPrice" />
-                    <ItemType :itemType="itemType" @setItemId="setItemId" />
+                    <ItemType :itemTypes="itemTypes" @setItemId="setItemId" />
                     <Measurements :measurements="measurements" />
-                    <DesignDetails />
+                    <DesignDetails :designDetails="itemTypes" @setDesignDetails="setDesignDetails" />
 
                     <div class="flex flex-col">
                         <Colors @setColor="setColor" />

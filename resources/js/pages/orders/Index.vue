@@ -5,15 +5,17 @@ import OrderList from '@/components/OrderList.vue';
 import SearchList from '@/components/SearchIcon.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Icon } from '@iconify/vue';
-import { computed, reactive, ref, watch } from 'vue';
-// import { debounce } from 'vue-debounce'
+import { defineProps, computed, reactive, ref, watch } from 'vue';
+
+const props = defineProps(['orders'])
 const searchTerm = ref('');
-const orders = ref([]);
+// const orders = ref([]);
 const selectedStatus = ref('');
 const selectedDelivery = ref('');
 const showDropdown = ref(false);
 const showDropdownDelivery = ref(false);
-
+let borderColor = ref('#837200');
+let bgColor = ref('#FFFCE6');
 let showable = reactive({ showSearch: false, showFilter: false })
 
 // make a emitable function to show and hide the search and filter list
@@ -39,7 +41,7 @@ watch(selectedDelivery, (newDelivery) => {
     console.log('Selected Delivery:', newDelivery);
 });
 const filteredOrders = computed(() => {
-    return orders.value.filter(order => {
+    return props.orders.value.filter(order => {
         const matchesSearch = !searchTerm.value || order.name.toLowerCase().includes(searchTerm.value.toLowerCase()) || order.status.toLowerCase().includes(searchTerm.value.toLowerCase());
         const matchesStatus = !selectedStatus.value || order.status === selectedStatus.value;
         const matchesDelivery = !selectedDelivery.value || order.deliveryDateRange === selectedDelivery.value;
@@ -163,18 +165,18 @@ function toggleDropdownDelivery() {
                                                 Days</label><br> -->
                                         </div>
                                         <div>
-                                            <Input type="radio" id="7-15-Days" label="7-15 Days" name="status" value="7-15 Days"
-                                                v-model="selectedDelivery"/>
+                                            <Input type="radio" id="7-15-Days" label="7-15 Days" name="status"
+                                                value="7-15 Days" v-model="selectedDelivery" />
                                             <!-- <label for="7-15-Days" class="ml-2">7-15 Days</label><br> -->
                                         </div>
                                         <div>
-                                            <Input type="radio" id="Overdue" label="Overdue" name="status" value="Overdue"
-                                                v-model="selectedDelivery"/>
+                                            <Input type="radio" id="Overdue" label="Overdue" name="status"
+                                                value="Overdue" v-model="selectedDelivery" />
                                             <!-- <label for="Overdue" class="ml-2">Overdue</label><br> -->
                                         </div>
                                         <div>
-                                            <Input type="radio" id="One-Month" label="One Month" name="status" value="One Month"
-                                                v-model="selectedDelivery"/>
+                                            <Input type="radio" id="One-Month" label="One Month" name="status"
+                                                value="One Month" v-model="selectedDelivery" />
                                             <!-- <label for="One-Month" class="ml-2">One Month</label><br> -->
                                         </div>
                                     </div>
@@ -187,10 +189,9 @@ function toggleDropdownDelivery() {
             <div class="px-4 mt-10 py-6 gap-[10px] rounded-[10px] shadow-[0px_0px_8.6px_0px_#005FAF40]">
                 <!-- Orders list -->
                 <div class="space-y-4">
-                    <OrderList :bgColor="'#FFFCE6'" :borderColor="'#837200'" />
-                    <OrderList :bgColor="'#EAF5FF'" :borderColor="'#005FAF'" />
-                    <OrderList :bgColor="'#FFFFFF'" :borderColor="'#828282'" />
-                    <OrderList :bgColor="'#FFEAEA'" :borderColor="'#FF0000'" />
+                    <OrderList v-if="orders?.length > 0" v-for="order in orders" :bgColor="bgColor"
+                        :borderColor="borderColor" />
+                    <span v-else>No Orders</span>
                 </div>
             </div>
         </div>
