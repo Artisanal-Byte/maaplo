@@ -15,7 +15,7 @@ const form = useForm({
     phone: '',
     address: '',
     organization_name: '',
-    subscription_plan: '',
+    subscription_plan: 'free',
     validity: '',
     password: '',
     organization_logo: null,
@@ -97,8 +97,33 @@ const createUser = () => {
                         <Input type="textarea" v-model="form.organization_name" label="Organization Name"
                             :error="form.errors.organization_name" :required="true"
                             placeholder="Enter Organization Name" />
-                        <Input type="textarea" v-model="form.subscription_plan" label="Subscription Plan"
-                            :error="form.errors.subscription_plan" :required="true" />
+                        <!-- Subscription Plan Dropdown -->
+                        <div>
+                            <label for="subscription_plan" class="block font-medium text-black mb-1">
+                                Subscription Plan <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <select id="subscription_plan" v-model="form.subscription_plan" required
+                                    class="appearance-none block w-full bg-white border border-gray-300 rounded-md py-2 px-3 pr-10 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option disabled value="">Select a plan</option>
+                                    <option value="free">Free</option>
+                                </select>
+                                <!-- Custom dropdown arrow -->
+                                <div
+                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 20 20" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M7 7l3-3 3 3m0 6l-3 3-3-3" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div v-if="form.errors.subscription_plan" class="text-red-600 text-sm mt-1">
+                                {{ form.errors.subscription_plan }}
+                            </div>
+                        </div>
+
+
                         <Input type="date" v-model="form.validity" label="Validity" :error="form.errors.validity"
                             :required="true" />
                     </div>

@@ -114,7 +114,7 @@ class UsersController extends Controller
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
             'organization_name' => 'nullable|string|max:255',
-            'subscription_plan' => 'nullable|string|max:255',
+            'subscription_plan' => 'required|string|in:free',
             'validity' => 'nullable|date',
             'password' => 'nullable|string|min:6',
             'organization_logo' => 'nullable|max:2048',
