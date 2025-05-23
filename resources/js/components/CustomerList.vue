@@ -105,7 +105,7 @@ const deleteCustomer = (customerId: number) => {
             <!-- Edit -->
             <div class="relative group">
                 <Link :href="route('customers.edit', props.customer.id)">
-                <Icon icon="ri:edit-fill" width="18" height="18" class="text-[#005FAF]" />
+                <Icon icon="ri:edit-fill" width="18" height="18" class="text-primary" />
                 </Link>
                 <div
                     class="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition bg-gray-800 text-white text-xs rounded py-1 px-2 pointer-events-none z-10">

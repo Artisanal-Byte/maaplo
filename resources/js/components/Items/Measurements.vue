@@ -129,7 +129,7 @@ function toggleDropdownMeasurements() {
                         <div class="flex items-center gap-4 col-span-2 sm:col-span-1">
                             <SvgIcon :name="'sleeve-length'" />
                             <span
-                                class="w-32 font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Sleeve
+                                class="w-32 font-normal text-[16px] leading-[18px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Sleeve
                                 length</span>
                             <Input v-model="measurements.sleeve_length" type="number" width="md" color="grayBorder"
                                 padding="sm" rounded="sm" />
@@ -140,7 +140,7 @@ function toggleDropdownMeasurements() {
                         <div class="flex items-center gap-4 col-span-2 sm:col-span-1">
                             <SvgIcon :name="'back-neck'" />
                             <span
-                                class="w-32 font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Back
+                                class="w-32 font-normal text-[16px] leading-[18px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Back
                                 Neck</span>
                             <Input v-model="measurements.back_neck" type="number" width="md" color="grayBorder"
                                 padding="sm" rounded="sm" />
@@ -181,7 +181,7 @@ function toggleDropdownMeasurements() {
                         <div class="flex items-center gap-4 col-span-2 sm:col-span-1">
                             <SvgIcon :name="'sleeve-circle'" />
                             <span
-                                class="w-32 font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Sleeve
+                                class="w-32 font-normal text-[16px] leading-[18px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Sleeve
                                 Circle</span>
                             <Input v-model="measurements.sleeve_circle" type="number" width="md" color="grayBorder"
                                 padding="sm" rounded="sm" />
@@ -192,7 +192,7 @@ function toggleDropdownMeasurements() {
                         <div class="flex items-center gap-4 col-span-2 sm:col-span-1">
                             <SvgIcon :name="'front-neck'" />
                             <span
-                                class="w-32 font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Front
+                                class="w-32 font-normal text-[16px] leading-[18px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">Front
                                 Neck</span>
                             <Input v-model="measurements.front_neck" type="number" width="md" color="grayBorder"
                                 padding="sm" rounded="sm" />
