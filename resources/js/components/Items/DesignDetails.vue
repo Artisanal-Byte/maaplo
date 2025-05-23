@@ -43,31 +43,31 @@ watch(selectedSleeveType, (newVal) => {
 })
 
 const neckTypes = [
-    { name: 'u-neck', label: 'U Neck' },
-    { name: 'v-neck-back', label: 'V Neck' },
-    { name: 'cross-neck', label: 'Cross Neck' },
-    { name: 'close-neck', label: 'Close Neck' },
+    { name: 'u-neck', label: 'U Neck', },
+    { name: 'v-neck-back', label: 'V Neck', img: '' },
+    { name: 'cross-neck', label: 'Cross Neck', img: '' },
+    { name: 'close-neck', label: 'Close Neck', img: '' },
 ]
 
 const frontNeck = [
-    { name: 'v-neck', label: 'V Neck' },
-    { name: 'square-neck', label: 'Square Neck' },
-    { name: 'halter-neck', label: 'Halter Neck' },
-    { name: 'round-neck', label: 'Round Neck' },
+    { name: 'v-neck', label: 'V Neck', img: '' },
+    { name: 'square-neck', label: 'Square Neck', img: '' },
+    { name: 'halter-neck', label: 'Halter Neck', img: '' },
+    { name: 'round-neck', label: 'Round Neck', img: '' },
 ]
 
 const sleeveType = [
     {
-        label: 'Full'
+        label: 'Full', img: ''
     },
     {
-        label: 'Half'
+        label: 'Half', img: ''
     },
     {
-        label: 'Cap'
+        label: 'Cap', img: ''
     },
     {
-        label: 'No'
+        label: 'No', img: ''
     },
 ]
 
