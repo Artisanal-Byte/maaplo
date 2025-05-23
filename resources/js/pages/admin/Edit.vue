@@ -77,7 +77,7 @@ const handleLogoChange = (event: Event) => {
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <!-- Header -->
             <div class="flex justify-between items-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-800 font-[Convergence] flex items-center gap-2">
+                <h1 class="text-3xl text-primary font-bold text-gray-800 font-[Convergence] flex items-center gap-2">
                     <Icon icon="mdi:account-edit" width="28" height="28" />
                     Edit User
                 </h1>
@@ -88,67 +88,83 @@ const handleLogoChange = (event: Event) => {
             </div>
 
             <!-- Form Card -->
-            <div class="bg-white p-8 rounded-lg shadow-md space-y-10">
+            <div class="bg-white p-4 lg:p-8 rounded-lg shadow-md space-y-5">
                 <!-- Section: User Info -->
                 <div>
                     <h2 class="text-lg font-semibold text-gray-700 mb-4">User Information</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Input type="text" v-model="form.name" label="User Name" :error="props.errors.name" required="true"
-                            placeholder="Enter User Name" />
-                        <Input type="email" v-model="form.email" label="Email" :error="props.errors.email" required="true"
-                            placeholder="example@mail.com" />
+                        <Input type="text" v-model="form.name" label="User Name" :error="props.errors.name"
+                            required="true" placeholder="Enter User Name">
+                        <template #icon>
+                            <Icon icon="bitcoin-icons:contacts-filled" width="24" height="24" />
+                        </template>
+                        </Input>
+
+                        <Input type="email" v-model="form.email" label="Email" :error="props.errors.email"
+                            required="true" placeholder="example@mail.com">
+                        <template #icon>
+                            <Icon icon="ic:round-email" width="20" height="20" />
+                        </template>
+                        </Input>
                         <Input type="text" v-model="form.phone" label="Contact Number" :error="props.errors.phone"
-                            required="true" placeholder="Enter Phone Number" />
+                            required="true" placeholder="Enter Phone Number">
+                        <template #icon>
+                            <Icon icon="ic:round-phone" width="20" height="20" />
+                        </template>
+                        </Input>
                         <!-- Password Input with Visibility Toggle -->
                         <div class="relative">
                             <Input :type="showPassword ? 'text' : 'password'" v-model="form.password" label="Password"
-                                :error="props.errors.password" placeholder="Leave blank to keep current password." required="true"/>
+                                :error="props.errors.password" placeholder="Leave blank to keep current password."
+                                required="true">
+                            <template #icon>
+                                <Icon icon="carbon:password" width="20" height="20" />
+                            </template>
+                            </Input>
                             <button type="button" @click="showPassword = !showPassword"
                                 class="absolute right-3 top-9 text-gray-600 hover:text-black" tabindex="-1">
-                                <Icon :icon="showPassword ? 'mdi:eye-off' : 'mdi:eye'" width="22" height="22" />
                             </button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Section: Organization Info -->
-                <div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Input type="textarea" v-model="form.address" label="Address" :error="props.errors.address"
-                            required="true" />
-
-
-                        <Input type="textarea" v-model="form.organization_name" label="Organization Name"
-                            :error="props.errors.organization_name" required="true" />
-
-                        <!-- Enhanced Subscription Plan Dropdown -->
-                        <div>
-                            <label for="subscription_plan" class="block text-sm font-medium text-gray-700 mb-1">
-                                Subscription Plan <span class="text-red-500">*</span>
-                            </label>
-                            <div class="relative">
-                                <select id="subscription_plan" v-model="form.subscription_plan" required
-                                    class="appearance-none block w-full bg-white border border-gray-300 rounded-md py-2 px-3 pr-10 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                    <option disabled value="">Select a plan</option>
-                                    <option value="free">Free</option>
-                                </select>
-                                <!-- Dropdown arrow icon -->
-                                <div
-                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
-                                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                        viewBox="0 0 20 20" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M7 7l3-3 3 3m0 6l-3 3-3-3" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <div v-if="props.errors.subscription_plan" class="text-red-600 text-sm mt-1">
-                                {{ props.errors.subscription_plan }}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Input type="textarea" v-model="form.address" label="Address" :error="props.errors.address"
+                        required="true" />
+                    <Input type="textarea" v-model="form.organization_name" label="Organization Name"
+                        :error="props.errors.organization_name" required="true" />
+                    <!-- Enhanced Subscription Plan Dropdown -->
+                    <div>
+                        <label for="subscription_plan" class="block text-sm font-medium text-gray-700 mb-1">
+                            Subscription Plan <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <select id="subscription_plan" v-model="form.subscription_plan" required
+                                class="appearance-none block w-full bg-white border border-gray-300 rounded-md py-2 px-3 pr-10 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <option disabled value="">Select a plan</option>
+                                <option value="free">Free</option>
+                            </select>
+                            <!-- Dropdown arrow icon -->
+                            <div
+                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M7 7l3-3 3 3m0 6l-3 3-3-3" />
+                                </svg>
                             </div>
                         </div>
-                        <Input type="date" v-model="form.validity" label="Validity" :error="props.errors.validity"
-                            required="true" />
+                        <div v-if="props.errors.subscription_plan" class="text-red-600 text-sm mt-1">
+                            {{ props.errors.subscription_plan }}
+                        </div>
                     </div>
+                    <Input type="date" v-model="form.validity" label="Validity" :error="props.errors.validity"
+                        required="true">
+                    <template #icon>
+                        <Icon icon="material-symbols:date-range-outline-rounded" width="20" height="20" />
+                    </template>
+                    </Input>
                 </div>
 
                 <!-- Organization Logo Upload -->
@@ -168,7 +184,7 @@ const handleLogoChange = (event: Event) => {
                         <label class="block">
                             <span class="text-sm text-gray-600">Upload new logo</span>
                             <input type="file" @change="handleLogoChange"
-                                class="block w-full text-sm text-gray-500 mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
+                                class="block w-full text-sm text-gray-500 mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#DEEFF4] file:text-primary hover:file:bg-indigo-100 cursor-pointer" />
                         </label>
 
                         <!-- Validation Error -->
@@ -205,7 +221,7 @@ const handleLogoChange = (event: Event) => {
                         :rounded="'full'" :textSize="'sm'"
                         class="w-full flex justify-center items-center hover:scale-105 transition-transform duration-200">
                         <Icon icon="mdi:check-bold" width="20" height="30" class="mr-2" />
-                        Update User
+                        Update User 
                     </Button>
                 </div>
             </div>
