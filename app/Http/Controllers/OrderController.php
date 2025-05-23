@@ -61,7 +61,8 @@ class OrderController extends Controller
         $user->load('customers');
 
         //-- item which have a global scope or created by Authentic user
-        $itemTypes = $data = GetTemplateHelper::getTemplateData();
+        $data = GetTemplateHelper::getTemplateData();
+        
         $itemTypes = [
             'publicTemplates' => $data['publicTemplates'],
             'privateTemplates' => $data['privateTemplates'],
