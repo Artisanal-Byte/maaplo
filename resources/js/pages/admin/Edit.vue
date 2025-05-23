@@ -154,16 +154,17 @@ const handleLogoChange = (event: Event) => {
                             required />
                     </div>
                 </div>
+
                 <!-- Organization Logo Upload -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                    <!-- Logo Upload with Preview (Edit Page) -->
+                    <!-- Logo Upload with Preview -->
                     <div>
                         <h2 class="text-lg font-semibold text-gray-800 mb-3">Organization Logo</h2>
 
                         <!-- Logo Preview with Fallback -->
                         <div
                             class="w-full h-64 bg-gray-50 flex items-center justify-center rounded-md overflow-hidden border mb-3">
-                            <img :src="logoUrl || '/images/company_logo.png'" alt="Organization Logo"
+                            <img :src="logoUrl || '/images/organization.png'" alt="Organization Logo"
                                 class="object-scale-down h-64 w-[500px]" />
                         </div>
 
