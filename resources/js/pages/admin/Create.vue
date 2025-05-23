@@ -63,19 +63,19 @@ const createUser = () => {
                         <Input type="text" v-model="form.phone" label="Contact Number" :required="true"
                             :error="form.errors.phone" placeholder="Enter Phone Number" />
                         <Input type="password" v-model="form.password" label="Password" :error="form.errors.password"
-                            placeholder="Enter Password" />
+                            placeholder="Enter Password" :required="true"/>
                     </div>
                 </div>
 
                 <!-- Section: Organization Info -->
                 <div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Input type="textarea" v-model="form.address" label="Address" :error="form.errors.address" />
+                        <Input type="textarea" v-model="form.address" label="Address" :error="form.errors.address" :required="true" placeholder="Enter Address"/>
                         <Input type="textarea" v-model="form.organization_name" label="Organization Name"
-                            :error="form.errors.organization_name" />
+                            :error="form.errors.organization_name" :required="true" placeholder="Enter Organization Name"/>
                         <Input type="textarea" v-model="form.subscription_plan" label="Subscription Plan"
-                            :error="form.errors.subscription_plan" />
-                        <Input type="date" v-model="form.validity" label="Validity" :error="form.errors.validity" />
+                            :error="form.errors.subscription_plan" :required="true"/>
+                        <Input type="date" v-model="form.validity" label="Validity" :error="form.errors.validity" :required="true"/>
                     </div>
                 </div>
 
