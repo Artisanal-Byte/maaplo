@@ -172,26 +172,41 @@ const closeImageModal = () => {
                 <!-- Customer Name -->
                 <div>
                     <Input type="text" v-model="form.name" label="Customer Name" color="grayBorder" :required="true"
-                        :error="errors.name" placeholder="Enter Customer Name" />
+                        :error="errors.name" placeholder="Enter Customer Name">
+                    <template #icon>
+                        <Icon icon="bitcoin-icons:contacts-filled" width="24" height="24" />
+                    </template>
+                    </Input>
                 </div>
 
                 <!-- Contact Number -->
                 <div>
                     <Input type="text" v-model="form.phone" label="Contact Number" :required="true"
-                        :error="errors.phone" color="grayBorder" placeholder="Enter Phone Number" />
+                        :error="errors.phone" color="grayBorder" placeholder="Enter Phone Number">
+                    <template #icon>
+                        <Icon icon="ic:round-phone" width="20" height="20" />
+                    </template>
+                    </Input>
                     <div v-if="phoneError" class="text-red-600 text-sm mt-1">{{ phoneError }}</div>
                 </div>
 
                 <!-- Email -->
                 <div>
                     <Input type="email" v-model="form.email" label="Email" color="grayBorder" :error="errors.email"
-                        placeholder="example@mail.com" />
+                        placeholder="example@mail.com">
+                    <template #icon>
+                        <Icon icon="ic:round-email" width="20" height="20" />
+                    </template>
+                    </Input>
                 </div>
 
                 <!-- Date of Birth -->
                 <div>
-                    <Input type="date" v-model="form.dob" :error="errors.dob" label="Date of Birth"
-                        color="grayBorder" />
+                    <Input type="date" v-model="form.dob" :error="errors.dob" label="Date of Birth" color="grayBorder">
+                    <template #icon>
+                        <Icon icon="material-symbols:date-range-outline-rounded" width="20" height="20" />
+                    </template>
+                    </Input>
                 </div>
 
                 <!-- Address -->
