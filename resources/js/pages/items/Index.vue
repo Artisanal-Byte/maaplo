@@ -83,7 +83,7 @@ const proceedDelete = () => {
                                     <!-- Edit Button with Tooltip -->
                                     <div class="relative group">
                                         <Link :href="route('items.edit', item.id)">
-                                        <Icon icon="ri:edit-fill" class="text-[#005FAF]" width="20" height="20" />
+                                        <Icon icon="ri:edit-fill" class="text-primary" width="20" height="20" />
                                         </Link>
                                         <span
                                             class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none z-10">
@@ -103,11 +103,8 @@ const proceedDelete = () => {
                                         </span>
                                     </div>
                                 </div>
-
                                 <div v-else class="text-gray-500">🔒 Not Editable</div>
                             </td>
-
-
                         </tr>
                     </tbody>
                 </table>
