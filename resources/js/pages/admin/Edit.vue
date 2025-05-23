@@ -6,9 +6,10 @@ import { Icon } from '@iconify/vue';
 import { Link } from '@inertiajs/vue3';
 import Button from '@/components/Button.vue';
 import Input from '@/components/InputWithLabel.vue';
-
+import { ref, computed } from 'vue';
 const toast = new ToastMagic();
-
+const showPassword = ref(false);
+const logoPreview = ref<string | null>(null);
 const props = defineProps<{
     errors: Record<string, string>,
     user: {
@@ -53,6 +54,22 @@ const updateUser = () => {
         }
     });
 };
+
+const logoUrl = computed(() => {
+    return logoPreview.value
+        ? logoPreview.value
+        : props.user.organization_logo
+            ? `/storage/${props.user.organization_logo.replace(/^storage\//, '')}`
+            : null;
+});
+
+const handleLogoChange = (event: Event) => {
+    const file = (event.target as HTMLInputElement)?.files?.[0];
+    if (file) {
+        form.organization_logo = file;
+        logoPreview.value = URL.createObjectURL(file);
+    }
+};
 </script>
 
 <template>
@@ -76,29 +93,89 @@ const updateUser = () => {
                 <div>
                     <h2 class="text-lg font-semibold text-gray-700 mb-4">User Information</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Input type="text" v-model="form.name" label="User Name" :error="props.errors.name" required
+                        <Input type="text" v-model="form.name" label="User Name" :error="props.errors.name" required="true"
                             placeholder="Enter User Name" />
-                        <Input type="email" v-model="form.email" label="Email" :error="props.errors.email" required
+                        <Input type="email" v-model="form.email" label="Email" :error="props.errors.email" required="true"
                             placeholder="example@mail.com" />
                         <Input type="text" v-model="form.phone" label="Contact Number" :error="props.errors.phone"
-                            required placeholder="Enter Phone Number" />
-                        <Input type="textarea" v-model="form.address" label="Address" :error="props.errors.address"
-                            required />
+                            required="true" placeholder="Enter Phone Number" />
+                        <!-- Password Input with Visibility Toggle -->
+                        <div class="relative">
+                            <Input :type="showPassword ? 'text' : 'password'" v-model="form.password" label="Password"
+                                :error="props.errors.password" placeholder="Leave blank to keep current password." required="true"/>
+                            <button type="button" @click="showPassword = !showPassword"
+                                class="absolute right-3 top-9 text-gray-600 hover:text-black" tabindex="-1">
+                                <Icon :icon="showPassword ? 'mdi:eye-off' : 'mdi:eye'" width="22" height="22" />
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Section: Organization Info -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Input type="textarea" v-model="form.organization_name" label="Organization Name"
-                        :error="props.errors.organization_name" required />
-                    <Input type="textarea" v-model="form.subscription_plan" label="Subscription Plan"
-                        :error="props.errors.subscription_plan" required />
-                    <Input type="date" v-model="form.validity" label="Validity" :error="props.errors.validity"
-                        required />
-                    <Input type="password" v-model="form.password" label="Password" :error="props.errors.password"
-                        placeholder="Enter Password (optional)" />
-                    <Input type="text" v-model="form.organization_logo" label="Organization Logo URL"
-                        :error="props.errors.organization_logo" placeholder="https://logo.url/image.png" />
+                <div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <Input type="textarea" v-model="form.address" label="Address" :error="props.errors.address"
+                            required="true" />
+
+
+                        <Input type="textarea" v-model="form.organization_name" label="Organization Name"
+                            :error="props.errors.organization_name" required="true" />
+
+                        <!-- Enhanced Subscription Plan Dropdown -->
+                        <div>
+                            <label for="subscription_plan" class="block text-sm font-medium text-gray-700 mb-1">
+                                Subscription Plan <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <select id="subscription_plan" v-model="form.subscription_plan" required
+                                    class="appearance-none block w-full bg-white border border-gray-300 rounded-md py-2 px-3 pr-10 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option disabled value="">Select a plan</option>
+                                    <option value="free">Free</option>
+                                </select>
+                                <!-- Dropdown arrow icon -->
+                                <div
+                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 20 20" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M7 7l3-3 3 3m0 6l-3 3-3-3" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div v-if="props.errors.subscription_plan" class="text-red-600 text-sm mt-1">
+                                {{ props.errors.subscription_plan }}
+                            </div>
+                        </div>
+                        <Input type="date" v-model="form.validity" label="Validity" :error="props.errors.validity"
+                            required="true" />
+                    </div>
+                </div>
+
+                <!-- Organization Logo Upload -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <!-- Logo Upload with Preview -->
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-800 mb-3">Organization Logo</h2>
+
+                        <!-- Logo Preview with Fallback -->
+                        <div
+                            class="w-full h-64 bg-gray-50 flex items-center justify-center rounded-md overflow-hidden border mb-3">
+                            <img :src="logoUrl || '/images/organization.png'" alt="Organization Logo"
+                                class="object-scale-down h-64 w-[500px]" />
+                        </div>
+
+                        <!-- Upload Input -->
+                        <label class="block">
+                            <span class="text-sm text-gray-600">Upload new logo</span>
+                            <input type="file" @change="handleLogoChange"
+                                class="block w-full text-sm text-gray-500 mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
+                        </label>
+
+                        <!-- Validation Error -->
+                        <div v-if="props.errors.organization_logo" class="text-red-600 text-sm mt-1">
+                            {{ props.errors.organization_logo }}
+                        </div>
+                    </div>
 
                     <!-- Status Select -->
                     <div class="flex items-center gap-3 mt-2 ml-1">
