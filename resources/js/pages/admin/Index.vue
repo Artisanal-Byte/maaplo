@@ -99,10 +99,10 @@ const user = computed(() => page.props.auth.user)
                                         <Icon icon="mdi:account-lock"
                                             :class="user.status ? 'text-green-600' : 'text-red-600'" width="20"
                                             height="20" />
-                                        <div
+                                        <!-- <div
                                             class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 z-10">
                                             Toggle Status
-                                        </div>
+                                        </div> -->
                                     </button>
                                 </div>
                             </td>
@@ -117,9 +117,13 @@ const user = computed(() => page.props.auth.user)
                     <h2 class="text-xl font-bold mb-3">Are you sure?</h2>
                     <p class="text-gray-700 mb-4">
                         You are about to
-                        <span class="font-semibold text-red-500">{{ selectedUser?.status ? 'deactivate' : 'activate'
-                            }}</span>
-                        <strong>{{ selectedUser?.name }}</strong>.
+                        <span :class="[
+                            'font-semibold mr-1',
+                            selectedUser?.status ? 'text-red-500' : 'text-green-500'
+                        ]">
+                            {{ selectedUser?.status ? 'deactivate' : 'activate' }}
+                        </span>
+                        <strong> {{ selectedUser?.name }}</strong>.
                     </p>
                     <div class="flex justify-end gap-3">
                         <Button @click="cancelModal" color="gray">Cancel</Button>

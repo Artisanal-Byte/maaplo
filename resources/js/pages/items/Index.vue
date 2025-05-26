@@ -87,7 +87,7 @@ const proceedDelete = () => {
                                         </Link>
                                         <span
                                             class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none z-10">
-                                            Edit Template
+                                            Edit
                                         </span>
                                     </div>
 
@@ -99,7 +99,7 @@ const proceedDelete = () => {
                                         </button>
                                         <span
                                             class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none z-10">
-                                            Delete Template
+                                            Delete
                                         </span>
                                     </div>
                                 </div>
