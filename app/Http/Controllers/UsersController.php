@@ -50,15 +50,20 @@ class UsersController extends Controller
             'organization_logo' => 'nullable|file|image|max:2048',
             'status' => 'boolean',
         ]);
+
         $validated['password'] = bcrypt($validated['password']);
+
         try {
             DB::beginTransaction();
-            // temporary store user
+
+            // Create user with empty logo initially
             $tempUser = User::create([
                 ...$validated,
                 'organization_logo' => '',
+                'thumbnail_logo' => '',
             ]);
-            // If logo image exists, process and update
+
+            // If logo image exists, process both original and thumbnail
             if ($request->hasFile('organization_logo')) {
                 $file = $request->file('organization_logo');
                 $username = Str::slug($validated['name']);
@@ -66,11 +71,14 @@ class UsersController extends Controller
                 $customerName = $username;
                 $customerId = $userId;
 
-                $path = ImageHelper::imageProccess($file, $customerId, $username, $userId, $customerName, 'org_logo');
-                $tempUser->update(['organization_logo' => $path]);
+                $orgLogoPath = ImageHelper::imageProccess($file, $customerId, $username, $userId, $customerName, 'org_logo');
+                $thumbnailPath = ImageHelper::saveThumbnail($file, $customerId, $username, $userId, $customerName, 'thumbnail_logo');
+
+                $tempUser->update([
+                    'organization_logo' => $orgLogoPath,
+                    'thumbnail_logo' => $thumbnailPath,
+                ]);
             }
-            $userFind = User::find($tempUser->id);
-            $userFind->update(['id' => $tempUser->id], $validated);
 
             DB::commit();
             ToastMagic::success('User created successfully!');
@@ -80,6 +88,7 @@ class UsersController extends Controller
             return redirect()->back()->withInput()->with('error', 'There was an error: ' . $e->getMessage());
         }
     }
+
 
     /**
      * Display the specified resource.
@@ -117,7 +126,7 @@ class UsersController extends Controller
             'subscription_plan' => 'required|string|in:free',
             'validity' => 'required|date',
             'password' => 'nullable|string|min:8',
-            'organization_logo' => 'nullable|max:2048',
+            'organization_logo' => 'nullable|file|image|max:2048',
             'status' => 'boolean',
         ]);
 
@@ -131,29 +140,39 @@ class UsersController extends Controller
             DB::beginTransaction();
 
             if ($request->hasFile('organization_logo')) {
+                // Delete old organization logo
                 if ($user->organization_logo) {
-                    // Extract relative path from URL or full path (e.g., 'storage/org_logos/logo.png')
-                    $relativePath = Str::after($user->organization_logo, 'storage/');
-
-                    // Check and delete the file if it exists
-                    if (Storage::disk('public')->exists($relativePath)) {
-                        Storage::disk('public')->delete($relativePath);
+                    $orgRelativePath = Str::after($user->organization_logo, 'storage/');
+                    if (Storage::disk('public')->exists($orgRelativePath)) {
+                        Storage::disk('public')->delete($orgRelativePath);
                     }
                 }
-                // Process and save new logo
+
+                // Delete old thumbnail logo
+                if ($user->thumbnail_logo) {
+                    $thumbRelativePath = Str::after($user->thumbnail_logo, 'storage/');
+                    if (Storage::disk('public')->exists($thumbRelativePath)) {
+                        Storage::disk('public')->delete($thumbRelativePath);
+                    }
+                }
+
+                // Save new logos
                 $file = $request->file('organization_logo');
                 $username = Str::slug($validated['name']);
                 $userId = $user->id;
                 $customerName = $username;
 
-                $path = ImageHelper::imageProccess($file, $userId, $username, $userId, $customerName, 'org_logo');
-                $validated['organization_logo'] = $path;
+                $orgLogoPath = ImageHelper::imageProccess($file, $userId, $username, $userId, $customerName, 'org_logo');
+                $thumbnailPath = ImageHelper::saveThumbnail($file, $userId, $username, $userId, $customerName, 'thumbnail_logo');
+
+                $validated['organization_logo'] = $orgLogoPath;
+                $validated['thumbnail_logo'] = $thumbnailPath;
             }
 
             $user->update($validated);
 
             DB::commit();
-            ToastMagic::success('User Updated successfully!');
+            ToastMagic::success('User updated successfully!');
             return redirect()->route('user.index')->with('success', 'User updated successfully.');
         } catch (\Exception $e) {
             DB::rollBack();

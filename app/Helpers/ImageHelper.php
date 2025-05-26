@@ -56,4 +56,35 @@ class ImageHelper
             dd($e->getMessage());
         }
     }
+
+    public static function saveThumbnail(UploadedFile $image, $customerId, $username, $userId, $customerName, $label = 'thumbnail_logo', $type = 'user')
+    {
+        try {
+            $timestamp = time();
+            $fileName = "{$label}_{$timestamp}.webp";
+
+            // New folder path
+            $folderPath = "users_organization_logo/thumbnail_logo/{$username}_{$userId}";
+            $fullPath = "{$folderPath}/{$fileName}";
+            $directory = storage_path("app/public/{$folderPath}/");
+
+            // Create directory if it doesn't exist
+            if (!file_exists($directory)) {
+                mkdir($directory, 0755, true);
+            }
+
+            $storagePath = $directory . $fileName;
+
+            // Use Intervention Image
+            $manager = new ImageManager(config('image.driver'));
+            $image = $manager->read($image);
+            $image = $image->scaleDown(width: 300, height: 300); // Resize
+            $encoded = $image->toWebp(50); // Lower quality
+            $encoded->save($storagePath);
+
+            return "storage/{$fullPath}";
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+    }
 }
