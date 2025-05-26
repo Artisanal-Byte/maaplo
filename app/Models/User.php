@@ -30,7 +30,8 @@ class User extends Authenticatable
         'password',
         'organization_logo',
         'thumbnail_logo',
-        'status'
+        'status',
+        // 'organization_id'
     ];
 
     /**
@@ -72,5 +73,9 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
     }
 }
