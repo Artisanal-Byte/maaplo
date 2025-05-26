@@ -128,7 +128,7 @@ class UsersController extends Controller
             'subscription_plan' => 'required|string|in:free',
             'validity' => 'required|date',
             'password' => 'nullable|string|min:8',
-            'organization_logo' => 'nullable|file|image|max:5120',
+            'organization_logo' => 'nullable|max:5120',
             'status' => 'boolean',
         ]);
 

@@ -72,7 +72,6 @@ const handleLogoChange = (event: Event) => {
         toast.error("Please select a valid image file.");
     }
 };
-
 </script>
 
 <template>
