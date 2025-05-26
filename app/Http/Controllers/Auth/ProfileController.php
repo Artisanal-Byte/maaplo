@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -13,13 +14,12 @@ class ProfileController extends Controller
     public function show()
     {
         $user = Auth::user();
-        return Inertia::render('profile/Show',['user'=>$user]);
+        return Inertia::render('profile/Show', ['user' => $user]);
     }
-
     public function edit()
     {
         $user = Auth::user();
-        return view('profile.edit', compact('user'));
+        return Inertia::render('profile/Edit', ['user' => $user]);
     }
 
     public function update(Request $request)
@@ -27,48 +27,36 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         $validated = $request->validate([
-            // Personal Information
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,'.$user->id,
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            
-            // Organization Fields
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone' => 'required|string|max:20',
             'organization_name' => 'nullable|string|max:255',
             'organization_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'subscription_plan' => 'required|in:free,premium,enterprise',
-            'validity' => 'nullable|date'
+            'subscription_plan' => 'required|string|max:50',
+            'validity' => 'nullable|date',
         ]);
-
-        // Handle avatar upload
-        if ($request->hasFile('avatar')) {
-            // Delete old avatar if exists
-            if ($user->avatar) {
-                Storage::delete($user->avatar);
-            }
-            
-            $path = $request->file('avatar')->store('avatars', 'public');
-            $validated['avatar'] = $path;
-        }
 
         // Handle organization logo upload
         if ($request->hasFile('organization_logo')) {
             // Delete old logo if exists
             if ($user->organization_logo) {
-                Storage::delete($user->organization_logo);
+                Storage::disk('public')->delete($user->organization_logo);
             }
-            
-            $orgPath = $request->file('organization_logo')->store('organization-logos', 'public');
-            $validated['organization_logo'] = $orgPath;
+
+            // Store new logo
+            $path = $request->file('organization_logo')->store('organization-logos', 'public');
+            $validated['organization_logo'] = $path;
+        } else {
+            // Keep the old organization logo path if no new file uploaded
+            $validated['organization_logo'] = $user->organization_logo;
         }
 
-        // Format validity date
-        if ($request->has('validity')) {
+        if (isset($validated['validity'])) {
             $validated['validity'] = Carbon::parse($validated['validity'])->format('Y-m-d');
         }
 
         $user->update($validated);
 
-        return redirect()->route('profile.show')
-                         ->with('success', 'Profile updated successfully');
+        return redirect()->route('profile.show')->with('success', 'Profile updated successfully');
     }
 }
