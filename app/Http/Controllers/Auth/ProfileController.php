@@ -55,6 +55,13 @@ class ProfileController extends Controller
                     }
                 }
 
+                if ($user->thumbnail_logo) {
+                    $thumbRelativePath = Str::after($user->thumbnail_logo, 'storage/');
+                    if (Storage::disk('public')->exists($thumbRelativePath)) {
+                        Storage::disk('public')->delete($thumbRelativePath);
+                    }
+                }
+
                 // Process and save new logo
                 $file = $request->file('organization_logo');
                 $username = Str::slug($validated['name']);
@@ -62,12 +69,15 @@ class ProfileController extends Controller
                 $customerName = $username;
 
                 $orgLogoPath = ImageHelper::imageProccess($file, $userId, $username, $userId, $customerName, 'org_logo');
+                $thumbnailPath = ImageHelper::saveThumbnail($file, $userId, $username, $userId, $customerName, 'thumbnail_logo');
+
                 $validated['organization_logo'] = $orgLogoPath;
+                $validated['thumbnail_logo'] = $thumbnailPath;
             } else {
                 // Keep existing logo if no new file uploaded
                 $validated['organization_logo'] = $user->organization_logo;
+                $validated['thumbnail_logo'] = $user->thumbnail_logo;
             }
-
             $user->update($validated);
 
             DB::commit();
