@@ -6,7 +6,7 @@ import SearchList from '@/components/SearchIcon.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Icon } from '@iconify/vue';
 import { Link, router } from '@inertiajs/vue3';
-import { reactive, ref } from 'vue';
+import { reactive, ref, computed } from 'vue';
 const showable = reactive({
     showSearch: false
 });
@@ -40,7 +40,17 @@ function myFn(val: string) {
     searchTerm.value = val
     // console.log('Searching  brj:', val)
 }
+const filteredCustomers = computed(() => {
+    if (!searchTerm.value) {
+        return props.customers;
+    }
 
+    return props.customers.filter((customer) =>
+        customer.name.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
+        customer.email?.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
+        customer.phone?.toLowerCase().includes(searchTerm.value.toLowerCase())
+    );
+});
 </script>
 <template>
     <AppLayout>
@@ -86,9 +96,14 @@ function myFn(val: string) {
                     class="w-full lg:max-w-7xl border border-gray-300 rounded-full px-4 py-3 text-sm shadow-[0px_0px_4.3px_0px_#16789333] focus:outline-none focus:ring focus:border-gray-400 transition-all" />
             </div>
             <div>
-                <CustomerList v-for="customer in props.customers" :key="customer.id" :customer="customer" />
+                <div v-if="filteredCustomers.length">
+                    <CustomerList v-for="customer in filteredCustomers" :key="customer.id" :customer="customer" />
+                </div>
+                <div v-else class="text-center text-gray-500 py-10">
+                    No customers available.
+                </div>
             </div>
+
         </div>
     </AppLayout>
 </template>
-
