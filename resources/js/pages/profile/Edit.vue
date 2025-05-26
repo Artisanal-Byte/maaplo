@@ -83,7 +83,7 @@ function closeImageModal() {
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-[24px] font-bold text-primary">Edit Profile</h1>
-                <Link href="/" class="flex items-center gap-1 text-gray-600 hover:text-black">
+                <Link :href="route('profile.show')" class="flex items-center gap-1 text-gray-600 hover:text-black">
                 <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
                 <span class="text-[16px] font-medium">Back</span>
                 </Link>
