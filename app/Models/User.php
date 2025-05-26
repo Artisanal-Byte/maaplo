@@ -29,6 +29,7 @@ class User extends Authenticatable
         'validity',
         'password',
         'organization_logo',
+        'thumbnail_logo',
         'status'
     ];
 
