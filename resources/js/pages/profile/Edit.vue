@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { useForm, Link, Head } from '@inertiajs/vue3';
+import { useForm, Link, Head,router  } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
 import Input from '@/components/InputWithLabel.vue';
