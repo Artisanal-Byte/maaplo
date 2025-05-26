@@ -78,4 +78,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Organization::class);
     }
+    protected $appends = ['formatted_validity'];
+    public function getFormattedValidityAttribute()
+    {
+        return $this->validity ? Carbon::parse($this->validity)->format('d/m/Y') : null;
+    }
 }

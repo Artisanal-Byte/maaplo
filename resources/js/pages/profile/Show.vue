@@ -8,6 +8,7 @@ const props = defineProps(['user']);
 function goToEdit() {
     router.visit(route('profile.edit'));
 }
+
 </script>
 
 <template>
@@ -53,7 +54,7 @@ function goToEdit() {
           <div class="flex items-center gap-3">
             <Icon icon="mdi:calendar-check" class="text-gray-500" width="20" />
             <p><strong>Validity:</strong>
-              {{ props.user.validity ? new Date(props.user.validity).toLocaleDateString() : 'N/A' }}
+              {{ props.user.formatted_validity ?? 'N/A' }}
             </p>
           </div>
 
