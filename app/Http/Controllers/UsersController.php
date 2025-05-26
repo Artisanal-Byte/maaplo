@@ -38,6 +38,7 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -47,9 +48,10 @@ class UsersController extends Controller
             'subscription_plan' => 'required|string|max:255',
             'validity' => 'required|date',
             'password' => 'required|string|min:8',
-            'organization_logo' => 'nullable|file|image|max:2048',
+            'organization_logo' => 'nullable|file|image|max:5120',
             'status' => 'boolean',
         ]);
+        dd($validated);
 
         $validated['password'] = bcrypt($validated['password']);
 
@@ -126,7 +128,7 @@ class UsersController extends Controller
             'subscription_plan' => 'required|string|in:free',
             'validity' => 'required|date',
             'password' => 'nullable|string|min:8',
-            'organization_logo' => 'nullable|file|image|max:2048',
+            'organization_logo' => 'nullable|file|image|max:5120',
             'status' => 'boolean',
         ]);
 
