@@ -51,7 +51,7 @@ class UsersController extends Controller
             'organization_logo' => 'nullable|file|image|max:5120',
             'status' => 'boolean',
         ]);
-        dd($validated);
+        // dd($validated);
 
         $validated['password'] = bcrypt($validated['password']);
 
