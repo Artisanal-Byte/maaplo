@@ -1,13 +1,14 @@
 <script setup lang="ts">
-const props = defineProps<{
-  thumbnail_logo: string | null
-}>()
-console.log('Thumbnail logo:', props.thumbnail_logo);
+import { computed } from 'vue'
+import { usePage } from '@inertiajs/vue3'
+const page = usePage()
+const thumbnailLogo = computed(() => page.props.thumbnail_logo as string | null)
+console.log('thumbnailLogo:', thumbnailLogo.value)
 </script>
 
 <template>
   <img
-    :src="props.thumbnail_logo ? '/' + props.thumbnail_logo : '/images/maaplologo.png'"
+    :src="thumbnailLogo ? '/' + thumbnailLogo : '/images/maaplologo.png'"
     alt="Logo"
     class="h-10 w-10"
   />
