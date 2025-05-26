@@ -17,14 +17,16 @@ const props = defineProps<{
         organization_name: string;
         subscription_plan: string;
         validity: string;
+        password?: string,
         organization_logo: string | null;
     };
 }>();
-
+const showPassword = ref(false);
 const form = useForm({
     name: props.user.name,
     email: props.user.email,
     phone: props.user.phone,
+    password: props.user.password ?? '',
     organization_name: props.user.organization_name,
     organization_logo: null,
 });
@@ -112,11 +114,22 @@ function closeImageModal() {
                 <Icon icon="fluent:organization-16-filled" width="20" height="20" />
             </template>
             </Input>
-
+            <!-- Password Input with Visibility Toggle -->
+            <div class="relative">
+                <Input :type="showPassword ? 'text' : 'password'" v-model="form.password" label="Password"
+                    :error="props.errors.password" placeholder="Leave blank to keep current password." required="true">
+                <template #icon>
+                    <Icon icon="carbon:password" width="20" height="20" />
+                </template>
+                </Input>
+                <button type="button" @click="showPassword = !showPassword"
+                    class="absolute right-3 top-9 text-gray-600 hover:text-black" tabindex="-1">
+                </button>
+            </div>
             <div>
                 <label for="organization_logo" class="block mb-1 font-semibold">Organization Logo</label>
                 <input id="organization_logo" type="file" accept="image/*" @change="handleLogoChange"
-                    class="border border-gray-300 rounded px-3 py-2 w-full" required="true"/>
+                    class="border border-gray-300 rounded px-3 py-2 w-full" required="true" />
                 <div v-if="organizationLogoUrl" class="mt-2 cursor-pointer"
                     @click="openImageModal(organizationLogoUrl)">
                     <img :src="organizationLogoUrl" alt="Organization Logo" class="w-32 h-auto rounded" />

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\ImageHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class ProfileController extends Controller
 {
@@ -25,38 +28,53 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
-
+// dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'phone' => 'required|string|max:20',
+            'phone' => 'required|regex:/^[0-9]{10}$/',
+            'password' => 'nullable|string|min:8',
             'organization_name' => 'nullable|string|max:255',
-            'organization_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'subscription_plan' => 'required|string|max:50',
-            'validity' => 'nullable|date',
+            'organization_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
+        if ($request->filled('password')) {
+            $validated['password'] = bcrypt($request->password);
+        } else {
+            unset($validated['password']);
+        }
+        try {
+            DB::beginTransaction();
 
-        // Handle organization logo upload
-        if ($request->hasFile('organization_logo')) {
-            // Delete old logo if exists
-            if ($user->organization_logo) {
-                Storage::disk('public')->delete($user->organization_logo);
+            if ($request->hasFile('organization_logo')) {
+                // Delete old organization logo
+                if ($user->organization_logo) {
+                    $orgRelativePath = Str::after($user->organization_logo, 'storage/');
+                    if (Storage::disk('public')->exists($orgRelativePath)) {
+                        Storage::disk('public')->delete($orgRelativePath);
+                    }
+                }
+
+                // Process and save new logo
+                $file = $request->file('organization_logo');
+                $username = Str::slug($validated['name']);
+                $userId = $user->id;
+                $customerName = $username;
+
+                $orgLogoPath = ImageHelper::imageProccess($file, $userId, $username, $userId, $customerName, 'org_logo');
+                $validated['organization_logo'] = $orgLogoPath;
+            } else {
+                // Keep existing logo if no new file uploaded
+                $validated['organization_logo'] = $user->organization_logo;
             }
 
-            // Store new logo
-            $path = $request->file('organization_logo')->store('organization-logos', 'public');
-            $validated['organization_logo'] = $path;
-        } else {
-            // Keep the old organization logo path if no new file uploaded
-            $validated['organization_logo'] = $user->organization_logo;
+            $user->update($validated);
+
+            DB::commit();
+
+            return redirect()->route('profile.show')->with('success', 'Profile updated successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('error', 'There was an error updating the profile: ' . $e->getMessage());
         }
-
-        if (isset($validated['validity'])) {
-            $validated['validity'] = Carbon::parse($validated['validity'])->format('Y-m-d');
-        }
-
-        $user->update($validated);
-
-        return redirect()->route('profile.show')->with('success', 'Profile updated successfully');
     }
 }
