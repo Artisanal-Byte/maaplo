@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { Icon } from "@iconify/vue";
 import { Link } from "@inertiajs/vue3";
+import Logo from "./Logo.vue";
 const showDropdown = ref(false);
 const showDropdownCustomer = ref(false);
 function toggleDropdown() {
@@ -33,7 +34,8 @@ const visible = ref(false);
             <!-- Header -->
             <div class="flex items-center justify-between px-7 py-5 border-b">
                 <div class="flex items-center gap-2">
-                    <span class="font-inter font-medium text-[30px] leading-[16px] tracking-[0]">Logo</span>
+                    <Logo />
+                    <!-- <span class="font-inter font-medium text-[30px] leading-[16px] tracking-[0]">Logo</span> -->
                 </div>
                 <button @click="visible = false" class="p-1 rounded-md hover:bg-gray-200">
                     <Icon icon="material-symbols:close" width="24" height="24" />
@@ -49,7 +51,6 @@ const visible = ref(false);
                             <Icon icon="ic:round-dashboard" width="20" height="20" />
                             <span
                                 class="ml-3 font-inter font-medium text-gray-700 hover:text-black leading-[16px] tracking-[0]">Dashboard</span>
-
                         </a>
                     </li>
                     <li>
