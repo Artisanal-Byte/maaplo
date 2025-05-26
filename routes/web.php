@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DesignDetailsController;
 use App\Http\Controllers\ItemTemplateController;
@@ -35,6 +36,7 @@ Route::middleware(["auth", "verified"])->group(function () {
     // Route::resource('orders', OrderController::class)->names(["index"]);
     Route::resource('items', TemplateController::class);
     Route::resource('user', UsersController::class);
+    //  Route::resource('profile', ProfileController::class);
     Route::post('/admin/users/{id}/toggle-status', [UsersController::class, 'toggleStatus'])->name('admin.toggleStatus');
     Route::resource('design-details', DesignDetailsController::class);
     // Route::resource('admin', DesignDetailsController::class);
