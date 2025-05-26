@@ -1,8 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import { Icon } from "@iconify/vue";
 import { Link } from "@inertiajs/vue3";
 import Logo from "./Logo.vue";
+const props = defineProps<{
+  user: {
+    thumbnail_logo: string | null
+  } | null
+}>()
+
+console.log("Logo path:", props.user?.thumbnail_logo)
+
+
 const showDropdown = ref(false);
 const showDropdownCustomer = ref(false);
 function toggleDropdown() {
@@ -34,7 +43,9 @@ const visible = ref(false);
             <!-- Header -->
             <div class="flex items-center justify-between px-7 py-5 border-b">
                 <div class="flex items-center gap-2">
-                    <Logo />
+                    <Logo :thumbnail_logo="props.user?.thumbnail_logo" />
+
+
                     <!-- <span class="font-inter font-medium text-[30px] leading-[16px] tracking-[0]">Logo</span> -->
                 </div>
                 <button @click="visible = false" class="p-1 rounded-md hover:bg-gray-200">
