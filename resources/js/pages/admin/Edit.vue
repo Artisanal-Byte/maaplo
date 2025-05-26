@@ -68,8 +68,11 @@ const handleLogoChange = (event: Event) => {
     if (file) {
         form.organization_logo = file;
         logoPreview.value = URL.createObjectURL(file);
+    } else {
+        toast.error("Please select a valid image file.");
     }
 };
+
 </script>
 
 <template>
@@ -221,7 +224,7 @@ const handleLogoChange = (event: Event) => {
                         :rounded="'full'" :textSize="'sm'"
                         class="w-full flex justify-center items-center hover:scale-105 transition-transform duration-200">
                         <Icon icon="mdi:check-bold" width="20" height="30" class="mr-2" />
-                        Update User 
+                        Update User
                     </Button>
                 </div>
             </div>
