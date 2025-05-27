@@ -24,7 +24,8 @@ const activeTab = ref('order')
     <Head title="Dashboard" />
     <AppLayout>
         <div class="mx-auto max-w-7xl px-4 py-8 w-full">
-            <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">Total Orders : 0
+            <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">Total Orders
+                : 0
             </h1>
             <!-- Graph Section Header with Filter Dropdown -->
             <div class="flex flex-row justify-between mt-8">
@@ -121,36 +122,50 @@ const activeTab = ref('order')
                         Quick Links
                     </h1>
                 </div>
-                <div class="flex flex-col lg:flex-row gap-4">
+                <div class="flex flex-col lg:flex-row gap-10">
+                    <!-- create customer -->
                     <div
-                        class="relative group overflow-hidden border border-primary  lg:w-[300px] h-[100px] rounded-md flex items-center justify-center">
-                        <div
-                            class="absolute left-0 top-0 w-0 h-full bg-primary transition-all duration-500 group-hover:w-full z-0">
+                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[130px] rounded-md flex items-center justify-center border-t-4 border-primary">
+                        <div class="flex flex-col items-center gap-2">
+                            <Link :href="route('customers.create')" class="flex flex-col items-center gap-2">
+                            <div>
+                                <Icon icon="mdi:account-plus" width="32" height="32" class="text-primary" />
+                            </div>
+                            <div class="relative z-10 text-primary font-[Lato] font-medium text-[24px] tracking-[0]">
+                                Create Customer
+                            </div>
+                            </Link>
                         </div>
+                    </div>
 
-                        <Link :href="route('customers.create')"
-                            class="relative z-10 text-primary group-hover:text-white font-[Lato] font-normal text-[22px] tracking-[0]">
-                        Create Customer
-                        </Link>
-                    </div>
+                    <!-- create order -->
                     <div
-                        class="relative group overflow-hidden border border-primary  lg:w-[300px] h-[100px] rounded-md flex items-center justify-center">
-                        <div
-                            class="absolute left-0 top-0 w-0 h-full bg-primary transition-all duration-500 group-hover:w-full z-0">
+                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[130px] rounded-md flex items-center justify-center border-t-4 border-primary">
+                        <div class="flex flex-col items-center gap-2">
+                            <Link :href="route('orders.create')" class="flex flex-col items-center gap-2">
+                            <div>
+                                <Icon icon="lsicon:order-edit-filled" width="32" height="32" class="text-primary" />
+                            </div>
+                            <div class="relative z-10 text-primary font-[Lato] font-medium text-[24px] tracking-[0]">
+                                Create Order
+                            </div>
+                            </Link>
                         </div>
-                        <Link :href="route('orders.create')"
-                            class="relative z-10 text-primary  group-hover:text-white font-[Lato] font-normal text-[22px] tracking-[0]">
-                        Create
-                        Order</Link>
                     </div>
+
+                    <!-- close order -->
                     <div
-                        class="relative group overflow-hidden border border-primary  lg:w-[300px] h-[100px] rounded-md flex items-center justify-center">
-                        <div
-                            class="absolute left-0 top-0 w-0 h-full bg-primary transition-all duration-500 group-hover:w-full z-0">
+                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[130px] rounded-md flex items-center justify-center border-t-4 border-primary">
+                        <div class="flex flex-col items-center gap-2">
+                            <!-- <Link :href="route('orders.create')" class="flex flex-col items-center gap-2"> -->
+                            <div>
+                                <Icon icon="lsicon:order-done-filled" width="32" height="32" class="text-primary" />
+                            </div>
+                            <div class="relative z-10 text-primary font-[Lato] font-medium text-[24px] tracking-[0]">
+                                Close Order
+                            </div>
+                            <!-- </Link> -->
                         </div>
-                        <a
-                            class="relative z-10 text-primary  group-hover:text-white font-[Lato] font-normal text-[22px] tracking-[0]">Close
-                            Order</a>
                     </div>
                 </div>
             </div>
@@ -162,30 +177,38 @@ const activeTab = ref('order')
                         Data
                     </h1>
                 </div>
-                <div class="flex flex-col lg:flex-row gap-4">
-                    <div
-                        class="relative group overflow-hidden border border-primary  lg:w-[300px] h-[100px] rounded-md flex items-center justify-center">
-                        <!-- Sliding background -->
-                        <div
-                            class="absolute left-0 top-0 w-0 h-full bg-primary transition-all duration-500 group-hover:w-full z-0">
-                        </div>
 
-                        <!-- Text content -->
-                        <Link :href="route('customers.index')"
-                            class="relative z-10 text-primary  group-hover:text-white font-[Lato] font-normal text-[22px] tracking-[0]">
-                        Customer List
-                        </Link>
+                <div class="flex flex-col lg:flex-row gap-10">
+                    <!-- customer list -->
+                    <div
+                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[130px] rounded-md flex items-center justify-center border-t-4 border-primary">
+                        <div class="flex flex-col items-center gap-2">
+                            <Link :href="route('customers.index')" class="flex flex-col items-center gap-2">
+                            <div>
+                                <Icon icon="garden:customer-lists-fill-26" width="32" height="32"
+                                    class="text-primary" />
+                            </div>
+                            <div class="relative z-10 text-primary font-[Lato] font-medium text-[24px] tracking-[0]">
+                                Customer List
+                            </div>
+                            </Link>
+                        </div>
                     </div>
 
+                    <!-- order list -->
                     <div
-                        class="relative group overflow-hidden border border-primary  lg:w-[300px] h-[100px] rounded-md flex items-center justify-center">
-                        <div
-                            class="absolute left-0 top-0 w-0 h-full bg-primary transition-all duration-500 group-hover:w-full z-0">
+                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[130px] rounded-md flex items-center justify-center border-t-4 border-primary">
+                        <div class="flex flex-col items-center gap-2">
+                            <Link :href="route('customers.index')" class="flex flex-col items-center gap-2">
+                            <div>
+                                <Icon icon="fe:list-order" width="32" height="32"
+                                    class="text-primary" />
+                            </div>
+                            <div class="relative z-10 text-primary font-[Lato] font-medium text-[24px] tracking-[0]">
+                                Order List
+                            </div>
+                            </Link>
                         </div>
-                        <Link :href="route('orders.index')"
-                            class="relative z-10 text-primary  group-hover:text-white font-[Lato] font-normal text-[22px] tracking-[0]">
-                        Order
-                        List</Link>
                     </div>
 
                 </div>
