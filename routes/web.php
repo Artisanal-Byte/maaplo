@@ -5,6 +5,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DesignDetailsController;
 use App\Http\Controllers\ItemTemplateController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
