@@ -28,6 +28,7 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
+// dd( $request->all() );
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
@@ -35,17 +36,23 @@ class ProfileController extends Controller
             'password' => 'nullable|string|min:8',
             'organization_name' => 'nullable|string|max:255',
             'organization_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
         if ($request->filled('password')) {
             $validated['password'] = bcrypt($request->password);
         } else {
             unset($validated['password']);
         }
+
         try {
             DB::beginTransaction();
 
+            $username = Str::slug($validated['name']);
+            $userId = $user->id;
+
+            // === Handle Organization Logo ===
             if ($request->hasFile('organization_logo')) {
-                // Delete old organization logo
                 if ($user->organization_logo) {
                     $orgRelativePath = Str::after($user->organization_logo, 'storage/');
                     if (Storage::disk('public')->exists($orgRelativePath)) {
@@ -60,22 +67,43 @@ class ProfileController extends Controller
                     }
                 }
 
-                // Process and save new logo
-                $file = $request->file('organization_logo');
-                $username = Str::slug($validated['name']);
-                $userId = $user->id;
-                $customerName = $username;
-
-                $orgLogoPath = ImageHelper::imageProccess($file, $userId, $username, $userId, $customerName, 'org_logo');
-                $thumbnailPath = ImageHelper::saveThumbnail($file, $userId, $username, $userId, $customerName, 'thumbnail_logo');
+                $orgFile = $request->file('organization_logo');
+                $orgLogoPath = ImageHelper::imageProccess($orgFile, $userId, $username, $userId, $username, 'org_logo');
+                $thumbnailPath = ImageHelper::saveThumbnail($orgFile, $userId, $username, $userId, $username, 'thumbnail_logo');
 
                 $validated['organization_logo'] = $orgLogoPath;
                 $validated['thumbnail_logo'] = $thumbnailPath;
             } else {
-                // Keep existing logo if no new file uploaded
                 $validated['organization_logo'] = $user->organization_logo;
                 $validated['thumbnail_logo'] = $user->thumbnail_logo;
             }
+
+            // === Handle Avatar ===
+            if ($request->hasFile('avatar')) {
+                // Delete current avatar
+                if ($user->avatar) {
+                    $avatarRelativePath = Str::after($user->avatar, 'storage/');
+                    if (Storage::disk('public')->exists($avatarRelativePath)) {
+                        Storage::disk('public')->delete($avatarRelativePath);
+                    }
+                }
+
+                // Delete old avatar_* files in the folder
+                $oldFiles = Storage::disk('public')->files("users/useravatar/{$username}_{$userId}");
+                foreach ($oldFiles as $file) {
+                    if (Str::contains($file, 'avatar_')) {
+                        Storage::disk('public')->delete($file);
+                    }
+                }
+
+                $avatarFile = $request->file('avatar');
+                // dd($avatarFile );
+                $validated['avatar'] = ImageHelper::imageAvatar($avatarFile, $username, $userId);
+            } else {
+                $validated['avatar'] = $user->avatar;
+            }
+
+            // dd($user->avatar, $validated['avatar']); // You can uncomment for debug
             $user->update($validated);
 
             DB::commit();
