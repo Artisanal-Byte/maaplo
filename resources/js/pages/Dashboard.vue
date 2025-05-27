@@ -125,7 +125,7 @@ const activeTab = ref('order')
                 <div class="flex flex-col lg:flex-row gap-10">
                     <!-- create customer -->
                     <div
-                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[130px] rounded-md flex items-center justify-center border-t-4 border-primary">
+                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
                             <Link :href="route('customers.create')" class="flex flex-col items-center gap-2">
                             <div>
@@ -140,7 +140,7 @@ const activeTab = ref('order')
 
                     <!-- create order -->
                     <div
-                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[130px] rounded-md flex items-center justify-center border-t-4 border-primary">
+                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
                             <Link :href="route('orders.create')" class="flex flex-col items-center gap-2">
                             <div>
@@ -155,7 +155,7 @@ const activeTab = ref('order')
 
                     <!-- close order -->
                     <div
-                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[130px] rounded-md flex items-center justify-center border-t-4 border-primary">
+                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
                             <!-- <Link :href="route('orders.create')" class="flex flex-col items-center gap-2"> -->
                             <div>
@@ -181,7 +181,7 @@ const activeTab = ref('order')
                 <div class="flex flex-col lg:flex-row gap-10">
                     <!-- customer list -->
                     <div
-                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[130px] rounded-md flex items-center justify-center border-t-4 border-primary">
+                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
                             <Link :href="route('customers.index')" class="flex flex-col items-center gap-2">
                             <div>
@@ -197,7 +197,7 @@ const activeTab = ref('order')
 
                     <!-- order list -->
                     <div
-                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[130px] rounded-md flex items-center justify-center border-t-4 border-primary">
+                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
                             <Link :href="route('customers.index')" class="flex flex-col items-center gap-2">
                             <div>
