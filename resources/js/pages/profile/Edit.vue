@@ -89,7 +89,7 @@ function closeImageModal() {
                 </Link>
             </div>
 
-            <!-- <div > -->
+            <div class="flex flex-col lg:mt-5 gap-3 rounded-lg lg:border lg:border-primary p-0 lg:p-4">
             <Input label="Name" v-model="form.name" :error="errors.name" required="true">
             <template #icon>
                 <Icon icon="bitcoin-icons:contacts-filled" width="24" height="24" />
@@ -159,6 +159,7 @@ function closeImageModal() {
             <ImageModal :show="showImageModal" :imageUrl="currentImageUrl" @close="closeImageModal" />
 
 
+        </div>
         </div>
     </AppLayout>
 </template>
