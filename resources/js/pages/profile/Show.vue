@@ -28,47 +28,53 @@ function goToEdit() {
         </Link>
       </div>
 
-      <div class="bg-[#DEEFF4] shadow-lg rounded-xl p-6 transition-all hover:shadow-xl border border-gray-100">
-        <div class="space-y-4 grid grid-cols-1 lg:grid-cols-2 text-lg">
-          <div class="flex items-center gap-3 mt-3">
-            <Icon icon="mdi:account" class="text-gray-500" width="20" />
-            <p><strong>Name:</strong> {{ props.user.name }}</p>
-          </div>
+      <div class="bg-[#DEEFF4] shadow-lg rounded-xl p-3 lg:p-6 transition-all hover:shadow-xl border border-gray-100">
+        <div class="grid grid-cols-2">
+          <div class="space-y-4 grid grid-cols-1 text-lg">
+            <div class="flex items-center gap-3 mt-3">
+              <Icon icon="mdi:account" class="text-gray-500" width="20" />
+              <p><strong>Name:</strong> {{ props.user.name }}</p>
+            </div>
 
-          <div class="flex items-center gap-3">
-            <Icon icon="mdi:email-outline" class="text-gray-500" width="20" />
-            <p><strong>Email:</strong> {{ props.user.email }}</p>
-          </div>
+            <div class="flex items-center gap-3">
+              <Icon icon="mdi:email-outline" class="text-gray-500" width="20" />
+              <p><strong>Email:</strong> {{ props.user.email }}</p>
+            </div>
 
-          <div class="flex items-center gap-3">
-            <Icon icon="mdi:phone" class="text-gray-500" width="20" />
-            <p><strong>Phone:</strong> {{ props.user.phone }}</p>
-          </div>
+            <div class="flex items-center gap-3">
+              <Icon icon="mdi:phone" class="text-gray-500" width="20" />
+              <p><strong>Phone:</strong> {{ props.user.phone }}</p>
+            </div>
 
-          <div class="flex items-center gap-3">
-            <Icon icon="mdi:office-building" class="text-gray-500" width="20" />
-            <p><strong>Organization:</strong> {{ props.user.organization_name }}</p>
-          </div>
+            <div class="flex items-center gap-3">
+              <Icon icon="mdi:office-building" class="text-gray-500" width="20" />
+              <p><strong>Organization:</strong> {{ props.user.organization_name }}</p>
+            </div>
 
-          <div class="flex items-center gap-3">
-            <Icon icon="mdi:badge-account-outline" class="text-gray-500" width="20" />
-            <p><strong>Subscription:</strong> {{ props.user.subscription_plan }}</p>
-          </div>
+            <div class="flex items-center gap-3">
+              <Icon icon="mdi:badge-account-outline" class="text-gray-500" width="20" />
+              <p><strong>Subscription:</strong> {{ props.user.subscription_plan }}</p>
+            </div>
 
-          <div class="flex items-center gap-3">
-            <Icon icon="mdi:calendar-check" class="text-gray-500" width="20" />
-            <p><strong>Validity:</strong>
-              {{ props.user.formatted_validity ?? 'N/A' }}
-            </p>
-          </div>
+            <div class="flex items-center gap-3">
+              <Icon icon="mdi:calendar-check" class="text-gray-500" width="20" />
+              <p><strong>Validity:</strong>
+                {{ props.user.formatted_validity ?? 'N/A' }}
+              </p>
+            </div>
 
-          <div v-if="props.user.organization_logo" class="pt-4">
-            <p class="font-semibold text-gray-700 mb-2">Organization Logo:</p>
-            <img :src="`/storage/${props.user.organization_logo.replace(/^storage\//, '')}`" alt="Organization Logo"
-              class="w-36 h-auto rounded shadow border" />
+            <div v-if="props.user.organization_logo" class="pt-4">
+              <p class="font-semibold text-gray-700 mb-2">Organization Logo:</p>
+              <img :src="`/storage/${props.user.organization_logo.replace(/^storage\//, '')}`" alt="Organization Logo"
+                class="w-36 h-auto rounded shadow border" />
+            </div>
+          </div>
+          <div class="w-full text-right">
+            <Link :href="route('profile.show')">
+            <img src="/images/Profile.png" alt="Profile Image" class="lg:w-48 lg:h-48 w-24 h-24 mr-0 lg:mr-12 mt-3 lg:mt-10 inline-block" />
+            </Link>
           </div>
         </div>
-
         <!-- <div class="pt-6 text-center"> -->
         <Button @click="goToEdit"
           class="mt-6 w-full w-auto bg-primary text-white hover:bg-primary-dark transition-colors">
