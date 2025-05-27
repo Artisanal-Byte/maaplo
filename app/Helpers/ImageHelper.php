@@ -105,8 +105,8 @@ class ImageHelper
             // Use Intervention Image
             $manager = new ImageManager(config('image.driver'));
             $image = $manager->read($image);
-            $image = $image->scaleDown(width: 40, height: 40); // Resize if necessary
-            $encoded = $image->toWebp(60); // Compress to webp
+            // $image = $image->scaleDown(width: 40, height: 40); // Resize if necessary
+            $encoded = $image->toWebp(40); // Compress to webp
             $encoded->save($storagePath);
 
             return "storage/{$fullPath}";
