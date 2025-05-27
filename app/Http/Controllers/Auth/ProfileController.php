@@ -17,7 +17,6 @@ class ProfileController extends Controller
     public function show()
     {
         $user = Auth::user();
-        // dd($user);
         return Inertia::render('profile/Show', ['user' => $user]);
     }
     public function edit()
@@ -29,7 +28,6 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
-        // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
