@@ -1,16 +1,22 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { usePage } from '@inertiajs/vue3'
+
 const page = usePage()
-const thumbnailLogo = computed(() => page.props.thumbnail_logo as string | null)
-// console.log('thumbnailLogo:', thumbnailLogo.value);
+
+// Correct spelling: thumbnailLogo
+const thumbnailLogo = computed(() => {
+  const logo = (page.props.user?.thumbnail_logo || '') as string
+  return logo ? `/storage/${logo.replace(/^storage\//, '')}` : null
+})
+
+const fallbackLogo = '/images/maaplologo.png'
 </script>
 
 <template>
   <img
-    :src="thumbnailLogo ? '/' + thumbnailLogo : '/images/maaplologo.png'"
-    alt="Logo"
+    :src="thumbnailLogo || fallbackLogo"
+    alt="Organization Logo"
     class="h-10 w-10"
   />
-  
 </template>
