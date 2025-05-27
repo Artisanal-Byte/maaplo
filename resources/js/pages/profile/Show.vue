@@ -47,12 +47,6 @@ function goToEdit() {
                             <Icon icon="mdi:phone" class="text-gray-500" width="20" />
                             <p><strong>Phone:</strong> {{ props.user.phone }}</p>
                         </div>
-
-                        <div class="flex items-center gap-3">
-                            <Icon icon="mdi:office-building" class="text-gray-500" width="20" />
-                            <p><strong>Organization:</strong> {{ props.user.organization_name }}</p>
-                        </div>
-
                         <div class="flex items-center gap-3">
                             <Icon icon="mdi:badge-account-outline" class="text-gray-500" width="20" />
                             <p><strong>Subscription:</strong> {{ props.user.subscription_plan }}</p>
@@ -64,12 +58,6 @@ function goToEdit() {
                                 {{ props.user.formatted_validity ?? 'N/A' }}
                             </p>
                         </div>
-
-                        <!-- <div v-if="props.user.organization_logo" class="pt-4">
-                            <p class="font-semibold text-gray-700 mb-2">Organization Logo:</p>
-                            <img :src="`/storage/${props.user.organization_logo.replace(/^storage\//, '')}`"
-                                alt="Organization Logo" class="w-36 h-auto rounded shadow border" />
-                        </div> -->
                     </div>
 
                     <div class="w-full text-right">

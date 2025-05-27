@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -41,11 +42,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
+       dd("you are logged out");
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/');
     }
 }
