@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
 import { defineProps } from 'vue';
 import { useForm } from '@inertiajs/vue3';
@@ -9,23 +9,11 @@ import Input from '@/components/InputWithLabel.vue';
 import { ref, computed } from 'vue';
 const toast = new ToastMagic();
 const showPassword = ref(false);
-const logoPreview = ref<string | null>(null);
-const props = defineProps<{
-    errors: Record<string, string>,
-    user: {
-        id: number,
-        name: string,
-        email: string,
-        phone: string,
-        address: string,
-        organization_name: string,
-        subscription_plan: string,
-        validity: Date,
-        password?: string,
-        organization_logo?: string,
-        status?: boolean,
-    }
-}>();
+const logoPreview = ref(null);
+const props = defineProps({
+    errors: Object,
+    user: Object
+});
 
 const form = useForm({
     name: props.user.name,
@@ -40,6 +28,23 @@ const form = useForm({
     status: props.user.status ?? true,
 });
 
+const logoUrl = computed(() => {
+    return logoPreview.value
+        ? logoPreview.value
+        : props.user.organization_logo
+            ? `/storage/${props.user.organization_logo.replace(/^storage\//, '')}`
+            : null;
+});
+
+const handleLogoChange = (event) => {
+    const file = event.target?.files?.[0];
+    if (file) {
+        form.organization_logo = file;
+        logoPreview.value = URL.createObjectURL(file);
+    } else {
+        toast.error("Please select a valid image file.");
+    }
+};
 const updateUser = () => {
     form.transform((data) => ({
         ...data,
@@ -55,23 +60,6 @@ const updateUser = () => {
     });
 };
 
-const logoUrl = computed(() => {
-    return logoPreview.value
-        ? logoPreview.value
-        : props.user.organization_logo
-            ? `/storage/${props.user.organization_logo.replace(/^storage\//, '')}`
-            : null;
-});
-
-const handleLogoChange = (event: Event) => {
-    const file = (event.target as HTMLInputElement)?.files?.[0];
-    if (file) {
-        form.organization_logo = file;
-        logoPreview.value = URL.createObjectURL(file);
-    } else {
-        toast.error("Please select a valid image file.");
-    }
-};
 </script>
 
 <template>
