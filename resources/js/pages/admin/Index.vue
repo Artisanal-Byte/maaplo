@@ -1,21 +1,20 @@
-<script setup lang="ts">
+<script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
 import UserTemplateList from '@/components/UserTemplateList.vue';
-import { ref,computed  } from 'vue';
-import { router, Link } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+import { router, Link, usePage } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
-import { usePage } from '@inertiajs/vue3'
-const page = usePage()
-console.log('page:', page);
+
+const page = usePage();
 const props = defineProps({
     users: Array
 });
 
 const showModal = ref(false);
-const selectedUser = ref<any>(null);
+const selectedUser = ref(null);
 
-function openConfirmationModal(user: any) {
+function openConfirmationModal(user) {
     selectedUser.value = user;
     showModal.value = true;
 }
@@ -33,7 +32,8 @@ function confirmToggleStatus() {
     });
     showModal.value = false;
 }
-const user = computed(() => page.props.auth.user)
+
+const user = computed(() => page.props.auth.user);
 </script>
 
 <template>
