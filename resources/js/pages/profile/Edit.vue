@@ -31,6 +31,7 @@ const form = useForm({
     password: props.user.password ?? '',
     organization_name: props.user.organization_name,
     organization_logo: null,
+    avatar: null,
 });
 
 // Image preview for organization logo
@@ -153,6 +154,16 @@ function closeImageModal() {
                     </div>
                     <p v-if="errors.organization_logo" class="text-red-600 text-sm mt-1">{{ errors.organization_logo }}
                     </p>
+                </div>
+
+                <div>
+                    <label for="avatar" class="block mb-1 font-semibold">Avatar</label>
+                    <input id="avatar" type="file" accept="image/*" @change="handleAvatarChange"
+                        class="border border-gray-300 rounded px-3 py-2 w-full" />
+                    <div v-if="avatarUrl" class="mt-2 cursor-pointer" @click="openImageModal(avatarUrl)">
+                        <img :src="avatarUrl" alt="Avatar" class="w-24 h-24 rounded-full object-cover" />
+                    </div>
+                    <p v-if="errors.avatar" class="text-red-600 text-sm mt-1">{{ errors.avatar }}</p>
                 </div>
 
                 <!-- <Input label="Subscription Plan" type="text" v-model="form.subscription_plan"

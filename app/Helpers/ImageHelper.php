@@ -85,4 +85,33 @@ class ImageHelper
             dd($e->getMessage());
         }
     }
+
+    public static function imageAvatar(UploadedFile $image, string $username, int $userId): string
+    {
+        try {
+            $timestamp = time();
+            $fileName = "avatar_{$timestamp}.webp";
+            $folderPath = "users/useravatar/{$username}_{$userId}";
+            $fullPath = "{$folderPath}/{$fileName}";
+            $directory = storage_path("app/public/{$folderPath}/");
+
+            // Create directory if it doesn't exist
+            if (!file_exists($directory)) {
+                mkdir($directory, 0755, true);
+            }
+
+            $storagePath = $directory . $fileName;
+
+            // Use Intervention Image
+            $manager = new ImageManager(config('image.driver'));
+            $image = $manager->read($image);
+            $image = $image->scaleDown(width: 40, height: 40); // Resize if necessary
+            $encoded = $image->toWebp(60); // Compress to webp
+            $encoded->save($storagePath);
+
+            return "storage/{$fullPath}";
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+    }
 }
