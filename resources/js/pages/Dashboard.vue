@@ -128,8 +128,8 @@ const activeTab = ref('order')
                         class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
                             <Link :href="route('customers.create')" class="flex flex-col items-center gap-2">
-                            <div>
-                                <Icon icon="mdi:account-plus" width="32" height="32" class="text-primary" />
+                            <div class="bg-primary p-3 rounded-full">
+                                <Icon icon="mdi:account-plus" width="32" height="32" class="text-white" />
                             </div>
                             <div class="relative z-10 text-primary font-[Lato] font-medium text-[24px] tracking-[0]">
                                 Create Customer
@@ -143,8 +143,8 @@ const activeTab = ref('order')
                         class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
                             <Link :href="route('orders.create')" class="flex flex-col items-center gap-2">
-                            <div>
-                                <Icon icon="lsicon:order-edit-filled" width="32" height="32" class="text-primary" />
+                            <div class="bg-primary p-3 rounded-full">
+                                <Icon icon="lsicon:order-edit-filled" width="32" height="32" class="text-white" />
                             </div>
                             <div class="relative z-10 text-primary font-[Lato] font-medium text-[24px] tracking-[0]">
                                 Create Order
@@ -158,8 +158,8 @@ const activeTab = ref('order')
                         class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
                             <!-- <Link :href="route('orders.create')" class="flex flex-col items-center gap-2"> -->
-                            <div>
-                                <Icon icon="lsicon:order-done-filled" width="32" height="32" class="text-primary" />
+                            <div class="bg-primary p-3 rounded-full">
+                                <Icon icon="lsicon:order-done-filled" width="32" height="32" class="text-white" />
                             </div>
                             <div class="relative z-10 text-primary font-[Lato] font-medium text-[24px] tracking-[0]">
                                 Close Order
@@ -184,9 +184,9 @@ const activeTab = ref('order')
                         class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
                             <Link :href="route('customers.index')" class="flex flex-col items-center gap-2">
-                            <div>
+                            <div class="bg-primary p-3 rounded-full">
                                 <Icon icon="garden:customer-lists-fill-26" width="32" height="32"
-                                    class="text-primary" />
+                                    class="text-white" />
                             </div>
                             <div class="relative z-10 text-primary font-[Lato] font-medium text-[24px] tracking-[0]">
                                 Customer List
@@ -200,9 +200,9 @@ const activeTab = ref('order')
                         class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
                             <Link :href="route('customers.index')" class="flex flex-col items-center gap-2">
-                            <div>
+                            <div class="bg-primary p-3 rounded-full">
                                 <Icon icon="fe:list-order" width="32" height="32"
-                                    class="text-primary" />
+                                    class="text-white" />
                             </div>
                             <div class="relative z-10 text-primary font-[Lato] font-medium text-[24px] tracking-[0]">
                                 Order List
