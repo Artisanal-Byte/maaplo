@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
 import { ref, computed } from 'vue';
 import { Icon } from '@iconify/vue';
@@ -7,7 +7,7 @@ import Button from '@/components/Button.vue';
 import Input from '@/components/InputWithLabel.vue';
 
 const toast = new ToastMagic();
-const logoPreview = ref<string | null>(null);
+const logoPreview = ref(null);
 const showPassword = ref(false);
 const form = useForm({
     name: '',
@@ -26,8 +26,8 @@ const logoUrl = computed(() => {
     return logoPreview.value ? logoPreview.value : null;
 });
 
-const handleLogoChange = (event: Event) => {
-    const file = (event.target as HTMLInputElement)?.files?.[0];
+const handleLogoChange = (event) => {
+    const file = event.target?.files?.[0];
     if (file) {
         form.organization_logo = file;
         logoPreview.value = URL.createObjectURL(file);
@@ -99,8 +99,6 @@ const createUser = () => {
                                 class="absolute right-3 top-10 text-gray-600 hover:text-black" tabindex="-1">
                             </button>
                         </div>
-
-
                     </div>
                 </div>
 
@@ -138,7 +136,6 @@ const createUser = () => {
                             </div>
                         </div>
 
-
                         <Input type="date" v-model="form.validity" label="Validity" :error="form.errors.validity"
                             :required="true">
                         <template #icon>
@@ -153,7 +150,6 @@ const createUser = () => {
                     <!-- Logo Upload with Preview -->
                     <div>
                         <h2 class="text-lg font-semibold text-gray-800 mb-3">Add Organization Logo</h2>
-
                         <!-- Logo Upload Input -->
                         <label class="block mb-3">
                             <input type="file" @change="handleLogoChange"
@@ -203,7 +199,6 @@ const createUser = () => {
                         Save & Continue
                     </Button>
                 </div>
-
             </div>
         </div>
     </AppLayout>
