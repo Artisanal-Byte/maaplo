@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 const page = usePage()
 const thumbnailLogo = computed(() => page.props.thumbnail_logo as string | null)
-console.log('thumbnailLogo:', thumbnailLogo.value)
+// console.log('thumbnailLogo:', thumbnailLogo.value);
 </script>
 
 <template>
@@ -12,4 +12,5 @@ console.log('thumbnailLogo:', thumbnailLogo.value)
     alt="Logo"
     class="h-10 w-10"
   />
+  
 </template>
