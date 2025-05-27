@@ -69,6 +69,7 @@ function goToEdit() {
                 class="w-36 h-auto rounded shadow border" />
             </div>
           </div>
+          
           <div class="w-full text-right">
             <Link :href="route('profile.show')">
             <img src="/images/Profile.png" alt="Profile Image" class="lg:w-48 lg:h-48 w-24 h-24 mr-0 lg:mr-12 mt-3 lg:mt-10 inline-block" />
