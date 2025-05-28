@@ -24,7 +24,7 @@ onMounted(() => {
 <template>
     <AppLayout>
         <div class="max-w-6xl mx-auto p-6">
-            <h1 class="text-4xl font-bold text-gray-800 mb-10">Organizations</h1>
+            <h1 class="text-4xl font-bold text-gray-800 mb-10">Your Organization</h1>
 
             <!-- Organizations List -->
             <div v-if="organizations.length" class="grid gap-6">
@@ -33,8 +33,8 @@ onMounted(() => {
                     <!-- Info Section -->
                     <div class="flex-1 w-full md:w-auto">
                         <h2 class="text-2xl font-semibold text-primary mb-2">{{ org.organization_name }}</h2>
-                        <p class="text-gray-600 text-sm mb-1"><strong>GST:</strong> {{ org.gst_number || '-' }}</p>
-                        <p class="text-gray-600 text-sm"><strong>Address:</strong> {{ org.address || '-' }}</p>
+                        <p class="text-gray-600 text-sm mb-1"><strong>GST Number:</strong> {{ org.gst_number || '-' }}</p>
+                        <p class="text-gray-600 text-sm"><strong>Organization Address:</strong> {{ org.address || '-' }}</p>
                     </div>
 
                     Logo Section
@@ -52,7 +52,7 @@ onMounted(() => {
                     <!-- Actions -->
                     <div class="mt-4 md:mt-0 md:ml-6">
                         <Link :href="route('organization.edit', org.id)"
-                            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                            class="inline-flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-blue-700 transition">
                         <Icon icon="mdi:pencil" class="mr-1" />
                         Edit
                         </Link>
@@ -64,7 +64,7 @@ onMounted(() => {
             <div v-else class="text-center mt-12">
                 <p class="text-gray-600 mb-4">No organization data available.</p>
                 <Link :href="route('organization.create')"
-                    class="inline-flex items-center px-5 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                    class="inline-flex items-center px-5 py-2 bg-gray-600 text-white rounded hover:bg-primary transition">
                 <Icon icon="mdi:plus" class="mr-2" />
                 Add Organization
                 </Link>
@@ -78,7 +78,7 @@ onMounted(() => {
                 <p class="text-gray-600 mb-6">Please add your organization information to continue.</p>
                 <div class="flex justify-center space-x-4">
                     <Link :href="route('organization.create')"
-                        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        class="px-4 py-2 bg-primary text-white rounded hover:bg-blue-700">
                     Add Organization
                     </Link>
                     <button @click="showModal = false"

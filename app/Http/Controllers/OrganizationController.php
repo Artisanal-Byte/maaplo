@@ -25,17 +25,53 @@ class OrganizationController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $data = $request->validate([
-            'organization_name' => 'nullable|string',
-            'organization_logo' => 'nullable|string',
-            'gst_number' => 'nullable|string',
-            'address' => 'nullable|string',
-        ]);
+{
+    $data = $request->validate([
+        'organization_name' => 'nullable|string',
+        'organization_logo' => 'nullable|file|max:5120', // <-- Handle file upload
+        'gst_number' => 'nullable|string',
+        'address' => 'nullable|string',
+    ]);
 
-        Organization::create($data);
-        return redirect()->route('organization.index')->with('success', 'Organization created.');
+    try {
+        DB::beginTransaction();
+
+        // Save logo if uploaded
+        if ($request->hasFile('organization_logo')) {
+            $file = $request->file('organization_logo');
+            $username = Str::slug($data['organization_name'] ?? 'organization');
+            $customerName = $username;
+
+            // Temporarily save with 0, update after create
+            $tempOrg = new Organization();
+            $tempOrg->organization_name = $data['organization_name'];
+            $tempOrg->gst_number = $data['gst_number'];
+            $tempOrg->address = $data['address'];
+            $tempOrg->save();
+
+            // Save image path
+            $orgLogoPath = ImageHelper::imageProccess($file, $tempOrg->id, $username, $tempOrg->id, $customerName, 'org_logo');
+            $tempOrg->organization_logo = $orgLogoPath;
+            $tempOrg->save();
+
+            DB::commit();
+
+            return redirect()->route('organization.index', $tempOrg->id)->with('success', 'Organization created.');
+        }
+
+        // No logo
+        $organization = Organization::create($data);
+
+        DB::commit();
+
+        return redirect()->route('organization.index', $organization->id)->with('success', 'Organization created.');
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()->back()->withInput()->with('error', 'Creation failed: ' . $e->getMessage());
     }
+}
+
 
     // public function edit(Organization $id)
     // {
