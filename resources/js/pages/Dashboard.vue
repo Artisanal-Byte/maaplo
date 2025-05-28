@@ -4,8 +4,7 @@ import { Head } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Chart from '@/components/Chart.vue';
 import { Link, router } from "@inertiajs/vue3";
-import { ref, watch } from 'vue';
-
+import { ref } from 'vue';
 const showDropdown = ref(false);
 const selectedOption = ref('Yesterday'); // Default text inside input
 
@@ -13,12 +12,8 @@ const props = defineProps({
     showOrganizationPopup: Boolean,
     organizationName: String,
 });
-// const showPopup = ref(props.showOrganizationPopup);
-const showPopup = ref(props.showOrganizationPopup);
 
-watch(() => props.showOrganizationPopup, (newVal) => {
-    showPopup.value = newVal;
-});
+const showPopup = ref(props.showOrganizationPopup);
 
 function closePopup() {
     showPopup.value = false;
@@ -48,23 +43,31 @@ const activeTab = ref('order')
 
     <Head title="Dashboard" />
     <AppLayout>
-        <div v-if="showPopup" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div class="bg-white p-6 rounded-md shadow-md w-[400px] text-center">
-                <h2 id="popupTitle" class="text-lg font-semibold mb-4 flex items-center justify-center gap-2">
-                    <span>Organization Info Required</span>
-                    <span class="text-2xl">😊</span> <!-- Smile emoji -->
-                </h2>
-                <p class="mb-6 text-gray-600">Please provide your organization information.</p>
-                <div class="flex justify-end gap-4">
-                    <button @click="closePopup" class="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400">
-                        Close
-                    </button>
-                    <button @click="noOrganization" class="px-4 py-2 bg-primary text-white rounded-md">
-                        I Don't Have an Organization
-                    </button>
+        <!-- Alert-style Notification -->
+        <div v-if="showPopup"
+            class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-md bg-white border-l-4 border-yellow-500 text-yellow-800 rounded-lg shadow-xl px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-slide-in">
+
+            <div class="flex items-start gap-4">
+                <div class="bg-yellow-100 p-2 rounded-full">
+                    <Icon icon="fluent:info-24-filled" class="text-yellow-500" width="28" height="28" />
+                </div>
+                <div>
+                    <p class="text-sm text-gray-700 mt-1">Please provide your organization information to continue.</p>
                 </div>
             </div>
+
+            <div class="flex gap-2 sm:ml-auto mt-3 sm:mt-0">
+                <button @click="closePopup"
+                    class="px-3 py-1.5 text-sm font-medium bg-gray-300 hover:bg-gray-200 text-gray-700 rounded-md transition">
+                    Dismiss
+                </button>
+                <button @click="noOrganization"
+                    class="px-3 py-1.5 text-sm font-medium bg-yellow-500 hover:bg-yellow-600 text-white rounded-md transition">
+                    I don't have a Organization
+                </button>
+            </div>
         </div>
+
         <div class="mx-auto max-w-7xl px-4 py-8 w-full">
             <div class="flex justify-between items-center mb-6">
 
@@ -74,7 +77,7 @@ const activeTab = ref('order')
                 </h2>
                 <h1
                     class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence] text-center w-full">
-                    {{ props.organizationName ?? 'No Organization Assigned' }}
+                    {{ props.organizationName }}
                 </h1>
             </div>
 
@@ -267,3 +270,18 @@ const activeTab = ref('order')
 
     </AppLayout>
 </template>
+<style scoped>
+@keyframes slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+.animate-slide-in {
+  animation: slide-in 0.4s ease-out;
+}
+</style>

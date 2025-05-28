@@ -57,6 +57,7 @@ class OrganizationController extends Controller
             // Step 3: Assign organization_id to current user
             $user = auth()->user();
             $user->organization_id = $organization->id;
+            $user->hash_organization = false;
             $user->save();
 
             DB::commit();
