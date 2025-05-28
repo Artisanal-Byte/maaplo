@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Icon } from "@iconify/vue";
-import { Link } from "@inertiajs/vue3";
+import { Link,usePage } from "@inertiajs/vue3";
+import { computed } from "vue";
 import Logo from "./Logo.vue";
+const page = usePage();
+const organizationId = computed(() => page.props.auth.user);
 
 const showDropdown = ref(false);
 const showDropdownCustomer = ref(false);
@@ -135,7 +138,7 @@ const visible = ref(false);
                 </ul>
                 <!-- Bottom "Preference" Link -->
                 <div class="p-4 absolute inset-x-0 bottom-0">
-                    <a href="#" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700 hover:text-black">
+                    <a :href="route('organization.edit', organizationId)" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700 hover:text-black">
                         <Icon icon="lets-icons:setting-fill" width="20" height="20" />
                         <span
                             class="ml-2 font-inter font-medium text-[16px] leading-[16px] tracking-[0]">Preference</span>
