@@ -19,6 +19,7 @@ const notes = ref([{ label: '', text: '' }]);
 const props = defineProps(['showModal', 'form', 'itemTypes', 'itemIndex', 'measurements', 'errorMessage', 'errors']);
 let findDesign = ref()
 
+
 const emit = defineEmits(['close', 'setOrderItemsData']);
 
 const showImageUpload = ref(false)
@@ -183,7 +184,7 @@ watch(() => data.template_id, (newId) => {
                     <WorkType :formData="data" @setMaterialCode="setMaterialCode" @setMaterialCost="setMaterialCost"
                         @setStichingCost="setStichingCost" @setMaterialType="setMaterialType" @setPrice="setPrice" />
                     <ItemType :itemTypes="itemTypes" @setItemId="setItemId" />
-                    <Measurements :measurements="measurements" />
+                    <Measurements :toAsk="measurements"  :isOrder="true"/>
                     <DesignDetails :designDetails="designDetails" v-model="data.design_detail"/>
 
                     <div class="flex flex-col">

@@ -59,6 +59,7 @@ watch(form.order_items, (items) => {
     });
     form.total_amount = t
 })
+
 const closeModel = () => {
     showModal.value = false
 }
@@ -90,6 +91,13 @@ const setMeasurements = (m) => {
     customerMeasurements.value = m
 }
 
+const openItemModel = () => {
+    if (form.customer_id == null) {
+        alert('Please Select a customer')
+        return
+    }
+    showModal.value = true
+}
 </script>
 
 <template>
@@ -132,7 +140,7 @@ const setMeasurements = (m) => {
                             <!-- Add Icon -->
                             <div class="relative group">
                                 <!-- Add Icon -->
-                                <div @click="showModal = true" class="cursor-pointer inline-block">
+                                <div @click="openItemModel" class="cursor-pointer inline-block">
                                     <Icon icon="material-symbols:add-rounded" width="20" height="20" />
                                 </div>
 
