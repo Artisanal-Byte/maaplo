@@ -3,15 +3,15 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Chart from '@/components/Chart.vue';
-import { Link,router  } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 import { ref } from 'vue';
 const showDropdown = ref(false);
 const selectedOption = ref('Yesterday'); // Default text inside input
 
 const props = defineProps({
-    showOrganizationPopup: Boolean
+    showOrganizationPopup: Boolean,
+    organizationName: String,
 });
-
 const showPopup = ref(props.showOrganizationPopup);
 
 function closePopup() {
@@ -57,9 +57,18 @@ const activeTab = ref('order')
             </div>
         </div>
         <div class="mx-auto max-w-7xl px-4 py-8 w-full">
-            <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">Total Orders
-                : 0
-            </h1>
+            <div class="flex justify-between items-center mb-6">
+
+                <h2
+                    class="text-[20px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence] whitespace-nowrap ml-auto">
+                    Total Orders: 0
+                </h2>
+                <h1
+                    class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence] text-center w-full">
+                    {{ props.organizationName ?? 'No Organization Assigned' }}
+                </h1>
+            </div>
+
             <!-- Graph Section Header with Filter Dropdown -->
             <div class="flex flex-row justify-between mt-8">
                 <div>

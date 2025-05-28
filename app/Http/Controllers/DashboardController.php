@@ -13,9 +13,11 @@ class DashboardController extends Controller
     public function __invoke(Request $request)
     {
         $user = $request->user();
+        $organizationName = optional($user->organization)->organization_name;
 
         return Inertia::render('Dashboard', [
             'showOrganizationPopup' => $user->hash_organization !== false,
+             'organizationName' => $organizationName,
         ]);
     }
 }
