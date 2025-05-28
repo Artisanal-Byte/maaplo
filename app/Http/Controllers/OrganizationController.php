@@ -57,6 +57,7 @@ class OrganizationController extends Controller
             // Step 3: Assign organization_id to current user
             $user = auth()->user();
             $user->organization_id = $organization->id;
+            $user->hash_organization = false;
             $user->save();
 
             DB::commit();
@@ -133,5 +134,16 @@ class OrganizationController extends Controller
     {
         $organization->delete();
         return redirect()->route('organization.index')->with('success', 'Organization deleted.');
+    }
+
+    public function setNoOrganization(Request $request)
+    {
+        $user = auth()->user();
+
+        // Update the user's hash_organization column to false
+        $user->update(['hash_organization' => false]);
+
+        // Redirect back to the dashboard with a success message
+        return redirect()->route('dashboard')->with('success', 'Organization skipped.');
     }
 }

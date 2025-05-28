@@ -25,7 +25,7 @@ onMounted(() => {
         <div class="px-4 py-10 max-w-4xl mx-auto">
             <div class="flex justify-between items-center mb-6">
                 <div class="flex ">
-                    <Icon icon="mdi:office-building" class="text-primary" width="36" height="36" />
+                    <Icon icon="mdi:office-building-plus" class="text-primary" width="36" height="36" />
                     <h1 class="text-3xl font-bold text-primary">Organization</h1>
                 </div>
                 <Link :href="route('dashboard')" class="flex items-center gap-2 text-gray-500 hover:text-gray-800">
@@ -90,8 +90,11 @@ onMounted(() => {
         <!-- Modal -->
         <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white rounded-lg p-6 max-w-md w-full shadow-lg text-center">
-                <h2 class="text-xl font-bold mb-4">No Organization Found</h2>
-                <p class="text-gray-600 mb-6">Please add your organization information to continue.</p>
+                <h2 id="popupTitle" class="text-lg font-semibold mb-4 flex items-center justify-center gap-2">
+                    <span>No Organization Found</span>
+                    <span class="text-2xl">😊</span>
+                </h2>
+                <p class="text-gray-600 mb-6">Please sir your organization information to continue.</p>
                 <div class="flex justify-center space-x-4">
                     <Link :href="route('organization.create')"
                         class="px-4 py-2 bg-primary text-white rounded hover:bg-blue-700">
