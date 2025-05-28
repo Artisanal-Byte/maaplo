@@ -1,8 +1,8 @@
 <script setup>
-import { Link, usePage } from '@inertiajs/vue3';
+import AppLayout from '@/layouts/AppLayout.vue';
+import { Link } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import { ref, onMounted } from 'vue';
-import AppLayout from '@/layouts/AppLayout.vue';
 
 const props = defineProps({
     organizations: {
@@ -10,12 +10,11 @@ const props = defineProps({
         required: true
     }
 });
-const organizations = props.organizations;
 const showModal = ref(false);
 
-// Automatically show modal if no organizations
+// Auto open modal if no orgs
 onMounted(() => {
-    if (!organizations.length) {
+    if (!props.organizations.length) {
         showModal.value = true;
     }
 });
@@ -23,48 +22,65 @@ onMounted(() => {
 
 <template>
     <AppLayout>
-        <div class="max-w-6xl mx-auto p-6">
-            <h1 class="text-4xl font-bold text-gray-800 mb-10">Your Organization</h1>
+        <div class="px-4 py-10 max-w-4xl mx-auto">
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex ">
+                    <Icon icon="mdi:office-building" class="text-primary" width="36" height="36" />
+                    <h1 class="text-3xl font-bold text-primary">Organization</h1>
+                </div>
+                <Link :href="route('dashboard')" class="flex items-center gap-2 text-gray-500 hover:text-gray-800">
+                <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
+                <span class="text-base font-medium">Back</span>
+                </Link>
+            </div>
 
-            <!-- Organizations List -->
-            <div v-if="organizations.length" class="grid gap-6">
-                <div v-for="org in organizations" :key="org.id"
-                    class="flex flex-col md:flex-row items-center justify-between bg-white border shadow-sm rounded-lg p-6 hover:shadow-md transition">
-                    <!-- Info Section -->
-                    <div class="flex-1 w-full md:w-auto">
-                        <h2 class="text-2xl font-semibold text-primary mb-2">{{ org.organization_name }}</h2>
-                        <p class="text-gray-600 text-sm mb-1"><strong>GST Number:</strong> {{ org.gst_number || '-' }}</p>
-                        <p class="text-gray-600 text-sm"><strong>Organization Address:</strong> {{ org.address || '-' }}</p>
+            <div v-if="props.organizations.length" class="space-y-6">
+                <div v-for="org in props.organizations" :key="org.id"
+                    class="bg-[#DEEFF4] shadow-md border border-gray-100 rounded-xl p-6 hover:shadow-lg transition">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Left: Details -->
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                <Icon icon="mdi:badge-account-outline" class="text-gray-500" width="22" />
+                                <p><strong>Name:</strong> {{ org.organization_name }}</p>
+                            </div>
+
+                            <div class="flex items-center gap-3">
+                                <Icon icon="mdi:certificate-outline" class="text-gray-500" width="22" />
+                                <p><strong>GST:</strong> {{ org.gst_number || '—' }}</p>
+                            </div>
+
+                            <div class="flex items-center gap-3">
+                                <Icon icon="mdi:map-marker-outline" class="text-gray-500" width="22" />
+                                <p><strong>Address:</strong> {{ org.address || '—' }}</p>
+                            </div>
+
+                            <div class="pt-3">
+                                <Link :href="route('organization.edit', org.id)"
+                                    class="inline-flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark transition">
+                                <Icon icon="mdi:pencil" class="mr-1" width="18" />
+                                Edit
+                                </Link>
+                            </div>
+                        </div>
+
+                        <!-- Right: Logo -->
+                        <div class="w-full text-right">
+                            <img :src="org.organization_logo
+                                ? `/storage/${org.organization_logo.replace(/^storage\//, '')}`
+                                : '/images/organization.png'" alt="Organization Logo"
+                                class="lg:w-48 lg:h-48 w-24 h-24 mr-0 lg:mr-12 mt-3 inline-block rounded-md object-cover border" />
+                        </div>
                     </div>
 
-                    Logo Section
-                    <div class="w-28 h-28 flex-shrink-0 mt-4 md:mt-0 md:ml-6">
-                        <img :src="org.organization_logo ? `/storage/${org.organization_logo.replace(/^storage\//, '')}` : '/images/organization.png'"
-                            alt="Organization Logo"
-                            class="w-full h-full object-contain border rounded-lg bg-gray-50 p-2" />
-                    </div>
-                    <!-- <div v-if="props.user.organization_logo" class="pt-4">
-                            <p class="font-semibold text-gray-700 mb-2">Organization Logo:</p>
-                            <img :src="`/storage/${props.user.organization_logo.replace(/^storage\//, '')}`"
-                                alt="Organization Logo" class="w-36 h-auto rounded shadow border" />
-                        </div> -->
-
-                    <!-- Actions -->
-                    <div class="mt-4 md:mt-0 md:ml-6">
-                        <Link :href="route('organization.edit', org.id)"
-                            class="inline-flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-blue-700 transition">
-                        <Icon icon="mdi:pencil" class="mr-1" />
-                        Edit
-                        </Link>
-                    </div>
                 </div>
             </div>
 
-            <!-- No Organizations -->
+            <!-- Empty State -->
             <div v-else class="text-center mt-12">
-                <p class="text-gray-600 mb-4">No organization data available.</p>
+                <p class="text-gray-600 mb-4 text-lg">No organization data available.</p>
                 <Link :href="route('organization.create')"
-                    class="inline-flex items-center px-5 py-2 bg-gray-600 text-white rounded hover:bg-primary transition">
+                    class="inline-flex items-center px-5 py-2 bg-primary text-white rounded hover:bg-primary-dark transition">
                 <Icon icon="mdi:plus" class="mr-2" />
                 Add Organization
                 </Link>
