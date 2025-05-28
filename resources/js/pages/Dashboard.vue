@@ -4,7 +4,7 @@ import { Head } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Chart from '@/components/Chart.vue';
 import { Link, router } from "@inertiajs/vue3";
-import { ref,watch  } from 'vue';
+import { ref, watch } from 'vue';
 
 const showDropdown = ref(false);
 const selectedOption = ref('Yesterday'); // Default text inside input
@@ -17,7 +17,7 @@ const props = defineProps({
 const showPopup = ref(props.showOrganizationPopup);
 
 watch(() => props.showOrganizationPopup, (newVal) => {
-  showPopup.value = newVal;
+    showPopup.value = newVal;
 });
 
 function closePopup() {
@@ -50,7 +50,10 @@ const activeTab = ref('order')
     <AppLayout>
         <div v-if="showPopup" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div class="bg-white p-6 rounded-md shadow-md w-[400px] text-center">
-                <h2 class="text-lg font-semibold mb-4">Organization Info Required</h2>
+                <h2 id="popupTitle" class="text-lg font-semibold mb-4 flex items-center justify-center gap-2">
+                    <span>Organization Info Required</span>
+                    <span class="text-2xl">😊</span> <!-- Smile emoji -->
+                </h2>
                 <p class="mb-6 text-gray-600">Please provide your organization information.</p>
                 <div class="flex justify-end gap-4">
                     <button @click="closePopup" class="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400">

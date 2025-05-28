@@ -90,8 +90,11 @@ onMounted(() => {
         <!-- Modal -->
         <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white rounded-lg p-6 max-w-md w-full shadow-lg text-center">
-                <h2 class="text-xl font-bold mb-4">No Organization Found</h2>
-                <p class="text-gray-600 mb-6">Please add your organization information to continue.</p>
+                <h2 id="popupTitle" class="text-lg font-semibold mb-4 flex items-center justify-center gap-2">
+                    <span>No Organization Found</span>
+                    <span class="text-2xl">😊</span>
+                </h2>
+                <p class="text-gray-600 mb-6">Please sir dd your organization information to continue.</p>
                 <div class="flex justify-center space-x-4">
                     <Link :href="route('organization.create')"
                         class="px-4 py-2 bg-primary text-white rounded hover:bg-blue-700">
