@@ -4,7 +4,8 @@ import { Head } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Chart from '@/components/Chart.vue';
 import { Link, router } from "@inertiajs/vue3";
-import { ref } from 'vue';
+import { ref,watch  } from 'vue';
+
 const showDropdown = ref(false);
 const selectedOption = ref('Yesterday'); // Default text inside input
 
@@ -12,7 +13,12 @@ const props = defineProps({
     showOrganizationPopup: Boolean,
     organizationName: String,
 });
+// const showPopup = ref(props.showOrganizationPopup);
 const showPopup = ref(props.showOrganizationPopup);
+
+watch(() => props.showOrganizationPopup, (newVal) => {
+  showPopup.value = newVal;
+});
 
 function closePopup() {
     showPopup.value = false;
