@@ -6,7 +6,10 @@ import Input from '../InputWithLabel.vue';
 
 const props = defineProps<{
   toAsk: Record<string, string> | null;
+  isOrder:boolean
 }>();
+
+console.log(props.toAsk);
 
 const emit = defineEmits<{
   (e: 'update:measurements', value: Record<string, string>): void;
@@ -27,11 +30,16 @@ watch(measurements, (val) => {
 
 const showDropdownMeasurements = ref(false);
 
+function formatKey(key: string): string {
+  const replaced = key.replace(/[_ ]/g, ' ');
+  return replaced.charAt(0).toUpperCase() + replaced.slice(1);
+}
 
 
 function toggleDropdownMeasurements() {
   showDropdownMeasurements.value = !showDropdownMeasurements.value;
 }
+
 </script>
 <template>
   <div class="mt-2">
@@ -69,13 +77,12 @@ function toggleDropdownMeasurements() {
         <li>
           <div class="grid grid-col-1 lg:grid-cols-2 gap-x-4 gap-y-4 ml-2 mt-4 text-black font-lato text-sm">
             <!-- Length -->
-
             <div class="flex items-center gap-4 col-span-2 sm:col-span-1" v-for="(value, key) in JSON.parse(toAsk)"
               :key="key">
-              <SvgIcon :name="value.replace(/ /g, '-').toLowerCase()" />
+              <SvgIcon :name="key?.replace(/_/g, '-')" />
               <span
                 class="w-32 font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato font-normal text-[16px] leading-[8px] tracking-normal font-lato">{{
-                  value }}</span>
+                  formatKey(key) }}</span>
               <Input v-model="measurements[key]" type="number" width="md" color="grayBorder" padding="sm"
                 rounded="sm" />
               <span class="text-sm text-gray-500">{{ unit }}</span>

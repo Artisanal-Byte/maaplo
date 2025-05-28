@@ -14,13 +14,13 @@ class Measurement extends Model
   protected $table = 'measurements';
   protected $primaryKey = 'id';
 
-  protected function name(): Attribute
-  {
-    return Attribute::make(
-      get: fn() => Str::ucfirst(Str::replace("_", " ", $this->slug))
-    );
-  }
-  protected $appends = ["name"];
+  // protected function name(): Attribute
+  // {
+  //   return Attribute::make(
+  //     get: fn() => Str::ucfirst(Str::replace("_", " ", $this->slug))
+  //   );
+  // }
+  // protected $appends = ["name"];
   protected $fillable = [
     'slug',
     'logo',

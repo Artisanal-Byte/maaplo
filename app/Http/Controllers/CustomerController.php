@@ -55,9 +55,8 @@ class CustomerController extends Controller
         $setData = [];
 
         foreach ($measurements as $measurement) {
-            $setData[$measurement->slug] = $measurement->name;
+            $setData[$measurement->slug] = null;
         }
-
         return Inertia::render('customer/Create', [
             'user_id' => $user_id,
             'measurements' => json_encode($setData, true),
