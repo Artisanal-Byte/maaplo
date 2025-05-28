@@ -3,10 +3,29 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Chart from '@/components/Chart.vue';
-import { Link } from "@inertiajs/vue3";
+import { Link,router  } from "@inertiajs/vue3";
 import { ref } from 'vue';
 const showDropdown = ref(false);
 const selectedOption = ref('Yesterday'); // Default text inside input
+
+const props = defineProps({
+    showOrganizationPopup: Boolean
+});
+
+const showPopup = ref(props.showOrganizationPopup);
+
+function closePopup() {
+    showPopup.value = false;
+}
+function noOrganization() {
+    // Send a request to set `hash_organization` to false
+    router.post('/organization/no-organization', {}, {
+        onSuccess: () => {
+            showPopup.value = false;
+        }
+    });
+}
+
 
 function toggleDropdown() {
     showDropdown.value = !showDropdown.value;
@@ -23,6 +42,20 @@ const activeTab = ref('order')
 
     <Head title="Dashboard" />
     <AppLayout>
+        <div v-if="showPopup" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white p-6 rounded-md shadow-md w-[400px] text-center">
+                <h2 class="text-lg font-semibold mb-4">Organization Info Required</h2>
+                <p class="mb-6 text-gray-600">Please provide your organization information.</p>
+                <div class="flex justify-end gap-4">
+                    <button @click="closePopup" class="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400">
+                        Close
+                    </button>
+                    <button @click="noOrganization" class="px-4 py-2 bg-primary text-white rounded-md">
+                        I Don't Have an Organization
+                    </button>
+                </div>
+            </div>
+        </div>
         <div class="mx-auto max-w-7xl px-4 py-8 w-full">
             <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">Total Orders
                 : 0
@@ -185,8 +218,7 @@ const activeTab = ref('order')
                         <div class="flex flex-col items-center gap-2">
                             <Link :href="route('customers.index')" class="flex flex-col items-center gap-2">
                             <div class="bg-primary p-3 rounded-full">
-                                <Icon icon="garden:customer-lists-fill-26" width="32" height="32"
-                                    class="text-white" />
+                                <Icon icon="garden:customer-lists-fill-26" width="32" height="32" class="text-white" />
                             </div>
                             <div class="relative z-10 text-primary font-[Lato] font-medium text-[24px] tracking-[0]">
                                 Customer List
@@ -201,8 +233,7 @@ const activeTab = ref('order')
                         <div class="flex flex-col items-center gap-2">
                             <Link :href="route('customers.index')" class="flex flex-col items-center gap-2">
                             <div class="bg-primary p-3 rounded-full">
-                                <Icon icon="fe:list-order" width="32" height="32"
-                                    class="text-white" />
+                                <Icon icon="fe:list-order" width="32" height="32" class="text-white" />
                             </div>
                             <div class="relative z-10 text-primary font-[Lato] font-medium text-[24px] tracking-[0]">
                                 Order List

@@ -32,6 +32,7 @@ class User extends Authenticatable
         'thumbnail_logo',
         'status',
         'avatar',
+        'hash_organization',
         // 'organization_id'
     ];
 
