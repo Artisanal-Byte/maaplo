@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\CustomerPhoto;
+use App\Models\Measurement;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -36,7 +37,6 @@ class CustomerController extends Controller
                 'payment_due' => $c->payment_due ?? null,
                 'face_image' => optional($c->photos->first())->image_url ? asset($c->photos->first()->image_url) : null,
             ]);
-
         return Inertia::render('customer/Index', [
             'customers' => $customers,
             'customer_limit_exceeded' => $customerLimitExceeded,
@@ -51,8 +51,16 @@ class CustomerController extends Controller
         $customerLimitExceeded = $user->subscription_plan === 'free' && $customerCount >= 5;
 
         $user_id = auth()->id();
+        $measurements = Measurement::all();
+        $setData = [];
+
+        foreach ($measurements as $measurement) {
+            $setData[$measurement->slug] = $measurement->name;
+        }
+
         return Inertia::render('customer/Create', [
             'user_id' => $user_id,
+            'measurements' => json_encode($setData, true),
             'customer_limit_exceeded' => $customerLimitExceeded,
         ]);
     }
@@ -83,12 +91,10 @@ class CustomerController extends Controller
         ]);
         try {
             DB::beginTransaction();
-
             $username = preg_replace('/\s+/', '_', strtolower($user->name));
             $customerName = preg_replace('/\s+/', '_', strtolower($validated['name']));
             $address = $validated['address'];
             $addressJson = json_encode(['value' => $address]);
-
             // First, create the customer to get the customer ID
             $customer = Customer::create([
                 'user_id' => $user_id,

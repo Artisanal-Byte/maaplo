@@ -13,6 +13,7 @@ import { useOrder } from '@/composables/useOrderData';
 const props = defineProps(["users", "customers", "itemTypes", "errors"])
 
 
+
 const showModal = ref(false);
 const disabled = ref(false);
 const toast = new ToastMagic();
@@ -20,6 +21,7 @@ const showDeletePopup = ref(false);
 const orderData = useOrder()
 let form = useForm(orderData);
 
+let customerMeasurements = ref({})
 const itemToDelete = ref(null);
 
 // set data which is set by child components 
@@ -27,9 +29,12 @@ let setOrderData = (data) => {
     form = data
 }
 
+
 let i = 0
 
 let setOrderItemsData = (data) => {
+    console.log('cust measruments:', data);
+    data.measurements = customerMeasurements.value
     form.order_items[i] = data
     i++
 }
@@ -81,6 +86,9 @@ const proceedDelete = () => {
     });
 };
 
+const setMeasurements = (m) => {
+    customerMeasurements.value = m
+}
 
 </script>
 
@@ -106,8 +114,8 @@ const proceedDelete = () => {
                 <h1 class="text-xl font-bold lg:mb-4 mb-4 lg:mt-0 mt-4">Enter Details</h1>
 
                 <!-- selected customer list -->
-                <CustomerListDropdown :customers="customers" :errors="errors" :form="form"
-                    @setOrderData="setOrderData" />
+                <CustomerListDropdown :customers="customers" :errors="errors" :form="form" @setOrderData="setOrderData"
+                    @setMeasurements="setMeasurements" />
 
                 <!-- Delivery Date -->
                 <DateIcon :form="form" :errors="errors" @setOrderData="setOrderData" />
@@ -143,7 +151,7 @@ const proceedDelete = () => {
                         <!-- Modal Content -->
                         <ItemModel :errors="form.errors?.order_items" :itemIndex="i" :showModal="showModal"
                             @close="closeModel" :form="form.order_items" @setOrderItemsData="setOrderItemsData"
-                            :itemTypes="itemTypes" :measurements="customers.base_measurements ?? []" />
+                            :itemTypes="itemTypes" :measurements="customerMeasurements ?? []" />
                         <p class="text-red-600 text-sm">
                             {{ form.errors.order_items }}
                         </p>

@@ -53,7 +53,7 @@ const props = defineProps(['name']);
 
     </div>
 
-    <div v-if="name == 'Arms'">
+    <div v-if="name == 'arms'">
         <svg width="21" height="21" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink">
             <mask id="mask0_515_938" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="16"

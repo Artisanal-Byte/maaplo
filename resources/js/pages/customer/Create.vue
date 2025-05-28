@@ -12,7 +12,8 @@ const customerMeasurements = ref({});
 const props = defineProps<{
     errors: Record<string, string>,
     user_id: number,
-    customer_limit_exceeded: boolean
+    customer_limit_exceeded: boolean,
+    measurements
 }>();
 
 const toast = new ToastMagic();
@@ -82,7 +83,8 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
 
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex justify-between items-center">
-                <h1 class="text-[24px] text-primary leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
+                <h1
+                    class="text-[24px] text-primary leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                     New Customer
                 </h1>
                 <div class="text-gray-600">
@@ -159,7 +161,8 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                 <!-- Measurements -->
                 <div>
                     <!-- <label class="block font-[Lato] text-[18px] leading-[16px] tracking-[0] mb-2">Measurements</label> -->
-                    <Measurements v-model:measurements="form.measurements"  :error="errors.measurements"/>
+                    <Measurements v-model:measurements="form.measurements" :error="errors.measurements"
+                        :toAsk="measurements" />
                     <div v-if="errors.measurements" class="text-red-600 text-sm mt-2">{{ errors.measurements }}</div>
                 </div>
 
