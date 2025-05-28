@@ -17,7 +17,9 @@ return new class extends Migration
             $table->string('organization_logo')->nullable();
             $table->string('gst_number')->nullable();
             $table->string('address')->nullable();
+            $table->boolean('hash_organization')->default(true);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
