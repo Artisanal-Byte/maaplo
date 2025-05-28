@@ -23,7 +23,7 @@ let form = useForm(orderData);
 
 let customerMeasurements = ref({})
 const itemToDelete = ref(null);
-
+let totalAmmount = ref(null)
 // set data which is set by child components 
 let setOrderData = (data) => {
     form = data
@@ -55,9 +55,9 @@ let create = () => {
 watch(form.order_items, (items) => {
     let t = 0
     items.forEach(item => {
-        t += item.cost
+        t += item.item_cost
     });
-    form.total_amount = t
+    form.total_amount = t - form.advance_paid
 })
 
 const closeModel = () => {
@@ -98,6 +98,12 @@ const openItemModel = () => {
     }
     showModal.value = true
 }
+
+
+
+watch(()=>form.advance_paid,(nPayVal)=>{
+    form.total_amount = form.total_amount - nPayVal
+})
 </script>
 
 <template>

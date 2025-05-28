@@ -35,7 +35,8 @@ let data = reactive({
     is_urgent: '',
     material_cost: null,
     stiching_cost: null,
-    cost: null,
+    // cost: null,
+    item_cost: null,
     notes: [{}],
     trial_dates: '',
     delivery_date: '',
@@ -58,7 +59,8 @@ const resetData = () => {
         is_urgent: '',
         material_cost: null,
         stiching_cost: null,
-        cost: null,
+        // cost: null,
+        item_cost: null,
         notes: [{}],
         trial_dates: '',
         delivery_date: '',
@@ -97,7 +99,8 @@ const setMaterialType = (materialType) => {
     data.material_type = materialType
 }
 const setPrice = (price) => {
-    data.cost = price
+    // data.cost = price
+    data.item_cost = price
 }
 const setColor = (color) => {
     data.colors = color
@@ -184,8 +187,8 @@ watch(() => data.template_id, (newId) => {
                     <WorkType :formData="data" @setMaterialCode="setMaterialCode" @setMaterialCost="setMaterialCost"
                         @setStichingCost="setStichingCost" @setMaterialType="setMaterialType" @setPrice="setPrice" />
                     <ItemType :itemTypes="itemTypes" @setItemId="setItemId" />
-                    <Measurements :toAsk="measurements"  :isOrder="true"/>
-                    <DesignDetails :designDetails="designDetails" v-model="data.design_detail"/>
+                    <Measurements :toAsk="measurements" :isOrder="true" />
+                    <DesignDetails :designDetails="designDetails" v-model="data.design_detail" />
 
                     <div class="flex flex-col">
                         <Colors @setColor="setColor" />
