@@ -1,57 +1,143 @@
+<script setup>
+import AppLayout from '@/layouts/AppLayout.vue';
+import { ref } from 'vue';
+import { Link, useForm } from '@inertiajs/vue3';
+import { Icon } from '@iconify/vue';
+import Button from '@/components/Button.vue';
+import Input from '@/components/InputWithLabel.vue';
 
-<script>
-export default {
-  data() {
-    return {
-      form: {
-        body_section: '',
-        gender: 'm',
-        body_part: '',
-        value: '',
-        image: null,
-      },
-    };
-  },
-  methods: {
-    handleImageUpload(event) {
-      this.form.image = event.target.files[0];
-    },
-    submit() {
-      const formData = new FormData();
-      for (const key in this.form) {
-        formData.append(key, this.form[key]);
-      }
+const toast = new ToastMagic(); // optional: if you're using a toast notification system
 
-      this.$inertia.post('/design-details', formData);
-    },
-  },
+const imagePreview = ref(null);
+
+const form = useForm({
+  body_section: '',
+  gender: 'm',
+  body_part: '',
+  value: '',
+  image: null,
+});
+
+const handleImageUpload = (event) => {
+  const file = event.target.files?.[0];
+  if (file) {
+    form.image = file;
+    imagePreview.value = URL.createObjectURL(file);
+  }
+};
+
+const createDesignDetail = () => {
+  form.post(route('design-details.store'), {
+    forceFormData: true,
+    onSuccess: () => toast.success('Design Detail created successfully!'),
+    onError: () => toast.error('Error creating Design Detail.'),
+  });
 };
 </script>
+
 <template>
-  <div>
-    <h1>Create Design Detail</h1>
-    <form @submit.prevent="submit">
-      <label for="body_section">Body Section:</label>
-      <input v-model="form.body_section" id="body_section" required />
+  <AppLayout>
+    <div class="px-4 py-8 max-w-6xl mx-auto">
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-primary flex items-center gap-2">
+          <Icon icon="mdi:vector-square-edit" width="28" height="28" />
+          Create Design Detail
+        </h1>
+        <Link :href="route('design-details.index')" class="flex items-center gap-2 text-gray-600 hover:text-black">
+          <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
+          <span class="text-md font-medium">Back</span>
+        </Link>
+      </div>
 
-      <label for="gender">Gender:</label>
-      <select v-model="form.gender" id="gender" required>
-        <option value="m">Male</option>
-        <option value="f">Female</option>
-        <option value="o">Other</option>
-      </select>
+      <!-- Form -->
+      <div class="bg-white p-8 rounded-lg shadow-md space-y-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Body Section (Dropdown) -->
+          <div>
+            <label class="block font-medium text-black mb-1">Body Section <span class="text-red-500">*</span></label>
+            <select
+              v-model="form.body_section"
+              class="w-full rounded-md border-gray-300 shadow-sm focus:ring-primary focus:border-primary"
+            >
+              <option disabled value="">Select body section</option>
+              <option value="Upper">Upper</option>
+              <option value="Lower">Lower</option>
+            </select>
+            <p v-if="form.errors.body_section" class="text-sm text-red-500 mt-1">{{ form.errors.body_section }}</p>
+          </div>
 
-      <label for="body_part">Body Part:</label>
-      <input v-model="form.body_part" id="body_part" required />
+          <!-- Body Part -->
+          <Input
+            type="text"
+            label="Body Part"
+            v-model="form.body_part"
+            :error="form.errors.body_part"
+            placeholder="Enter body part"
+            required
+          >
+            <template #icon>
+              <Icon icon="mdi:human-male-height" width="20" height="20" />
+            </template>
+          </Input>
 
-      <label for="value">Value:</label>
-      <input v-model="form.value" id="value" required />
+          <!-- Value -->
+          <Input
+            type="text"
+            label="Value"
+            v-model="form.value"
+            :error="form.errors.value"
+            placeholder="Enter value"
+            required
+          >
+            <template #icon>
+              <Icon icon="mdi:tag-text" width="20" height="20" />
+            </template>
+          </Input>
 
-      <label for="image">Image:</label>
-      <input type="file" @change="handleImageUpload" id="image" required />
+          <!-- Gender Select -->
+          <div>
+            <label class="block font-medium text-black mb-1">Gender <span class="text-red-500">*</span></label>
+            <select
+              v-model="form.gender"
+              class="w-full rounded-md border-gray-300 shadow-sm focus:ring-primary focus:border-primary"
+            >
+              <option value="m">Male</option>
+              <option value="f">Female</option>
+              <option value="o">Other</option>
+            </select>
+            <p v-if="form.errors.gender" class="text-sm text-red-500 mt-1">{{ form.errors.gender }}</p>
+          </div>
+        </div>
 
-      <button type="submit">Save</button>
-    </form>
-  </div>
+        <!-- Image Upload -->
+        <div>
+          <label class="block font-medium text-black mb-2">Upload Image <span class="text-red-500">*</span></label>
+          <input
+            type="file"
+            @change="handleImageUpload"
+            class="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 cursor-pointer"
+          />
+          <div v-if="imagePreview" class="mt-4">
+            <img :src="imagePreview" alt="Preview" class="w-64 h-64 object-contain border rounded-lg" />
+          </div>
+          <p v-if="form.errors.image" class="text-sm text-red-500 mt-1">{{ form.errors.image }}</p>
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+          <Button
+            @click="createDesignDetail"
+            :color="'primary'"
+            :rounded="'full'"
+            :textSize="'sm'"
+            class="w-full justify-center hover:scale-105 transition-transform"
+          >
+            <Icon icon="mdi:check-bold" class="mr-2" width="20" />
+            Save Design Detail
+          </Button>
+        </div>
+      </div>
+    </div>
+  </AppLayout>
 </template>
-

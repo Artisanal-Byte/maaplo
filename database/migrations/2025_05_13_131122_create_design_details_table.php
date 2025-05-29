@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('design_details', function (Blueprint $table) {
             $table->id();
-            $table->string('body_section');
+            $table->enum('body_section', ['Upper', 'Lower']);
             $table->enum('gender', ['m','f','o']);
             $table->string('body_part');
             $table->string('value');

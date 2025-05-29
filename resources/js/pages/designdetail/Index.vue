@@ -41,7 +41,7 @@ function confirmDelete() {
             <Icon icon="material-symbols:add-rounded" width="30" height="30" />
             <div
               class="absolute top-full mt-1 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-gray-800 text-white text-xs rounded px-2 py-1 transition pointer-events-none z-10">
-              Create Design Detail
+              Create Design
             </div>
           </Link>
         </div>
