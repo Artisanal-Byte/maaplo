@@ -17,12 +17,12 @@ class DesignDetailsController extends Controller
     public function index()
     {
         $designDetails = DesignDetail::all();
-        return Inertia::render('DesignDetails/Index', ['designDetails' => $designDetails]);
+        return Inertia::render('designdetail/Index', ['designDetails' => $designDetails]);
     }
 
     public function create()
     {
-        return Inertia::render('DesignDetails/Create');
+        return Inertia::render('designdetail/Create');
     }
 
     public function store(Request $request)
@@ -42,7 +42,7 @@ class DesignDetailsController extends Controller
 
     public function edit(DesignDetail $designDetail)
     {
-        return Inertia::render('DesignDetails/Edit', [
+        return Inertia::render('designdetail/Edit', [
             'designDetail' => $designDetail,
         ]);
     }
