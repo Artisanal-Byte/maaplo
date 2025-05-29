@@ -16,79 +16,56 @@ class DesignDetailsController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->role != 'Super Admin' && !Auth::user()) {
-            abort(404);
-        }
         $designDetails = DesignDetail::all();
-        return Inertia::render('designDetails/Index', ['designDetails' => $designDetails]);
+        return Inertia::render('DesignDetails/Index', ['designDetails' => $designDetails]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return Inertia::render('designDetails/Create');
+        return Inertia::render('DesignDetails/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'body_selection' => 'required|string|max:255',
+            'body_section' => 'required|string|max:255',
+            'gender' => 'required|in:m,f,o',
             'body_part' => 'required|string|max:255',
             'value' => 'required|string|max:255',
             'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        try {
+        DesignDetail::create($validated);
 
-            DB::beginTransaction();
-
-            DesignDetail::create($validated);
-
-            DB::commit();
-       
-        } catch (\Exception $exception) {
-
-            DB::rollBack();
-
-            dd($exception->getMessage());
-       
-        }
+        return redirect()->route('design-details.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(DesignDetail $designDetail)
     {
-        //
+        return Inertia::render('DesignDetails/Edit', [
+            'designDetail' => $designDetail,
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, DesignDetail $designDetail)
     {
-        //
+        $validated = $request->validate([
+            'body_section' => 'required|string|max:255',
+            'gender' => 'required|in:m,f,o',
+            'body_part' => 'required|string|max:255',
+            'value' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        $designDetail->update($validated);
+
+        return redirect()->route('design-details.index');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(DesignDetail $designDetail)
     {
-        //
-    }
+        $designDetail->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->route('design-details.index');
     }
 }
