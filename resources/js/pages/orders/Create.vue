@@ -40,6 +40,11 @@ let setOrderItemsData = (data) => {
 }
 
 let create = () => {
+    if (form.advance_paid > form.total_amount) {
+        alert("advance paid can't be greater than total payment!");
+        form.advance_paid = null
+        return
+    }
     form.post(route('orders.store'), {
         onSuccess: () => {
             toast.success('Order Created Successfully');
@@ -57,6 +62,7 @@ watch(form.order_items, (items) => {
     items.forEach(item => {
         t += item.item_cost
     });
+    totalAmmount.value = t
     form.total_amount = t - form.advance_paid
 })
 
@@ -101,9 +107,14 @@ const openItemModel = () => {
 
 
 
-watch(()=>form.advance_paid,(nPayVal)=>{
-    form.total_amount = form.total_amount - nPayVal
+watch(() => form.advance_paid, (nPayVal) => {
+    if (nPayVal == null || nPayVal == 0) {
+        form.total_amount = totalAmmount.value
+    } else {
+        form.total_amount = totalAmmount.value - nPayVal
+    }
 })
+
 </script>
 
 <template>

@@ -132,11 +132,11 @@ watch(() => material.type, (val) => {
       </div>
 
       <div v-if="modelValue === 'Only Stitching'" class="mt-4 ml-2">
-        <Input v-model="cost.stitching" type="text" label="Cost" :required="true" placeholder="Enter Cost" />
+        <Input v-model="cost.stitching" type="number" label="Cost" :required="true" placeholder="Enter Cost" />
       </div>
 
       <div v-if="modelValue === 'Only Altering'" class="mt-4 ml-2">
-        <Input v-model="cost.altering" type="text" label="Cost" :required="true" placeholder="Enter Cost" />
+        <Input v-model="cost.altering" type="number" label="Cost" :required="true" placeholder="Enter Cost" />
       </div>
 
     </div>
