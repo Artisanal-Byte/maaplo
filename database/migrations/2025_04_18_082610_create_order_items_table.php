@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->string('work_type')->nullable()->after('material_code');
             $table->string('material_type');
             $table->string('material_code')->nullable();
-            $table->enum('refrence_dress', ['yes', 'no'])->default('no');
+            $table->text('refrence_dress')->default(null);
             $table->enum('is_urgent', ['yes', 'no'])->default('no');
             $table->decimal('material_cost', 10, 2)->nullable();
             $table->decimal('stiching_cost', 10, 2)->nullable();

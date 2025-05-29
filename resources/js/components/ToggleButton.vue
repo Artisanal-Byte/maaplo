@@ -1,13 +1,12 @@
 <script setup>
 import { ref, watch } from 'vue';
 
-const emits = defineEmits(['setIfReferenceDress','setIfUrgent'])
+const emits = defineEmits(['setShowReferenceDress'])
 
 const setTogle = ref(false)
 
 watch(()=>setTogle.value,(val)=>{
-    emits('setIfReferenceDress',val)
-    emits('setIfUrgent',val)
+    emits('setShowReferenceDress',val)
 })
 
 

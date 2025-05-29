@@ -35,7 +35,6 @@ let data = reactive({
     is_urgent: '',
     material_cost: null,
     stiching_cost: null,
-    // cost: null,
     item_cost: null,
     notes: [{}],
     trial_dates: '',
@@ -75,6 +74,8 @@ const designDetails = ref({})
 // Save and emit
 function saveItem() {
     emit('setOrderItemsData', JSON.parse(JSON.stringify(data)))
+    previewImage.value = null
+    showImageUpload.value = false
     resetData();
     // emit('setOrderItemsData', data)
     emit('close')
@@ -99,7 +100,6 @@ const setMaterialType = (materialType) => {
     data.material_type = materialType
 }
 const setPrice = (price) => {
-    // data.cost = price
     data.item_cost = price
 }
 const setColor = (color) => {
@@ -108,19 +108,23 @@ const setColor = (color) => {
 const setNotes = (notes) => {
     data.notes = notes
 }
-const setIfReferenceDress = (val) => {
-    data.refrence_dress = val
+const setShowReferenceDress = (val) => {
     showImageUpload.value = val
 }
 const setIfUrgent = (val) => {
     data.is_urgent = val
 }
-const setClothImage1 = (imgPath) => {
-    data.cloth_img1 = imgPath
-}
-const setClothImage2 = (imgPath) => {
-    data.cloth_img2 = imgPath
-}
+// const setClothImage1 = (imgPath) => {
+//     alert('setClothImage1')
+//     console.log(imgPath);
+
+//     data.cloth_img1 = imgPath
+// }
+// const setClothImage2 = (imgPath) => {
+//     alert('setClothImage2')
+//     console.log(imgPath);
+//     data.cloth_img2 = imgPath
+// }
 const setPatternImage1 = (imgPath) => {
     data.Pattern_img1 = imgPath
 }
@@ -148,11 +152,19 @@ function onFileChange(event, index) {
     if (file && file.type.startsWith('image/')) {
         const url = URL.createObjectURL(file);
         if (index === 1) {
+            if (showImageUpload.value) {
+                data.refrence_dress = file
+            }
             previewImage.value = url;
         }
     }
 }
-
+watch(() => showImageUpload.value, (nVal) => {
+    if (!nVal) {
+        data.refrence_dress = null
+        previewImage.value = null
+    }
+})
 watch(() => data.template_id, (newId) => {
     designDetails.value = props.itemTypes.privateTemplates.find(item => item.id === newId).design_details
 })
@@ -197,7 +209,7 @@ watch(() => data.template_id, (newId) => {
 
                     <div class="flex items-center gap-4">
                         <h1 class="font-medium font-lato">Reference dress given?</h1>
-                        <ToggleButton @setIfReferenceDress="setIfReferenceDress" />
+                        <ToggleButton @setShowReferenceDress="setShowReferenceDress" />
                     </div>
 
                     <div v-if="showImageUpload"
@@ -244,7 +256,8 @@ watch(() => data.template_id, (newId) => {
                     </div>
                     <!-- Upload icon, only shown when toggle is ON -->
                     <div class="flex flex-col lg:flex-row justify-between gap-4">
-                        <ClothImage @setClothImage1="setClothImage1" @setClothImage2="setClothImage2" />
+                        <ClothImage @setClothImage1="(file) => data.cloth_img1 = file"
+                            @setClothImage2="(file) => data.cloth_img2 = file" />
                         <PatternImage @setPatternImage1="setPatternImage1" @setPatternImage2="setPatternImage2" />
                     </div>
                     <div class="">

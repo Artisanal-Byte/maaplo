@@ -12,6 +12,7 @@ class StoreOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        dd($this->all());
         return \Illuminate\Support\Facades\Auth::check();
     }
 
@@ -46,8 +47,8 @@ class StoreOrderRequest extends FormRequest
             'order_items.*.work_type' => ['required', 'string', 'in:New from Material,Only Stitching,Only Altering'],
             'order_items.*.material_code' => ['nullable', 'string', 'max:256'],
             'order_items.*.material_type' => ['nullable', 'string', 'max:256'],
-            'order_items.*.refrence_dress' => ['required', 'string', 'in:yes,no'],
-            'order_items.*.is_urgent' => ['required', 'boolean'],
+            'order_items.*.refrence_dress' => ['required', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
+            // 'order_items.*.is_urgent' => ['required', 'boolean'],
             'order_items.*.material_cost' => ['nullable', 'numeric', 'min:0'],
             'order_items.*.stiching_cost' => ['nullable', 'numeric', 'min:0'],
             'order_items.*.item_cost' => ['required', 'numeric', 'min:0'],
@@ -112,10 +113,10 @@ class StoreOrderRequest extends FormRequest
             'order_items.*.material_type.string' => 'The material type must be a string.',
             'order_items.*.material_type.max' => 'The material type may not exceed 256 characters.',
 
-            'order_items.*.refrence_dress.required' => 'Reference dress is required.',
-            'order_items.*.refrence_dress.in' => 'Reference dress must be either "yes" or "no".',
+            // 'order_items.*.refrence_dress.required' => 'Reference dress is required.',
+            // 'order_items.*.refrence_dress.in' => 'Reference dress must be either "yes" or "no".',
 
-            'order_items.*.is_urgent.required' => 'Urgency information is required.',
+            // 'order_items.*.is_urgent.required' => 'Urgency information is required.',
             // 'order_items.*.is_urgent.in' => 'Urgency must be either "yes" or "no".',
 
             'order_items.*.material_cost.numeric' => 'Material cost must be a number.',
