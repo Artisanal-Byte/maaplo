@@ -43,7 +43,7 @@ const proceedDelete = () => {
         <div class="max-w-7xl mx-auto py-8 px-4">
             <!-- Header Section -->
             <div class="flex flex-row justify-between mb-6">
-                <h1 class="text-2xl font-bold text-gray-800">Template's</h1>
+                <h1 class="text-2xl font-bold text-primary">Template's</h1>
 
                 <div class="flex gap-4 text-gray-600 items-center">
                     <Link :href="route('items.create')" class="relative group">
