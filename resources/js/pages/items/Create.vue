@@ -68,7 +68,8 @@ const formatLabel = (key: string): string => {
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex justify-between items-center">
                 <h1
-                    class="text-[24px] text-primary leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
+                    class="flex items-center gap-2 lg:gap-4 text-[24px] leading-[16px] font-bold text-gray-800 font-[Convergence] text-primary tracking-[0]">
+                    <Icon icon="ooui:template-add-ltr" width="28" height="28" />
                     Add New Template
                 </h1>
                 <div class="text-gray-600">
@@ -78,7 +79,7 @@ const formatLabel = (key: string): string => {
                     </Link>
                 </div>
             </div>
-            <div class="flex flex-col lg:mt-5 gap-3 mt-6 lg:gap-4 rounded-lg lg:border lg:border-primary p-0 lg:p-4">
+            <div class="flex flex-col lg:mt-10 gap-3 lg:bg-white lg:p-7 lg:rounded-lg lg:shadow-md p-0 lg:p-4 lg:border-t-4 lg:border-primary mt-5">
                 <!-- <h1>Select Base Template</h1> -->
                 <div>
                     <label class="font-medium">Select Base Template</label>

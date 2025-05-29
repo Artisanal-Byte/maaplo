@@ -123,7 +123,8 @@ watch(() => form.advance_paid, (nPayVal) => {
             <div class="flex flex-row justify-between">
                 <div>
                     <h1
-                        class="text-[24px] text-primary mt-3 leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
+                        class="flex items-center gap-2 lg:gap-4 text-[24px] leading-[16px] font-bold text-gray-800 font-[Convergence] text-primary tracking-[0]">
+                        <Icon icon="lsicon:order-edit-filled" width="30" height="30" />
                         New Order
                     </h1>
                     <!-- <pre>
@@ -134,9 +135,10 @@ watch(() => form.advance_paid, (nPayVal) => {
                     <Button :disabled="disabled" @click="create">Create Order</Button>
                 </div>
             </div>
-            <div class="flex flex-col lg:mt-5 gap-3 lg:bg-white lg:p-7 lg:rounded-lg lg:shadow-md p-0 lg:p-4 lg:border-t-4 lg:border-primary">
+            <div
+                class="flex flex-col lg:mt-7 gap-3 lg:bg-white lg:p-7 lg:rounded-lg lg:shadow-md p-0 lg:p-4 lg:border-t-4 lg:border-primary">
 
-                <h1 class="text-xl font-bold  lg:mt-0 mt-4">Enter Details</h1>
+                <h1 class="text-xl font-bold lg:mt-0 mt-4">Enter Details</h1>
 
                 <!-- selected customer list -->
                 <CustomerListDropdown :customers="customers" :errors="errors" :form="form" @setOrderData="setOrderData"

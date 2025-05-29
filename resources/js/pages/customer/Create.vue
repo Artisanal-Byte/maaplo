@@ -83,10 +83,13 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
 
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex justify-between items-center">
+
                 <h1
-                    class="text-[24px] text-primary leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
+                    class="flex items-center gap-2 lg:gap-4 text-[24px] leading-[16px] font-bold text-gray-800 font-[Convergence] text-primary tracking-[0]">
+                    <Icon icon="mdi:account-plus" width="28" height="28" />
                     New Customer
                 </h1>
+
                 <div class="text-gray-600">
                     <Link :href="route('customers.index')" class="flex items-center gap-1 hover:text-black">
                     <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
@@ -95,7 +98,7 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                 </div>
             </div>
             <div
-                class="lg:mt-5 gap-3 lg:bg-white lg:p-7 lg:rounded-lg lg:shadow-md p-0 lg:p-4 lg:border-t-4 lg:border-primary">
+                class="lg:mt-10 gap-3 lg:bg-white lg:p-7 lg:rounded-lg lg:shadow-md p-0 lg:p-4 lg:border-t-4 lg:border-primary">
                 <h1 class="text-xl font-bold lg:mt-0 mt-6">Enter Details</h1>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-5 mt-3">
                     <!-- Customer Name -->
@@ -219,7 +222,7 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
 
                 <!-- Submit Button (Full Width Below) -->
                 <Button @click="submitForm" :color="'primary'" :padding="'md'" :rounded="'full'" :textSize="'sm'"
-                    class="lg:mt-5 mt-3 w-full" >
+                    class="lg:mt-5 mt-3 w-full">
                     Save & Continue
                 </Button>
             </div>
