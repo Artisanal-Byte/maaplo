@@ -12,8 +12,6 @@ import Input from '@/components/InputWithLabel.vue';
 import { useOrder } from '@/composables/useOrderData';
 const props = defineProps(["users", "customers", "itemTypes", "errors"])
 
-
-
 const showModal = ref(false);
 const disabled = ref(false);
 const toast = new ToastMagic();
@@ -28,7 +26,6 @@ let totalAmmount = ref(null)
 let setOrderData = (data) => {
     form = data
 }
-
 
 let i = 0
 
@@ -128,9 +125,9 @@ watch(() => form.advance_paid, (nPayVal) => {
                         <Icon icon="lsicon:order-edit-filled" width="30" height="30" />
                         New Order
                     </h1>
-                    <!-- <pre>
+                    <pre>
                         {{ form }}
-                    </pre> -->
+                    </pre>
                 </div>
                 <div class="self-center">
                     <Button :disabled="disabled" @click="create">Create Order</Button>

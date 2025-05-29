@@ -4,6 +4,8 @@ import { Icon } from '@iconify/vue';
 import SvgIcon from '../SvgIcon.vue';
 
 const props = defineProps(["designDetails"])
+console.log('design details data from backend:', props.designDetails);
+
 const selectedNeck = ref('')
 const selectedfrontNeck = ref('')
 const selectedSleeveType = ref('')
@@ -27,7 +29,7 @@ function toggleDropdownSleeveType() {
 }
 
 watch(selectedfrontNeck, (newVal) => {
-    console.log(newVal);
+    console.log('Selected Design:', newVal);
 
     model.value = newVal
 })

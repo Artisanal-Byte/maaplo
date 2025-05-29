@@ -221,15 +221,11 @@ const formatLabel = (key: string): string => {
                         {{ errors.design_details }}
                     </div>
                 </div>
-
-
                 <Button @click="submitForm" color="primary" padding="md" rounded="full" textSize="sm"
                     class="lg:mt-5 mt-3">
                     Save
                 </Button>
-
             </div>
-
         </div>
     </AppLayout>
 </template>
