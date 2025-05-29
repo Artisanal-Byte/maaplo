@@ -17,7 +17,7 @@ return new class extends Migration
             $table->enum('gender', ['m','f','o']);
             $table->string('body_part');
             $table->string('value');
-            $table->string('image');
+            $table->text('image');
             $table->timestamps();
             $table->softDeletes();
         });

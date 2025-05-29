@@ -27,14 +27,15 @@ class DesignDetailsController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $validated = $request->validate([
-            'body_section' => 'required|string|max:255',
+            'body_section' => 'required|in:Upper,Lower',
             'gender' => 'required|in:m,f,o',
             'body_part' => 'required|string|max:255',
-            'value' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'value' => 'required|string',
+            'image' => 'required|string',
         ]);
-
+// dd( $validated);
         DesignDetail::create($validated);
 
         return redirect()->route('design-details.index');
@@ -54,7 +55,7 @@ class DesignDetailsController extends Controller
             'gender' => 'required|in:m,f,o',
             'body_part' => 'required|string|max:255',
             'value' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image' => 'required|string',
         ]);
 
         $designDetail->update($validated);
