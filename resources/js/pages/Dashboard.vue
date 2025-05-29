@@ -72,17 +72,17 @@ const activeTab = ref('order')
             <div class="flex justify-between items-center mb-6">
 
                 <h2
-                    class="text-[20px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence] whitespace-nowrap ml-auto">
+                    class="text-[20px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence] whitespace-nowrap">
                     Total Orders: 0
                 </h2>
                 <h1
-                    class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence] text-center w-full">
+                    class="text-[20px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence] text-center lg:w-full">
                     {{ props.organizationName }}
                 </h1>
             </div>
 
             <!-- Graph Section Header with Filter Dropdown -->
-            <div class="flex flex-row justify-between mt-8">
+            <div class="flex flex-row justify-between">
                 <div>
                     <!-- <h1 class="font-normal text-[20px] leading-[16px] tracking-[0] font-[Convergence]">Graph</h1> -->
                 </div>
