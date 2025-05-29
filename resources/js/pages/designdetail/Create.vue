@@ -25,6 +25,15 @@ watch(() => form.image, (newVal) => {
     }
 });
 
+
+const isSvgMarkup = (str = '') => {
+  return str.trim().startsWith('<svg');
+};
+
+const isValidPathData = (str = '') => {
+  return /^[Mm]/.test(str.trim());
+};
+
 const createDesignDetail = () => {
     if (form.image?.includes('<svg')) {
         form.image = form.image
@@ -119,11 +128,20 @@ const createDesignDetail = () => {
                 <div
                     class="mt-6 border border-gray-300 rounded-lg p-6 bg-gray-50 flex justify-center items-center min-h-[120px]">
                     <label class="sr-only">SVG Preview</label>
-                    <div v-if="form.image?.includes('<svg')" v-html="form.image" class="max-w-[120px] max-h-[120px]">
-                    </div>
-                    <svg v-else width="120" height="120" viewBox="0 0 100 100" class="stroke-black fill-none">
+
+                    <!-- Full SVG Markup -->
+                    <div v-if="isSvgMarkup(form.image)" v-html="form.image" class="max-w-[120px] max-h-[120px]"></div>
+
+                    <!-- Path Only -->
+                    <svg v-else-if="isValidPathData(form.image)" width="120" height="120" viewBox="0 0 100 100"
+                        class="stroke-black fill-none">
                         <path :d="form.image" stroke="black" stroke-width="2" />
                     </svg>
+
+                    <!-- Invalid -->
+                    <div v-else class="text-red-500 text-sm">
+                        ⚠️ Invalid SVG path or markup. Must start with &lt;svg&gt; or `M`.
+                    </div>
                 </div>
 
                 <!-- Submit Button -->
