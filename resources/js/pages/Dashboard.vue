@@ -45,18 +45,18 @@ const activeTab = ref('order')
     <AppLayout>
         <!-- Alert-style Notification -->
         <div v-if="showPopup"
-            class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-md bg-white border-l-4 border-yellow-500 text-yellow-800 rounded-lg shadow-xl px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-slide-in">
+            class=" fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-md bg-white border-t-4 border-yellow-500 text-yellow-800 rounded-lg shadow-xl px-4 py-3 flex flex-col items-start items-center justify-between animate-slide-in">
 
             <div class="flex items-start gap-4">
                 <div class="bg-yellow-100 p-2 rounded-full">
-                    <Icon icon="fluent:info-24-filled" class="text-yellow-500" width="28" height="28" />
+                    <Icon icon="fluent:info-24-filled" class="text-yellow-500" width="26" height="26" />
                 </div>
                 <div>
-                    <p class="text-sm text-gray-700 mt-1">Please provide your organization information to continue.</p>
+                    <p class="text-sm text-gray-800 mt-1">Provide your organization information to continue.</p>
                 </div>
             </div>
 
-            <div class="flex gap-2 sm:ml-auto mt-3 sm:mt-0">
+            <div class="flex gap-2 ml-auto mt-3 sm:mt-0">
                 <button @click="closePopup"
                     class="px-3 py-1.5 text-sm font-medium bg-gray-300 hover:bg-gray-200 text-gray-700 rounded-md transition">
                     Dismiss
