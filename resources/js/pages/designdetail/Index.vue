@@ -35,7 +35,7 @@ function confirmDelete() {
     <div class="max-w-7xl mx-auto py-8 px-4">
       <!-- Header Section -->
       <div class="flex justify-between mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Design Details</h1>
+        <h1 class="text-2xl font-bold text-primary">Design Details</h1>
         <div class="flex gap-4 items-center text-gray-600">
           <Link :href="route('design-details.create')" class="relative group">
             <Icon icon="material-symbols:add-rounded" width="30" height="30" />

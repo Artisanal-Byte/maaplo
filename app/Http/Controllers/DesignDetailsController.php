@@ -28,7 +28,6 @@ class DesignDetailsController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
         $validated = $request->validate([
             'body_section' => 'required|in:Upper,Lower',
             'gender' => 'required|in:m,f,o',
@@ -36,7 +35,6 @@ class DesignDetailsController extends Controller
             'value' => 'required|string',
             'image' => ['required', 'string', new SvgMarkup()],
         ]);
-// dd( $validated);
         DesignDetail::create($validated);
 
         return redirect()->route('design-details.index');
