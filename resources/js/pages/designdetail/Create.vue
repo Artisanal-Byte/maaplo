@@ -75,8 +75,8 @@ const createDesignDetail = () => {
                             class="w-full rounded-md border border-gray-300 px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                             required="true">
                             <option disabled value="">Select body section</option>
-                            <option value="Upper">Upper</option>
-                            <option value="Lower">Lower</option>
+                            <option value="Upper">Upper Body</option>
+                            <option value="Lower">Lower Body</option>
                         </select>
                         <p v-if="form.errors.body_section" class="mt-1 text-sm text-red-600">{{ form.errors.body_section
                             }}</p>

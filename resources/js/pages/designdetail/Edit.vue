@@ -86,8 +86,8 @@ const updateDesignDetail = () => {
                         <select id="body_section" v-model="form.body_section" required
                             class="w-full border rounded-md py-2 px-3 text-sm shadow-sm focus:ring-primary focus:border-primary">
                             <option disabled value="">Select body section</option>
-                            <option value="Upper">Upper</option>
-                            <option value="Lower">Lower</option>
+                            <option value="Upper">Upper Body</option>
+                            <option value="Lower">Lower Body</option>
                         </select>
                         <div v-if="props.errors.body_section" class="text-red-600 text-sm mt-1">
                             {{ props.errors.body_section }}
