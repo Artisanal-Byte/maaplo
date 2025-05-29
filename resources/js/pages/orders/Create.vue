@@ -23,7 +23,7 @@ let form = useForm(orderData);
 
 let customerMeasurements = ref({})
 const itemToDelete = ref(null);
-
+let totalAmmount = ref(null)
 // set data which is set by child components 
 let setOrderData = (data) => {
     form = data
@@ -40,6 +40,11 @@ let setOrderItemsData = (data) => {
 }
 
 let create = () => {
+    if (form.advance_paid > form.total_amount) {
+        alert("advance paid can't be greater than total payment!");
+        form.advance_paid = null
+        return
+    }
     form.post(route('orders.store'), {
         onSuccess: () => {
             toast.success('Order Created Successfully');
@@ -55,9 +60,10 @@ let create = () => {
 watch(form.order_items, (items) => {
     let t = 0
     items.forEach(item => {
-        t += item.cost
+        t += item.item_cost
     });
-    form.total_amount = t
+    totalAmmount.value = t
+    form.total_amount = t - form.advance_paid
 })
 
 const closeModel = () => {
@@ -98,6 +104,17 @@ const openItemModel = () => {
     }
     showModal.value = true
 }
+
+
+
+watch(() => form.advance_paid, (nPayVal) => {
+    if (nPayVal == null || nPayVal == 0) {
+        form.total_amount = totalAmmount.value
+    } else {
+        form.total_amount = totalAmmount.value - nPayVal
+    }
+})
+
 </script>
 
 <template>
