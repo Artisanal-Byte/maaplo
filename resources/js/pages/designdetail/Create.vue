@@ -55,7 +55,7 @@ const createDesignDetail = () => {
             </div>
 
             <!-- Form -->
-            <form @submit.prevent="createDesignDetail" class="bg-white p-10 rounded-xl shadow-lg space-y-8">
+            <div class="bg-white p-10 rounded-xl shadow-lg space-y-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <!-- Body Section -->
                     <div>
@@ -64,7 +64,7 @@ const createDesignDetail = () => {
                         </label>
                         <select id="body_section" v-model="form.body_section"
                             class="w-full rounded-md border border-gray-300 px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-                            required>
+                            required="true">
                             <option disabled value="">Select body section</option>
                             <option value="Upper">Upper</option>
                             <option value="Lower">Lower</option>
@@ -81,6 +81,7 @@ const createDesignDetail = () => {
                         <select id="gender" v-model="form.gender"
                             class="w-full rounded-md border border-gray-300 px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                             required>
+                            <option disabled value="">Select Gender</option>
                             <option value="m">Male</option>
                             <option value="f">Female</option>
                             <option value="o">Other</option>
@@ -127,14 +128,14 @@ const createDesignDetail = () => {
 
                 <!-- Submit Button -->
                 <div>
-                    <Button type="submit" :color="'primary'" :rounded="'full'" :textSize="'md'"
+                    <Button @click="createDesignDetail" :color="'primary'" :rounded="'full'" :textSize="'md'"
                         class="w-full py-4 font-semibold hover:scale-105 transform transition-transform duration-300"
                         :disabled="form.processing">
                         <Icon icon="mdi:check-bold" width="22" class="mr-3" />
                         Save Design Detail
                     </Button>
                 </div>
-            </form>
+            </div>
         </div>
     </AppLayout>
 </template>

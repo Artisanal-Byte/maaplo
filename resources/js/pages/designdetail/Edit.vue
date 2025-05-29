@@ -69,7 +69,7 @@ const updateDesignDetail = () => {
       </div>
 
       <!-- Form -->
-      <form @submit.prevent="updateDesignDetail" class="bg-white p-10 rounded-xl shadow-lg space-y-8">
+      <div class="bg-white p-10 rounded-xl shadow-lg space-y-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <!-- Body Section -->
           <div>
@@ -114,7 +114,7 @@ const updateDesignDetail = () => {
             v-model="form.body_part"
             :error="props.errors.body_part"
             placeholder="Enter body part"
-            required
+            required="true"
           >
             <template #icon>
               <Icon icon="mdi:human-male-height" width="22" height="22" />
@@ -128,7 +128,7 @@ const updateDesignDetail = () => {
             v-model="form.value"
             :error="props.errors.value"
             placeholder="Enter value"
-            required
+            required="true"
           >
             <template #icon>
               <Icon icon="mdi:tag-text" width="22" height="22" />
@@ -143,7 +143,8 @@ const updateDesignDetail = () => {
           v-model="form.image"
           :error="props.errors.image"
           placeholder="Paste your SVG path or full SVG markup here"
-          required
+          required="true"
+          class="mt-6"
           rows="5"
         >
           <template #icon>
@@ -169,7 +170,7 @@ const updateDesignDetail = () => {
         <!-- Submit Button -->
         <div>
           <Button
-            type="submit"
+            @submit.prevent="updateDesignDetail"
             :color="'primary'"
             :rounded="'full'"
             :textSize="'md'"
@@ -180,7 +181,7 @@ const updateDesignDetail = () => {
             Update Design Detail
           </Button>
         </div>
-      </form>
+    </div>
     </div>
   </AppLayout>
 </template>
