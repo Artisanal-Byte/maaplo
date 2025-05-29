@@ -13,6 +13,7 @@ class DesignDetail extends Model
         'body_selection',
         'body_part',
         'value',
-        'image'
+        'image',
+        'gender',
     ];
 }
