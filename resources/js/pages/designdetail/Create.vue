@@ -10,7 +10,7 @@ const toast = new ToastMagic();
 
 const form = useForm({
     body_section: '',
-    gender: 'm',
+    gender: '',
     body_part: '',
     value: '',
     image: '',
