@@ -46,6 +46,7 @@ let create = () => {
         return
     }
     form.post(route('orders.store'), {
+        forceFormData: true,
         onSuccess: () => {
             toast.success('Order Created Successfully');
         },
