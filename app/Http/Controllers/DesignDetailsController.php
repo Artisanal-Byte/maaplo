@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ImageHelper;
 use App\Models\DesignDetail;
+use App\Rules\SvgMarkup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -16,79 +17,57 @@ class DesignDetailsController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->role != 'Super Admin' && !Auth::user()) {
-            abort(404);
-        }
         $designDetails = DesignDetail::all();
-        return Inertia::render('designDetails/Index', ['designDetails' => $designDetails]);
+        return Inertia::render('designdetail/Index', ['designDetails' => $designDetails]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return Inertia::render('designDetails/Create');
+        return Inertia::render('designdetail/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        // dd($request->all());
         $validated = $request->validate([
-            'body_selection' => 'required|string|max:255',
+            'body_section' => 'required|in:Upper,Lower',
+            'gender' => 'required|in:m,f,o',
             'body_part' => 'required|string|max:255',
-            'value' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'value' => 'required|string',
+            'image' => ['required', 'string', new SvgMarkup()],
+        ]);
+// dd( $validated);
+        DesignDetail::create($validated);
+
+        return redirect()->route('design-details.index');
+    }
+
+    public function edit(DesignDetail $designDetail)
+    {
+        return Inertia::render('designdetail/Edit', [
+            'designDetail' => $designDetail,
+        ]);
+    }
+
+    public function update(Request $request, DesignDetail $designDetail)
+    {
+        $validated = $request->validate([
+            'body_section' => 'required|in:Upper,Lower',
+            'gender' => 'required|in:m,f,o',
+            'body_part' => 'required|string|max:255',
+            'value' => 'required|string',
+            'image' => ['required', 'string', new SvgMarkup()],
         ]);
 
-        try {
+        $designDetail->update($validated);
 
-            DB::beginTransaction();
-
-            DesignDetail::create($validated);
-
-            DB::commit();
-       
-        } catch (\Exception $exception) {
-
-            DB::rollBack();
-
-            dd($exception->getMessage());
-       
-        }
+        return redirect()->route('design-details.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function destroy(DesignDetail $designDetail)
     {
-        //
-    }
+        $designDetail->delete();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->route('design-details.index');
     }
 }

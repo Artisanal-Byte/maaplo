@@ -10,9 +10,10 @@ class DesignDetail extends Model
     use SoftDeletes;
     protected $table = 'design_details';
     protected $fillable = [
-        'body_selection',
+        'body_section',
         'body_part',
         'value',
-        'image'
+        'image',
+        'gender',
     ];
 }
