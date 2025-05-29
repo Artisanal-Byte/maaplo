@@ -252,7 +252,7 @@ const activeTab = ref('order')
                     <div
                         class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
-                            <Link :href="route('customers.index')" class="flex flex-col items-center gap-2">
+                            <Link :href="route('orders.index')" class="flex flex-col items-center gap-2">
                             <div class="bg-primary p-3 rounded-full">
                                 <Icon icon="fe:list-order" width="32" height="32" class="text-white" />
                             </div>
