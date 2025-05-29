@@ -53,7 +53,7 @@ const deleteCustomer = (customerId: number) => {
 </script>
 
 <template>
-    <div class="relative mt-5 h-full rounded-[10px] px-[10px] py-[17px] bg-[#DEEFF4]">
+    <div class="relative mt-5 h-full rounded-[10px] p-[17px] bg-[#DEEFF4]">
         <div class="flex justify-between gap-4">
             <!-- Left Section -->
             <div class="flex-2">
@@ -61,7 +61,7 @@ const deleteCustomer = (customerId: number) => {
                     {{ props.customer.name }}
                 </h1>
 
-                <div @click="toggleDropdown()" class="flex items-center gap-2 cursor-pointer mt-4">
+                <div @click="toggleDropdown()" class="flex items-center gap-2 cursor-pointer mt-2">
                     <h1 class="font-[Lato] font-medium text-[18px] text-black">Contact</h1>
                     <Icon :icon="showDropdown ? 'icon-park-outline:up' : 'icon-park-outline:down'" width="20"
                         height="20" />
@@ -80,7 +80,7 @@ const deleteCustomer = (customerId: number) => {
                     </ul>
                 </div>
 
-                <h1 class="font-[Lato] font-medium text-[18px] text-black mt-3">
+                <h1 class="font-[Lato] font-medium text-[18px] text-black mt-2">
                     Active Order : {{ props.customer.active_orders || 'N/A' }}
                 </h1>
                 <h1 class="font-[Lato] font-medium text-[18px] text-black mt-2">
