@@ -152,7 +152,7 @@ const updateDesignDetail = () => {
 
                     <!-- Invalid -->
                     <div v-else class="text-red-500 text-sm">
-                        ⚠️ Invalid SVG path or markup. Must start with &lt;svg&gt; or `M`.
+                        ⚠️ Invalid SVG path or markup. Must start with &lt;svg&gt;.
                     </div>
                 </div>
 
