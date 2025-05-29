@@ -126,17 +126,17 @@ watch(() => form.advance_paid, (nPayVal) => {
                         class="text-[24px] text-primary mt-3 leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                         New Order
                     </h1>
-                    <pre>
+                    <!-- <pre>
                         {{ form }}
-                    </pre>
+                    </pre> -->
                 </div>
                 <div class="self-center">
                     <Button :disabled="disabled" @click="create">Create Order</Button>
                 </div>
             </div>
-            <div class="flex flex-col lg:mt-5 rounded-lg lg:border lg:border-primary p-0 lg:p-4">
+            <div class="flex flex-col lg:mt-5 gap-3 lg:bg-white lg:p-7 lg:rounded-lg lg:shadow-md p-0 lg:p-4 lg:border-t-4 lg:border-primary">
 
-                <h1 class="text-xl font-bold lg:mb-4 mb-4 lg:mt-0 mt-4">Enter Details</h1>
+                <h1 class="text-xl font-bold  lg:mt-0 mt-4">Enter Details</h1>
 
                 <!-- selected customer list -->
                 <CustomerListDropdown :customers="customers" :errors="errors" :form="form" @setOrderData="setOrderData"
@@ -146,7 +146,7 @@ watch(() => form.advance_paid, (nPayVal) => {
                 <DateIcon :form="form" :errors="errors" @setOrderData="setOrderData" />
 
                 <!-- items -->
-                <div class="mt-4">
+                <div class="mt-2">
                     <div>
                         <div class="flex flex-row justify-between items-center">
                             <div>
