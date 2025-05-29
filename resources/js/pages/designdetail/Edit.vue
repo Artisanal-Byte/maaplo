@@ -157,14 +157,14 @@ const updateDesignDetail = () => {
                 </div>
 
                 <!-- Submit Button -->
-                <div>
-                    <Button @click="updateDesignDetail" :disabled="form.processing" :color="'primary'" :rounded="'full'"
-                        :textSize="'md'"
-                        class="w-full py-3 font-semibold hover:scale-105 transition-transform duration-300">
-                        <Icon icon="mdi:check-bold" width="20" class="mr-2" />
-                        Update Design Detail
+                <div class="mt-8">
+                    <Button @click="updateDesignDetail" :disabled="form.processing" :rounded="'full'" :textSize="'md'"
+                        class="w-full h-4 py-6 font-semibold flex items-center justify-center gap-3 bg-primary text-white">
+                        <Icon icon="mdi:check-bold" width="24" height="24" />
+                        <span>Update Design Detail</span>
                     </Button>
                 </div>
+
             </div>
         </div>
     </AppLayout>

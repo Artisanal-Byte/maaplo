@@ -147,7 +147,7 @@ const createDesignDetail = () => {
                 <!-- Submit Button -->
                 <div>
                     <Button @click="createDesignDetail" :color="'primary'" :rounded="'full'" :textSize="'md'"
-                        class="w-full py-4 font-semibold hover:scale-105 transform transition-transform duration-300"
+                        class="w-full h-4 py-6 font-semibold flex items-center justify-center gap-3 bg-primary text-white"
                         :disabled="form.processing">
                         <Icon icon="mdi:check-bold" width="22" class="mr-3" />
                         Save Design Detail
