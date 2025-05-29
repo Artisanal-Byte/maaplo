@@ -17,8 +17,11 @@ class DesignDetailsController extends Controller
      */
     public function index()
     {
-        $designDetails = DesignDetail::all();
-        return Inertia::render('designdetail/Index', ['designDetails' => $designDetails]);
+        $designDetails = DesignDetail::orderBy('created_at', 'desc')->get();
+
+        return Inertia::render('designdetail/Index', [
+            'designDetails' => $designDetails,
+        ]);
     }
 
     public function create()
