@@ -8,7 +8,7 @@ import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
 import VueApexCharts from "vue3-apexcharts";
 import vueDebounce from 'vue-debounce'
-
+import { createPinia } from 'pinia'
 
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
@@ -22,7 +22,7 @@ declare module 'vite/client' {
         readonly glob: <T>(pattern: string) => Record<string, () => Promise<T>>;
     }
 }
-
+const pinia = createPinia()
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
@@ -33,6 +33,7 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .use(VueApexCharts)
+            .use(pinia)
             .directive('debounce', vueDebounce({ lock: true }))
             .mount(el);
     },
