@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Link } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import { ref, onMounted } from 'vue';
+import Button from '@/components/Button.vue';
 
 const props = defineProps({
     organizations: {
@@ -37,7 +38,7 @@ onMounted(() => {
             <div v-if="props.organizations.length" class="space-y-6">
                 <div v-for="org in props.organizations" :key="org.id"
                     class="bg-[#DEEFF4] shadow-md border border-gray-100 rounded-xl p-6 hover:shadow-lg transition">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-2 lg:gap-6">
                         <!-- Left: Details -->
                         <div class="space-y-4">
                             <div class="flex items-center gap-3">
@@ -55,17 +56,19 @@ onMounted(() => {
                                 <p><strong>Address:</strong> {{ org.address || '—' }}</p>
                             </div>
 
-                            <div class="pt-3">
-                                <Link :href="route('organization.edit', org.id)"
-                                    class="inline-flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark transition">
-                                <Icon icon="mdi:pencil" class="mr-1" width="18" />
-                                Edit
-                                </Link>
+                            <div class="pt-5 pl-2">
+                                <Button>
+                                    <Link :href="route('organization.edit', org.id)"
+                                        class="inline-flex items-center bg-primary text-white rounded hover:bg-primary-dark transition">
+                                    <Icon icon="mdi:pencil" class="mr-1" width="18" />
+                                    Edit
+                                    </Link>
+                                </Button>
                             </div>
                         </div>
 
                         <!-- Right: Logo -->
-                        <div class="w-full text-right">
+                        <div class="text-right">
                             <img :src="org.organization_logo
                                 ? `/storage/${org.organization_logo.replace(/^storage\//, '')}`
                                 : '/images/organization.png'" alt="Organization Logo"
@@ -97,7 +100,7 @@ onMounted(() => {
                 <p class="text-gray-600 mb-6">Please sir your organization information to continue.</p>
                 <div class="flex justify-center space-x-4">
                     <Link :href="route('organization.create')"
-                        class="px-4 py-2 bg-primary text-white rounded hover:bg-blue-700">
+                        class="px-4 py-2 bg-primary text-white rounded hover:bg-primary">
                     Add Organization
                     </Link>
                     <button @click="showModal = false"

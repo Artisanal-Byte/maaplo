@@ -68,7 +68,7 @@ const updateOrganization = () => {
             </div>
 
             <!-- Form Card -->
-            <div class="bg-white p-6 rounded-lg shadow-md space-y-6">
+            <div class="bg-white lg:p-6 rounded-lg lg:shadow-md space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Name -->
                     <Input v-model="form.organization_name" label="Organization Name"
