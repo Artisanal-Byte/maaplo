@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ImageHelper;
 use App\Models\DesignDetail;
+use App\Rules\SvgMarkup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +34,7 @@ class DesignDetailsController extends Controller
             'gender' => 'required|in:m,f,o',
             'body_part' => 'required|string|max:255',
             'value' => 'required|string',
-            'image' => 'required|string',
+            'image' => ['required', 'string', new SvgMarkup()],
         ]);
 // dd( $validated);
         DesignDetail::create($validated);
@@ -51,11 +52,11 @@ class DesignDetailsController extends Controller
     public function update(Request $request, DesignDetail $designDetail)
     {
         $validated = $request->validate([
-            'body_section' => 'required|string|max:255',
+            'body_section' => 'required|in:Upper,Lower',
             'gender' => 'required|in:m,f,o',
             'body_part' => 'required|string|max:255',
-            'value' => 'required|string|max:255',
-            'image' => 'required|string',
+            'value' => 'required|string',
+            'image' => ['required', 'string', new SvgMarkup()],
         ]);
 
         $designDetail->update($validated);
