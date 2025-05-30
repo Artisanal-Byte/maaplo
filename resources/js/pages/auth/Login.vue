@@ -98,16 +98,15 @@ const submit = () => {
         <img src="/images/imgg.png" alt="Background" class="absolute inset-0 w-full h-full object-cover" />
 
         <!-- Login Form -->
-        <div class="relative z-10 bg-white shadow-md rounded-lg p-6 w-full max-w-md ml-0 lg:ml-20">
+        <div class="relative z-10 mt-8 lg:mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary w-full max-w-md ml-0 lg:ml-20">
             <form @submit.prevent="submit" class="flex flex-col gap-6">
                 <h1 class="text-2xl font-bold text-gray-800 text-center">Login to Your Account</h1>
-
                 <div class="grid gap-6">
                     <!-- Email -->
                     <div class="grid gap-2">
                         <Label for="email">Email address</Label>
                         <Input id="email" type="email" required autofocus :tabindex="1" autocomplete="email"
-                            v-model="form.email" placeholder="email@example.com" />
+                            v-model="form.email" placeholder="email@example.com" class="broder border-primary" />
                         <InputError :message="form.errors.email" />
                     </div>
 
@@ -121,7 +120,7 @@ const submit = () => {
                             </TextLink>
                         </div>
                         <Input id="password" type="password" required :tabindex="2" autocomplete="current-password"
-                            v-model="form.password" placeholder="Password" />
+                            v-model="form.password" placeholder="Password" class="broder border-primary" />
                         <InputError :message="form.errors.password" />
                     </div>
 
@@ -134,7 +133,7 @@ const submit = () => {
                     </div>
 
                     <!-- Submit button -->
-                    <Button type="submit" class="mt-4 w-full bg-primary hover:bg-primary" :tabindex="4" :disabled="form.processing">
+                    <Button type="submit" class="w-full bg-primary hover:bg-primary rounded-full" :tabindex="4" :disabled="form.processing">
                         <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin " />
                         Log in
                     </Button>

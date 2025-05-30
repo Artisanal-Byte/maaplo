@@ -54,7 +54,7 @@ const createUser = () => {
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <!-- Header -->
             <div class="flex justify-between items-center mb-8">
-                <h1 class="text-3xl text-primary font-bold text-gray-800 font-[Convergence] flex items-center gap-2">
+                <h1 class="text-xl lg:text-3xl text-primary font-bold text-gray-800 font-[Convergence] flex items-center gap-2">
                     <Icon icon="mdi:account-plus" width="28" height="28" />
                     Create User
                 </h1>
@@ -69,7 +69,7 @@ const createUser = () => {
                 <!-- Section: User Info -->
                 <div>
                     <h2 class="text-lg font-semibold text-gray-700 mb-4">User Information</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
                         <Input type="text" v-model="form.name" label="User Name" :required="true"
                             :error="form.errors.name" placeholder="Enter User Name">
                         <template #icon>
@@ -104,7 +104,7 @@ const createUser = () => {
 
                 <!-- Section: Organization Info -->
                 <div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 mt-5">
                         <Input type="textarea" v-model="form.address" label="Address" :error="form.errors.address"
                             :required="true" placeholder="Enter Address" />
                         <Input type="textarea" v-model="form.organization_name" label="Organization Name"
@@ -146,7 +146,7 @@ const createUser = () => {
                 </div>
 
                 <!-- Section: Logo Upload & Status -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mt-5">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 items-center mt-5">
                     <!-- Logo Upload with Preview -->
                     <div>
                         <h2 class="text-lg font-semibold text-gray-800 mb-3">Add Organization Logo</h2>

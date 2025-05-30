@@ -29,7 +29,7 @@ const submit = () => {
         <!-- Background image -->
         <img src="/images/imgg.png" alt="Background" class="absolute inset-0 w-full h-full object-cover" />
 
-        <div class="relative z-10 bg-white shadow-md rounded-lg p-6 w-full max-w-md ml-0 lg:ml-20">
+        <div class="relative z-10 mt-8 lg:mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary w-full max-w-md ml-0 lg:ml-20">
             <form @submit.prevent="submit" class="flex flex-col gap-6">
                 <h1 class="text-2xl font-bold text-gray-800 text-center">Create an Account</h1>
                 <div class="grid gap-6">
@@ -62,7 +62,7 @@ const submit = () => {
                         <InputError :message="form.errors.password_confirmation" />
                     </div>
 
-                    <Button type="submit" class="mt-2 w-full bg-primary hover:bg-primary" tabindex="5"
+                    <Button type="submit" class="mt-2 w-full bg-primary hover:bg-primary w-full" tabindex="5"
                         :disabled="form.processing">
                         <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
                         Create account
