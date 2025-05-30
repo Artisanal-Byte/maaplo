@@ -79,7 +79,7 @@ const formatLabel = (key: string): string => {
                     </Link>
                 </div>
             </div>
-            <div class="flex flex-col lg:mt-10 gap-3 lg:bg-white lg:p-7 lg:rounded-lg lg:shadow-md p-0 lg:p-4 lg:border-t-4 lg:border-primary mt-5">
+            <div class="flex flex-col mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
                 <!-- <h1>Select Base Template</h1> -->
                 <div>
                     <label class="font-medium">Select Base Template</label>

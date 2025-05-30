@@ -49,11 +49,11 @@ const createDesignDetail = () => {
 
 <template>
     <AppLayout>
-        <div class="px-6 py-10 max-w-5xl mx-auto">
+        <div class="px-6 py-10 max-w-6xl mx-auto">
             <!-- Header -->
             <div class="flex justify-between items-center mb-10">
-                <h1 class="text-4xl font-extrabold text-primary flex items-center gap-3">
-                    <Icon icon="mdi:vector-square-edit" width="32" height="32" />
+                <h1 class="lg:text-3xl text-xl font-extrabold text-primary flex items-center gap-3">
+                    <Icon icon="mdi:vector-square-edit" width="28" height="28" />
                     Create Design Detail
                 </h1>
                 <Link :href="route('design-details.index')"
@@ -64,8 +64,8 @@ const createDesignDetail = () => {
             </div>
 
             <!-- Form -->
-            <div class="bg-white p-10 rounded-xl shadow-lg space-y-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-white lg:p-7 p-5 rounded-xl shadow-lg space-y-8 border-primary border-t-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <!-- Body Section -->
                     <div>
                         <label for="body_section" class="block text-lg font-semibold text-gray-800 mb-2">
