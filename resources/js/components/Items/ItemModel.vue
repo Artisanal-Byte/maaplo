@@ -114,28 +114,23 @@ const setShowReferenceDress = (val) => {
 const setIfUrgent = (val) => {
     data.is_urgent = val
 }
-// const setClothImage1 = (imgPath) => {
-//     alert('setClothImage1')
-//     console.log(imgPath);
-
-//     data.cloth_img1 = imgPath
-// }
-// const setClothImage2 = (imgPath) => {
-//     alert('setClothImage2')
-//     console.log(imgPath);
-//     data.cloth_img2 = imgPath
-// }
-const setPatternImage1 = (imgPath) => {
-    data.Pattern_img1 = imgPath
+const setClothImage1 = (file) => {
+    data.cloth_img1 = file
 }
-const setPatternImage2 = (imgPath) => {
-    data.Pattern_img2 = imgPath
+const setClothImage2 = (file) => {
+    data.cloth_img2 = file
+}
+const setPatternImage1 = (file) => {
+    data.Pattern_img1 = file
+}
+const setPatternImage2 = (file) => {
+    data.Pattern_img2 = file
 }
 const setTrialDate = (date) => {
     data.trial_dates = date
 }
-const setdDeliveryDate = (imgPath) => {
-    data.delivery_date = imgPath
+const setdDeliveryDate = (file) => {
+    data.delivery_date = file
 }
 
 // Trigger function for each input
@@ -256,8 +251,10 @@ watch(() => data.template_id, (newId) => {
                     </div>
                     <!-- Upload icon, only shown when toggle is ON -->
                     <div class="flex flex-col lg:flex-row justify-between gap-4">
-                        <ClothImage @setClothImage1="(file) => data.cloth_img1 = file"
-                            @setClothImage2="(file) => data.cloth_img2 = file" />
+                        <ClothImage @setClothImage1="setClothImage1" @setClothImage2="setClothImage2" />
+
+                        <!-- <ClothImage @setClothImage1="payload => emit('setClothImage1', payload)"
+                            @setClothImage2="payload => emit('setClothImage2', payload)" /> -->
                         <PatternImage @setPatternImage1="setPatternImage1" @setPatternImage2="setPatternImage2" />
                     </div>
                     <div class="">

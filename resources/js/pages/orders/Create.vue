@@ -10,6 +10,8 @@ import { router, useForm } from '@inertiajs/vue3';
 import Notes from '@/components/Items/Notes.vue';
 import Input from '@/components/InputWithLabel.vue';
 import { useOrder } from '@/composables/useOrderData';
+import { useOrderFormStore } from '@/stores/orderFormStore';
+
 const props = defineProps(["users", "customers", "itemTypes", "errors"])
 
 const showModal = ref(false);
@@ -18,7 +20,7 @@ const toast = new ToastMagic();
 const showDeletePopup = ref(false);
 const orderData = useOrder()
 let form = useForm(orderData);
-
+const formStore = useOrderFormStore()
 let customerMeasurements = ref({})
 const itemToDelete = ref(null);
 let totalAmmount = ref(null)
@@ -33,6 +35,8 @@ let setOrderItemsData = (data) => {
     console.log('cust measruments:', data);
     data.measurements = customerMeasurements.value
     form.order_items[i] = data
+    // hdbv
+    form.order_items.push(formStore.order_items)
     i++
 }
 
@@ -113,6 +117,7 @@ watch(() => form.advance_paid, (nPayVal) => {
     }
 })
 
+
 </script>
 
 <template>
@@ -133,8 +138,7 @@ watch(() => form.advance_paid, (nPayVal) => {
                     <Button :disabled="disabled" @click="create">Create Order</Button>
                 </div>
             </div>
-            <div
-                class="flex flex-col mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
+            <div class="flex flex-col mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
 
                 <h1 class="text-xl font-bold lg:mt-0 mt-4">Enter Details</h1>
 
