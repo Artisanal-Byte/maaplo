@@ -168,7 +168,7 @@ class CustomerController extends Controller
     public function edit($id)
     {
         $customer = Customer::findOrFail($id);
-
+        // dd($customer->base_measurements);
         // Get the customer photos (face image and full-body image)
         $photos = CustomerPhoto::where('customer_id', $customer->id)->get();
 
@@ -176,6 +176,15 @@ class CustomerController extends Controller
         $faceImage = $photos->where('label', 'Faceimage')->first();
         $fullBodyImage = $photos->where('label', 'Fullbody')->first();
 
+        $measurements = Measurement::all();
+        // dd($measurements);
+        $setData = [];
+        foreach ($measurements as $measurement) {
+            // dd($measurement->slug);
+            $setData[$measurement->slug] = null;
+        }
+
+        $hasOrder = $customer->orders()->exists();
         return Inertia::render('customer/Edit', [
             'customer' => array_merge(
                 $customer->toArray(),
@@ -188,6 +197,8 @@ class CustomerController extends Controller
                         : $customer->base_measurements,
                 ]
             ),
+            'isOrder' => $hasOrder,
+            'toAsk' => json_encode($setData, true),
             'notes' => $customer->notes ?? [],
         ]);
     }
@@ -207,6 +218,7 @@ class CustomerController extends Controller
             'half_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'full_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+        // dd($validated);
 
         try {
             // Update the base customer fields
