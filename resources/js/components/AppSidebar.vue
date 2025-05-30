@@ -143,7 +143,7 @@ const visible = ref(false);
                         <span
                             class="ml-2 font-inter font-medium text-[16px] leading-[16px] tracking-[0]">Preference</span>
                     </a>
-                    <a href="#" class="flex items-center p-2 rounded hover:bg-gray-100 text-[#FF0000]">
+                    <a :href="route('logout')" class="flex items-center p-2 rounded hover:bg-gray-100 text-[#FF0000]">
                         <Icon icon="lucide:log-out" width="18" height="18" />
                         <span class="ml-2 font-inter font-medium text-[16px] leading-[16px] tracking-[0]">Log Out</span>
                     </a>
