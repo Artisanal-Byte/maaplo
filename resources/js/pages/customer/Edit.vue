@@ -24,15 +24,35 @@ const props = defineProps<{
         payment_due?: number;
         face_image: string;
         full_body_image: string;
-    }
+    },
+    isOrder?: boolean;
+    toAsk?: string | null;
+
 }>();
+
+const parseToAsk = (): Record<string, string> | null => {
+    if (!props.toAsk) return null;
+
+    try {
+        const parsed = JSON.parse(props.toAsk);
+        // Remove keys with null or empty values
+        const filtered = Object.fromEntries(
+            Object.entries(parsed).filter(([_, v]) => v !== null && v !== "")
+        );
+        return Object.keys(filtered).length > 0 ? filtered : null;
+    } catch {
+        return null;
+    }
+};
 const form = useForm({
     name: props.customer.name,
     email: props.customer.email,
     phone: props.customer.phone,
     address: props.customer.address,
     dob: props.customer.dob,
-    measurements: props.customer.measurements ?? null,
+    measurements: props.customer.measurements && Object.values(props.customer.measurements).some(v => v !== null)
+        ? props.customer.measurements
+        : parseToAsk(),
     gender: props.customer.gender,
     payment_due: props.customer.payment_due,
     half_image: null,
@@ -57,7 +77,6 @@ const fullBodyImageUrl = computed(() => {
         ? fullBodyImagePreview.value
         : `/storage/${props.customer.full_body_image?.replace(/^storage\//, '')}`;
 });
-
 
 const handleFaceImageChange = (event: Event) => {
     const file = (event.target as HTMLInputElement)?.files?.[0];
@@ -102,27 +121,6 @@ const updateCustomer = () => {
     });
 };
 
-// const notes = ref([{ label: '', text: '' }]);
-const noteErrors = ref<string | null>(null);
-
-
-const validateNotes = () => {
-    if (!form.notes || form.notes.length === 0) {
-        noteErrors.value = null;
-        return true;
-    }
-
-    const isValid = form.notes.every(note =>
-        typeof note.label === 'string' &&
-        typeof note.text === 'string' &&
-        note.label.trim() !== '' &&
-        note.text.trim() !== ''
-    );
-
-    noteErrors.value = isValid ? null : 'All notes must have a label and text.';
-    return isValid;
-};
-
 const phoneError = computed(() => {
     if (!form.phone) return '';
     if (!/^\d+$/.test(form.phone)) {
@@ -145,9 +143,6 @@ const openImageModal = (url: string) => {
 const closeImageModal = () => {
     showImageModal.value = false;
 };
-
-// Notes
-
 
 </script>
 
@@ -236,7 +231,8 @@ const closeImageModal = () => {
                 <!-- Measurements -->
                 <div>
                     <!-- <label class="block font-[Lato] text-[18px] leading-[16px] tracking-[0] mb-2">Measurements</label> -->
-                    <Measurements class="mb-4" v-model:measurements="form.measurements" :error="errors.measurements"/>
+                    <Measurements class="mb-4" v-model:measurements="form.measurements" :error="errors.measurements"
+                        :toAsk="props.toAsk" :isOrder="props.isOrder" />
                     <div v-if="errors.measurements" class="text-red-600 text-sm mt-2">{{ errors.measurements }}</div>
                 </div>
 
