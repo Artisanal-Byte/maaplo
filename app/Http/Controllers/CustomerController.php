@@ -79,6 +79,7 @@ class CustomerController extends Controller
             'user_id' => 'required|exists:users,id',
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f,o',
+            'country_code' => ['nullable', 'string', 'regex:/^\+\d{1,4}$/'],
             'phone' => 'required|regex:/^[0-9]{10}$/',
             'email' => 'nullable|email|unique:customers,email',
             'address' => 'required|string|max:255',
@@ -88,6 +89,7 @@ class CustomerController extends Controller
             'half_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'full_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+        // dd($validated);
         try {
             DB::beginTransaction();
             $username = preg_replace('/\s+/', '_', strtolower($user->name));
@@ -99,6 +101,7 @@ class CustomerController extends Controller
                 'user_id' => $user_id,
                 'name' => $validated['name'],
                 'gender' => $validated['gender'],
+                'country_code' => $validated['country_code'],
                 'phone' => $validated['phone'],
                 'email' => $validated['email'],
                 'base_measurements' => json_encode($validated['measurements']),
@@ -205,11 +208,13 @@ class CustomerController extends Controller
     // Update the specified customer in storage
     public function update(Request $request, $id)
     {
+        // dd($request);
         $customer = Customer::findOrFail($id);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'nullable|email|unique:customers,email,' . $id,
-            'phone' => 'required|max:10',
+            'country_code' => ['nullable', 'string', 'regex:/^\+\d{1,4}$/'],
+            'phone' => 'required|regex:/^[0-9]{10}$/',
             'gender' => 'required|in:m,f,o',
             'dob' => 'nullable|date',
             'measurements' => 'nullable|array',
@@ -228,6 +233,7 @@ class CustomerController extends Controller
                 'gender' => $validated['gender'],
                 'dob' => $validated['dob'],
                 'base_measurements' => json_encode($validated['measurements']),
+                'country_code' => $validated['country_code'],
                 'phone' => $validated['phone'],
                 'notes' => json_encode($validated['notes']),
                 'address' => json_encode(['value' => $validated['address']]), // keep consistent format

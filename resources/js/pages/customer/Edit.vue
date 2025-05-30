@@ -8,6 +8,7 @@ import ImageModal from '@/components/ImageModal.vue';
 import Input from '@/components/InputWithLabel.vue';
 import Notes from '@/components/Items/Notes.vue';
 import Measurements from '@/components/Items/Measurements.vue';
+import MobileCountryCode from '@/components/MobileCountryCode.vue';
 const toast = new ToastMagic();
 const props = defineProps<{
     errors: Record<string, string>,
@@ -15,6 +16,7 @@ const props = defineProps<{
         id: number;
         name: string;
         email: string;
+        country_code: string;
         phone: string;
         dob: string;
         measurements: Record<string, string> | null;
@@ -29,7 +31,7 @@ const props = defineProps<{
     toAsk?: string | null;
 
 }>();
-
+console.log('Customer Data:', props.customer.phone);
 const parseToAsk = (): Record<string, string> | null => {
     if (!props.toAsk) return null;
 
@@ -44,12 +46,15 @@ const parseToAsk = (): Record<string, string> | null => {
         return null;
     }
 };
+
+
 const form = useForm({
     name: props.customer.name,
     email: props.customer.email,
     phone: props.customer.phone,
     address: props.customer.address,
     dob: props.customer.dob,
+    country_code: props.customer.country_code,
     measurements: props.customer.measurements && Object.values(props.customer.measurements).some(v => v !== null)
         ? props.customer.measurements
         : parseToAsk(),
@@ -176,12 +181,20 @@ const closeImageModal = () => {
 
                 <!-- Contact Number -->
                 <div>
-                    <Input type="text" v-model="form.phone" label="Contact Number" :required="true"
-                        :error="errors.phone" color="grayBorder" placeholder="Enter Phone Number">
-                    <template #icon>
-                        <Icon icon="ic:round-phone" width="20" height="20" />
-                    </template>
-                    </Input>
+                    <label class="font-medium block mb-1">
+                        Contact Number <span class="text-red-500">*</span>
+                    </label>
+                    <div class="flex">
+                        <!-- Use MobileCountryCode component here -->
+                        <MobileCountryCode v-model="form.country_code" :countries="countries" />
+
+                        <Input type="text" v-model="form.phone" label="Contact Number" :required="true"
+                            :error="errors.phone" color="grayBorder" placeholder="Enter Phone Number">
+                        <template #icon>
+                            <Icon icon="ic:round-phone" width="20" height="20" />
+                        </template>
+                        </Input>
+                    </div>
                     <div v-if="phoneError" class="text-red-600 text-sm mt-1">{{ phoneError }}</div>
                 </div>
 
@@ -233,7 +246,8 @@ const closeImageModal = () => {
                     <!-- <label class="block font-[Lato] text-[18px] leading-[16px] tracking-[0] mb-2">Measurements</label> -->
                     <Measurements class="mb-4" v-model:measurements="form.measurements" :error="errors.measurements"
                         :toAsk="props.toAsk" :isOrder="props.isOrder" />
-                    <div v-if="errors.measurements" class="text-red-600 text-sm mt-2">{{ errors.measurements }}</div>
+                    <div v-if="errors.measurements" class="text-red-600 text-sm mt-2">{{ errors.measurements }}
+                    </div>
                 </div>
 
                 <!-- Notes Section -->

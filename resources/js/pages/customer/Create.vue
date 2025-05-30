@@ -8,6 +8,7 @@ import Input from '@/components/InputWithLabel.vue';
 import Notes from '@/components/Items/Notes.vue';
 import Measurements from '@/components/Items/Measurements.vue';
 import CustomerLimitPopup from '@/components/CustomerLimitPopup.vue';
+import MobileCountryCode from '@/components/MobileCountryCode.vue';
 const customerMeasurements = ref({});
 const props = defineProps<{
     errors: Record<string, string>,
@@ -30,9 +31,10 @@ const form = reactive({
     half_image: '',
     full_image: '',
     half_image_preview: '',
+    country_code: '+91',
     full_image_preview: ''
 });
-
+console.log('Form:', form);
 // Notes
 const notes = ref([{ label: '', text: '' }]);
 const showLimitModal = ref(false);
@@ -97,8 +99,7 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                     </Link>
                 </div>
             </div>
-            <div
-                class="mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
+            <div class="mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
                 <h1 class="text-xl font-bold lg:mt-0 mt-2">Enter Details</h1>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-5 mt-3">
                     <!-- Customer Name -->
@@ -114,13 +115,24 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
 
                     <!-- Contact Number -->
                     <div>
-                        <Input type="tel" v-model="form.phone" label="Contact Number" :required="true"
-                            :error="errors.phone" color="grayBorder" placeholder="Enter Phone Number">
-                        <template #icon>
-                            <Icon icon="ic:round-phone" width="20" height="20" />
-                        </template>
-                        </Input>
+                        <label class="font-medium block mb-1">
+                            Contact Number <span class="text-red-500">*</span>
+                        </label>
+                        <div class="flex">
+                            <!-- Use MobileCountryCode component here -->
+                            <MobileCountryCode v-model="form.country_code" :countries="countries" />
+
+                            <!-- Phone Input -->
+                            <Input type="tel" v-model="form.phone" class="rounded-l-none"
+                                placeholder="Enter Phone Number" :error="errors.phone" :required="true"
+                                color="grayBorder">
+                            <template #icon>
+                                <Icon icon="ic:round-phone" width="20" height="20" />
+                            </template>
+                            </Input>
+                        </div>
                     </div>
+
 
                     <!-- Email -->
                     <div>

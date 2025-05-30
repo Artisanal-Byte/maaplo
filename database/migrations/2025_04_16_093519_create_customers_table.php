@@ -12,16 +12,17 @@ return new class extends Migration {
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->nullable(false); // Nullable for optional user association
+            $table->unsignedBigInteger('user_id')->nullable(false);
             $table->string('name');
-            $table->enum('gender', ["m", "f", "o"]); // Define possible values for gender
+            $table->enum('gender', ["m", "f", "o"]);
+            $table->string('country_code')->nullable();
             $table->string('phone');
             $table->string('email')->nullable()->unique();
             $table->date('dob')->nullable();
             $table->json('address');
-            $table->json('base_measurements')->nullable(); // Nullable for optional base measurements
+            $table->json('base_measurements')->nullable();
             $table->json('notes');
-            $table->timestamps(); // Automatically creates created_at and updated_at
+            $table->timestamps();
             $table->softDeletes();
         });
     }

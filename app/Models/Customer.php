@@ -18,6 +18,7 @@ class Customer extends Model
         'name',
         'gender',
         'email',
+        'country_code',
         'phone',
         'base_measurements',
         'address',
