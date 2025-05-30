@@ -12,7 +12,8 @@ const customerMeasurements = ref({});
 const props = defineProps<{
     errors: Record<string, string>,
     user_id: number,
-    customer_limit_exceeded: boolean
+    customer_limit_exceeded: boolean,
+    measurements
 }>();
 
 const toast = new ToastMagic();
@@ -82,7 +83,8 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
 
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex justify-between items-center">
-                <h1 class="text-[24px] text-primary leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
+                <h1
+                    class="text-[24px] text-primary leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                     New Customer
                 </h1>
                 <div class="text-gray-600">
@@ -92,51 +94,53 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                     </Link>
                 </div>
             </div>
-            <div class="flex flex-col lg:mt-5 gap-3 rounded-lg lg:border lg:border-primary p-0 lg:p-4">
+            <div
+                class="lg:mt-5 gap-3 lg:bg-white lg:p-7 lg:rounded-lg lg:shadow-md p-0 lg:p-4 lg:border-t-4 lg:border-primary">
                 <h1 class="text-xl font-bold lg:mt-0 mt-6">Enter Details</h1>
-                <!-- Customer Name -->
-                <div>
-                    <Input type="text" v-model="form.name" label="Customer Name" color="grayBorder" :required="true"
-                        :error="errors.name" placeholder="Enter Customer Name">
-                    <!-- Icon inside input placeholder -->
-                    <template #icon>
-                        <Icon icon="bitcoin-icons:contacts-filled" width="24" height="24" />
-                    </template>
-                    </Input>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-5 mt-3">
+                    <!-- Customer Name -->
+                    <div>
+                        <Input type="text" v-model="form.name" label="Customer Name" color="grayBorder" :required="true"
+                            :error="errors.name" placeholder="Enter Customer Name">
+                        <!-- Icon inside input placeholder -->
+                        <template #icon>
+                            <Icon icon="bitcoin-icons:contacts-filled" width="24" height="24" />
+                        </template>
+                        </Input>
+                    </div>
+
+                    <!-- Contact Number -->
+                    <div>
+                        <Input type="tel" v-model="form.phone" label="Contact Number" :required="true"
+                            :error="errors.phone" color="grayBorder" placeholder="Enter Phone Number">
+                        <template #icon>
+                            <Icon icon="ic:round-phone" width="20" height="20" />
+                        </template>
+                        </Input>
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <Input type="email" v-model="form.email" label="Email" color="grayBorder" :error="errors.email"
+                            placeholder="example@mail.com">
+                        <template #icon>
+                            <Icon icon="ic:round-email" width="20" height="20" />
+                        </template>
+                        </Input>
+                    </div>
+
+                    <!-- Date of Birth -->
+                    <div>
+                        <Input type="date" v-model="form.dob" :error="errors.dob" label="Date of Birth"
+                            color="grayBorder">
+                        <template #icon>
+                            <Icon icon="material-symbols:date-range-outline-rounded" width="20" height="20" />
+                        </template>
+                        </Input>
+                    </div>
                 </div>
-
-
-                <!-- Contact Number -->
-                <div>
-                    <Input type="tel" v-model="form.phone" label="Contact Number" :required="true" :error="errors.phone"
-                        color="grayBorder" placeholder="Enter Phone Number">
-                    <template #icon>
-                        <Icon icon="ic:round-phone" width="20" height="20" />
-                    </template>
-                    </Input>
-                </div>
-
-                <!-- Email -->
-                <div>
-                    <Input type="email" v-model="form.email" label="Email" color="grayBorder" :error="errors.email"
-                        placeholder="example@mail.com">
-                    <template #icon>
-                        <Icon icon="ic:round-email" width="20" height="20" />
-                    </template>
-                    </Input>
-                </div>
-
-                <!-- Date of Birth -->
-                <div>
-                    <Input type="date" v-model="form.dob" :error="errors.dob" label="Date of Birth" color="grayBorder">
-                    <template #icon>
-                        <Icon icon="material-symbols:date-range-outline-rounded" width="20" height="20" />
-                    </template>
-                    </Input>
-                </div>
-
                 <!-- Address -->
-                <div class="md:col-span-2">
+                <div class="md:col-span-2 mt-3">
                     <!-- <label class="bblock font-[Lato] text-[18px] leading-[16px] tracking-[0] mb-1">Address <span
                             class="text-red-500">*</span></label> -->
                     <Input type="textarea" v-model="form.address" color="grayBorder" :required="true" label="Address"
@@ -144,8 +148,8 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                 </div>
 
                 <!-- Gender -->
-                <div class="flex">
-                    <div class="mr-3">
+                <div class="flex mt-5">
+                    <div class="mr-3 ">
                         <label class="font-medium">Gender <span class="text-red-500">*</span></label>
                     </div>
                     <div class="flex flex-row items-center space-x-6 text-black">
@@ -157,20 +161,21 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                 <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.gender }}</div>
 
                 <!-- Measurements -->
-                <div>
+                <div class="mt-5">
                     <!-- <label class="block font-[Lato] text-[18px] leading-[16px] tracking-[0] mb-2">Measurements</label> -->
-                    <Measurements v-model:measurements="form.measurements"  :error="errors.measurements"/>
+                    <Measurements v-model:measurements="form.measurements" :error="errors.measurements"
+                        :toAsk="measurements" />
                     <div v-if="errors.measurements" class="text-red-600 text-sm mt-2">{{ errors.measurements }}</div>
                 </div>
 
                 <!-- Notes Section -->
-                <div>
+                <div class="mt-3">
                     <Notes v-model:notes="notes" />
                 </div>
 
                 <!-- Upload Section -->
                 <div>
-                    <h2 class="block font-medium leading-[16px] tracking-[0] mb-5 ">Photos <span
+                    <h2 class="block font-medium leading-[16px] tracking-[0] mb-5 mt-3 ">Photos <span
                             class="text-red-500">*</span></h2>
                     <div class="flex flex-row justify-center item-center gap-6">
 
@@ -214,7 +219,7 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
 
                 <!-- Submit Button (Full Width Below) -->
                 <Button @click="submitForm" :color="'primary'" :padding="'md'" :rounded="'full'" :textSize="'sm'"
-                    class="lg:mt-5 mt-3">
+                    class="lg:mt-5 mt-3 w-full" >
                     Save & Continue
                 </Button>
             </div>

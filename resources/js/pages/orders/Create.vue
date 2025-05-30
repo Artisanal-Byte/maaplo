@@ -13,6 +13,7 @@ import { useOrder } from '@/composables/useOrderData';
 const props = defineProps(["users", "customers", "itemTypes", "errors"])
 
 
+
 const showModal = ref(false);
 const disabled = ref(false);
 const toast = new ToastMagic();
@@ -20,21 +21,30 @@ const showDeletePopup = ref(false);
 const orderData = useOrder()
 let form = useForm(orderData);
 
+let customerMeasurements = ref({})
 const itemToDelete = ref(null);
-
+let totalAmmount = ref(null)
 // set data which is set by child components 
 let setOrderData = (data) => {
     form = data
 }
 
+
 let i = 0
 
 let setOrderItemsData = (data) => {
+    console.log('cust measruments:', data);
+    data.measurements = customerMeasurements.value
     form.order_items[i] = data
     i++
 }
 
 let create = () => {
+    if (form.advance_paid > form.total_amount) {
+        alert("advance paid can't be greater than total payment!");
+        form.advance_paid = null
+        return
+    }
     form.post(route('orders.store'), {
         onSuccess: () => {
             toast.success('Order Created Successfully');
@@ -50,10 +60,12 @@ let create = () => {
 watch(form.order_items, (items) => {
     let t = 0
     items.forEach(item => {
-        t += item.cost
+        t += item.item_cost
     });
-    form.total_amount = t
+    totalAmmount.value = t
+    form.total_amount = t - form.advance_paid
 })
+
 const closeModel = () => {
     showModal.value = false
 }
@@ -81,6 +93,27 @@ const proceedDelete = () => {
     });
 };
 
+const setMeasurements = (m) => {
+    customerMeasurements.value = m
+}
+
+const openItemModel = () => {
+    if (form.customer_id == null) {
+        alert('Please Select a customer')
+        return
+    }
+    showModal.value = true
+}
+
+
+
+watch(() => form.advance_paid, (nPayVal) => {
+    if (nPayVal == null || nPayVal == 0) {
+        form.total_amount = totalAmmount.value
+    } else {
+        form.total_amount = totalAmmount.value - nPayVal
+    }
+})
 
 </script>
 
@@ -93,27 +126,27 @@ const proceedDelete = () => {
                         class="text-[24px] text-primary mt-3 leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                         New Order
                     </h1>
-                    <pre>
+                    <!-- <pre>
                         {{ form }}
-                    </pre>
+                    </pre> -->
                 </div>
                 <div class="self-center">
                     <Button :disabled="disabled" @click="create">Create Order</Button>
                 </div>
             </div>
-            <div class="flex flex-col lg:mt-5 rounded-lg lg:border lg:border-primary p-0 lg:p-4">
+            <div class="flex flex-col lg:mt-5 gap-3 lg:bg-white lg:p-7 lg:rounded-lg lg:shadow-md p-0 lg:p-4 lg:border-t-4 lg:border-primary">
 
-                <h1 class="text-xl font-bold lg:mb-4 mb-4 lg:mt-0 mt-4">Enter Details</h1>
+                <h1 class="text-xl font-bold  lg:mt-0 mt-4">Enter Details</h1>
 
                 <!-- selected customer list -->
-                <CustomerListDropdown :customers="customers" :errors="errors" :form="form"
-                    @setOrderData="setOrderData" />
+                <CustomerListDropdown :customers="customers" :errors="errors" :form="form" @setOrderData="setOrderData"
+                    @setMeasurements="setMeasurements" />
 
                 <!-- Delivery Date -->
                 <DateIcon :form="form" :errors="errors" @setOrderData="setOrderData" />
 
                 <!-- items -->
-                <div class="mt-4">
+                <div class="mt-2">
                     <div>
                         <div class="flex flex-row justify-between items-center">
                             <div>
@@ -124,7 +157,7 @@ const proceedDelete = () => {
                             <!-- Add Icon -->
                             <div class="relative group">
                                 <!-- Add Icon -->
-                                <div @click="showModal = true" class="cursor-pointer inline-block">
+                                <div @click="openItemModel" class="cursor-pointer inline-block">
                                     <Icon icon="material-symbols:add-rounded" width="20" height="20" />
                                 </div>
 
@@ -143,7 +176,7 @@ const proceedDelete = () => {
                         <!-- Modal Content -->
                         <ItemModel :errors="form.errors?.order_items" :itemIndex="i" :showModal="showModal"
                             @close="closeModel" :form="form.order_items" @setOrderItemsData="setOrderItemsData"
-                            :itemTypes="itemTypes" :measurements="customers.base_measurements ?? []" />
+                            :itemTypes="itemTypes" :measurements="customerMeasurements ?? []" />
                         <p class="text-red-600 text-sm">
                             {{ form.errors.order_items }}
                         </p>

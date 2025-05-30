@@ -3,10 +3,30 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Chart from '@/components/Chart.vue';
-import { Link } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 import { ref } from 'vue';
 const showDropdown = ref(false);
 const selectedOption = ref('Yesterday'); // Default text inside input
+
+const props = defineProps({
+    showOrganizationPopup: Boolean,
+    organizationName: String,
+});
+
+const showPopup = ref(props.showOrganizationPopup);
+
+function closePopup() {
+    showPopup.value = false;
+}
+function noOrganization() {
+    // Send a request to set `hash_organization` to false
+    router.post('/organization/no-organization', {}, {
+        onSuccess: () => {
+            showPopup.value = false;
+        }
+    });
+}
+
 
 function toggleDropdown() {
     showDropdown.value = !showDropdown.value;
@@ -23,12 +43,46 @@ const activeTab = ref('order')
 
     <Head title="Dashboard" />
     <AppLayout>
+        <!-- Alert-style Notification -->
+        <div v-if="showPopup"
+            class=" fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-md bg-white border-t-4 border-yellow-500 text-yellow-800 rounded-lg shadow-xl px-4 py-3 flex flex-col items-start items-center justify-between animate-slide-in">
+
+            <div class="flex items-start gap-4">
+                <div class="bg-yellow-100 p-2 rounded-full">
+                    <Icon icon="fluent:info-24-filled" class="text-yellow-500" width="26" height="26" />
+                </div>
+                <div>
+                    <p class="text-sm text-gray-800 mt-1">Provide your organization information to continue.</p>
+                </div>
+            </div>
+
+            <div class="flex gap-2 ml-auto mt-3 sm:mt-0">
+                <button @click="closePopup"
+                    class="px-3 py-1.5 text-sm font-medium bg-gray-300 hover:bg-gray-200 text-gray-700 rounded-md transition">
+                    Dismiss
+                </button>
+                <button @click="noOrganization"
+                    class="px-3 py-1.5 text-sm font-medium bg-yellow-500 hover:bg-yellow-600 text-white rounded-md transition">
+                    I don't have a Organization
+                </button>
+            </div>
+        </div>
+
         <div class="mx-auto max-w-7xl px-4 py-8 w-full">
-            <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">Total Orders
-                : 0
-            </h1>
+            <div class="flex justify-between items-center mb-6">
+
+                <h2
+                    class="text-[20px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence] whitespace-nowrap">
+                    Total Orders: 0
+                </h2>
+                <h1
+                    class="text-[20px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence] text-center lg:w-full">
+                    {{ props.organizationName }}
+                </h1>
+            </div>
+
             <!-- Graph Section Header with Filter Dropdown -->
-            <div class="flex flex-row justify-between mt-8">
+            <div class="flex flex-row justify-between">
                 <div>
                     <!-- <h1 class="font-normal text-[20px] leading-[16px] tracking-[0] font-[Convergence]">Graph</h1> -->
                 </div>
@@ -184,9 +238,8 @@ const activeTab = ref('order')
                         class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
                             <Link :href="route('customers.index')" class="flex flex-col items-center gap-2">
-                            <div>
-                                <Icon icon="garden:customer-lists-fill-26" width="32" height="32"
-                                    class="text-primary" />
+                            <div class="bg-primary p-3 rounded-full">
+                                <Icon icon="garden:customer-lists-fill-26" width="32" height="32" class="text-white" />
                             </div>
                             <div class="relative z-10 text-primary font-[Lato] font-medium text-[24px] tracking-[0]">
                                 Customer List
@@ -199,10 +252,9 @@ const activeTab = ref('order')
                     <div
                         class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
-                            <Link :href="route('customers.index')" class="flex flex-col items-center gap-2">
-                            <div>
-                                <Icon icon="fe:list-order" width="32" height="32"
-                                    class="text-primary" />
+                            <Link :href="route('orders.index')" class="flex flex-col items-center gap-2">
+                            <div class="bg-primary p-3 rounded-full">
+                                <Icon icon="fe:list-order" width="32" height="32" class="text-white" />
                             </div>
                             <div class="relative z-10 text-primary font-[Lato] font-medium text-[24px] tracking-[0]">
                                 Order List
@@ -218,3 +270,18 @@ const activeTab = ref('order')
 
     </AppLayout>
 </template>
+<style scoped>
+@keyframes slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+.animate-slide-in {
+  animation: slide-in 0.4s ease-out;
+}
+</style>

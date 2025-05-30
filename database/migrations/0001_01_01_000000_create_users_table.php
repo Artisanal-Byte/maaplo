@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->string('address')->nullable();
             $table->string('organization_logo')->nullable();
             $table->string('avatar')->nullable();
+            $table->boolean('hash_organization')->default(true);
             $table->string('thumbnail_logo')->nullable();
             $table->enum('subscription_plan', ['free'])->default('free');
             $table->boolean('status')->default(true);

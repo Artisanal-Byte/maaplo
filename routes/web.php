@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DesignDetailsController;
 use App\Http\Controllers\ItemTemplateController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
@@ -14,10 +16,13 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
 
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('dashboard', function () {
+//     return Inertia::render('Dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('dashboard', DashboardController::class)
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 Route::middleware(["auth", "verified"])->group(function () {
 
     //-- Make resource Route For Orders Process
@@ -31,11 +36,12 @@ Route::middleware(["auth", "verified"])->group(function () {
         'destroy'
     );
 
-
+    Route::post('/organization/no-organization', [OrganizationController::class, 'setNoOrganization']);
     Route::resource('customers', CustomerController::class);
     // Route::resource('orders', OrderController::class)->names(["index"]);
     Route::resource('items', TemplateController::class);
     Route::resource('user', UsersController::class);
+    Route::resource('organization', OrganizationController::class);
     //  Route::resource('profile', ProfileController::class);
     Route::post('/admin/users/{id}/toggle-status', [UsersController::class, 'toggleStatus'])->name('admin.toggleStatus');
     Route::resource('design-details', DesignDetailsController::class);
