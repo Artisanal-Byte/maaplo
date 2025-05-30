@@ -65,7 +65,7 @@ const createUser = () => {
             </div>
 
             <!-- Form -->
-            <div class="bg-white p-8 rounded-lg shadow-md space-y-8">
+            <div class="mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
                 <!-- Section: User Info -->
                 <div>
                     <h2 class="text-lg font-semibold text-gray-700 mb-4">User Information</h2>
@@ -104,7 +104,7 @@ const createUser = () => {
 
                 <!-- Section: Organization Info -->
                 <div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
                         <Input type="textarea" v-model="form.address" label="Address" :error="form.errors.address"
                             :required="true" placeholder="Enter Address" />
                         <Input type="textarea" v-model="form.organization_name" label="Organization Name"
@@ -146,7 +146,7 @@ const createUser = () => {
                 </div>
 
                 <!-- Section: Logo Upload & Status -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mt-5">
                     <!-- Logo Upload with Preview -->
                     <div>
                         <h2 class="text-lg font-semibold text-gray-800 mb-3">Add Organization Logo</h2>
@@ -192,7 +192,7 @@ const createUser = () => {
                 </div>
 
                 <!-- Submit Button -->
-                <div class="flex w-full">
+                <div class="flex w-full mt-5">
                     <Button @click="createUser" :color="'primary'" :padding="'md'" :rounded="'full'" :textSize="'sm'"
                         class="w-full flex justify-center items-center hover:scale-105 transition-transform duration-200">
                         <Icon icon="mdi:check-bold" width="20" height="30" class="mr-2" />

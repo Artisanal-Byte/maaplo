@@ -50,45 +50,48 @@ const createOrganization = () => {
                     <Icon icon="mdi:domain-plus" width="28" height="28" />
                     Create Organization
                 </h1>
-                <Link :href="route('organization.index')" class="flex items-center gap-2 text-gray-600 hover:text-black">
-                    <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
-                    <span class="text-md font-medium">Back</span>
+                <Link :href="route('organization.index')"
+                    class="flex items-center gap-2 text-gray-600 hover:text-black">
+                <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
+                <span class="text-md font-medium">Back</span>
                 </Link>
             </div>
 
             <!-- Form -->
-            <div class="bg-white p-8 rounded-lg shadow-md space-y-8">
+            <div class="lg:mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Organization Name -->
                     <Input v-model="form.organization_name" label="Organization Name"
                         placeholder="Enter Organization Name" :error="form.errors.organization_name" required>
-                        <template #icon>
-                            <Icon icon="ic:outline-business" width="24" height="24" />
-                        </template>
+                    <template #icon>
+                        <Icon icon="ic:outline-business" width="24" height="24" />
+                    </template>
                     </Input>
 
                     <!-- GST Number -->
                     <Input v-model="form.gst_number" label="GST Number" placeholder="Enter GST Number"
                         :error="form.errors.gst_number">
-                        <template #icon>
-                            <Icon icon="mdi:certificate-outline" width="24" height="24" />
-                        </template>
+                    <template #icon>
+                        <Icon icon="mdi:certificate-outline" width="24" height="24" />
+                    </template>
                     </Input>
-
-                    <!-- Address -->
-                    <Input v-model="form.address" label="Address" placeholder="Enter Address"
+                </div>
+                <!-- Address -->
+                <div class="mt-6">
+                    <Input type="textarea" v-model="form.address" label="Address" placeholder="Enter Address"
                         :error="form.errors.address">
-                        <template #icon>
-                            <Icon icon="mdi:map-marker-outline" width="24" height="24" />
-                        </template>
+                    <template #icon>
+                        <Icon icon="mdi:map-marker-outline" width="24" height="24" />
+                    </template>
                     </Input>
                 </div>
 
                 <!-- Logo Upload -->
                 <div>
-                    <label class="block font-medium text-gray-700 mb-2">Organization Logo</label>
+                    <label class="block font-medium text-gray-700 mb-2 mt-5">Organization Logo</label>
                     <div class="mb-4">
-                        <div class="w-full h-64 bg-gray-100 border rounded flex items-center justify-center overflow-hidden">
+                        <div
+                            class="w-full h-64 bg-gray-100 border rounded flex items-center justify-center overflow-hidden">
                             <img :src="logoUrl || '/images/organization.png'" alt="Logo"
                                 class="object-contain h-full w-full" />
                         </div>
@@ -101,7 +104,7 @@ const createOrganization = () => {
                 </div>
 
                 <!-- Submit Button -->
-                <div class="flex w-full">
+                <div class="flex w-full mt-8">
                     <Button @click="createOrganization" :disabled="form.processing" :color="'primary'" :padding="'md'"
                         :rounded="'full'" :textSize="'sm'"
                         class="w-full flex justify-center items-center hover:scale-105 transition-transform duration-200">
