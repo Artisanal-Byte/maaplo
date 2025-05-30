@@ -98,8 +98,8 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                 </div>
             </div>
             <div
-                class="lg:mt-10 gap-3 lg:bg-white lg:p-7 lg:rounded-lg lg:shadow-md p-0 lg:p-4 lg:border-t-4 lg:border-primary">
-                <h1 class="text-xl font-bold lg:mt-0 mt-6">Enter Details</h1>
+                class="mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
+                <h1 class="text-xl font-bold lg:mt-0 mt-2">Enter Details</h1>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-5 mt-3">
                     <!-- Customer Name -->
                     <div>
