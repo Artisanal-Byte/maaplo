@@ -32,7 +32,6 @@ const props = defineProps<{
     toAsk?: string | null;
 
 }>();
-// console.log('countries',props.countries);
 const countries = props.countries;
 const parseToAsk = (): Record<string, string> | null => {
     if (!props.toAsk) return null;
@@ -68,6 +67,7 @@ const form = useForm({
         ? props.customer.notes
         : [{ label: '', text: '' }],
 });
+
 // Image preview refs
 const faceImagePreview = ref<string | null>(null);
 const fullBodyImagePreview = ref<string | null>(null);
