@@ -1,34 +1,23 @@
-<script setup lang="ts">
+<script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
 import SearchSelect from '@/components/SearchSelect.vue';
 import { nextTick, ref } from 'vue';
+
 const toast = new ToastMagic();
 
-const props = defineProps<{
-    errors: Record<string, string>,
-    item: {
-        id: number;
-        name: string;
-        svg_logo: string;
-        gender: string;
-        body_part: string;
-    },
-    designDetails: {
-        front_neck_design: boolean,
-        back_neck_design: boolean,
-        sleeve_type: boolean
-    },
-    publicTemplates: Array<{ id: number; name: string }>,
-    privateTemplates: Array<{ id: number; name: string }>,
-    measurements: {
-        all: Array<{ id: number, slug: string }>,
-        selected: string[], measurements_logo: string
-    }
-}>();
+const props = defineProps({
+    errors: Object,
+    item: Object,
+    designDetails: Object,
+    publicTemplates: Array,
+    privateTemplates: Array,
+    measurements: Object
+});
+
 const selectedTemplate = ref(null);
 
 const form = useForm({
@@ -46,7 +35,7 @@ const form = useForm({
     _method: 'put',
 });
 
-const toggleMeasurement = (label: string) => {
+const toggleMeasurement = (label) => {
     const updatedMeasurements = [...form.required_measurements];
     const index = updatedMeasurements.indexOf(label);
     if (index > -1) {
@@ -77,28 +66,26 @@ const updateTemplate = () => {
         }
     });
 };
-const fillFormFromTemplate = (selectedTemplate: any) => {
 
+const fillFormFromTemplate = (selectedTemplate) => {
     form.name = selectedTemplate.name || '';
     form.svg_logo = selectedTemplate.svg_logo || '';
     form.gender = selectedTemplate.gender === 'Male' ? 'm' : (selectedTemplate.gender === 'Female' ? 'f' : '');
     form.body_part = selectedTemplate.body_part === 'Upper' ? 'upper' : (selectedTemplate.body_part === 'Lower' ? 'lower' : '');
 
-    // If template.measurements is an array of objects, map them to slugs
     form.required_measurements = Array.isArray(selectedTemplate.measurements)
-        ? selectedTemplate.measurements.map((m: any) => m.slug)
+        ? selectedTemplate.measurements.map(m => m.slug)
         : [];
-
 };
 
-const formatSlug = (slug: string): string => {
+const formatSlug = (slug) => {
     return slug
         .split('_')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 };
 
-const formatLabel = (key: string): string => {
+const formatLabel = (key) => {
     return key
         .split('_')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
@@ -106,9 +93,8 @@ const formatLabel = (key: string): string => {
 };
 </script>
 
-<template>
 
-    <Head title="Template-Edit" />
+<template>
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex justify-between items-center mb-6">
