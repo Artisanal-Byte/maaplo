@@ -2,7 +2,7 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import UserTemplateList from '@/components/UserTemplateList.vue';
 import { ref, computed } from 'vue';
-import { router, Link, usePage } from '@inertiajs/vue3';
+import { router, Link, usePage, Head } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
 
@@ -37,6 +37,7 @@ const user = computed(() => page.props.auth.user);
 </script>
 
 <template>
+    <Head title="Users" />
     <AppLayout>
         <div class="max-w-7xl mx-auto py-8 px-4">
             <!-- Header Section -->

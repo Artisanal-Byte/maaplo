@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
 import { defineProps } from 'vue';
-import { useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import { Link } from '@inertiajs/vue3';
 import Button from '@/components/Button.vue';
@@ -63,6 +63,7 @@ const updateUser = () => {
 </script>
 
 <template>
+    <Head title="User-Edit" />
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <!-- Header -->
