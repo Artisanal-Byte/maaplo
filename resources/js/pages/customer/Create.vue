@@ -74,6 +74,13 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
     form[previewField] = file ? URL.createObjectURL(file) : '';
 };
 
+const onPhoneInput = (event: Event) => {
+    const input = event.target as HTMLInputElement;
+    // Remove non-numeric characters and trim to max 10 digits
+    input.value = input.value.replace(/\D/g, '').slice(0, 10);
+    form.phone = input.value;
+};
+
 </script>
 
 <template>
@@ -125,7 +132,7 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                             <!-- Phone Input -->
                             <Input type="tel" v-model="form.phone" class="rounded-l-none"
                                 placeholder="Enter Phone Number" :error="errors.phone" :required="true"
-                                color="grayBorder">
+                                color="grayBorder" inputmode="numeric" pattern="\d*" @input="onPhoneInput">
                             <template #icon>
                                 <Icon icon="ic:round-phone" width="20" height="20" />
                             </template>
