@@ -86,7 +86,7 @@ const onPhoneInput = (event: Event) => {
 
 <template>
 
-    <Head title="Costomer" />
+    <Head title="Costomer-Create" />
     <AppLayout>
         <!-- Limit Reached Modal -->
         <CustomerLimitPopup :show="showLimitModal" @close="showLimitModal = false" />

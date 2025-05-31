@@ -5,7 +5,7 @@ import CustomerList from '@/components/CustomerList.vue';
 import SearchList from '@/components/SearchIcon.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Icon } from '@iconify/vue';
-import { Link, router } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { reactive, ref, computed } from 'vue';
 const showable = reactive({
     showSearch: false
@@ -54,6 +54,7 @@ const filteredCustomers = computed(() => {
 });
 </script>
 <template>
+    <Head title="Customer" />
     <AppLayout>
         <!-- Limit Reached Modal -->
         <CustomerLimitPopup :show="showLimitModal" @close="showLimitModal = false" />

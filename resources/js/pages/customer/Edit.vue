@@ -162,7 +162,7 @@ const closeImageModal = () => {
 
 <template>
 
-    <Head title="Costomer" />
+    <Head title="Costomer-Edit" />
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex justify-between items-center">
