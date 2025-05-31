@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
 import { ref, watch } from 'vue';
-import { Link, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
 import Input from '@/components/InputWithLabel.vue';
@@ -48,6 +48,7 @@ const createDesignDetail = () => {
 </script>
 
 <template>
+        <Head title="DesignDetail-Create" />
     <AppLayout>
         <div class="px-6 py-10 max-w-6xl mx-auto">
             <!-- Header -->

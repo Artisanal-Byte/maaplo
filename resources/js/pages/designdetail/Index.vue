@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
 import { ref } from 'vue';
-import { router, Link } from '@inertiajs/vue3';
+import { router, Link, Head } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
 
@@ -31,6 +31,7 @@ function confirmDelete() {
 </script>
 
 <template>
+    <Head title="DesignDetails" />
   <AppLayout>
     <div class="max-w-7xl mx-auto py-8 px-4">
       <!-- Header Section -->

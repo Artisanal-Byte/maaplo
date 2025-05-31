@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
 import { defineProps, ref, computed, watch } from 'vue';
-import { useForm, Link } from '@inertiajs/vue3';
+import { useForm, Link, Head } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
 import Input from '@/components/InputWithLabel.vue';
@@ -60,6 +60,7 @@ const updateDesignDetail = () => {
 </script>
 
 <template>
+        <Head title="DesignDetail-Edit" />
     <AppLayout>
         <div class="px-6 py-10 max-w-5xl mx-auto">
             <!-- Header -->
