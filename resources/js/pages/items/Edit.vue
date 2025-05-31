@@ -120,7 +120,7 @@ const isValidPathData = (str = '') => {
                 </div>
             </div>
 
-            <div class="flex flex-col mt-10 gap-4 rounded-lg border border-primary p-4">
+            <div class="flex flex-col mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Select Base Template -->
                     <div>
