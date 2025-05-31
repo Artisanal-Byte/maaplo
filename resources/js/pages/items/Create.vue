@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { reactive, ref } from 'vue';
@@ -6,27 +6,27 @@ import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import SearchSelect from '@/components/SearchSelect.vue';
 import Button from '@/components/Button.vue';
+import { usePage } from '@inertiajs/vue3';
 
 const toast = new ToastMagic();
 
-const props = defineProps<{
-    errors: Record<string, string>;
-    privateTemplates: Array<{ id: number; name: string }>;
-    publicTemplates: Array<{ id: number; name: string }>;
-    measurements: Array<{ id: number; slug: string; measurements_logo: string }>;
-}>();
+
+const { props: pageProps } = usePage();
+const errors = pageProps.errors || {};
+const measurements = pageProps.measurements || [];
+
 const form = reactive({
     name: '',
     gender: '',
     body_part: '',
-    required_measurements: [] as string[],
+    required_measurements: [],
     custom_template: false,
     svg_logo: '',
     design_details: {
         front_neck_design: false,
         back_neck_design: false,
         sleeve_type: false,
-    } as Record<string, boolean>,
+    },
 });
 
 const submitForm = () => {
@@ -41,21 +41,23 @@ const submitForm = () => {
     });
 };
 
-const formatSlug = (slug: string): string => {
+const formatSlug = (slug) => {
     return slug
         .split('_')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 };
-const fillFormFromTemplate = (template: any) => {
-    form.name = template.name;
+const fillFormFromTemplate = (template) => {
+    if (!template) return;
+
+    form.name = template.name || '';
     form.gender = template.gender === 'Male' ? 'm' : (template.gender === 'Female' ? 'f' : '');
     form.body_part = template.body_part === 'Upper' ? 'upper' : (template.body_part === 'Lower' ? 'lower' : '');
-    form.svg_logo = template.svg_logo;
-    form.required_measurements = template.measurements.map((m: any) => m.slug);
+    form.svg_logo = template.svg_logo || '';
+    form.required_measurements = template.measurements?.map(m => m.slug) || [];
 };
 
-const formatLabel = (key: string): string => {
+const formatLabel = (key) => {
     return key
         .split('_')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
@@ -64,6 +66,7 @@ const formatLabel = (key: string): string => {
 </script>
 
 <template>
+
     <Head title="Template-Create" />
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
@@ -84,8 +87,8 @@ const formatLabel = (key: string): string => {
                 <!-- <h1>Select Base Template</h1> -->
                 <div>
                     <label class="font-medium">Select Base Template</label>
-                    <SearchSelect class="mt-2" :public-templates="props.publicTemplates"
-                        :private-templates="props.privateTemplates" @templateSelected="fillFormFromTemplate" />
+                    <SearchSelect class="mt-2" :public-templates="pageProps.publicTemplates"
+                        :private-templates="pageProps.privateTemplates" @templateSelected="fillFormFromTemplate" />
                 </div>
                 <div>
                     <Input v-model="form.name" label="Template Name" placeholder="Enter Template Name" margin="md"
@@ -173,7 +176,7 @@ const formatLabel = (key: string): string => {
                 <!--Measurements -->
                 <h1 class="text-md font-semibold mb-2">Measurement Ask :</h1>
                 <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 items-center gap-x-16 gap-y-4">
-                    <label v-for="measurement in props.measurements" :key="measurement.id"
+                    <label v-for="measurement in measurements" :key="measurement.id"
                         class="flex items-center gap-3 cursor-pointer rounded w-full">
                         <!-- SVG icon -->
                         <div v-if="measurement.measurements_logo" class="shrink-0"
