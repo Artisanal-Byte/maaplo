@@ -17,7 +17,6 @@ const props = defineProps<{
         face_image?: string;
     };
 }>();
-console.log('CustomerList Props:', props.customer);
 
 const showDropdown = ref(false);
 const showDeletePopup = ref(false);

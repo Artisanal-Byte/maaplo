@@ -28,7 +28,6 @@ const props = defineProps<{
     customer_limit_exceeded: boolean,
 }>();
 
-console.log('Customer index Props:', props.customers);
 const showLimitModal = ref(false);
 
 function handleCreateClick(event: Event) {
