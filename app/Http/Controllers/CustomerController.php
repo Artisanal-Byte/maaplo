@@ -194,9 +194,7 @@ class CustomerController extends Controller
                 [
                     'face_image' => $faceImage ? $faceImage->image_url : null,
                     'full_body_image' => $fullBodyImage ? $fullBodyImage->image_url : null,
-                    'measurements' => is_string($customer->base_measurements)
-                        ? json_decode($customer->base_measurements, true)
-                        : $customer->base_measurements,
+                    'measurements' => $customer->base_measurements,
                 ]
             ),
             'isOrder' => $hasOrder,
