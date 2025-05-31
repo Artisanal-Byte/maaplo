@@ -14,9 +14,11 @@ const props = defineProps<{
     errors: Record<string, string>,
     user_id: number,
     customer_limit_exceeded: boolean,
-    measurements
-}>();
+    measurements,
+    isOrder?: boolean;
+    toAsk?: string | null;
 
+}>();
 const toast = new ToastMagic();
 
 const form = reactive({
@@ -34,7 +36,6 @@ const form = reactive({
     country_code: '+91',
     full_image_preview: ''
 });
-console.log('Form:', form);
 // Notes
 const notes = ref([{ label: '', text: '' }]);
 const showLimitModal = ref(false);
@@ -127,7 +128,7 @@ const onPhoneInput = (event: Event) => {
                         </label>
                         <div class="flex">
                             <!-- Use MobileCountryCode component here -->
-                            <MobileCountryCode v-model="form.country_code" :countries="countries" />
+                            <MobileCountryCode v-model="form.country_code"/>
 
                             <!-- Phone Input -->
                             <Input type="tel" v-model="form.phone" class="rounded-l-none"
@@ -186,7 +187,7 @@ const onPhoneInput = (event: Event) => {
                 <div class="mt-5">
                     <!-- <label class="block font-[Lato] text-[18px] leading-[16px] tracking-[0] mb-2">Measurements</label> -->
                     <Measurements v-model:measurements="form.measurements" :error="errors.measurements"
-                        :toAsk="measurements" />
+                        :toAsk="measurements" :isOrder="false"/>
                     <div v-if="errors.measurements" class="text-red-600 text-sm mt-2">{{ errors.measurements }}</div>
                 </div>
 

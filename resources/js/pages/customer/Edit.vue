@@ -20,6 +20,7 @@ const props = defineProps<{
         phone: string;
         dob: string;
         measurements: Record<string, string> | null;
+        countries: Array<{ name: string; code: string }>
         address: string;
         gender: string;
         notes: Array<{ label: string; text: string }>;
@@ -31,6 +32,8 @@ const props = defineProps<{
     toAsk?: string | null;
 
 }>();
+// console.log('countries',props.countries);
+const countries = props.countries;
 const parseToAsk = (): Record<string, string> | null => {
     if (!props.toAsk) return null;
 
@@ -96,6 +99,13 @@ const handleFullBodyImageChange = (event: Event) => {
         form.full_image = file;
         fullBodyImagePreview.value = URL.createObjectURL(file);
     }
+};
+
+const onPhoneInput = (event: Event) => {
+    const input = event.target as HTMLInputElement;
+    // Remove non-numeric characters and trim to max 10 digits
+    input.value = input.value.replace(/\D/g, '').slice(0, 10);
+    form.phone = input.value;
 };
 
 const updateCustomer = () => {
@@ -185,19 +195,25 @@ const closeImageModal = () => {
                         <label class="font-medium block mb-1">
                             Contact Number <span class="text-red-500">*</span>
                         </label>
-                        <div class="flex">
-                            <!-- Use MobileCountryCode component here -->
-                            <MobileCountryCode v-model="form.country_code" :countries="countries" />
 
-                            <Input type="text" v-model="form.phone" label="Contact Number" :required="true"
-                                :error="errors.phone" color="grayBorder" placeholder="Enter Phone Number">
+                        <div class="flex gap-0">
+                            <!-- Country Code Selector -->
+                            <MobileCountryCode v-model="form.country_code" :countries="countries"
+                                class="rounded-r-none" />
+
+                            <!-- Phone Input -->
+                            <Input type="text" v-model="form.phone" :required="true" :error="errors.phone"
+                                color="grayBorder" placeholder="Enter Phone Number" class="rounded-l-none flex-1"
+                                inputmode="numeric" pattern="\d*" @input="onPhoneInput">
                             <template #icon>
                                 <Icon icon="ic:round-phone" width="20" height="20" />
                             </template>
                             </Input>
                         </div>
+
                         <div v-if="phoneError" class="text-red-600 text-sm mt-1">{{ phoneError }}</div>
                     </div>
+
 
                     <!-- Email -->
                     <div>
@@ -297,8 +313,8 @@ const closeImageModal = () => {
                 <ImageModal :show="showImageModal" :imageUrl="currentImageUrl" @close="closeImageModal" />
 
                 <!-- Update Button -->
-                <Button class="lg:mt-5 mt-3 w-full" @click="updateCustomer" :disabled="form.processing" :color="'primary'" :padding="'md'"
-                    :rounded="'full'" :textSize="'sm'">
+                <Button class="lg:mt-5 mt-3 w-full" @click="updateCustomer" :disabled="form.processing"
+                    :color="'primary'" :padding="'md'" :rounded="'full'" :textSize="'sm'">
                     Update Customer
                 </Button>
             </div>
