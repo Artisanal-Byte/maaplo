@@ -30,6 +30,7 @@ class CustomerController extends Controller
                 'id' => $c->id,
                 'name' => $c->name,
                 'email' => $c->email,
+                'country_code' => $c->country_code,
                 'phone' => $c->phone,
                 'gender' => $c->gender,
                 'dob' => $c->dob,
@@ -61,6 +62,8 @@ class CustomerController extends Controller
             'user_id' => $user_id,
             'measurements' => json_encode($setData, true),
             'customer_limit_exceeded' => $customerLimitExceeded,
+             'toAsk' => json_encode($setData, true),
+            'notes' => $customer->notes ?? [],
         ]);
     }
 

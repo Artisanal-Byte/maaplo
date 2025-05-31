@@ -14,9 +14,11 @@ const props = defineProps<{
     errors: Record<string, string>,
     user_id: number,
     customer_limit_exceeded: boolean,
-    measurements
-}>();
+    measurements,
+    isOrder?: boolean;
+    toAsk?: string | null;
 
+}>();
 const toast = new ToastMagic();
 
 const form = reactive({
@@ -34,7 +36,6 @@ const form = reactive({
     country_code: '+91',
     full_image_preview: ''
 });
-console.log('Form:', form);
 // Notes
 const notes = ref([{ label: '', text: '' }]);
 const showLimitModal = ref(false);
@@ -72,6 +73,13 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
     form[field] = file;
     const previewField = field + '_preview' as 'half_image_preview' | 'full_image_preview';
     form[previewField] = file ? URL.createObjectURL(file) : '';
+};
+
+const onPhoneInput = (event: Event) => {
+    const input = event.target as HTMLInputElement;
+    // Remove non-numeric characters and trim to max 10 digits
+    input.value = input.value.replace(/\D/g, '').slice(0, 10);
+    form.phone = input.value;
 };
 
 </script>
@@ -120,12 +128,12 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                         </label>
                         <div class="flex">
                             <!-- Use MobileCountryCode component here -->
-                            <MobileCountryCode v-model="form.country_code" :countries="countries" />
+                            <MobileCountryCode v-model="form.country_code"/>
 
                             <!-- Phone Input -->
                             <Input type="tel" v-model="form.phone" class="rounded-l-none"
                                 placeholder="Enter Phone Number" :error="errors.phone" :required="true"
-                                color="grayBorder">
+                                color="grayBorder" inputmode="numeric" pattern="\d*" @input="onPhoneInput">
                             <template #icon>
                                 <Icon icon="ic:round-phone" width="20" height="20" />
                             </template>
@@ -179,7 +187,7 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                 <div class="mt-5">
                     <!-- <label class="block font-[Lato] text-[18px] leading-[16px] tracking-[0] mb-2">Measurements</label> -->
                     <Measurements v-model:measurements="form.measurements" :error="errors.measurements"
-                        :toAsk="measurements" />
+                        :toAsk="measurements" :isOrder="false"/>
                     <div v-if="errors.measurements" class="text-red-600 text-sm mt-2">{{ errors.measurements }}</div>
                 </div>
 

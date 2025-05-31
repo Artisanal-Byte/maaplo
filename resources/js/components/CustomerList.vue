@@ -9,6 +9,7 @@ const props = defineProps<{
     customer: {
         id: number;
         name: string;
+        country_code:string,
         phone: string;
         email?: string;
         active_orders?: number;
@@ -57,6 +58,7 @@ const deleteCustomer = (customerId: number) => {
         <div class="flex justify-between gap-4">
             <!-- Left Section -->
             <div class="flex-2">
+
                 <h1 class="text-[22px] font-semibold tracking-wide text-gray-900">
                     {{ props.customer.name }}
                 </h1>
@@ -70,8 +72,9 @@ const deleteCustomer = (customerId: number) => {
                 <div v-show="showDropdown" class="mt-2">
                     <ul class="text-sm text-gray-700 space-y-2">
                         <li class="flex items-center gap-2">
+
                             <Icon icon="ic:baseline-phone" width="16" height="16" />
-                            <span class="text-black">{{ props.customer.phone }}</span>
+                            <span class="text-black">{{ props.customer.country_code }} {{ props.customer.phone }}</span>
                         </li>
                         <li class="flex items-center gap-2">
                             <Icon icon="ic:outline-email" width="18" height="18" />
