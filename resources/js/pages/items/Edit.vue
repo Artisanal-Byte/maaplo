@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Link, router, useForm } from '@inertiajs/vue3';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
@@ -91,10 +91,19 @@ const formatLabel = (key) => {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 };
+
+const isSvgMarkup = (str = '') => {
+    return str.trim().startsWith('<svg');
+};
+
+const isValidPathData = (str = '') => {
+    return /^[Mm]/.test(str.trim());
+};
 </script>
 
-
 <template>
+
+    <Head title="Template-Edit" />
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex justify-between items-center mb-6">
@@ -110,129 +119,161 @@ const formatLabel = (key) => {
             </div>
 
             <div class="flex flex-col mt-10 gap-4 rounded-lg border border-primary p-4">
-                <div>
-                    <label class="text-md">Select Base Template</label>
-                    <SearchSelect class="mt-2" :public-templates="props.publicTemplates"
-                        :private-templates="props.privateTemplates" @templateSelected="fillFormFromTemplate" />
-                </div>
-                <!-- Name -->
-                <Input v-model="form.name" label="Template Name" placeholder="Enter Template Name" margin="md"
-                    width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.name" required="true" />
-                <div v-if="errors.name" class="text-red-600 text-sm">{{ errors.name }}</div>
-                <!-- Gender -->
-                <div class="flex flex-col">
-                    <label class="text-md mb-2">Gender <span class="text-red-500">*</span></label>
-                    <div class="flex gap-4">
-                        <label>
-                            <input type="radio" name="gender" value="f" v-model="form.gender" class="hidden" />
-                            <div :class="[
-                                'px-4 py-1 rounded border text-sm cursor-pointer',
-                                form.gender === 'f'
-                                    ? 'bg-primary text-white'
-                                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
-                            ]">Female</div>
-                        </label>
-                        <label>
-                            <input type="radio" name="gender" value="m" v-model="form.gender" class="hidden" />
-                            <div :class="[
-                                'px-4 py-1 rounded border text-sm cursor-pointer',
-                                form.gender === 'm'
-                                    ? 'bg-primary text-white'
-                                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
-                            ]">Male</div>
-                        </label>
-                    </div>
-                </div>
-                <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.gender }}</div>
-
-                <!-- Body Part -->
-                <div class="flex flex-col mt-4">
-                    <label class="text-md mb-2">Body Part <span class="text-red-500">*</span></label>
-                    <div class="flex gap-4">
-                        <label>
-                            <input type="radio" name="bodyPart" value="upper" v-model="form.body_part" class="hidden" />
-                            <div :class="[
-                                'px-4 py-1 rounded border text-sm cursor-pointer',
-                                form.body_part === 'upper'
-                                    ? 'bg-primary text-white'
-                                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
-                            ]">Upper</div>
-                        </label>
-                        <label>
-                            <input type="radio" name="bodyPart" value="lower" v-model="form.body_part" class="hidden" />
-                            <div :class="[
-                                'px-4 py-1 rounded border text-sm cursor-pointer',
-                                form.body_part === 'lower'
-                                    ? 'bg-primary text-white'
-                                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
-                            ]">Lower</div>
-                        </label>
-                    </div>
-                </div>
-                <div v-if="errors.body_part" class="text-red-600 text-sm">{{ errors.body_part }}</div>
-                <!-- SVG Logo -->
-                <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
-                    width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo" />
-
-                <!-- Required Measurements -->
-                <h1 class="text-md font-semibold mb-2 mt-4">Measurement Ask:</h1>
-
-                <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 items-center gap-x-16 gap-y-4">
-                    <label v-for="measurement in props.measurements.all" :key="measurement.id || measurement.slug"
-                        class="flex items-center gap-3 cursor-pointer rounded w-full">
-                        <!-- SVG icon -->
-                        <div v-if="measurement.measurements_logo" class="shrink-0"
-                            v-html="measurement.measurements_logo"></div>
-
-                        <!-- Text and checkbox -->
-                        <div class="flex justify-between items-center lg:w-full w-80">
-                            <span class="text-[16px]">{{ formatSlug(measurement.slug) }}</span>
-                            <input type="checkbox" :id="measurement.slug" :value="measurement.slug"
-                                v-model="form.required_measurements" class="form-checkbox w-4 h-4" />
+                <div class="flex flex-col mt-10 gap-4 rounded-lg border border-primary p-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Select Base Template -->
+                        <div>
+                            <label class="text-md">Select Base Template</label>
+                            <SearchSelect class="mt-2" :public-templates="props.publicTemplates"
+                                :private-templates="props.privateTemplates" @templateSelected="fillFormFromTemplate" />
                         </div>
-                    </label>
-                </div>
 
-                <div v-if="errors.required_measurements" class="text-red-600 text-sm mt-1">
-                    {{ errors.required_measurements }}
-                </div>
+                        <!-- Template Name -->
+                        <div>
+                            <Input v-model="form.name" label="Template Name" placeholder="Enter Template Name"
+                                margin="md" width="full" fonttype="normal" textSize="base" rounded="md"
+                                :error="errors.name" required="true">
+                            <template #icon>
+                                <Icon icon="tdesign:template-filled" width="18" height="18" class="mt-2" />
+                            </template>
+                            </Input>
 
-                <!-- Design Details -->
-                <div class="mt-2">
-                    <h2 class="text-md font-semibold mb-4">Design Details</h2>
+                            <div v-if="errors.name" class="text-red-600 text-sm">{{ errors.name }}</div>
+                        </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div v-for="(value, key) in form.design_details" :key="key"
-                            class="flex items-center justify-between bg-gray-50 p-2 rounded-md">
-                            <span class="font-normal text-[16px] tracking-normal font-lato">
-                                {{ formatLabel(key) }}
-                            </span>
+                        <!-- Gender -->
+                        <div class="flex flex-col">
+                            <label class="text-md mb-2">Gender <span class="text-red-500">*</span></label>
+                            <div class="flex gap-4">
+                                <label>
+                                    <input type="radio" name="gender" value="f" v-model="form.gender" class="hidden" />
+                                    <div :class="[
+                                        'px-4 py-1 rounded border text-sm cursor-pointer',
+                                        form.gender === 'f' ? 'bg-primary text-white' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+                                    ]">Female</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="gender" value="m" v-model="form.gender" class="hidden" />
+                                    <div :class="[
+                                        'px-4 py-1 rounded border text-sm cursor-pointer',
+                                        form.gender === 'm' ? 'bg-primary text-white' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+                                    ]">Male</div>
+                                </label>
+                            </div>
+                            <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.gender }}</div>
+                        </div>
 
-                            <div class="flex rounded overflow-hidden text-sm">
-                                <button :class="[
-                                    'px-4 py-1 focus:outline-none transition',
-                                    form.design_details[key] === true ? 'bg-primary text-white' : 'bg-gray-200 text-black'
-                                ]" @click="form.design_details[key] = true">
-                                    Yes
-                                </button>
-                                <button :class="[
-                                    'px-4 py-1 focus:outline-none transition',
-                                    form.design_details[key] === false ? 'bg-primary text-white' : 'bg-gray-200 text-black'
-                                ]" @click="form.design_details[key] = false">
-                                    No
-                                </button>
+                        <!-- Body Part -->
+                        <div class="flex flex-col">
+                            <label class="text-md mb-2">Body Part <span class="text-red-500">*</span></label>
+                            <div class="flex gap-4">
+                                <label>
+                                    <input type="radio" name="bodyPart" value="upper" v-model="form.body_part"
+                                        class="hidden" />
+                                    <div :class="[
+                                        'px-4 py-1 rounded border text-sm cursor-pointer',
+                                        form.body_part === 'upper' ? 'bg-primary text-white' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+                                    ]">Upper</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="bodyPart" value="lower" v-model="form.body_part"
+                                        class="hidden" />
+                                    <div :class="[
+                                        'px-4 py-1 rounded border text-sm cursor-pointer',
+                                        form.body_part === 'lower' ? 'bg-primary text-white' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+                                    ]">Lower</div>
+                                </label>
+                            </div>
+                            <div v-if="errors.body_part" class="text-red-600 text-sm">{{ errors.body_part }}</div>
+                        </div>
+                    </div>
+
+
+                    <!-- Required Measurements -->
+                    <h1 class="text-md font-semibold mb-2 mt-4">Measurement Ask:</h1>
+
+                    <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 items-center gap-x-16 gap-y-4">
+                        <label v-for="measurement in props.measurements.all" :key="measurement.id || measurement.slug"
+                            class="flex items-center gap-3 cursor-pointer rounded w-full">
+                            <!-- SVG icon -->
+                            <div v-if="measurement.measurements_logo" class="shrink-0"
+                                v-html="measurement.measurements_logo"></div>
+
+                            <!-- Text and checkbox -->
+                            <div class="flex justify-between items-center lg:w-full w-80">
+                                <span class="text-[16px]">{{ formatSlug(measurement.slug) }}</span>
+                                <input type="checkbox" :id="measurement.slug" :value="measurement.slug"
+                                    v-model="form.required_measurements" class="form-checkbox w-4 h-4" />
+                            </div>
+                        </label>
+                    </div>
+
+                    <div v-if="errors.required_measurements" class="text-red-600 text-sm mt-1">
+                        {{ errors.required_measurements }}
+                    </div>
+
+                    <!-- SVG Logo -->
+                    <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
+                        width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo" />
+
+                    <div
+                        class="mt-6 border border-gray-300 rounded-lg p-6 bg-gray-50 flex justify-center items-center min-h-[120px]">
+                        <label class="sr-only">SVG Preview</label>
+
+                        <!-- Full SVG Markup -->
+                        <div v-if="isSvgMarkup(form.svg_logo)" v-html="form.svg_logo"
+                            class="max-w-[120px] max-h-[120px]">
+                        </div>
+
+                        <!-- Path Only -->
+                        <svg v-else-if="isValidPathData(form.svg_logo)" width="120" height="120" viewBox="0 0 100 100"
+                            class="stroke-black fill-none">
+                            <path :d="form.svg_logo" stroke="black" stroke-width="2" />
+                        </svg>
+
+                        <!-- Invalid -->
+                        <div v-else class="text-red-500 text-sm">
+                            ⚠️ Invalid SVG path or markup. Must start with &lt;svg&gt;.
+                        </div>
+                    </div>
+
+                    <!-- Design Details -->
+                    <div class="mt-2">
+                        <h2 class="text-md font-semibold mb-4">Design Details</h2>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div v-for="(value, key) in form.design_details" :key="key"
+                                class="flex items-center justify-between bg-gray-50 p-2 rounded-md">
+                                <span class="font-normal text-[16px] tracking-normal font-lato">
+                                    {{ formatLabel(key) }}
+                                </span>
+
+                                <div class="flex rounded overflow-hidden text-sm">
+                                    <button :class="[
+                                        'px-4 py-1 focus:outline-none transition',
+                                        form.design_details[key] === true ? 'bg-primary text-white' : 'bg-gray-200 text-black'
+                                    ]" @click="form.design_details[key] = true">
+                                        Yes
+                                    </button>
+                                    <button :class="[
+                                        'px-4 py-1 focus:outline-none transition',
+                                        form.design_details[key] === false ? 'bg-primary text-white' : 'bg-gray-200 text-black'
+                                    ]" @click="form.design_details[key] = false">
+                                        No
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div v-if="errors.design_details" class="text-red-600 text-sm">{{ errors.design_details }}
-                </div>
+                    <div v-if="errors.design_details" class="text-red-600 text-sm">{{ errors.design_details }}
+                    </div>
 
 
-                <!-- Submit Button -->
-                <Button @click="updateTemplate" color="primary" textSize="lg" padding="md" rounded="full">
-                    Save Changes
-                </Button>
+                    <!-- Submit Button -->
+                    <Button @click="updateTemplate" color="primary" textSize="lg" padding="md" rounded="full">
+                        Save Changes
+                    </Button>
+                </div>
             </div>
         </div>
     </AppLayout>
