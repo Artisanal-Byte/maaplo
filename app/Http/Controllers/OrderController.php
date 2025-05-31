@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\GetTemplateHelper;
 use App\Helpers\UniqueOrderNumber; // Ensure this class exists in the specified namespace or create it if missing
 use App\Http\Requests\StoreOrderRequest;
+use App\Models\DesignDetail;
 use App\Models\Template;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -61,13 +62,12 @@ class OrderController extends Controller
         $user->load('customers');
 
         //-- item which have a global scope or created by Authentic user
-        $data = GetTemplateHelper::getTemplateData();
-        
-        $itemTypes = [
-            'publicTemplates' => $data['publicTemplates'],
-            'privateTemplates' => $data['privateTemplates'],
-            'measurements' => $data['allMeasurements'],
-        ];
+        $itemTypes = Template::where('user_id', Auth::id())
+            ->orWhereNull('user_id')
+            ->with('measurements')
+            ->get();
+
+        $designDetails = DesignDetail::all();
         return Inertia::render('orders/Create', [
             'customers' => $user->customers,
             'itemTypes' => $itemTypes

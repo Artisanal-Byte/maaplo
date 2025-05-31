@@ -17,7 +17,7 @@ let data = props.form
 //select customer and set value
 function selectOption(customer) {
     selectedCustomer.value = customer.name;
-    emit('setMeasurements', customer.base_measurements)
+    emit('setMeasurements', customer.measurements)
     formStore.user_id = customer.user_id
     formStore.customer_id = customer.id
     showDropdown.value = false;

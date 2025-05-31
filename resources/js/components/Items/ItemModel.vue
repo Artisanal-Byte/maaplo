@@ -13,17 +13,19 @@ import Button from '../Button.vue';
 import { ref, defineProps, defineEmits, watch, reactive } from 'vue';
 import TrialAndDeliveryDate from '../TrialAndDeliveryDate.vue';
 import { useOrderFormStore } from '@/stores/orderFormStore';
+import ItemMeasurements from './ItemMeasurements.vue';
 const fileInputGallery = ref(null)
 const fileInputCamera = ref(null)
 const previewImage = ref(null)
 const notes = ref([{ label: '', text: '' }]);
-const props = defineProps(['showModal', 'form', 'itemTypes', 'itemIndex', 'measurements', 'errorMessage', 'errors']);
+const props = defineProps(['showModal', 'form', 'itemTypes', 'itemIndex', 'errorMessage', 'errors']);
 let findDesign = ref()
 let formStore = useOrderFormStore()
 
+// console.log('asked measurments:', props.itemTypes);
 
 const emit = defineEmits(['close', 'setOrderItemsData']);
-
+const measurements = ref([])
 const showImageUpload = ref(false)
 
 const resetformStore = () => {
@@ -60,8 +62,11 @@ function saveItem() {
     emit('close')
 }
 
-const setItemId = (id) => {
-    formStore.order_items_template.template_id = id
+const setItemId = (option) => {
+    formStore.order_items_template.template_id = option.id
+    measurements.value = option.measurements
+    console.log('meas val test:', measurements.value);
+
 }
 
 
@@ -121,8 +126,8 @@ watch(() => showImageUpload.value, (nVal) => {
         previewImage.value = null
     }
 })
-watch(() => formStore.template_id, (newId) => {
-    designDetails.value = props.itemTypes.privateTemplates.find(item => item.id === newId).design_details
+watch(() => formStore.order_items_template.template_id, (newId) => {
+    designDetails.value = props.itemTypes.find(item => item.id === newId).design_details
 })
 
 </script>
@@ -152,13 +157,16 @@ watch(() => formStore.template_id, (newId) => {
                 <!-- Scrollable Content -->
                 <div class=" max-h-[75vh] pr-2 space-y-5">
                     <!-- done -->
-                    <WorkType  />
+                    <WorkType />
                     <ItemType :itemTypes="itemTypes" @setItemId="setItemId" />
-                    <Measurements :toAsk="measurements" :isOrder="true" />
+                    <!-- <pre>
+                        {{ measurements }}
+                    </pre> -->
+                    <ItemMeasurements :askedMeasurements="measurements" />
                     <DesignDetails :designDetails="designDetails" v-model="formStore.design_detail" />
 
                     <div class="flex flex-col">
-                        <Colors  />
+                        <Colors />
                         <Notes v-model:notes="notes" @setNotes="setNotes" class="mt-5" />
                     </div>
 
