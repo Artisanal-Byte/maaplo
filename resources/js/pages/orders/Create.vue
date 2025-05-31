@@ -18,17 +18,7 @@ const showModal = ref(false);
 const disabled = ref(false);
 const toast = new ToastMagic();
 const showDeletePopup = ref(false);
-let form = useForm({
-    user_id: null,
-    customer_id: null,
-    status: 'create',
-    total_amount: null,
-    advance_paid: null,
-    delivery_date: '',
-    close_date: '',
-    notes: [{ label: '', text: '' }],
-    order_items: [],
-});
+let form = useOrderFormStore();
 let customerMeasurements = ref({})
 const itemToDelete = ref(null);
 let totalAmmount = ref(null)
@@ -38,11 +28,7 @@ let i = 0
 
 let setOrderItemsData = (data) => {
     form.order_items.push(data)
-    console.log('cust measruments:', data);
-    data.measurements = customerMeasurements.value
     form.order_items[i] = data
-    
-    form.order_items.push(formStore.order_items)
     i++
 }
 
@@ -52,16 +38,16 @@ let create = () => {
         form.advance_paid = null
         return
     }
-    form.post(route('orders.store'), {
-        forceFormData: true,
-        onSuccess: () => {
-            toast.success('Order Created Successfully');
-        },
-        onError: (error) => {
-            console.log('validation errors:', error);
-            toast.error('failed To create order.');
-        }
-    })
+    // form.post(route('orders.store'), {
+    //     forceFormData: true,
+    //     onSuccess: () => {
+    //         toast.success('Order Created Successfully');
+    //     },
+    //     onError: (error) => {
+    //         console.log('validation errors:', error);
+    //         toast.error('failed To create order.');
+    //     }
+    // })
 }
 
 //total amount of order
@@ -149,11 +135,10 @@ watch(() => form.advance_paid, (nPayVal) => {
                 <h1 class="text-xl font-bold lg:mt-0 mt-4">Enter Details</h1>
 
                 <!-- selected customer list -->
-                <CustomerListDropdown :customers="customers" :errors="errors" :form="form" 
-                    @setMeasurements="setMeasurements" />
+                <CustomerListDropdown :customers="customers" @setMeasurements="setMeasurements" />
 
                 <!-- Delivery Date -->
-                <DateIcon :form="form" :errors="errors"  />
+                <DateIcon />
 
                 <!-- items -->
                 <div class="mt-2">
@@ -188,7 +173,7 @@ watch(() => form.advance_paid, (nPayVal) => {
                             @close="closeModel" :form="form.order_items" @setOrderItemsData="setOrderItemsData"
                             :itemTypes="itemTypes" :measurements="customerMeasurements ?? []" />
                         <p class="text-red-600 text-sm">
-                            {{ form.errors.order_items }}
+                            <!-- {{ form.errors.order_items }} -->
                         </p>
 
                         <!-- table -->
