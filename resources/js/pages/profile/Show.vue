@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 import { router } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
@@ -13,6 +13,7 @@ function goToEdit() {
 </script>
 
 <template>
+    <Head :title="`${props.user.name}-Profile`" />
     <AppLayout>
         <div class="px-4 py-10 max-w-4xl mx-auto">
             <div class="flex justify-between items-center mb-6">
