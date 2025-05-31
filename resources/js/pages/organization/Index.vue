@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Link } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import { ref, onMounted } from 'vue';
 import Button from '@/components/Button.vue';
@@ -22,6 +22,7 @@ onMounted(() => {
 </script>
 
 <template>
+    <Head title="Organization's" />
     <AppLayout>
         <div class="px-4 py-10 max-w-4xl mx-auto">
             <div class="flex justify-between items-center mb-6">

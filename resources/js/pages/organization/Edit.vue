@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
 import { ref, computed } from 'vue';
-import { useForm, Link } from '@inertiajs/vue3';
+import { useForm, Link, Head } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
@@ -53,6 +53,7 @@ const updateOrganization = () => {
 </script>
 
 <template>
+    <Head title="Organization-Edit" />
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <!-- Header -->
