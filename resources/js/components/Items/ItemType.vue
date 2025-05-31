@@ -7,7 +7,6 @@ const props = defineProps(["itemTypes"])
 const emit = defineEmits(['setItemId'])
 
 const showDropdownitemTypes = ref(false);
-const modelValue = defineModel();
 function toggleDropdownitemTypes() {
     showDropdownitemTypes.value = !showDropdownitemTypes.value;
 }

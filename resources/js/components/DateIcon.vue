@@ -1,13 +1,12 @@
 <script setup>
-import { computed, ref, defineProps, defineEmits } from 'vue'
+import { computed, ref, defineEmits } from 'vue'
 import { Icon } from '@iconify/vue';
+import { useOrderFormStore } from '@/stores/orderFormStore';
 
-let props = defineProps(["form","errors"])
 let emits = defineEmits(["setOrderData"])
-const selectedDate = ref('')
+const selectedDate = useOrderFormStore()
 const dateInput = ref(null)
 
-let data = props.form
 
 
 function openCalendar() {
@@ -21,9 +20,6 @@ function openCalendar() {
 const formattedDate = computed(() => {
     if (!selectedDate.value) return ''
     const d = new Date(selectedDate.value)
-
-    data.delivery_date = d
-    emits('setOrderData', data)
     return d.toLocaleDateString(undefined, {
         year: 'numeric',
         month: 'short',
@@ -35,7 +31,7 @@ const formattedDate = computed(() => {
     <div class="mt-2 flex items-center gap-3">
         <label class="font-lato text-base font-medium leading-4 tracking-normal">
             Delivery Date <span class="text-red-500">*</span>
-            <p class="text-red-600 text-sm">{{ errors?.delivery_date }}</p>
+            <!-- <p class="text-red-600 text-sm">{{ errors?.delivery_date }}</p> -->
         </label>
 
         <!-- Calendar icon acts as the “open picker” trigger -->
@@ -43,7 +39,7 @@ const formattedDate = computed(() => {
             class="cursor-pointer text-gray-700 hover:text-gray-900" @click="openCalendar" />
 
         <!-- Hidden native date input -->
-        <input ref="dateInput" type="date" v-model="selectedDate" @change="onDateChange" class="hidden" />
+        <input ref="dateInput" type="date" v-model="selectedDate.delivery_date" @change="onDateChange" class="hidden" />
 
         <!-- Show the picked date -->
         <span v-if="selectedDate" class="ml-2 text-gray-800">

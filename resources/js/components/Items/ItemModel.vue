@@ -22,7 +22,7 @@ let findDesign = ref()
 let formStore = useOrderFormStore()
 
 
-const emit = defineEmits(['close', 'setOrderItemsformStore']);
+const emit = defineEmits(['close', 'setOrderItemsData']);
 
 const showImageUpload = ref(false)
 
@@ -53,7 +53,6 @@ const resetformStore = () => {
 const designDetails = ref({})
 // Save and emit
 function saveItem() {
-    emit('setOrderItemsformStore', JSON.parse(JSON.stringify(formStore)))
     previewImage.value = null
     showImageUpload.value = false
     resetformStore();
@@ -62,29 +61,11 @@ function saveItem() {
 }
 
 const setItemId = (id) => {
-    formStore.template_id = id
+    formStore.order_items_template.template_id = id
 }
 
-const setMaterialCode = (materialCode) => {
-    formStore.material_code = materialCode
-}
 
-const setMaterialCost = (materialCost) => {
-    formStore.material_cost = materialCost
-}
 
-const setStichingCost = (stichingCost) => {
-    formStore.stiching_cost = stichingCost
-}
-const setMaterialType = (materialType) => {
-    formStore.material_type = materialType
-}
-const setPrice = (price) => {
-    formStore.item_cost = price
-}
-const setColor = (color) => {
-    formStore.colors = color
-}
 const setNotes = (notes) => {
     formStore.notes = notes
 }
@@ -177,7 +158,7 @@ watch(() => formStore.template_id, (newId) => {
                     <DesignDetails :designDetails="designDetails" v-model="formStore.design_detail" />
 
                     <div class="flex flex-col">
-                        <Colors @setColor="setColor" />
+                        <Colors  />
                         <Notes v-model:notes="notes" @setNotes="setNotes" class="mt-5" />
                     </div>
 

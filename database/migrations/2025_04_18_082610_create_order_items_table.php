@@ -26,6 +26,7 @@ return new class extends Migration {
             $table->enum('is_urgent', ['yes', 'no'])->default('no');
             $table->decimal('material_cost', 10, 2)->nullable();
             $table->decimal('stiching_cost', 10, 2)->nullable();
+            $table->decimal('altering_cost', 10, 2)->nullable();
             $table->decimal('item_cost', 10, 2)->nullable();
             $table->json("notes")->nullable();
             $table->date('trial_dates');
