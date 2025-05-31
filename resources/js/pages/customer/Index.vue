@@ -17,6 +17,7 @@ const props = defineProps<{
         id: number,
         name: string,
         email: string,
+        country_code:string,
         phone: string,
         address: string,
         gender: string,
@@ -27,6 +28,7 @@ const props = defineProps<{
     customer_limit_exceeded: boolean,
 }>();
 
+console.log('Customer index Props:', props.customers);
 const showLimitModal = ref(false);
 
 function handleCreateClick(event: Event) {
@@ -96,6 +98,8 @@ const filteredCustomers = computed(() => {
                     class="w-full lg:max-w-7xl border border-gray-300 rounded-full px-4 py-3 text-sm shadow-[0px_0px_4.3px_0px_#16789333] focus:outline-none focus:ring focus:border-gray-400 transition-all" />
             </div>
             <div>
+                            <pre>{{ props.customers.country_code }}</pre>
+
                 <div v-if="filteredCustomers.length">
                     <CustomerList v-for="customer in filteredCustomers" :key="customer.id" :customer="customer" />
                 </div>

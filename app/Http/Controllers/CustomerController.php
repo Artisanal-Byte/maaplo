@@ -30,6 +30,7 @@ class CustomerController extends Controller
                 'id' => $c->id,
                 'name' => $c->name,
                 'email' => $c->email,
+                'country_code' => $c->country_code,
                 'phone' => $c->phone,
                 'gender' => $c->gender,
                 'dob' => $c->dob,
