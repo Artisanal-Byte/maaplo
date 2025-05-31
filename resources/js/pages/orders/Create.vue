@@ -18,24 +18,30 @@ const showModal = ref(false);
 const disabled = ref(false);
 const toast = new ToastMagic();
 const showDeletePopup = ref(false);
-const orderData = useOrder()
-let form = useForm(orderData);
-const formStore = useOrderFormStore()
+let form = useForm({
+    user_id: null,
+    customer_id: null,
+    status: 'create',
+    total_amount: null,
+    advance_paid: null,
+    delivery_date: '',
+    close_date: '',
+    notes: [{ label: '', text: '' }],
+    order_items: [],
+});
 let customerMeasurements = ref({})
 const itemToDelete = ref(null);
 let totalAmmount = ref(null)
-// set data which is set by child components 
-let setOrderData = (data) => {
-    form = data
-}
+
 
 let i = 0
 
 let setOrderItemsData = (data) => {
+    form.order_items.push(data)
     console.log('cust measruments:', data);
     data.measurements = customerMeasurements.value
     form.order_items[i] = data
-    // hdbv
+    
     form.order_items.push(formStore.order_items)
     i++
 }
@@ -143,11 +149,11 @@ watch(() => form.advance_paid, (nPayVal) => {
                 <h1 class="text-xl font-bold lg:mt-0 mt-4">Enter Details</h1>
 
                 <!-- selected customer list -->
-                <CustomerListDropdown :customers="customers" :errors="errors" :form="form" @setOrderData="setOrderData"
+                <CustomerListDropdown :customers="customers" :errors="errors" :form="form" 
                     @setMeasurements="setMeasurements" />
 
                 <!-- Delivery Date -->
-                <DateIcon :form="form" :errors="errors" @setOrderData="setOrderData" />
+                <DateIcon :form="form" :errors="errors"  />
 
                 <!-- items -->
                 <div class="mt-2">
