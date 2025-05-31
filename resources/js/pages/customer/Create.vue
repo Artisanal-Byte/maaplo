@@ -128,10 +128,10 @@ const onPhoneInput = (event: Event) => {
                         </label>
                         <div class="flex">
                             <!-- Use MobileCountryCode component here -->
-                            <MobileCountryCode v-model="form.country_code"/>
+                            <MobileCountryCode v-model="form.country_code"  class="rounded-r-none"/>
 
                             <!-- Phone Input -->
-                            <Input type="tel" v-model="form.phone" class="rounded-l-none"
+                            <Input type="tel" v-model="form.phone" class="rounded-l-none flex-1"
                                 placeholder="Enter Phone Number" :error="errors.phone" :required="true"
                                 color="grayBorder" inputmode="numeric" pattern="\d*" @input="onPhoneInput">
                             <template #icon>
