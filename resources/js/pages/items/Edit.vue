@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Link, router, useForm } from '@inertiajs/vue3';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
@@ -107,6 +107,8 @@ const formatLabel = (key: string): string => {
 </script>
 
 <template>
+
+    <Head title="Template-Edit" />
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex justify-between items-center mb-6">
@@ -193,7 +195,7 @@ const formatLabel = (key: string): string => {
                     <label v-for="measurement in props.measurements.all" :key="measurement.id || measurement.slug"
                         class="flex items-center gap-3 cursor-pointer rounded w-full">
                         <!-- SVG icon -->
-                       <div v-if="measurement.measurements_logo" class="shrink-0"
+                        <div v-if="measurement.measurements_logo" class="shrink-0"
                             v-html="measurement.measurements_logo"></div>
 
                         <!-- Text and checkbox -->

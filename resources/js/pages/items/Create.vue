@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Link, router } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { reactive, ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
@@ -64,6 +64,7 @@ const formatLabel = (key: string): string => {
 </script>
 
 <template>
+    <Head title="Template-Create" />
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex justify-between items-center">

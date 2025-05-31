@@ -2,7 +2,7 @@
 import ItemTemplateList from '@/components/ItemTemplateList.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { ref } from 'vue';
-import { router, Link } from '@inertiajs/vue3';
+import { router, Link, Head } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
 
@@ -39,6 +39,7 @@ const proceedDelete = () => {
 </script>
 
 <template>
+    <Head title="Template's" />
     <AppLayout>
         <div class="max-w-7xl mx-auto py-8 px-4">
             <!-- Header Section -->
