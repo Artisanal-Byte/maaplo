@@ -92,7 +92,6 @@ class CustomerController extends Controller
             'half_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'full_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-        // dd($validated);
         try {
             DB::beginTransaction();
             $username = preg_replace('/\s+/', '_', strtolower($user->name));
@@ -174,7 +173,6 @@ class CustomerController extends Controller
     public function edit($id)
     {
         $customer = Customer::findOrFail($id);
-        // dd($customer->base_measurements);
         // Get the customer photos (face image and full-body image)
         $photos = CustomerPhoto::where('customer_id', $customer->id)->get();
 
@@ -183,10 +181,8 @@ class CustomerController extends Controller
         $fullBodyImage = $photos->where('label', 'Fullbody')->first();
 
         $measurements = Measurement::all();
-        // dd($measurements);
         $setData = [];
         foreach ($measurements as $measurement) {
-            // dd($measurement->slug);
             $setData[$measurement->slug] = null;
         }
 
@@ -211,7 +207,6 @@ class CustomerController extends Controller
     // Update the specified customer in storage
     public function update(Request $request, $id)
     {
-        // dd($request);
         $customer = Customer::findOrFail($id);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -226,7 +221,6 @@ class CustomerController extends Controller
             'half_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'full_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-        // dd($validated);
 
         try {
             // Update the base customer fields

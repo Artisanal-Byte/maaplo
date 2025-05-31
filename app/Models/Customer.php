@@ -67,16 +67,16 @@ class Customer extends Model
         );
     }
     // ✅ Correct accessor name and spelling
-    protected function baseMeasurements(): Attribute
-    {
-        return Attribute::make(
-            get: function ($value, $attributes) {
-                $decoded = json_decode($attributes['base_measurements'] ?? '{}', true);
-                unset($decoded['unit']);
-                return json_encode($decoded, true);
-            }
-        );
-    }
+    // protected function baseMeasurements(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: function ($value, $attributes) {
+    //             $decoded = json_decode($attributes['base_measurements'] ?? '{}', true);
+    //             unset($decoded['unit']);
+    //             return json_encode($decoded, true);
+    //         }
+    //     );
+    // }
 
 
     //    Relations
