@@ -2,9 +2,16 @@
 import { ref, defineProps, watch } from 'vue';
 import { Icon } from '@iconify/vue';
 import SvgIcon from '../SvgIcon.vue';
+import { useOrderFormStore } from '@/stores/orderFormStore';
 
 const props = defineProps(["designDetails"])
-console.log('design details data from backend:', props.designDetails);
+
+watch(()=>props.designDetails,(nVal)=> {
+    console.log('design details:',nVal);
+})
+const formStore = useOrderFormStore()
+
+// console.log('design details data from backend:', props.designDetails);
 
 const selectedNeck = ref('')
 const selectedfrontNeck = ref('')
@@ -29,7 +36,6 @@ function toggleDropdownSleeveType() {
 }
 
 watch(selectedfrontNeck, (newVal) => {
-    console.log('Selected Design:', newVal);
 
     model.value = newVal
 })
@@ -199,7 +205,6 @@ const sleeveType = [
                                 </ul>
                             </div>
                         </div>
-
                         <div
                             v-if="!designDetails.front_neck_design && !designDetails.back_neck_design && !designDetails.sleeve_type">
                             <div class="flex">
