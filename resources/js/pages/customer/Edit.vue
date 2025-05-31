@@ -58,7 +58,7 @@ const form = useForm({
     country_code: props.customer.country_code,
     measurements: props.customer.measurements && Object.values(props.customer.measurements).some(v => v !== null)
         ? props.customer.measurements
-        : parseToAsk(),
+        : parseToAsk() ?? {},
     gender: props.customer.gender,
     payment_due: props.customer.payment_due,
     half_image: null,

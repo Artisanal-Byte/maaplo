@@ -4,12 +4,15 @@ import { Icon } from '@iconify/vue';
 import SvgIcon from '../SvgIcon.vue';
 import Input from '../InputWithLabel.vue';
 
-const props = defineProps<{
-    measurements: Record<string, string>;
-    toAsk?: string | null;
-    isOrder: boolean;
-}>();
-
+const props = defineProps({
+  measurements: {
+    type: Object as () => Record<string, string>,
+    required: true,
+    default: () => ({ unit: 'in' }),
+  },
+  toAsk: String,
+  isOrder: Boolean,
+});
 const emit = defineEmits<{
     (e: 'update:measurements', value: Record<string, string>): void;
 }>();
