@@ -2,12 +2,10 @@
 import { reactive, ref, watch, defineProps, defineEmits } from 'vue';
 import { Icon } from '@iconify/vue';
 import Input from '../InputWithLabel.vue';
+import { useOrderFormStore } from '@/stores/orderFormStore';
 
-const props = defineProps(['formData', 'index'])
-
-const emits = defineEmits(['setPrice', 'setAlteringCost', 'setMaterialCode', 'setMaterial', 'setMaterialCost', 'setStichingCost', 'setItemCost', 'setMaterialType', 'setdataData'])
+let formStore = useOrderFormStore()
 const modelValue = defineModel(); // enables v-model binding
-const data = props.formData
 const showDropdownWorkType = ref(false);
 
 function toggleDropdownWorkType() {
@@ -46,43 +44,39 @@ watch(
       const m = parseFloat(materialCost) || 0;
       const s = parseFloat(stitchingCost) || 0;
       cost.total = m + s;
-      emits('setAlteringCost', null)
-      emits('setMaterialCost', materialCost)
-      emits('setStichingCost', stitchingCost)
-      emits('setPrice', cost.total)
+      formStore.material_cost = materialCost
+      formStore.stiching_cost = stitchingCost
+      formStore.item_cost = cost.total
     }
 
     if (modelValue.value == 'Only Stitching') {
       cost.total = stitchingCost;
-      emits('setAlteringCost', null)
-      emits('setStichingCost', stitchingCost)
-      emits('setPrice', cost.total)
+      formStore.material_cost = 0
+      formStore.stiching_cost = stitchingCost
+      formStore.item_cost = cost.total
     }
     if (modelValue.value == 'Only Altering') {
       cost.total = alteringCost;
-      emits('setStichingCost', null)
-      emits('setAlteringCost', alteringCost)
-      emits('setPrice', cost.total)
+      formStore.material_cost = 0
+      formStore.stiching_cost = 0
+      formStore.item_cost = cost.total
     }
   },
 );
 
 //set material code
 watch(() => material.code, (val) => {
-  data.material_code = val
-  emits('setMaterialCode', val)
+  formStore.material_code = val
 })
 
 //set work Type 
 watch(() => modelValue.value, (val) => {
-  data.work_type = val
-  emits('setdataData', val)
+  formStore.work_type = val
 })
 
 //set material type
 watch(() => material.type, (val) => {
-  data.material_type = val
-  emits('setMaterialType', val)
+  formStore.material_type = val
 })
 
 </script>

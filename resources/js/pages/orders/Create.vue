@@ -10,29 +10,39 @@ import { router, useForm } from '@inertiajs/vue3';
 import Notes from '@/components/Items/Notes.vue';
 import Input from '@/components/InputWithLabel.vue';
 import { useOrder } from '@/composables/useOrderData';
+import { useOrderFormStore } from '@/stores/orderFormStore';
+
 const props = defineProps(["users", "customers", "itemTypes", "errors"])
 
 const showModal = ref(false);
 const disabled = ref(false);
 const toast = new ToastMagic();
 const showDeletePopup = ref(false);
-const orderData = useOrder()
-let form = useForm(orderData);
-
+let form = useForm({
+    user_id: null,
+    customer_id: null,
+    status: 'create',
+    total_amount: null,
+    advance_paid: null,
+    delivery_date: '',
+    close_date: '',
+    notes: [{ label: '', text: '' }],
+    order_items: [],
+});
 let customerMeasurements = ref({})
 const itemToDelete = ref(null);
 let totalAmmount = ref(null)
-// set data which is set by child components 
-let setOrderData = (data) => {
-    form = data
-}
+
 
 let i = 0
 
 let setOrderItemsData = (data) => {
+    form.order_items.push(data)
     console.log('cust measruments:', data);
     data.measurements = customerMeasurements.value
     form.order_items[i] = data
+    
+    form.order_items.push(formStore.order_items)
     i++
 }
 
@@ -113,6 +123,7 @@ watch(() => form.advance_paid, (nPayVal) => {
     }
 })
 
+
 </script>
 
 <template>
@@ -133,17 +144,16 @@ watch(() => form.advance_paid, (nPayVal) => {
                     <Button :disabled="disabled" @click="create">Create Order</Button>
                 </div>
             </div>
-            <div
-                class="flex flex-col mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
+            <div class="flex flex-col mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
 
                 <h1 class="text-xl font-bold lg:mt-0 mt-4">Enter Details</h1>
 
                 <!-- selected customer list -->
-                <CustomerListDropdown :customers="customers" :errors="errors" :form="form" @setOrderData="setOrderData"
+                <CustomerListDropdown :customers="customers" :errors="errors" :form="form" 
                     @setMeasurements="setMeasurements" />
 
                 <!-- Delivery Date -->
-                <DateIcon :form="form" :errors="errors" @setOrderData="setOrderData" />
+                <DateIcon :form="form" :errors="errors"  />
 
                 <!-- items -->
                 <div class="mt-2">

@@ -17,20 +17,6 @@ function triggerUpload(type, index) {
   }
 }
 
-// function onFileChange(event, index) {
-//   const file = event.target.files[0]
-//   if (file && file.type.startsWith('image/')) {
-//     const url = URL.createObjectURL(file)
-//     if (index === 1) {
-//       previewImage1.value = url
-//       emits('setClothImage1', file)
-//     } else if (index === 2) {
-//       previewImage2.value = url
-//       emits('setClothImage2', file)
-//     }
-//   }
-// }
-
 function onFileChange(event, index) {
   const file = event.target.files[0]
   if (file && file.type.startsWith('image/')) {
@@ -41,14 +27,12 @@ function onFileChange(event, index) {
       emits('setClothImage1', file) // ✅ emit actual file
     } else if (index === 2) {
       previewImage2.value = url
+      console.log('set Cloth 2 Image on change function:',file);
       emits('setClothImage2', file)
     }
   }
 }
 
-
-// watch(() => previewImage1.value, val => emits('setClothImage1', val))
-// watch(() => previewImage2.value, val => emits('setClothImage2', val))
 </script>
 
 <template>
