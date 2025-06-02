@@ -18,7 +18,7 @@ const fileInputGallery = ref(null)
 const fileInputCamera = ref(null)
 const previewImage = ref(null)
 const notes = ref([{ label: '', text: '' }]);
-const props = defineProps(['showModal', 'form', 'itemTypes', 'itemIndex', 'errorMessage', 'errors']);
+const props = defineProps(['showModal', 'form', 'itemTypes', 'allDesignDetails', 'itemIndex', 'errorMessage', 'errors']);
 let findDesign = ref()
 let formStore = useOrderFormStore()
 
@@ -127,7 +127,22 @@ watch(() => showImageUpload.value, (nVal) => {
     }
 })
 watch(() => formStore.order_items_template.template_id, (newId) => {
-    designDetails.value = props.itemTypes.find(item => item.id === newId).design_details
+
+    //set the design details 
+    console.log('item type val:', props.itemTypes);
+    let designDetailsIds = []
+    designDetailsIds = props.itemTypes.find(item => item.id === newId).design_details
+    // designDetails.value = props.itemTypes.find(item => item.id === newId).design_details
+
+    props.allDesignDetails.forEach(key => {
+        if (key.id.includes(designDetailsIds)) {
+            designDetails.value[key] = key.id;
+        }
+    });
+    // designDetails.value = props.allDesignDetails.find(item => item.id === newId).design_details
+
+    console.log('design details ids:', designDetails.value);
+
 })
 
 </script>
@@ -159,9 +174,6 @@ watch(() => formStore.order_items_template.template_id, (newId) => {
                     <!-- done -->
                     <WorkType />
                     <ItemType :itemTypes="itemTypes" @setItemId="setItemId" />
-                    <!-- <pre>
-                        {{ measurements }}
-                    </pre> -->
                     <ItemMeasurements :askedMeasurements="measurements" />
                     <DesignDetails :designDetails="designDetails" v-model="formStore.design_detail" />
 

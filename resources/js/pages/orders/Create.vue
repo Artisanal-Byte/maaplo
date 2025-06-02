@@ -12,7 +12,7 @@ import Input from '@/components/InputWithLabel.vue';
 import { useOrder } from '@/composables/useOrderData';
 import { useOrderFormStore } from '@/stores/orderFormStore';
 
-const props = defineProps(["users", "customers", "itemTypes", "errors"])
+const props = defineProps(["users", "customers", "itemTypes", "designDetails", "errors"])
 
 const showModal = ref(false);
 const disabled = ref(false);
@@ -171,7 +171,7 @@ watch(() => form.advance_paid, (nPayVal) => {
                         <!-- Modal Content -->
                         <ItemModel :errors="form.errors?.order_items" :itemIndex="i" :showModal="showModal"
                             @close="closeModel" :form="form.order_items" @setOrderItemsData="setOrderItemsData"
-                            :itemTypes="itemTypes" :measurements="customerMeasurements ?? []" />
+                            :itemTypes="itemTypes" :measurements="customerMeasurements ?? []"  :allDesignDetails="designDetails"/>
                         <p class="text-red-600 text-sm">
                             <!-- {{ form.errors.order_items }} -->
                         </p>

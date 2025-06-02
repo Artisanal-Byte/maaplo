@@ -6,8 +6,8 @@ import { useOrderFormStore } from '@/stores/orderFormStore';
 
 const props = defineProps(["designDetails"])
 
-watch(()=>props.designDetails,(nVal)=> {
-    console.log('design details:',nVal);
+watch(() => props.designDetails, (nVal) => {
+    console.log('design details:', nVal);
 })
 const formStore = useOrderFormStore()
 
@@ -51,31 +51,31 @@ watch(selectedSleeveType, (newVal) => {
 })
 
 const neckTypes = [
-    { name: 'u-neck', label: 'U Neck', },
-    { name: 'v-neck-back', label: 'V Neck', img: '' },
-    { name: 'cross-neck', label: 'Cross Neck', img: '' },
-    { name: 'close-neck', label: 'Close Neck', img: '' },
+    { id: 1, name: 'u-neck', label: 'U Neck', },
+    { id: 2, name: 'v-neck-back', label: 'V Neck', img: '' },
+    { id: 3, name: 'cross-neck', label: 'Cross Neck', img: '' },
+    { id: 4, name: 'close-neck', label: 'Close Neck', img: '' },
 ]
 
 const frontNeck = [
-    { name: 'v-neck', label: 'V Neck', img: '' },
-    { name: 'square-neck', label: 'Square Neck', img: '' },
-    { name: 'halter-neck', label: 'Halter Neck', img: '' },
-    { name: 'round-neck', label: 'Round Neck', img: '' },
+    { id: 5, name: 'v-neck', label: 'V Neck', img: '' },
+    { id: 6, name: 'square-neck', label: 'Square Neck', img: '' },
+    { id: 7, name: 'halter-neck', label: 'Halter Neck', img: '' },
+    { id: 8, name: 'round-neck', label: 'Round Neck', img: '' },
 ]
 
 const sleeveType = [
     {
-        label: 'Full', img: ''
+        id: 9, label: 'Full', img: ''
     },
     {
-        label: 'Half', img: ''
+        id: 10, label: 'Half', img: ''
     },
     {
-        label: 'Cap', img: ''
+        id: 11, label: 'Cap', img: ''
     },
     {
-        label: 'No', img: ''
+        id: 12, label: 'No', img: ''
     },
 ]
 
