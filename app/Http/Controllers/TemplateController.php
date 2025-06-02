@@ -42,8 +42,8 @@ class TemplateController extends Controller
             'privateTemplates' => $data['privateTemplates'],
             'measurements' => $data['allMeasurements'],
             'designDetails' => DesignDetail::with('bodyPartValue')
-                ->get(['id', 'body_part', 'value', 'gender'])
-                ->unique('body_part')
+                ->get(['id', 'body_part_id', 'value', 'gender'])
+                ->unique('body_part_id')
                 ->values(),
         ]);
     }
@@ -115,8 +115,8 @@ class TemplateController extends Controller
             'privateTemplates' => $templateData['privateTemplates'],
             'allMeasurements' => $templateData['allMeasurements'],
             'designDetails' => DesignDetail::with('bodyPartValue')
-                ->get(['id', 'body_part', 'value', 'gender'])
-                ->unique('body_part')
+                ->get(['id', 'body_part_id', 'value', 'gender'])
+                ->unique('body_part_id')
                 ->values(),
         ]);
     }

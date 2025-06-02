@@ -28,7 +28,7 @@ const form = useForm({
 designDetails.forEach(dd => {
     form.design_details[dd.id] = false;
 });
-
+console.log('Design Details:', designDetails);
 const uniqueDesignDetails = computed(() => {
     const seen = new Set();
     return designDetails.filter(detail => {
@@ -37,7 +37,7 @@ const uniqueDesignDetails = computed(() => {
         return true;
     });
 });
-
+console.log('Unique Design Details:', uniqueDesignDetails.value);
 const formatSlug = (slug) => {
     return slug
         .split('_')
@@ -213,7 +213,7 @@ const submitForm = () => {
                 <div class="mt-2">
                     <h2 class="text-md font-semibold mb-4">Design Details Ask:</h2>
                     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div v-for="detail in uniqueDesignDetails" :key="detail.body_part"
+                        <div v-for="detail in designDetails" :key="detail.body_part"
                             class="flex items-center justify-between bg-gray-50 p-2 rounded-md">
                             <span class="font-normal text-[16px] tracking-normal font-lato">
                                 {{ detail.body_part_value?.body_part || detail.body_part }}

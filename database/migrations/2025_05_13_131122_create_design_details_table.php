@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->enum('body_section', ['Upper', 'Lower']);
             $table->enum('gender', ['m','f','o']);
-            $table->string('body_part_id');
+           $table->foreignId('body_part_id')->references('id')->on('body_part_value')->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('value');
             $table->text('image');
             $table->timestamps();

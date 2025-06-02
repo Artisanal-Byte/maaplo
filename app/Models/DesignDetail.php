@@ -43,13 +43,17 @@ class DesignDetail extends Model
         return strtolower(str_replace(' ', '_', trim($value)));
     }
 
-    private function convertForDisplay(string $value): string
+    private function convertForDisplay(?string $value): string
     {
+        if (is_null($value)) {
+            return '';
+        }
+
         return ucwords(strtolower(str_replace('_', ' ', $value)));
     }
 
     public function bodyPartValue()
     {
-        return $this->belongsTo(BodyPartValue::class, 'body_part');
+        return $this->belongsTo(BodyPartValue::class, 'body_part_id');
     }
 }
