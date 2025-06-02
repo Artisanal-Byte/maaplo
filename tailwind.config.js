@@ -13,6 +13,8 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Instrument Sans', ...defaultTheme.fontFamily.sans],
+                lato: ['Lato', 'sans-serif'],
+                convergence: ['Convergence', 'sans-serif'],
             },
             borderRadius: {
                 lg: 'var(--radius)',
