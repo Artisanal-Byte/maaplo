@@ -107,7 +107,6 @@ const isValidPathData = (str) => {
                     </Link>
                 </div>
             </div>
-            <pre>{{ form.errors }}</pre>
             <div class="flex flex-col mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Select Base Template -->
@@ -193,10 +192,10 @@ const isValidPathData = (str) => {
                                 v-model="form.required_measurements" class="form-checkbox w-4 h-4" />
                         </div>
                     </label>
-                    <div v-if="form.errors.required_measurements" class="text-red-600 text-sm mt-1">{{
-                        form.errors.required_measurements
-                        }}</div>
                 </div>
+                <div v-if="form.errors.required_measurements" class="text-red-600 text-sm mt-1">{{
+                    form.errors.required_measurements
+                    }}</div>
 
                 <!-- SVG Logo -->
                 <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
@@ -230,7 +229,7 @@ const isValidPathData = (str) => {
                         <div v-for="detail in props.designDetails" :key="detail.id"
                             class="flex items-center justify-between bg-gray-50 p-2 rounded-md">
                             <span class="font-normal text-[16px] tracking-normal font-lato">
-                                {{ detail.value }}
+                                {{ detail.body_part }}
                             </span>
 
                             <div class="flex rounded overflow-hidden text-sm">

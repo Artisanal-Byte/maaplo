@@ -107,12 +107,11 @@ class TemplateController extends Controller
         $templateData = GetTemplateHelper::getTemplateData(auth()->id());
         return Inertia::render('items/Edit', [
             'item' => $item,
-            'errors' => [],
             'measurements' => $measurements,
             'publicTemplates' => $templateData['publicTemplates'],
             'privateTemplates' => $templateData['privateTemplates'],
             'allMeasurements' => $templateData['allMeasurements'],
-            'designDetails' => DesignDetail::all(['id', 'value', 'body_part', 'gender']),
+            'designDetails' => DesignDetail::all(['id', 'body_part', 'value', 'gender']),
         ]);
     }
     /**
@@ -129,7 +128,6 @@ class TemplateController extends Controller
             'required_measurements' => 'required|array',
             'design_details' => 'required|array',
         ]);
-        dd($validated);
         $trueDesignDetails = array_map('intval', $validated['design_details']);
 
         // dd($trueDesignDetails);

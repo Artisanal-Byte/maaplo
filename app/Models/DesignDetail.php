@@ -18,6 +18,10 @@ class DesignDetail extends Model
         'gender',
     ];
 
+    protected $casts = [
+        'design_details' => 'array',
+    ];
+
     protected function bodyPart(): Attribute
     {
         return Attribute::make(
