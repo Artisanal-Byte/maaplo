@@ -1,6 +1,7 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
@@ -8,7 +9,7 @@ import SearchSelect from '@/components/SearchSelect.vue';
 import Button from '@/components/Button.vue';
 
 // Import or define ToastMagic instance properly
-const toast = new ToastMagic(); // Adjust this import to your actual ToastMagic location
+const toast = new ToastMagic();
 
 const { props: pageProps } = usePage();
 const measurements = pageProps.measurements || [];
@@ -26,6 +27,15 @@ const form = useForm({
 
 designDetails.forEach(dd => {
     form.design_details[dd.id] = false;
+});
+
+const uniqueDesignDetails = computed(() => {
+    const seen = new Set();
+    return designDetails.filter(detail => {
+        if (seen.has(detail.body_part)) return false;
+        seen.add(detail.body_part);
+        return true;
+    });
 });
 
 const formatSlug = (slug) => {
@@ -167,7 +177,8 @@ const submitForm = () => {
                         </div>
                     </label>
                 </div>
-                <div v-if="form.errors.required_measurements" class="text-red-600 text-sm">{{ form.errors.required_measurements }}
+                <div v-if="form.errors.required_measurements" class="text-red-600 text-sm">{{
+                    form.errors.required_measurements }}
                 </div>
 
 
@@ -202,10 +213,10 @@ const submitForm = () => {
                 <div class="mt-2">
                     <h2 class="text-md font-semibold mb-4">Design Details Ask:</h2>
                     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div v-for="detail in designDetails" :key="detail.id"
+                        <div v-for="detail in uniqueDesignDetails" :key="detail.body_part"
                             class="flex items-center justify-between bg-gray-50 p-2 rounded-md">
                             <span class="font-normal text-[16px] tracking-normal font-lato">
-                                {{ detail.body_part }}
+                                {{ detail.body_part_value?.body_part || detail.body_part }}
                             </span>
                             <div class="flex rounded overflow-hidden text-sm">
                                 <button :class="[
@@ -224,7 +235,8 @@ const submitForm = () => {
                         </div>
                     </div>
 
-                    <div v-if="form.errors.design_details" class="text-red-600 text-sm mt-2">{{ form.errors.design_details }}
+                    <div v-if="form.errors.design_details" class="text-red-600 text-sm mt-2">{{
+                        form.errors.design_details }}
                     </div>
                 </div>
 
