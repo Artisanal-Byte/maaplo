@@ -5,7 +5,6 @@ import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
 import SearchSelect from '@/components/SearchSelect.vue';
-import { nextTick, ref } from 'vue';
 
 const toast = new ToastMagic();
 
@@ -18,39 +17,29 @@ const props = defineProps({
     measurements: Object
 });
 
-const selectedTemplate = ref(null);
-
 const form = useForm({
     name: props.item.name,
     svg_logo: props.item.svg_logo,
     gender: props.item.gender === "Male" ? "m" : (props.item.gender === "Female" ? "f" : "o"),
     body_part: props.item.body_part === "Upper" ? "upper" : "lower",
     required_measurements: props.measurements.selected,
-    design_details: {
-        front_neck_design: props.designDetails?.front_neck_design ?? false,
-        back_neck_design: props.designDetails?.back_neck_design ?? false,
-        sleeve_type: props.designDetails?.sleeve_type ?? false,
-    },
-
+    design_details: {},
+    errors: props.errors,
     _method: 'put',
 });
 
-const toggleMeasurement = (label) => {
-    const updatedMeasurements = [...form.required_measurements];
-    const index = updatedMeasurements.indexOf(label);
-    if (index > -1) {
-        updatedMeasurements.splice(index, 1);
-    } else {
-        updatedMeasurements.push(label);
-    }
-    form.required_measurements = updatedMeasurements;
-};
+props.designDetails.forEach(detail => {
+    form.design_details[detail.id] = props.item.design_details?.includes(detail.id) ?? false;
+});
 
 const updateTemplate = () => {
+    const trueDesignDetailIds = Object.entries(form.design_details)
+        .filter(([_, value]) => value === true)
+        .map(([key]) => Number(key));
     const dataToSend = {
         ...form.data(),
         required_measurements: form.required_measurements,
-        design_details: form.design_details,
+        design_details: trueDesignDetailIds,
     };
 
     form.transform(data => ({
@@ -61,7 +50,8 @@ const updateTemplate = () => {
             toast.success('Template updated successfully!');
             setTimeout(() => router.visit(route('items.index')), 1000);
         },
-        onError: () => {
+        onError: (errors) => {
+            console.log(errors);
             toast.error('Update failed. Please try again.');
         }
     });
@@ -76,6 +66,7 @@ const fillFormFromTemplate = (selectedTemplate) => {
     form.required_measurements = Array.isArray(selectedTemplate.measurements)
         ? selectedTemplate.measurements.map(m => m.slug)
         : [];
+
 };
 
 const formatSlug = (slug) => {
@@ -85,17 +76,11 @@ const formatSlug = (slug) => {
         .join(' ');
 };
 
-const formatLabel = (key) => {
-    return key
-        .split('_')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-};
-
 const isSvgMarkup = (str) => {
     if (typeof str !== 'string') return false;
     return str.trim().startsWith('<svg');
 };
+
 
 const isValidPathData = (str) => {
     if (typeof str !== 'string') return false;
@@ -122,7 +107,7 @@ const isValidPathData = (str) => {
                     </Link>
                 </div>
             </div>
-
+            <pre>{{ form.errors }}</pre>
             <div class="flex flex-col mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Select Base Template -->
@@ -135,14 +120,12 @@ const isValidPathData = (str) => {
                     <!-- Template Name -->
                     <div>
                         <Input v-model="form.name" label="Template Name" placeholder="Enter Template Name" margin="md"
-                            width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.name"
+                            width="full" fonttype="normal" textSize="base" rounded="md" :error="form.errors.name"
                             required="true">
                         <template #icon>
                             <Icon icon="tdesign:template-filled" width="18" height="18" class="mt-2" />
                         </template>
                         </Input>
-
-                        <div v-if="errors.name" class="text-red-600 text-sm">{{ errors.name }}</div>
                     </div>
 
                     <!-- Gender -->
@@ -164,7 +147,7 @@ const isValidPathData = (str) => {
                                 ]">Male</div>
                             </label>
                         </div>
-                        <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.gender }}</div>
+                        <div v-if="form.errors.gender" class="text-red-600 text-sm">{{ form.errors.gender }}</div>
                     </div>
 
                     <!-- Body Part -->
@@ -188,7 +171,7 @@ const isValidPathData = (str) => {
                                 ]">Lower</div>
                             </label>
                         </div>
-                        <div v-if="errors.body_part" class="text-red-600 text-sm">{{ errors.body_part }}</div>
+                        <div v-if="form.errors.body_part" class="text-red-600 text-sm">{{ form.errors.body_part }}</div>
                     </div>
                 </div>
 
@@ -210,15 +193,14 @@ const isValidPathData = (str) => {
                                 v-model="form.required_measurements" class="form-checkbox w-4 h-4" />
                         </div>
                     </label>
-                </div>
-
-                <div v-if="errors.required_measurements" class="text-red-600 text-sm mt-1">
-                    {{ errors.required_measurements }}
+                    <div v-if="form.errors.required_measurements" class="text-red-600 text-sm mt-1">{{
+                        form.errors.required_measurements
+                        }}</div>
                 </div>
 
                 <!-- SVG Logo -->
                 <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
-                    width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo" />
+                    width="full" fonttype="normal" textSize="base" rounded="md" :error="form.errors.svg_logo" />
 
                 <div
                     class="mt-6 border border-gray-300 rounded-lg p-6 bg-gray-50 flex justify-center items-center min-h-[120px]">
@@ -245,32 +227,32 @@ const isValidPathData = (str) => {
                     <h2 class="text-md font-semibold mb-4">Design Details</h2>
 
                     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div v-for="(value, key) in form.design_details" :key="key"
+                        <div v-for="detail in props.designDetails" :key="detail.id"
                             class="flex items-center justify-between bg-gray-50 p-2 rounded-md">
                             <span class="font-normal text-[16px] tracking-normal font-lato">
-                                {{ formatLabel(key) }}
+                                {{ detail.value }}
                             </span>
 
                             <div class="flex rounded overflow-hidden text-sm">
                                 <button :class="[
                                     'px-4 py-1 focus:outline-none transition',
-                                    form.design_details[key] === true ? 'bg-primary text-white' : 'bg-gray-200 text-black'
-                                ]" @click="form.design_details[key] = true">
+                                    form.design_details[detail.id] === true ? 'bg-primary text-white' : 'bg-gray-200 text-black'
+                                ]" @click="form.design_details[detail.id] = true">
                                     Yes
                                 </button>
                                 <button :class="[
                                     'px-4 py-1 focus:outline-none transition',
-                                    form.design_details[key] === false ? 'bg-primary text-white' : 'bg-gray-200 text-black'
-                                ]" @click="form.design_details[key] = false">
+                                    form.design_details[detail.id] === false ? 'bg-primary text-white' : 'bg-gray-200 text-black'
+                                ]" @click="form.design_details[detail.id] = false">
                                     No
                                 </button>
                             </div>
                         </div>
+
                     </div>
                 </div>
-                <div v-if="errors.design_details" class="text-red-600 text-sm">{{ errors.design_details }}
+                <div v-if="form.errors.design_details" class="text-red-600 text-sm">{{ form.errors.design_details }}
                 </div>
-
 
                 <!-- Submit Button -->
                 <Button @click="updateTemplate" color="primary" textSize="lg" padding="md" rounded="full">
