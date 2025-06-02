@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { reactive } from 'vue';
+import { useForm } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import SearchSelect from '@/components/SearchSelect.vue';
@@ -11,17 +11,16 @@ import Button from '@/components/Button.vue';
 const toast = new ToastMagic(); // Adjust this import to your actual ToastMagic location
 
 const { props: pageProps } = usePage();
-const errors = pageProps.errors || {};
 const measurements = pageProps.measurements || [];
 const designDetails = pageProps.designDetails || [];
 
-const form = reactive({
+const form = useForm({
     name: '',
     gender: '',
     body_part: '',
     required_measurements: [],
     custom_template: false,
-    svg_logo: '',         // SVG content or path
+    svg_logo: '',
     design_details: {},
 });
 
@@ -55,7 +54,7 @@ const isValidPathData = (str = '') => {
 };
 
 const submitForm = () => {
-    router.post(route('items.store'), form, {
+    form.post(route('items.store'), {
         onSuccess: () => {
             toast.success("Item created successfully!");
             router.visit(route('items.index'));
@@ -98,13 +97,13 @@ const submitForm = () => {
                     <!-- Template Name -->
                     <div>
                         <Input v-model="form.name" label="Template Name" placeholder="Enter Template Name" margin="md"
-                            width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.name"
+                            width="full" fonttype="normal" textSize="base" rounded="md" :error="form.errors.name"
                             required="true">
                         <template #icon>
                             <Icon icon="tdesign:template-filled" width="18" height="18" class="mt-2" />
                         </template>
                         </Input>
-                        <div v-if="errors.name" class="text-red-600 text-sm">{{ errors.name }}</div>
+
                     </div>
 
                     <!-- Gender -->
@@ -126,7 +125,7 @@ const submitForm = () => {
                                 ]">Male</div>
                             </label>
                         </div>
-                        <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.gender }}</div>
+                        <div v-if="form.errors.gender" class="text-red-600 text-sm">{{ form.errors.gender }}</div>
                     </div>
 
                     <!-- Body Part -->
@@ -150,7 +149,7 @@ const submitForm = () => {
                                 ]">Lower</div>
                             </label>
                         </div>
-                        <div v-if="errors.body_part" class="text-red-600 text-sm">{{ errors.body_part }}</div>
+                        <div v-if="form.errors.body_part" class="text-red-600 text-sm">{{ form.errors.body_part }}</div>
                     </div>
                 </div>
 
@@ -168,7 +167,7 @@ const submitForm = () => {
                         </div>
                     </label>
                 </div>
-                <div v-if="errors.required_measurements" class="text-red-600 text-sm">{{ errors.required_measurements }}
+                <div v-if="form.errors.required_measurements" class="text-red-600 text-sm">{{ form.errors.required_measurements }}
                 </div>
 
 
@@ -176,7 +175,7 @@ const submitForm = () => {
                 <div>
                     <Input class="mt-4" v-model="form.svg_logo" label="Template Logo"
                         placeholder="Only Paste SVG path here" margin="md" width="full" fonttype="normal"
-                        textSize="base" rounded="md" :error="errors.svg_logo" />
+                        textSize="base" rounded="md" :error="form.errors.svg_logo" />
                 </div>
                 <!-- SVG Preview -->
                 <div
@@ -225,7 +224,7 @@ const submitForm = () => {
                         </div>
                     </div>
 
-                    <div v-if="errors.design_details" class="text-red-600 text-sm mt-2">{{ errors.design_details }}
+                    <div v-if="form.errors.design_details" class="text-red-600 text-sm mt-2">{{ form.errors.design_details }}
                     </div>
                 </div>
 
