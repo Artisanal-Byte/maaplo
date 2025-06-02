@@ -80,5 +80,5 @@ class Template extends Model
             'measurements_id'
         );
     }
-    
+
 }

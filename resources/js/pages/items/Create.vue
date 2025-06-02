@@ -13,6 +13,7 @@ const toast = new ToastMagic(); // Adjust this import to your actual ToastMagic 
 const { props: pageProps } = usePage();
 const errors = pageProps.errors || {};
 const measurements = pageProps.measurements || [];
+const designDetails = pageProps.designDetails || [];
 
 const form = reactive({
     name: '',
@@ -21,11 +22,11 @@ const form = reactive({
     required_measurements: [],
     custom_template: false,
     svg_logo: '',         // SVG content or path
-    design_details: {
-        front_neck_design: false,
-        back_neck_design: false,
-        sleeve_type: false,
-    },
+    design_details: {},
+});
+
+designDetails.forEach(dd => {
+    form.design_details[dd.id] = false;
 });
 
 const formatSlug = (slug) => {
@@ -53,13 +54,6 @@ const isValidPathData = (str = '') => {
     return /^[Mm]/.test(str.trim());
 };
 
-const formatLabel = (key) => {
-    return key
-        .split('_')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-};
-
 const submitForm = () => {
     router.post(route('items.store'), form, {
         onSuccess: () => {
@@ -74,6 +68,7 @@ const submitForm = () => {
 </script>
 
 <template>
+
     <Head title="Template-Create" />
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
@@ -103,7 +98,8 @@ const submitForm = () => {
                     <!-- Template Name -->
                     <div>
                         <Input v-model="form.name" label="Template Name" placeholder="Enter Template Name" margin="md"
-                            width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.name" required="true">
+                            width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.name"
+                            required="true">
                         <template #icon>
                             <Icon icon="tdesign:template-filled" width="18" height="18" class="mt-2" />
                         </template>
@@ -207,23 +203,28 @@ const submitForm = () => {
                 <div class="mt-2">
                     <h2 class="text-md font-semibold mb-4">Design Details Ask:</h2>
                     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div v-for="(value, key) in form.design_details" :key="key"
+                        <div v-for="detail in designDetails" :key="detail.id"
                             class="flex items-center justify-between bg-gray-50 p-2 rounded-md">
                             <span class="font-normal text-[16px] tracking-normal font-lato">
-                                {{ formatLabel(key) }}
+                                {{ detail.value }}
                             </span>
                             <div class="flex rounded overflow-hidden text-sm">
                                 <button :class="[
                                     'px-4 py-1 focus:outline-none transition',
-                                    form.design_details[key] === true ? 'bg-primary text-white' : 'bg-gray-200 text-black'
-                                ]" @click="form.design_details[key] = true">Yes</button>
+                                    form.design_details[detail.id] ? 'bg-primary text-white' : 'bg-gray-200 text-black'
+                                ]" @click="form.design_details[detail.id] = true">
+                                    Yes
+                                </button>
                                 <button :class="[
                                     'px-4 py-1 focus:outline-none transition',
-                                    form.design_details[key] === false ? 'bg-primary text-white' : 'bg-gray-200 text-black'
-                                ]" @click="form.design_details[key] = false">No</button>
+                                    form.design_details[detail.id] === false ? 'bg-primary text-white' : 'bg-gray-200 text-black'
+                                ]" @click="form.design_details[detail.id] = false">
+                                    No
+                                </button>
                             </div>
                         </div>
                     </div>
+
                     <div v-if="errors.design_details" class="text-red-600 text-sm mt-2">{{ errors.design_details }}
                     </div>
                 </div>

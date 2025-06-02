@@ -5,7 +5,6 @@ import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
 import SearchSelect from '@/components/SearchSelect.vue';
-import { nextTick, ref } from 'vue';
 
 const toast = new ToastMagic();
 
@@ -18,39 +17,28 @@ const props = defineProps({
     measurements: Object
 });
 
-const selectedTemplate = ref(null);
-
 const form = useForm({
     name: props.item.name,
     svg_logo: props.item.svg_logo,
     gender: props.item.gender === "Male" ? "m" : (props.item.gender === "Female" ? "f" : "o"),
     body_part: props.item.body_part === "Upper" ? "upper" : "lower",
     required_measurements: props.measurements.selected,
-    design_details: {
-        front_neck_design: props.designDetails?.front_neck_design ?? false,
-        back_neck_design: props.designDetails?.back_neck_design ?? false,
-        sleeve_type: props.designDetails?.sleeve_type ?? false,
-    },
-
+    design_details: {},
     _method: 'put',
 });
 
-const toggleMeasurement = (label) => {
-    const updatedMeasurements = [...form.required_measurements];
-    const index = updatedMeasurements.indexOf(label);
-    if (index > -1) {
-        updatedMeasurements.splice(index, 1);
-    } else {
-        updatedMeasurements.push(label);
-    }
-    form.required_measurements = updatedMeasurements;
-};
+props.designDetails.forEach(detail => {
+    form.design_details[detail.id] = props.item.design_details?.includes(detail.id) ?? false;
+});
 
 const updateTemplate = () => {
+    const trueDesignDetailIds = Object.entries(form.design_details)
+        .filter(([_, value]) => value === true)
+        .map(([key]) => Number(key));
     const dataToSend = {
         ...form.data(),
         required_measurements: form.required_measurements,
-        design_details: form.design_details,
+        design_details: trueDesignDetailIds,
     };
 
     form.transform(data => ({
@@ -76,17 +64,11 @@ const fillFormFromTemplate = (selectedTemplate) => {
     form.required_measurements = Array.isArray(selectedTemplate.measurements)
         ? selectedTemplate.measurements.map(m => m.slug)
         : [];
+
 };
 
 const formatSlug = (slug) => {
     return slug
-        .split('_')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-};
-
-const formatLabel = (key) => {
-    return key
         .split('_')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
@@ -245,32 +227,32 @@ const isValidPathData = (str) => {
                     <h2 class="text-md font-semibold mb-4">Design Details</h2>
 
                     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div v-for="(value, key) in form.design_details" :key="key"
+                        <div v-for="detail in props.designDetails" :key="detail.id"
                             class="flex items-center justify-between bg-gray-50 p-2 rounded-md">
                             <span class="font-normal text-[16px] tracking-normal font-lato">
-                                {{ formatLabel(key) }}
+                                {{ detail.value }}
                             </span>
 
                             <div class="flex rounded overflow-hidden text-sm">
                                 <button :class="[
                                     'px-4 py-1 focus:outline-none transition',
-                                    form.design_details[key] === true ? 'bg-primary text-white' : 'bg-gray-200 text-black'
-                                ]" @click="form.design_details[key] = true">
+                                    form.design_details[detail.id] === true ? 'bg-primary text-white' : 'bg-gray-200 text-black'
+                                ]" @click="form.design_details[detail.id] = true">
                                     Yes
                                 </button>
                                 <button :class="[
                                     'px-4 py-1 focus:outline-none transition',
-                                    form.design_details[key] === false ? 'bg-primary text-white' : 'bg-gray-200 text-black'
-                                ]" @click="form.design_details[key] = false">
+                                    form.design_details[detail.id] === false ? 'bg-primary text-white' : 'bg-gray-200 text-black'
+                                ]" @click="form.design_details[detail.id] = false">
                                     No
                                 </button>
                             </div>
                         </div>
+
                     </div>
                 </div>
                 <div v-if="errors.design_details" class="text-red-600 text-sm">{{ errors.design_details }}
                 </div>
-
 
                 <!-- Submit Button -->
                 <Button @click="updateTemplate" color="primary" textSize="lg" padding="md" rounded="full">
