@@ -11,12 +11,16 @@ const toast = new ToastMagic();
 const props = defineProps({
     designDetail: Object,
     errors: Object,
+    bodyParts: Array,
 });
+const existingBodyParts = ref(props.bodyParts || []);
+
 
 const form = useForm({
     body_section: props.designDetail.body_section,
     gender: props.designDetail.gender,
-    body_part: props.designDetail.body_part,
+    body_part_id: null,
+    new_body_part: '',
     value: props.designDetail.value,
     image: props.designDetail.image,
 });
@@ -60,7 +64,8 @@ const updateDesignDetail = () => {
 </script>
 
 <template>
-        <Head title="DesignDetail-Edit" />
+
+    <Head title="DesignDetail-Edit" />
     <AppLayout>
         <div class="px-6 py-10 max-w-5xl mx-auto">
             <!-- Header -->
@@ -112,12 +117,25 @@ const updateDesignDetail = () => {
                     </div>
 
                     <!-- Body Part -->
-                    <Input type="text" label="Body Part" v-model="form.body_part" :error="props.errors.body_part"
-                        placeholder="Enter body part" required="true">
-                    <template #icon>
-                        <Icon icon="mdi:human-male-height" width="20" height="20" />
-                    </template>
-                    </Input>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-800 mb-1">
+                            Body Part <span class="text-red-500">*</span>
+                        </label>
+                        <select v-model="form.body_part_id"
+                            class="w-full border rounded-md py-2 px-3 text-sm shadow-sm focus:ring-primary focus:border-primary">
+                            <option value="">-- Select existing Body Part --</option>
+                            <option v-for="part in props.bodyParts" :key="part.id" :value="part.id">
+                                {{ part.body_part }}
+                            </option>
+                        </select>
+                        <div class="text-gray-500 text-sm mt-1">Or enter a new body part below:</div>
+                        <Input type="text" v-model="form.new_body_part" placeholder="New body part"
+                            :error="props.errors.body_part" class="mt-2">
+                        <template #icon>
+                            <Icon icon="mdi:human-male-height" width="20" height="20" />
+                        </template>
+                        </Input>
+                    </div>
 
                     <!-- Value -->
                     <Input type="text" label="Value" v-model="form.value" :error="props.errors.value"

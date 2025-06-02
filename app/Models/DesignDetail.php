@@ -47,4 +47,9 @@ class DesignDetail extends Model
     {
         return ucwords(strtolower(str_replace('_', ' ', $value)));
     }
+
+    public function bodyPartValue()
+    {
+        return $this->belongsTo(BodyPartValue::class, 'body_part');
+    }
 }
