@@ -74,8 +74,9 @@ export const useOrderFormStore = defineStore('orderForm', {
             }
         },
         createOrder() {
-            const form = useForm({ ...this.$state });
-            form.post(route('orders.store'))
+            const { order_items_template, ...formData } = this.$state;
+            const form = useForm({ ...formData });
+            form.post(route('orders.store'));
         },
         deleteOrderItem(index) {
             if (index >= 0 && index < this.order_items.length) {

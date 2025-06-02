@@ -16,12 +16,8 @@ import { useOrderFormStore } from '@/stores/orderFormStore';
 import ItemMeasurements from './ItemMeasurements.vue';
 const fileInputGallery = ref(null)
 const fileInputCamera = ref(null)
-const notes = ref([{ label: '', text: '' }]);
 const props = defineProps(['showModal', 'form', 'itemTypes', 'allDesignDetails', 'itemIndex', 'errorMessage', 'errors']);
-let findDesign = ref()
 let formStore = useOrderFormStore()
-
-// console.log('asked measurments:', props.itemTypes);
 
 const emit = defineEmits(['close', 'setOrderItemsData']);
 const measurements = ref([])
@@ -134,7 +130,7 @@ const previewImage = (file) => {
 
                     <div class="flex items-center gap-4">
                         <h1 class="font-medium font-lato">Reference dress given?</h1>
-                        <ToggleButton @setShowReferenceDress="setShowReferenceDress" />
+                        <ToggleButton v-model:model="showImageUpload" />
                     </div>
 
                     <div v-if="showImageUpload"
