@@ -66,7 +66,7 @@ function confirmDelete() {
               <td class="p-2 border text-center capitalize">
                 {{ detail.gender === 'm' ? 'Male' : detail.gender === 'f' ? 'Female' : 'Other' }}
               </td>
-              <td class="p-2 border text-center">{{ detail.body_part }}</td>
+              <td class="p-2 border text-center">{{ detail.body_part_value?.body_part ?? 'N/A' }}</td>
               <td class="p-2 border text-center">{{ detail.value }}</td>
               <td class="p-2 border text-center">
                 <div class="flex justify-center gap-4">
