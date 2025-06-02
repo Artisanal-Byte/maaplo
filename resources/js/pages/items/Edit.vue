@@ -228,7 +228,7 @@ const isValidPathData = (str) => {
 
                 <!-- Design Details -->
                 <div class="mt-2">
-                    <h2 class="text-md font-semibold mb-4">Design Details</h2>
+                    <h2 class="text-md font-semibold mb-4">Design Details Ask :</h2>
 
                     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div v-for="detail in props.designDetails" :key="detail.id"
