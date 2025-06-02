@@ -6,12 +6,21 @@ import { useOrderFormStore } from '@/stores/orderFormStore';
 
 const props = defineProps(["designDetails"])
 
-watch(() => props.designDetails, (nVal) => {
+console.log('design details props from props:', props.designDetails);
+
+let prepareDataForDesignDetails = [{
+    frontNeck:[
+        {},
+        {},
+    ]
+}]
+watch(props.designDetails, (nVal) => {
+    prepareDataForDesignDetails.push({
+
+    })
     console.log('design details:', nVal);
 })
 const formStore = useOrderFormStore()
-
-// console.log('design details data from backend:', props.designDetails);
 
 const selectedNeck = ref('')
 const selectedfrontNeck = ref('')
@@ -36,17 +45,12 @@ function toggleDropdownSleeveType() {
 }
 
 watch(selectedfrontNeck, (newVal) => {
-
     model.value = newVal
 })
 watch(selectedNeck, (newVal) => {
-    console.log(newVal);
-
     model.value = newVal
 })
 watch(selectedSleeveType, (newVal) => {
-    console.log(newVal);
-
     model.value = newVal
 })
 

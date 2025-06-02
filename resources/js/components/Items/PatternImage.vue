@@ -1,14 +1,13 @@
 <script setup>
 import { ref, defineEmits, watch } from 'vue'
 import { Icon } from '@iconify/vue'
-const emits = defineEmits(['setPatternImage1', 'setPatternImage2'])
+import { useOrderFormStore } from '@/stores/orderFormStore'
 const fileInputGallery1 = ref(null)
 const fileInputCamera1 = ref(null)
 const fileInputGallery2 = ref(null)
 const fileInputCamera2 = ref(null)
+const formStore = useOrderFormStore()
 
-const previewImage1 = ref(null)
-const previewImage2 = ref(null)
 
 function triggerUpload(type, index) {
   if (type === 'gallery') {
@@ -21,18 +20,18 @@ function triggerUpload(type, index) {
 function onFileChange(event, index) {
   const file = event.target.files[0]
   if (file && file.type.startsWith('image/')) {
-    const url = URL.createObjectURL(file)
 
     if (index === 1) {
-      previewImage1.value = url
-      emits('setPatternImage1', file) // ✅ emit actual file
+      formStore.order_items_template.Pattern_img1 = file
     } else if (index === 2) {
-      previewImage2.value = url
-      emits('setPatternImage2', file)
+      formStore.order_items_template.Pattern_img2 = file
     }
   }
 }
 
+const previewImage = (file) => {
+  return URL.createObjectURL(file)
+}
 
 </script>
 
@@ -64,7 +63,9 @@ function onFileChange(event, index) {
 
         </div>
         <div class="bg-[#BDDBDB3D] p-2 rounded h-24 mb-2">
-          <img v-if="previewImage1" :src="previewImage1" alt="Preview" class="w-32 h-20 object-cover rounded" />
+          <img v-if="formStore.order_items_template.Pattern_img1"
+            :src="previewImage(formStore.order_items_template.Pattern_img1)" alt="Preview"
+            class="w-32 h-20 object-cover rounded" />
         </div>
         <input ref="fileInputGallery1" type="file" class="hidden" accept="image/*" @change="e => onFileChange(e, 1)" />
         <input ref="fileInputCamera1" type="file" class="hidden" accept="image/*" capture="environment"
@@ -93,7 +94,9 @@ function onFileChange(event, index) {
           </div>
         </div>
         <div class="bg-[#BDDBDB3D] p-2 rounded h-24 mb-2">
-          <img v-if="previewImage2" :src="previewImage2" alt="Preview" class="w-32 h-20 object-cover rounded" />
+          <img v-if="formStore.order_items_template.Pattern_img2"
+            :src="previewImage(formStore.order_items_template.Pattern_img2)" alt="Preview"
+            class="w-32 h-20 object-cover rounded" />
         </div>
         <input ref="fileInputGallery2" type="file" class="hidden" accept="image/*" @change="e => onFileChange(e, 2)" />
         <input ref="fileInputCamera2" type="file" class="hidden" accept="image/*" capture="environment"
@@ -102,5 +105,3 @@ function onFileChange(event, index) {
     </div>
   </div>
 </template>
-
-
