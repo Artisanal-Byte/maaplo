@@ -18,8 +18,8 @@ function openCalendar() {
 }
 
 const formattedDate = computed(() => {
-    if (!selectedDate.value) return ''
-    const d = new Date(selectedDate.value)
+    if (!selectedDate.delivery_date) return ''
+    const d = new Date(selectedDate.delivery_date)
     return d.toLocaleDateString(undefined, {
         year: 'numeric',
         month: 'short',

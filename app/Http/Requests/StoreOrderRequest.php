@@ -12,7 +12,7 @@ class StoreOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        dd($this);
+        dd($this->file());
         return \Illuminate\Support\Facades\Auth::check();
     }
 

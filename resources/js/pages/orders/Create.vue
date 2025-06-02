@@ -21,6 +21,7 @@ const showDeletePopup = ref(false);
 let form = useOrderFormStore();
 let customerMeasurements = ref({})
 const itemToDelete = ref(null);
+let deleteOrEditOrderIndex = ref()
 let totalAmmount = ref(null)
 
 
@@ -38,16 +39,8 @@ let create = () => {
         form.advance_paid = null
         return
     }
-    // form.post(route('orders.store'), {
-    //     forceFormData: true,
-    //     onSuccess: () => {
-    //         toast.success('Order Created Successfully');
-    //     },
-    //     onError: (error) => {
-    //         console.log('validation errors:', error);
-    //         toast.error('failed To create order.');
-    //     }
-    // })
+
+    form.createOrder()
 }
 
 //total amount of order
@@ -64,7 +57,8 @@ const closeModel = () => {
     showModal.value = false
 }
 
-const confirmDelete = (item) => {
+const confirmDelete = (item,index) => {
+    deleteOrEditOrderIndex.value = index
     itemToDelete.value = item;
     showDeletePopup.value = true;
 };
@@ -75,16 +69,8 @@ const cancelDelete = () => {
 };
 
 const proceedDelete = () => {
-    router.delete(route('orders.destroy', itemToDelete.value.id), {
-        onSuccess: () => {
-            toast.success('Item deleted successfully!');
-            showDeletePopup.value = false;
-        },
-        onError: () => {
-            toast.error('Failed to delete item.');
-            alert('Delete failed');
-        }
-    });
+    form.deleteOrderItem(deleteOrEditOrderIndex.value)
+    showDeletePopup.value = false;
 };
 
 const setMeasurements = (m) => {
@@ -92,6 +78,7 @@ const setMeasurements = (m) => {
 }
 
 const openItemModel = () => {
+    form.resetOrderItemTemplate()
     if (form.customer_id == null) {
         alert('Please Select a customer')
         return
@@ -108,7 +95,11 @@ watch(() => form.advance_paid, (nPayVal) => {
         form.total_amount = totalAmmount.value - nPayVal
     }
 })
-
+ 
+const editOrderItem = (index) => {
+    form.setOrderItemData(index)
+    showModal.value = true
+} 
 
 </script>
 
@@ -122,9 +113,9 @@ watch(() => form.advance_paid, (nPayVal) => {
                         <Icon icon="lsicon:order-edit-filled" width="30" height="30" />
                         New Order
                     </h1>
-                    <pre>
+                    <!-- <pre>
                         {{ form }}
-                    </pre>
+                    </pre> -->
                 </div>
                 <div class="self-center">
                     <Button :disabled="disabled" @click="create">Create Order</Button>
@@ -192,19 +183,20 @@ watch(() => form.advance_paid, (nPayVal) => {
                                     <tr v-for="(order_item, index) in form.order_items" :key="index">
                                         <td class="p-2 border">{{ order_item.work_type }}</td>
                                         <td class="p-2 border">
-                                            {{itemTypes['privateTemplates'].find(item => item.id ===
+                                            <!-- {{  }} -->
+                                            <!-- {{itemTypes['privateTemplates'].find(item => item.id ===
                                                 order_item.template_id)?.name ?? itemTypes['publicTemplates'].find(item =>
                                                     item.id ===
-                                                    order_item.template_id)?.name}}
+                                                    order_item.template_id)?.name}} -->
                                         </td>
                                         <td class="p-2 border">{{ order_item.delivery_date }}</td>
                                         <td class="p-2 border">
                                             <div class="flex gap-4">
                                                 <Icon icon="material-symbols:edit-rounded" width="24" height="24"
-                                                    class="text-primary cursor-pointer hover:text-blue-700" />
+                                                    class="text-primary cursor-pointer hover:text-blue-700" @click="editOrderItem(index)" />
                                                 <Icon icon="mingcute:delete-fill" width="24" height="24"
                                                     class="text-red-500 cursor-pointer hover:text-red-700"
-                                                    @click="confirmDelete(order_item)" />
+                                                    @click="confirmDelete(order_item,index)" />
                                             </div>
                                         </td>
                                     </tr>

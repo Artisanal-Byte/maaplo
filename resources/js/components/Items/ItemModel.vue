@@ -16,7 +16,6 @@ import { useOrderFormStore } from '@/stores/orderFormStore';
 import ItemMeasurements from './ItemMeasurements.vue';
 const fileInputGallery = ref(null)
 const fileInputCamera = ref(null)
-const previewImage = ref(null)
 const notes = ref([{ label: '', text: '' }]);
 const props = defineProps(['showModal', 'form', 'itemTypes', 'allDesignDetails', 'itemIndex', 'errorMessage', 'errors']);
 let findDesign = ref()
@@ -28,75 +27,21 @@ const emit = defineEmits(['close', 'setOrderItemsData']);
 const measurements = ref([])
 const showImageUpload = ref(false)
 
-const resetformStore = () => {
-    formStore = {
-        template_id: null,
-        measurements: [],
-        design_detail: [],
-        colors: '',
-        work_type: '',
-        material_type: '',
-        material_code: '',
-        refrence_dress: '',
-        is_urgent: '',
-        material_cost: null,
-        stiching_cost: null,
-        item_cost: null,
-        notes: [{}],
-        trial_dates: '',
-        delivery_date: '',
-        status: '',
-        cloth_img1: null,
-        cloth_img2: null,
-        Pattern_img1: null,
-        Pattern_img2: null
-    }
-}
+
 const designDetails = ref({})
 // Save and emit
 function saveItem() {
     previewImage.value = null
     showImageUpload.value = false
-    resetformStore();
-    // emit('setOrderItemsformStore', formStore)
+    formStore.pushOrderItem()
+    formStore.resetOrderItemTemplate()
     emit('close')
 }
 
 const setItemId = (option) => {
     formStore.order_items_template.template_id = option.id
     measurements.value = option.measurements
-    console.log('meas val test:', measurements.value);
 
-}
-
-
-
-const setNotes = (notes) => {
-    formStore.notes = notes
-}
-const setShowReferenceDress = (val) => {
-    showImageUpload.value = val
-}
-const setIfUrgent = (val) => {
-    formStore.is_urgent = val
-}
-const setClothImage1 = (file) => {
-    formStore.cloth_img1 = file
-}
-const setClothImage2 = (file) => {
-    formStore.cloth_img2 = file
-}
-const setPatternImage1 = (file) => {
-    formStore.Pattern_img1 = file
-}
-const setPatternImage2 = (file) => {
-    formStore.Pattern_img2 = file
-}
-const setTrialDate = (date) => {
-    formStore.trial_dates = date
-}
-const setdDeliveryDate = (file) => {
-    formStore.delivery_date = file
 }
 
 // Trigger function for each input
@@ -114,9 +59,8 @@ function onFileChange(event, index) {
         const url = URL.createObjectURL(file);
         if (index === 1) {
             if (showImageUpload.value) {
-                formStore.refrence_dress = file
+                formStore.order_items_template.refrence_dress = file
             }
-            previewImage.value = url;
         }
     }
 }
@@ -126,25 +70,31 @@ watch(() => showImageUpload.value, (nVal) => {
         previewImage.value = null
     }
 })
-watch(() => formStore.order_items_template.template_id, (newId) => {
 
-    //set the design details 
-    console.log('item type val:', props.itemTypes);
-    let designDetailsIds = []
-    designDetailsIds = props.itemTypes.find(item => item.id === newId).design_details
-    // designDetails.value = props.itemTypes.find(item => item.id === newId).design_details
+// design details
+// watch(() => formStore.order_items_template.template_id, (newId) => {
 
-    props.allDesignDetails.forEach(key => {
-        if (key.id.includes(designDetailsIds)) {
-            designDetails.value[key] = key.id;
-        }
-    });
-    // designDetails.value = props.allDesignDetails.find(item => item.id === newId).design_details
+//     //set the design details 
+//     let designDetailsIds = []
+//     designDetailsIds = props.itemTypes.find(item => item.id === newId).design_details
+//     // designDetails.value = props.itemTypes.find(item => item.id === newId).design_details
 
-    console.log('design details ids:', designDetails.value);
+//     props.allDesignDetails.forEach(key => {
+//         if (designDetailsIds.includes(key.id)) {
+//             // console.log('body part:', key.body_part);
+//             // console.log('all design details:', props.allDesignDetails);
+//             designDetails.value[key.body_part] = key.id; // or any value you want
+//         }
+//     });
+//     // console.log('bpdy part:', designDetails.value);
 
-})
+//     // designDetails.value = props.allDesignDetails.find(item => item.id === newId).design_details
 
+
+// })
+const previewImage = (file) => {
+    return URL.createObjectURL(file)
+}
 </script>
 
 <template>
@@ -179,7 +129,7 @@ watch(() => formStore.order_items_template.template_id, (newId) => {
 
                     <div class="flex flex-col">
                         <Colors />
-                        <Notes v-model:notes="notes" @setNotes="setNotes" class="mt-5" />
+                        <Notes v-model:notes="formStore.order_items_template.notes" class="mt-5" />
                     </div>
 
                     <div class="flex items-center gap-4">
@@ -213,7 +163,8 @@ watch(() => formStore.order_items_template.template_id, (newId) => {
 
                         </div>
                         <div class="bg-[#BDDBDB3D] p-2 rounded h-24 mb-2">
-                            <img v-if="previewImage" :src="previewImage" alt="Preview"
+                            <img v-if="formStore.order_items_template.refrence_dress"
+                                :src="previewImage(formStore.order_items_template.refrence_dress)" alt="Preview"
                                 class="w-32 h-20 object-cover rounded" />
                         </div>
                         <input ref="fileInputGallery" type="file" class="hidden" accept="image/*"
@@ -223,19 +174,16 @@ watch(() => formStore.order_items_template.template_id, (newId) => {
                     </div>
                     <!-- Trail Date && Delivery Date  -->
 
-                    <TrialAndDeliveryDate @setTrialDate="setTrialDate" @setdDeliveryDate="setdDeliveryDate" />
+                    <TrialAndDeliveryDate  />
 
                     <div class="flex items-center gap-4">
                         <h1 class="font-medium font-lato">Mark as Urgent</h1>
-                        <ToggleButton @setIfUrgent="setIfUrgent" />
+                        <ToggleButton v-model:model="formStore.order_items_template.is_urgent" />
                     </div>
                     <!-- Upload icon, only shown when toggle is ON -->
                     <div class="flex flex-col lg:flex-row justify-between gap-4">
-                        <ClothImage @setClothImage1="setClothImage1" @setClothImage2="setClothImage2" />
-
-                        <!-- <ClothImage @setClothImage1="payload => emit('setClothImage1', payload)"
-                            @setClothImage2="payload => emit('setClothImage2', payload)" /> -->
-                        <PatternImage @setPatternImage1="setPatternImage1" @setPatternImage2="setPatternImage2" />
+                        <ClothImage />
+                        <PatternImage />
                     </div>
                     <div class="">
                         <Button @click="saveItem" color="primary" textSize="lg" class="mb-5 w-full">
