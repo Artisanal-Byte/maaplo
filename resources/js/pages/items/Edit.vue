@@ -24,6 +24,7 @@ const form = useForm({
     body_part: props.item.body_part === "Upper" ? "upper" : "lower",
     required_measurements: props.measurements.selected,
     design_details: {},
+    errors: props.errors,
     _method: 'put',
 });
 
@@ -49,7 +50,8 @@ const updateTemplate = () => {
             toast.success('Template updated successfully!');
             setTimeout(() => router.visit(route('items.index')), 1000);
         },
-        onError: () => {
+        onError: (errors) => {
+            console.log(errors);
             toast.error('Update failed. Please try again.');
         }
     });
@@ -79,6 +81,7 @@ const isSvgMarkup = (str) => {
     return str.trim().startsWith('<svg');
 };
 
+
 const isValidPathData = (str) => {
     if (typeof str !== 'string') return false;
     return /^[Mm]/.test(str.trim());
@@ -104,7 +107,7 @@ const isValidPathData = (str) => {
                     </Link>
                 </div>
             </div>
-
+            <pre>{{ form.errors }}</pre>
             <div class="flex flex-col mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Select Base Template -->
@@ -117,14 +120,12 @@ const isValidPathData = (str) => {
                     <!-- Template Name -->
                     <div>
                         <Input v-model="form.name" label="Template Name" placeholder="Enter Template Name" margin="md"
-                            width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.name"
+                            width="full" fonttype="normal" textSize="base" rounded="md" :error="form.errors.name"
                             required="true">
                         <template #icon>
                             <Icon icon="tdesign:template-filled" width="18" height="18" class="mt-2" />
                         </template>
                         </Input>
-
-                        <div v-if="errors.name" class="text-red-600 text-sm">{{ errors.name }}</div>
                     </div>
 
                     <!-- Gender -->
@@ -146,7 +147,7 @@ const isValidPathData = (str) => {
                                 ]">Male</div>
                             </label>
                         </div>
-                        <div v-if="errors.gender" class="text-red-600 text-sm">{{ errors.gender }}</div>
+                        <div v-if="form.errors.gender" class="text-red-600 text-sm">{{ form.errors.gender }}</div>
                     </div>
 
                     <!-- Body Part -->
@@ -170,7 +171,7 @@ const isValidPathData = (str) => {
                                 ]">Lower</div>
                             </label>
                         </div>
-                        <div v-if="errors.body_part" class="text-red-600 text-sm">{{ errors.body_part }}</div>
+                        <div v-if="form.errors.body_part" class="text-red-600 text-sm">{{ form.errors.body_part }}</div>
                     </div>
                 </div>
 
@@ -192,15 +193,14 @@ const isValidPathData = (str) => {
                                 v-model="form.required_measurements" class="form-checkbox w-4 h-4" />
                         </div>
                     </label>
-                </div>
-
-                <div v-if="errors.required_measurements" class="text-red-600 text-sm mt-1">
-                    {{ errors.required_measurements }}
+                    <div v-if="form.errors.required_measurements" class="text-red-600 text-sm mt-1">{{
+                        form.errors.required_measurements
+                        }}</div>
                 </div>
 
                 <!-- SVG Logo -->
                 <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
-                    width="full" fonttype="normal" textSize="base" rounded="md" :error="errors.svg_logo" />
+                    width="full" fonttype="normal" textSize="base" rounded="md" :error="form.errors.svg_logo" />
 
                 <div
                     class="mt-6 border border-gray-300 rounded-lg p-6 bg-gray-50 flex justify-center items-center min-h-[120px]">
@@ -251,7 +251,7 @@ const isValidPathData = (str) => {
 
                     </div>
                 </div>
-                <div v-if="errors.design_details" class="text-red-600 text-sm">{{ errors.design_details }}
+                <div v-if="form.errors.design_details" class="text-red-600 text-sm">{{ form.errors.design_details }}
                 </div>
 
                 <!-- Submit Button -->

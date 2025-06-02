@@ -129,7 +129,7 @@ class TemplateController extends Controller
             'required_measurements' => 'required|array',
             'design_details' => 'required|array',
         ]);
-        // dd($validated);
+        dd($validated);
         $trueDesignDetails = array_map('intval', $validated['design_details']);
 
         // dd($trueDesignDetails);
@@ -153,7 +153,7 @@ class TemplateController extends Controller
             return redirect()->route('items.index')->with('success', 'Item updated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Update failed: ' . $e->getMessage());
+            return back()->withErrors($validated->errors())->withInput();
         }
     }
 
