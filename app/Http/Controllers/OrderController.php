@@ -66,11 +66,12 @@ class OrderController extends Controller
             ->orWhereNull('user_id')
             ->with('measurements')
             ->get();
-
+            
         $designDetails = DesignDetail::all();
         return Inertia::render('orders/Create', [
             'customers' => $user->customers,
-            'itemTypes' => $itemTypes
+            'itemTypes' => $itemTypes,
+            'designDetails' => $designDetails
         ]);
     }
 
