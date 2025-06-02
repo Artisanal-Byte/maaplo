@@ -92,13 +92,16 @@ const formatLabel = (key) => {
         .join(' ');
 };
 
-const isSvgMarkup = (str = '') => {
+const isSvgMarkup = (str) => {
+    if (typeof str !== 'string') return false;
     return str.trim().startsWith('<svg');
 };
 
-const isValidPathData = (str = '') => {
+const isValidPathData = (str) => {
+    if (typeof str !== 'string') return false;
     return /^[Mm]/.test(str.trim());
 };
+
 </script>
 
 <template>
