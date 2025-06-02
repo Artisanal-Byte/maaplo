@@ -2,7 +2,7 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { ref, computed } from 'vue';
 import { Icon } from '@iconify/vue';
-import { Link, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import Button from '@/components/Button.vue';
 import Input from '@/components/InputWithLabel.vue';
 
@@ -50,6 +50,7 @@ const createUser = () => {
 </script>
 
 <template>
+    <Head title="User-Create" />
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <!-- Header -->

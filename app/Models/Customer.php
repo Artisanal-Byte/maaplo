@@ -18,6 +18,7 @@ class Customer extends Model
         'name',
         'gender',
         'email',
+        'country_code',
         'phone',
         'base_measurements',
         'address',
@@ -26,7 +27,7 @@ class Customer extends Model
     ];
 
     protected $with = ['photos'];
-
+    protected $appends = ['base_measurements'];
     // Accessor for 'address'
     protected function address(): Attribute
     {
@@ -69,11 +70,7 @@ class Customer extends Model
     protected function baseMeasurements(): Attribute
     {
         return Attribute::make(
-            get: function ($value, $attributes) {
-                $decoded = json_decode($attributes['base_measurements'] ?? '{}', true);
-                unset($decoded['unit']);
-                return json_encode($decoded, true);
-            }
+            get: fn($value) => is_string($value) ? json_decode($value, true) : $value
         );
     }
 

@@ -2,9 +2,11 @@
 import { ref, defineProps } from 'vue';
 import { Icon } from '@iconify/vue';
 import { Link } from '@inertiajs/vue3';
+import { useOrderFormStore } from '@/stores/orderFormStore';
 
-let props = defineProps(["customers", "form", "errors"]);
-let emit = defineEmits(["setMeasurements", "setOrderData"]);
+let props = defineProps(["customers"    ]);
+let emit = defineEmits(["setMeasurements"]);
+const formStore = useOrderFormStore()
 const selectedCustomer = ref('Select Customer');
 const showDropdown = ref(false);
 function toggleDropdown() {
@@ -15,10 +17,9 @@ let data = props.form
 //select customer and set value
 function selectOption(customer) {
     selectedCustomer.value = customer.name;
-    emit('setMeasurements', customer.base_measurements)
-    data.user_id = customer.user_id
-    data.customer_id = customer.id
-    emit('setOrderData', data)
+    emit('setMeasurements', customer.measurements)
+    formStore.user_id = customer.user_id
+    formStore.customer_id = customer.id
     showDropdown.value = false;
 
 }
@@ -38,7 +39,7 @@ function asset(path) {
                 }}</span>
                 <Icon :icon="showDropdown ? 'icon-park-outline:up' : 'icon-park-outline:down'" width="20" height="20" />
             </button>
-            <p class="text-red-600 text-sm">{{ errors?.customer_id }}</p>
+            <!-- <p class="text-red-600 text-sm">{{ errors?.customer_id }}</p> -->
 
             <!-- Dropdown Menu -->
             <div v-if="showDropdown"

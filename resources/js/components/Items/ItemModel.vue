@@ -12,41 +12,24 @@ import PatternImage from './PatternImage.vue';
 import Button from '../Button.vue';
 import { ref, defineProps, defineEmits, watch, reactive } from 'vue';
 import TrialAndDeliveryDate from '../TrialAndDeliveryDate.vue';
+import { useOrderFormStore } from '@/stores/orderFormStore';
+import ItemMeasurements from './ItemMeasurements.vue';
 const fileInputGallery = ref(null)
 const fileInputCamera = ref(null)
 const previewImage = ref(null)
 const notes = ref([{ label: '', text: '' }]);
-const props = defineProps(['showModal', 'form', 'itemTypes', 'itemIndex', 'measurements', 'errorMessage', 'errors']);
+const props = defineProps(['showModal', 'form', 'itemTypes', 'allDesignDetails', 'itemIndex', 'errorMessage', 'errors']);
 let findDesign = ref()
+let formStore = useOrderFormStore()
 
+// console.log('asked measurments:', props.itemTypes);
 
 const emit = defineEmits(['close', 'setOrderItemsData']);
-
+const measurements = ref([])
 const showImageUpload = ref(false)
-let data = reactive({
-    template_id: null,
-    measurements: [],
-    design_detail: [],
-    colors: '',
-    work_type: '',
-    material_type: '',
-    material_code: '',
-    refrence_dress: '',
-    is_urgent: '',
-    material_cost: null,
-    stiching_cost: null,
-    item_cost: null,
-    notes: [{}],
-    trial_dates: '',
-    delivery_date: '',
-    status: '',
-    cloth_img1: null,
-    cloth_img2: null,
-    Pattern_img1: null,
-    Pattern_img2: null
-})
-const resetData = () => {
-    data = {
+
+const resetformStore = () => {
+    formStore = {
         template_id: null,
         measurements: [],
         design_detail: [],
@@ -58,7 +41,6 @@ const resetData = () => {
         is_urgent: '',
         material_cost: null,
         stiching_cost: null,
-        // cost: null,
         item_cost: null,
         notes: [{}],
         trial_dates: '',
@@ -73,69 +55,48 @@ const resetData = () => {
 const designDetails = ref({})
 // Save and emit
 function saveItem() {
-    emit('setOrderItemsData', JSON.parse(JSON.stringify(data)))
     previewImage.value = null
     showImageUpload.value = false
-    resetData();
-    // emit('setOrderItemsData', data)
+    resetformStore();
+    // emit('setOrderItemsformStore', formStore)
     emit('close')
 }
 
-const setItemId = (id) => {
-    data.template_id = id
+const setItemId = (option) => {
+    formStore.order_items_template.template_id = option.id
+    measurements.value = option.measurements
+    console.log('meas val test:', measurements.value);
+
 }
 
-const setMaterialCode = (materialCode) => {
-    data.material_code = materialCode
-}
 
-const setMaterialCost = (materialCost) => {
-    data.material_cost = materialCost
-}
 
-const setStichingCost = (stichingCost) => {
-    data.stiching_cost = stichingCost
-}
-const setMaterialType = (materialType) => {
-    data.material_type = materialType
-}
-const setPrice = (price) => {
-    data.item_cost = price
-}
-const setColor = (color) => {
-    data.colors = color
-}
 const setNotes = (notes) => {
-    data.notes = notes
+    formStore.notes = notes
 }
 const setShowReferenceDress = (val) => {
     showImageUpload.value = val
 }
 const setIfUrgent = (val) => {
-    data.is_urgent = val
+    formStore.is_urgent = val
 }
-// const setClothImage1 = (imgPath) => {
-//     alert('setClothImage1')
-//     console.log(imgPath);
-
-//     data.cloth_img1 = imgPath
-// }
-// const setClothImage2 = (imgPath) => {
-//     alert('setClothImage2')
-//     console.log(imgPath);
-//     data.cloth_img2 = imgPath
-// }
-const setPatternImage1 = (imgPath) => {
-    data.Pattern_img1 = imgPath
+const setClothImage1 = (file) => {
+    formStore.cloth_img1 = file
 }
-const setPatternImage2 = (imgPath) => {
-    data.Pattern_img2 = imgPath
+const setClothImage2 = (file) => {
+    formStore.cloth_img2 = file
+}
+const setPatternImage1 = (file) => {
+    formStore.Pattern_img1 = file
+}
+const setPatternImage2 = (file) => {
+    formStore.Pattern_img2 = file
 }
 const setTrialDate = (date) => {
-    data.trial_dates = date
+    formStore.trial_dates = date
 }
-const setdDeliveryDate = (imgPath) => {
-    data.delivery_date = imgPath
+const setdDeliveryDate = (file) => {
+    formStore.delivery_date = file
 }
 
 // Trigger function for each input
@@ -153,7 +114,7 @@ function onFileChange(event, index) {
         const url = URL.createObjectURL(file);
         if (index === 1) {
             if (showImageUpload.value) {
-                data.refrence_dress = file
+                formStore.refrence_dress = file
             }
             previewImage.value = url;
         }
@@ -161,12 +122,27 @@ function onFileChange(event, index) {
 }
 watch(() => showImageUpload.value, (nVal) => {
     if (!nVal) {
-        data.refrence_dress = null
+        formStore.refrence_dress = null
         previewImage.value = null
     }
 })
-watch(() => data.template_id, (newId) => {
-    designDetails.value = props.itemTypes.privateTemplates.find(item => item.id === newId).design_details
+watch(() => formStore.order_items_template.template_id, (newId) => {
+
+    //set the design details 
+    console.log('item type val:', props.itemTypes);
+    let designDetailsIds = []
+    designDetailsIds = props.itemTypes.find(item => item.id === newId).design_details
+    // designDetails.value = props.itemTypes.find(item => item.id === newId).design_details
+
+    props.allDesignDetails.forEach(key => {
+        if (key.id.includes(designDetailsIds)) {
+            designDetails.value[key] = key.id;
+        }
+    });
+    // designDetails.value = props.allDesignDetails.find(item => item.id === newId).design_details
+
+    console.log('design details ids:', designDetails.value);
+
 })
 
 </script>
@@ -196,14 +172,13 @@ watch(() => data.template_id, (newId) => {
                 <!-- Scrollable Content -->
                 <div class=" max-h-[75vh] pr-2 space-y-5">
                     <!-- done -->
-                    <WorkType :formData="data" @setMaterialCode="setMaterialCode" @setMaterialCost="setMaterialCost"
-                        @setStichingCost="setStichingCost" @setMaterialType="setMaterialType" @setPrice="setPrice" />
+                    <WorkType />
                     <ItemType :itemTypes="itemTypes" @setItemId="setItemId" />
-                    <Measurements :toAsk="measurements" :isOrder="true" />
-                    <DesignDetails :designDetails="designDetails" v-model="data.design_detail" />
+                    <ItemMeasurements :askedMeasurements="measurements" />
+                    <DesignDetails :designDetails="designDetails" v-model="formStore.design_detail" />
 
                     <div class="flex flex-col">
-                        <Colors @setColor="setColor" />
+                        <Colors />
                         <Notes v-model:notes="notes" @setNotes="setNotes" class="mt-5" />
                     </div>
 
@@ -256,8 +231,10 @@ watch(() => data.template_id, (newId) => {
                     </div>
                     <!-- Upload icon, only shown when toggle is ON -->
                     <div class="flex flex-col lg:flex-row justify-between gap-4">
-                        <ClothImage @setClothImage1="(file) => data.cloth_img1 = file"
-                            @setClothImage2="(file) => data.cloth_img2 = file" />
+                        <ClothImage @setClothImage1="setClothImage1" @setClothImage2="setClothImage2" />
+
+                        <!-- <ClothImage @setClothImage1="payload => emit('setClothImage1', payload)"
+                            @setClothImage2="payload => emit('setClothImage2', payload)" /> -->
                         <PatternImage @setPatternImage1="setPatternImage1" @setPatternImage2="setPatternImage2" />
                     </div>
                     <div class="">

@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Link } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import { ref, onMounted } from 'vue';
 import Button from '@/components/Button.vue';
@@ -22,6 +22,7 @@ onMounted(() => {
 </script>
 
 <template>
+    <Head title="Organization's" />
     <AppLayout>
         <div class="px-4 py-10 max-w-4xl mx-auto">
             <div class="flex justify-between items-center mb-6">
@@ -95,9 +96,8 @@ onMounted(() => {
             <div class="bg-white rounded-lg p-6 max-w-md w-full shadow-lg text-center">
                 <h2 id="popupTitle" class="text-lg font-semibold mb-4 flex items-center justify-center gap-2">
                     <span>No Organization Found</span>
-                    <span class="text-2xl">😊</span>
                 </h2>
-                <p class="text-gray-600 mb-6">Please sir your organization information to continue.</p>
+                <p class="text-gray-600 mb-6">Please Add your organization Details to continue.</p>
                 <div class="flex justify-center space-x-4">
                     <Link :href="route('organization.create')"
                         class="px-4 py-2 bg-primary text-white rounded hover:bg-primary">

@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('design_details', function (Blueprint $table) {
+        Schema::create('body_part_value', function (Blueprint $table) {
             $table->id();
-            $table->enum('body_section', ['Upper', 'Lower']);
-            $table->enum('gender', ['m','f','o']);
-           $table->foreignId('body_part_id')->references('id')->on('body_part_value')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->string('value');
-            $table->text('image');
+            $table->string('body_part')->unique();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('design_details');
+        Schema::dropIfExists('body_part_value');
     }
 };

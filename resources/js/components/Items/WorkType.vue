@@ -2,12 +2,9 @@
 import { reactive, ref, watch, defineProps, defineEmits } from 'vue';
 import { Icon } from '@iconify/vue';
 import Input from '../InputWithLabel.vue';
+import { useOrderFormStore } from '@/stores/orderFormStore';
 
-const props = defineProps(['formData', 'index'])
-
-const emits = defineEmits(['setPrice', 'setAlteringCost', 'setMaterialCode', 'setMaterial', 'setMaterialCost', 'setStichingCost', 'setItemCost', 'setMaterialType', 'setdataData'])
-const modelValue = defineModel(); // enables v-model binding
-const data = props.formData
+let formStore = useOrderFormStore()
 const showDropdownWorkType = ref(false);
 
 function toggleDropdownWorkType() {
@@ -15,75 +12,37 @@ function toggleDropdownWorkType() {
 }
 
 
-let material = reactive({
-  code: '',
-  cost: 0,
-  type: '',
-})
-
-let cost = reactive({
-  stitching: 0,
-  altering: 0,
-  total: null
-})
 
 
-
-//reset cost value on change work type
-watch(() => modelValue.value, (val) => {
-  cost.stitching = 0
-  cost.altering = 0
-  cost.total = 0
-  material.cost = 0
-})
-
-//calculate the total cost 
+//calculate the total cost of item
 watch(
-  () => [material.cost, cost.stitching, cost.altering],
+  () => [formStore.order_items_template.material_cost, formStore.order_items_template.stiching_cost, formStore.order_items_template.altering_cost],
   ([materialCost, stitchingCost, alteringCost]) => {
-    // cost.total = cost.stitching = cost.altering = material.cost = 0
-    if (modelValue.value == 'New from Material') {
+    let total = 0
+    if (formStore.order_items_template.work_type == 'New from Material') {
       const m = parseFloat(materialCost) || 0;
       const s = parseFloat(stitchingCost) || 0;
-      cost.total = m + s;
-      emits('setAlteringCost', null)
-      emits('setMaterialCost', materialCost)
-      emits('setStichingCost', stitchingCost)
-      emits('setPrice', cost.total)
+      total = m + s;
+      formStore.order_items_template.material_cost = materialCost
+      formStore.order_items_template.stiching_cost = stitchingCost
+      formStore.order_items_template.item_cost = total
     }
 
-    if (modelValue.value == 'Only Stitching') {
-      cost.total = stitchingCost;
-      emits('setAlteringCost', null)
-      emits('setStichingCost', stitchingCost)
-      emits('setPrice', cost.total)
+    if (formStore.order_items_template.work_type == 'Only Stitching') {
+      total = stitchingCost;
+      formStore.order_items_template.material_cost = 0
+      formStore.order_items_template.stiching_cost = stitchingCost
+      formStore.order_items_template.item_cost = total
     }
-    if (modelValue.value == 'Only Altering') {
-      cost.total = alteringCost;
-      emits('setStichingCost', null)
-      emits('setAlteringCost', alteringCost)
-      emits('setPrice', cost.total)
+    if (formStore.order_items_template.work_type == 'Only Altering') {
+      total = alteringCost;
+      formStore.order_items_template.material_cost = 0
+      formStore.order_items_template.stiching_cost = 0
+      formStore.order_items_template.item_cost = total
     }
   },
 );
 
-//set material code
-watch(() => material.code, (val) => {
-  data.material_code = val
-  emits('setMaterialCode', val)
-})
-
-//set work Type 
-watch(() => modelValue.value, (val) => {
-  data.work_type = val
-  emits('setdataData', val)
-})
-
-//set material type
-watch(() => material.type, (val) => {
-  data.material_type = val
-  emits('setMaterialType', val)
-})
 
 </script>
 
@@ -101,17 +60,17 @@ watch(() => material.type, (val) => {
           <div class="flex flex-col ml-2 gap-3 text-black mt-2">
             <div class="flex gap-2">
               <Input type="radio" id="new-from-material" name="work-type" radioValue="New from Material"
-                v-model="modelValue" label="New from Material" />
+                v-model="formStore.order_items_template.work_type" label="New from Material" />
 
             </div>
             <div class="flex gap-2">
-              <Input type="radio" id="only-stitching" name="work-type" radioValue="Only Stitching" v-model="modelValue"
-                label="Only Stitching" />
+              <Input type="radio" id="only-stitching" name="work-type" radioValue="Only Stitching"
+                v-model="formStore.order_items_template.work_type" label="Only Stitching" />
 
             </div>
             <div class="flex gap-2">
-              <Input type="radio" id="only-altering" name="work-type" radioValue="Only Altering" v-model="modelValue"
-                label="Only Altering" />
+              <Input type="radio" id="only-altering" name="work-type" radioValue="Only Altering"
+                v-model="formStore.order_items_template.work_type" label="Only Altering" />
 
             </div>
           </div>
@@ -119,24 +78,27 @@ watch(() => material.type, (val) => {
       </ul>
 
       <!-- Conditional inputs -->
-      <div v-if="modelValue === 'New from Material'" class="mt-4 ml-2 flex flex-col gap-3">
-        <Input v-model="material.code" type="text" label="Material Code" :required="true"
+      <div v-if="formStore.order_items_template.work_type === 'New from Material'"
+        class="mt-4 ml-2 flex flex-col gap-3">
+        <Input v-model="formStore.order_items_template.material_code" type="text" label="Material Code" :required="true"
           placeholder="Enter material code" />
-        <Input v-model="material.cost" type="number" label="Material Cost" :required="true"
-          placeholder="Enter material cost" />
-        <Input v-model="material.type" type="text" label="Material Type" :required="true"
+        <Input v-model="formStore.order_items_template.material_cost" type="number" label="Material Cost"
+          :required="true" placeholder="Enter material cost" />
+        <Input v-model="formStore.order_items_template.material_type" type="text" label="Material Type" :required="true"
           placeholder="Enter material type" />
-        <Input v-model="cost.stitching" type="number" label="Stitching Cost" :required="true"
-          placeholder="Enter stitching cost" />
-        <h1>Total Cost:{{ cost.total }}</h1>
+        <Input v-model="formStore.order_items_template.stiching_cost" type="number" label="Stitching Cost"
+          :required="true" placeholder="Enter stitching cost" />
+        <h1>Total Cost:{{ formStore.order_items_template.item_cost }}</h1>
       </div>
 
-      <div v-if="modelValue === 'Only Stitching'" class="mt-4 ml-2">
-        <Input v-model="cost.stitching" type="number" label="Cost" :required="true" placeholder="Enter Cost" />
+      <div v-if="formStore.order_items_template.work_type === 'Only Stitching'" class="mt-4 ml-2">
+        <Input v-model="formStore.order_items_template.stiching_cost" type="number" label="Cost" :required="true"
+          placeholder="Enter Cost" />
       </div>
 
-      <div v-if="modelValue === 'Only Altering'" class="mt-4 ml-2">
-        <Input v-model="cost.altering" type="number" label="Cost" :required="true" placeholder="Enter Cost" />
+      <div v-if="formStore.order_items_template.work_type === 'Only Altering'" class="mt-4 ml-2">
+        <Input v-model="formStore.order_items_template.altering_cost" type="number" label="Cost" :required="true"
+          placeholder="Enter Cost" />
       </div>
 
     </div>

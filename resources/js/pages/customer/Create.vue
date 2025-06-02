@@ -8,14 +8,17 @@ import Input from '@/components/InputWithLabel.vue';
 import Notes from '@/components/Items/Notes.vue';
 import Measurements from '@/components/Items/Measurements.vue';
 import CustomerLimitPopup from '@/components/CustomerLimitPopup.vue';
+import MobileCountryCode from '@/components/MobileCountryCode.vue';
 const customerMeasurements = ref({});
 const props = defineProps<{
     errors: Record<string, string>,
     user_id: number,
     customer_limit_exceeded: boolean,
-    measurements
-}>();
+    measurements,
+    isOrder?: boolean;
+    toAsk?: string | null;
 
+}>();
 const toast = new ToastMagic();
 
 const form = reactive({
@@ -30,9 +33,9 @@ const form = reactive({
     half_image: '',
     full_image: '',
     half_image_preview: '',
+    country_code: '+91',
     full_image_preview: ''
 });
-
 // Notes
 const notes = ref([{ label: '', text: '' }]);
 const showLimitModal = ref(false);
@@ -72,11 +75,18 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
     form[previewField] = file ? URL.createObjectURL(file) : '';
 };
 
+const onPhoneInput = (event: Event) => {
+    const input = event.target as HTMLInputElement;
+    // Remove non-numeric characters and trim to max 10 digits
+    input.value = input.value.replace(/\D/g, '').slice(0, 10);
+    form.phone = input.value;
+};
+
 </script>
 
 <template>
 
-    <Head title="Costomer" />
+    <Head title="Costomer-Create" />
     <AppLayout>
         <!-- Limit Reached Modal -->
         <CustomerLimitPopup :show="showLimitModal" @close="showLimitModal = false" />
@@ -97,8 +107,7 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                     </Link>
                 </div>
             </div>
-            <div
-                class="mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
+            <div class="mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
                 <h1 class="text-xl font-bold lg:mt-0 mt-2">Enter Details</h1>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-5 mt-3">
                     <!-- Customer Name -->
@@ -114,13 +123,24 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
 
                     <!-- Contact Number -->
                     <div>
-                        <Input type="tel" v-model="form.phone" label="Contact Number" :required="true"
-                            :error="errors.phone" color="grayBorder" placeholder="Enter Phone Number">
-                        <template #icon>
-                            <Icon icon="ic:round-phone" width="20" height="20" />
-                        </template>
-                        </Input>
+                        <label class="font-medium block mb-1">
+                            Contact Number <span class="text-red-500">*</span>
+                        </label>
+                        <div class="flex">
+                            <!-- Use MobileCountryCode component here -->
+                            <MobileCountryCode v-model="form.country_code"  class="rounded-r-none"/>
+
+                            <!-- Phone Input -->
+                            <Input type="tel" v-model="form.phone" class="rounded-l-none flex-1"
+                                placeholder="Enter Phone Number" :error="errors.phone" :required="true"
+                                color="grayBorder" inputmode="numeric" pattern="\d*" @input="onPhoneInput">
+                            <template #icon>
+                                <Icon icon="ic:round-phone" width="20" height="20" />
+                            </template>
+                            </Input>
+                        </div>
                     </div>
+
 
                     <!-- Email -->
                     <div>
@@ -167,7 +187,7 @@ const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => 
                 <div class="mt-5">
                     <!-- <label class="block font-[Lato] text-[18px] leading-[16px] tracking-[0] mb-2">Measurements</label> -->
                     <Measurements v-model:measurements="form.measurements" :error="errors.measurements"
-                        :toAsk="measurements" />
+                        :toAsk="measurements" :isOrder="false"/>
                     <div v-if="errors.measurements" class="text-red-600 text-sm mt-2">{{ errors.measurements }}</div>
                 </div>
 

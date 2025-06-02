@@ -25,10 +25,10 @@ function onFileChange(event, index) {
 
     if (index === 1) {
       previewImage1.value = url
-      emits('setClothImage1', file) // ✅ emit actual file
+      emits('setPatternImage1', file) // ✅ emit actual file
     } else if (index === 2) {
       previewImage2.value = url
-      emits('setClothImage2', file)
+      emits('setPatternImage2', file)
     }
   }
 }

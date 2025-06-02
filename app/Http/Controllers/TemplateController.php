@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\GetTemplateHelper;
+use App\Models\DesignDetail;
 use App\Models\Measurement;
 use App\Models\Template;
 use App\Models\TemplateMeasurement;
@@ -40,6 +41,10 @@ class TemplateController extends Controller
             'publicTemplates' => $data['publicTemplates'],
             'privateTemplates' => $data['privateTemplates'],
             'measurements' => $data['allMeasurements'],
+            'designDetails' => DesignDetail::with('bodyPartValue')
+                ->get(['id', 'body_part_id', 'value', 'gender'])
+                ->unique('body_part_id')
+                ->values(),
         ]);
     }
 
@@ -48,6 +53,7 @@ class TemplateController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f,o',
@@ -56,6 +62,12 @@ class TemplateController extends Controller
             'required_measurements' => 'required|array',
             'design_details' => 'required|array',
         ]);
+        $trueDesignDetails = collect($validated['design_details'])
+            ->filter(fn($val) => $val === true)
+            ->keys()
+            ->map(fn($key) => (int) $key)
+            ->values()
+            ->toArray();
 
         try {
             DB::beginTransaction();
@@ -65,7 +77,7 @@ class TemplateController extends Controller
                 'gender' => $validated['gender'],
                 'body_part' => $validated['body_part'],
                 'svg_logo' => $validated['svg_logo'],
-                'design_details' => $validated['design_details'],
+                'design_details' => $trueDesignDetails,
             ]);
             $measurementIds = Measurement::whereIn('slug', $validated['required_measurements'])->pluck('id');
             foreach ($measurementIds as $measurementId) {
@@ -98,12 +110,14 @@ class TemplateController extends Controller
         $templateData = GetTemplateHelper::getTemplateData(auth()->id());
         return Inertia::render('items/Edit', [
             'item' => $item,
-            'errors' => [],
             'measurements' => $measurements,
             'publicTemplates' => $templateData['publicTemplates'],
             'privateTemplates' => $templateData['privateTemplates'],
             'allMeasurements' => $templateData['allMeasurements'],
-            'designDetails' => $item->design_details,
+            'designDetails' => DesignDetail::with('bodyPartValue')
+                ->get(['id', 'body_part_id', 'value', 'gender'])
+                ->unique('body_part_id')
+                ->values(),
         ]);
     }
     /**
@@ -111,6 +125,7 @@ class TemplateController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f',
@@ -119,6 +134,9 @@ class TemplateController extends Controller
             'required_measurements' => 'required|array',
             'design_details' => 'required|array',
         ]);
+        $trueDesignDetails = array_map('intval', $validated['design_details']);
+
+        // dd($trueDesignDetails);
         try {
             DB::beginTransaction();
 
@@ -128,7 +146,7 @@ class TemplateController extends Controller
                 'gender' => $validated['gender'],
                 'body_part' => $validated['body_part'],
                 'svg_logo' => $validated['svg_logo'],
-                'design_details' => $validated['design_details'],
+                'design_details' => $trueDesignDetails,
             ]);
             // Get the IDs of the selected measurements by slug
             $measurementIds = Measurement::whereIn('slug', $validated['required_measurements'])->pluck('id')->toArray();
@@ -139,7 +157,7 @@ class TemplateController extends Controller
             return redirect()->route('items.index')->with('success', 'Item updated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Update failed: ' . $e->getMessage());
+            return back()->withErrors($validated->errors())->withInput();
         }
     }
 

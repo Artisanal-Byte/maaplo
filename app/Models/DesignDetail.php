@@ -12,10 +12,14 @@ class DesignDetail extends Model
     protected $table = 'design_details';
     protected $fillable = [
         'body_section',
-        'body_part',
+        'body_part_id',
         'value',
         'image',
         'gender',
+    ];
+
+    protected $casts = [
+        'design_details' => 'array',
     ];
 
     protected function bodyPart(): Attribute
@@ -39,8 +43,17 @@ class DesignDetail extends Model
         return strtolower(str_replace(' ', '_', trim($value)));
     }
 
-    private function convertForDisplay(string $value): string
+    private function convertForDisplay(?string $value): string
     {
+        if (is_null($value)) {
+            return '';
+        }
+
         return ucwords(strtolower(str_replace('_', ' ', $value)));
+    }
+
+    public function bodyPartValue()
+    {
+        return $this->belongsTo(BodyPartValue::class, 'body_part_id');
     }
 }

@@ -26,4 +26,8 @@ class Measurement extends Model
     'logo',
   ];
 
+  public function templates()
+  {
+    return $this->belongsToMany(Template::class, 'templates_measurements', 'measurement_id', 'template_id');
+  }
 }

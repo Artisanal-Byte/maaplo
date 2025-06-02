@@ -1,19 +1,32 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
-import { ref, watch } from 'vue';
-import { Link, useForm } from '@inertiajs/vue3';
+import { ref, watch, onMounted, defineProps } from 'vue';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
 import Input from '@/components/InputWithLabel.vue';
 
 const toast = new ToastMagic();
-
 const form = useForm({
     body_section: '',
     gender: '',
-    body_part: '',
+    body_part_id: '',
+    new_body_part: '',
     value: '',
     image: '',
+});
+
+const props = defineProps({
+    bodyParts: Array,
+});
+const existingBodyParts = ref(props.bodyParts || []);
+
+
+onMounted(() => {
+    // Fetch existing body parts from backend API route or via props
+    fetch('web/body-parts')  // create this API route to return all body parts
+        .then(res => res.json())
+        .then(data => existingBodyParts.value = data);
 });
 
 watch(() => form.image, (newVal) => {
@@ -27,14 +40,18 @@ watch(() => form.image, (newVal) => {
 
 
 const isSvgMarkup = (str = '') => {
-  return str.trim().startsWith('<svg');
+    return str.trim().startsWith('<svg');
 };
 
 const isValidPathData = (str = '') => {
-  return /^[Mm]/.test(str.trim());
+    return /^[Mm]/.test(str.trim());
 };
 
 const createDesignDetail = () => {
+    if (!form.body_part_id && !form.new_body_part) {
+        toast.error('Please select an existing Body Part or enter a new one.');
+        return;
+    }
     if (form.image?.includes('<svg')) {
         form.image = form.image
             .replace(/width="[^"]*"/, 'width="50"')
@@ -48,6 +65,8 @@ const createDesignDetail = () => {
 </script>
 
 <template>
+
+    <Head title="DesignDetail-Create" />
     <AppLayout>
         <div class="px-6 py-10 max-w-6xl mx-auto">
             <!-- Header -->
@@ -79,7 +98,7 @@ const createDesignDetail = () => {
                             <option value="Lower">Lower Body</option>
                         </select>
                         <p v-if="form.errors.body_section" class="mt-1 text-sm text-red-600">{{ form.errors.body_section
-                            }}</p>
+                        }}</p>
                     </div>
 
                     <!-- Gender -->
@@ -98,14 +117,33 @@ const createDesignDetail = () => {
                         <p v-if="form.errors.gender" class="mt-1 text-sm text-red-600">{{ form.errors.gender }}</p>
                     </div>
 
-                    <!-- Body Part -->
-                    <Input type="text" label="Body Part" v-model="form.body_part" :error="form.errors.body_part"
-                        placeholder="Enter body part" required="true">
-                    <template #icon>
-                        <Icon icon="mdi:human-male-height" width="22" height="22" />
-                    </template>
-                    </Input>
+                    <!-- Body Part Dropdown -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-800 mb-1">Select Existing Body Part <span
+                                class="text-red-500">*</span></label>
+                        <select v-model="form.body_part_id"
+                            class="w-full border rounded-md py-2 px-3 text-sm shadow-sm focus:ring-primary focus:border-primary">
+                            <option value="">-- Select Body Part --</option>
+                            <option v-for="part in existingBodyParts" :key="part.id" :value="part.id">
+                                {{ part.body_part }}
+                            </option>
+                        </select>
 
+                        <div class="text-gray-500 text-sm mt-1">Or enter a new body part below:</div>
+
+                        <!-- New Body Part Text Input -->
+                        <label class="block text-lg font-semibold">New Body Part</label>
+                        <Input type="text" v-model="form.new_body_part" placeholder="Enter new body part" class="mt-2">
+                        <template #icon>
+                            <Icon icon="mdi:human-male-height" width="20" height="20" />
+                        </template>
+                        </Input>
+                        <p v-if="form.errors.new_body_part" class="text-red-600 text-sm mt-1">
+                            {{ form.errors.new_body_part }}
+                        </p>
+
+
+                    </div>
                     <!-- Value -->
                     <Input type="text" label="Value" v-model="form.value" :error="form.errors.value"
                         placeholder="Enter value" required="true">

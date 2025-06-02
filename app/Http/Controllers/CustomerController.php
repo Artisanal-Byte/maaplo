@@ -30,6 +30,7 @@ class CustomerController extends Controller
                 'id' => $c->id,
                 'name' => $c->name,
                 'email' => $c->email,
+                'country_code' => $c->country_code,
                 'phone' => $c->phone,
                 'gender' => $c->gender,
                 'dob' => $c->dob,
@@ -61,6 +62,8 @@ class CustomerController extends Controller
             'user_id' => $user_id,
             'measurements' => json_encode($setData, true),
             'customer_limit_exceeded' => $customerLimitExceeded,
+             'toAsk' => json_encode($setData, true),
+            'notes' => $customer->notes ?? [],
         ]);
     }
 
@@ -79,6 +82,7 @@ class CustomerController extends Controller
             'user_id' => 'required|exists:users,id',
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f,o',
+            'country_code' => ['nullable', 'string', 'regex:/^\+\d{1,4}$/'],
             'phone' => 'required|regex:/^[0-9]{10}$/',
             'email' => 'nullable|email|unique:customers,email',
             'address' => 'required|string|max:255',
@@ -99,6 +103,7 @@ class CustomerController extends Controller
                 'user_id' => $user_id,
                 'name' => $validated['name'],
                 'gender' => $validated['gender'],
+                'country_code' => $validated['country_code'],
                 'phone' => $validated['phone'],
                 'email' => $validated['email'],
                 'base_measurements' => json_encode($validated['measurements']),
@@ -168,7 +173,6 @@ class CustomerController extends Controller
     public function edit($id)
     {
         $customer = Customer::findOrFail($id);
-
         // Get the customer photos (face image and full-body image)
         $photos = CustomerPhoto::where('customer_id', $customer->id)->get();
 
@@ -176,6 +180,13 @@ class CustomerController extends Controller
         $faceImage = $photos->where('label', 'Faceimage')->first();
         $fullBodyImage = $photos->where('label', 'Fullbody')->first();
 
+        $measurements = Measurement::all();
+        $setData = [];
+        foreach ($measurements as $measurement) {
+            $setData[$measurement->slug] = null;
+        }
+
+        $hasOrder = $customer->orders()->exists();
         return Inertia::render('customer/Edit', [
             'customer' => array_merge(
                 $customer->toArray(),
@@ -183,11 +194,11 @@ class CustomerController extends Controller
                 [
                     'face_image' => $faceImage ? $faceImage->image_url : null,
                     'full_body_image' => $fullBodyImage ? $fullBodyImage->image_url : null,
-                    'measurements' => is_string($customer->base_measurements)
-                        ? json_decode($customer->base_measurements, true)
-                        : $customer->base_measurements,
+                    'measurements' => $customer->base_measurements,
                 ]
             ),
+            'isOrder' => $hasOrder,
+            'toAsk' => json_encode($setData, true),
             'notes' => $customer->notes ?? [],
         ]);
     }
@@ -198,7 +209,8 @@ class CustomerController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'nullable|email|unique:customers,email,' . $id,
-            'phone' => 'required|max:10',
+            'country_code' => ['nullable', 'string', 'regex:/^\+\d{1,4}$/'],
+            'phone' => 'required|regex:/^[0-9]{10}$/',
             'gender' => 'required|in:m,f,o',
             'dob' => 'nullable|date',
             'measurements' => 'nullable|array',
@@ -216,6 +228,7 @@ class CustomerController extends Controller
                 'gender' => $validated['gender'],
                 'dob' => $validated['dob'],
                 'base_measurements' => json_encode($validated['measurements']),
+                'country_code' => $validated['country_code'],
                 'phone' => $validated['phone'],
                 'notes' => json_encode($validated['notes']),
                 'address' => json_encode(['value' => $validated['address']]), // keep consistent format

@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
 import { ref } from 'vue';
-import { router, Link } from '@inertiajs/vue3';
+import { router, Link, Head } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
 
@@ -31,6 +31,7 @@ function confirmDelete() {
 </script>
 
 <template>
+    <Head title="DesignDetails" />
   <AppLayout>
     <div class="max-w-7xl mx-auto py-8 px-4">
       <!-- Header Section -->
@@ -65,7 +66,7 @@ function confirmDelete() {
               <td class="p-2 border text-center capitalize">
                 {{ detail.gender === 'm' ? 'Male' : detail.gender === 'f' ? 'Female' : 'Other' }}
               </td>
-              <td class="p-2 border text-center">{{ detail.body_part }}</td>
+              <td class="p-2 border text-center">{{ detail.body_part_value?.body_part ?? 'N/A' }}</td>
               <td class="p-2 border text-center">{{ detail.value }}</td>
               <td class="p-2 border text-center">
                 <div class="flex justify-center gap-4">
