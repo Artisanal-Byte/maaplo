@@ -12,7 +12,7 @@ class DesignDetail extends Model
     protected $table = 'design_details';
     protected $fillable = [
         'body_section',
-        'body_part',
+        'body_part_id',
         'value',
         'image',
         'gender',

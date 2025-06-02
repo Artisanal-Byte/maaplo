@@ -48,6 +48,10 @@ const isValidPathData = (str = '') => {
 };
 
 const createDesignDetail = () => {
+    if (!form.body_part_id && !form.new_body_part) {
+        toast.error('Please select an existing Body Part or enter a new one.');
+        return;
+    }
     if (form.image?.includes('<svg')) {
         form.image = form.image
             .replace(/width="[^"]*"/, 'width="50"')
@@ -134,8 +138,10 @@ const createDesignDetail = () => {
                             <Icon icon="mdi:human-male-height" width="20" height="20" />
                         </template>
                         </Input>
-                        <p v-if="form.errors.body_part" class="text-red-600 text-sm mt-1">{{ form.errors.body_part }}
+                        <p v-if="form.errors.new_body_part" class="text-red-600 text-sm mt-1">
+                            {{ form.errors.new_body_part }}
                         </p>
+
 
                     </div>
                     <!-- Value -->

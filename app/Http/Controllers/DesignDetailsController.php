@@ -46,38 +46,46 @@ class DesignDetailsController extends Controller
             'image' => ['required', 'string', new SvgMarkup()],
         ]);
 
-        // Logic: if user selected existing body_part_id, use it
+        // Ensure one of the two fields is filled
+        if (!$request->filled('body_part_id') && !$request->filled('new_body_part')) {
+            return back()->withErrors([
+                'body_part_id' => 'Either select an existing Body Part or enter a new one.',
+                'new_body_part' => 'Either select an existing Body Part or enter a new one.',
+            ])->withInput();
+        }
+
+        // Use existing body_part_id if provided
         if ($validated['body_part_id']) {
             $bodyPartId = $validated['body_part_id'];
         }
-        // Otherwise, new_body_part should be provided
-        elseif (!empty($validated['new_body_part'])) {
+        // Otherwise, create a new body part
+        else {
             $newBodyPart = trim($validated['new_body_part']);
 
             // Check if this new body part already exists
             $exists = BodyPartValue::where('body_part', $newBodyPart)->first();
             if ($exists) {
-                return back()->withErrors(['body_part' => 'This Body Part already exists. Please select it from the dropdown.'])->withInput();
+                return back()->withErrors([
+                    'new_body_part' => 'This Body Part already exists. Please select it from the dropdown.',
+                ])->withInput();
             }
 
-            // Create new body part
             $bodyPart = BodyPartValue::create(['body_part' => $newBodyPart]);
             $bodyPartId = $bodyPart->id;
-        } else {
-            return back()->withErrors(['body_part' => 'Please select or enter a Body Part.'])->withInput();
         }
 
-        // Now create DesignDetail with the body_part_id
+        // Save DesignDetail with the proper body_part_id column
         DesignDetail::create([
             'body_section' => $validated['body_section'],
             'gender' => $validated['gender'],
-            'body_part' => $bodyPartId, // store id here
+            'body_part_id' => $bodyPartId, // make sure DB column is body_part_id!
             'value' => $validated['value'],
             'image' => $validated['image'],
         ]);
 
         return redirect()->route('design-details.index');
     }
+
 
 
     public function edit(DesignDetail $designDetail)
@@ -101,23 +109,29 @@ class DesignDetailsController extends Controller
         ]);
 
         // Determine body part ID
-        if (!empty($validated['body_part_id'])) {
+        if (!$request->filled('body_part_id') && !$request->filled('new_body_part')) {
+            return back()->withErrors([
+                'body_part_id' => 'Either select an existing Body Part or enter a new one.',
+                'new_body_part' => 'Either select an existing Body Part or enter a new one.',
+            ])->withInput();
+        }
+
+        if ($validated['body_part_id']) {
             $bodyPartId = $validated['body_part_id'];
-        } elseif (!empty($validated['new_body_part'])) {
+        } else {
             $newBodyPart = trim($validated['new_body_part']);
 
-            // Check for duplicates
-            $existing = BodyPartValue::where('body_part', $newBodyPart)->first();
-            if ($existing) {
-                return back()->withErrors(['body_part' => 'This Body Part already exists. Please select it from the dropdown.'])->withInput();
+            $exists = BodyPartValue::where('body_part', $newBodyPart)->first();
+            if ($exists) {
+                return back()->withErrors([
+                    'new_body_part' => 'This Body Part already exists. Please select it from the dropdown.',
+                ])->withInput();
             }
 
-            // Create new body part
             $bodyPart = BodyPartValue::create(['body_part' => $newBodyPart]);
             $bodyPartId = $bodyPart->id;
-        } else {
-            return back()->withErrors(['body_part' => 'Please select or enter a Body Part.'])->withInput();
         }
+
 
         // Update design detail
         $designDetail->update([

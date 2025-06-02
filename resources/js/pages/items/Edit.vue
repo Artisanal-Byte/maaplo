@@ -36,6 +36,11 @@ const updateTemplate = () => {
     const trueDesignDetailIds = Object.entries(form.design_details)
         .filter(([_, value]) => value === true)
         .map(([key]) => Number(key));
+
+    if (trueDesignDetailIds.length === 0) {
+        toast.error('Please select at least one Design Detail.');
+        return;
+    }
     const dataToSend = {
         ...form.data(),
         required_measurements: form.required_measurements,
@@ -195,7 +200,7 @@ const isValidPathData = (str) => {
                 </div>
                 <div v-if="form.errors.required_measurements" class="text-red-600 text-sm mt-1">{{
                     form.errors.required_measurements
-                    }}</div>
+                }}</div>
 
                 <!-- SVG Logo -->
                 <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
