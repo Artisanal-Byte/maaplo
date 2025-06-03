@@ -4,8 +4,7 @@ import { Icon } from '@iconify/vue';
 import { Link } from '@inertiajs/vue3';
 import { useOrderFormStore } from '@/stores/orderFormStore';
 
-let props = defineProps(["customers"    ]);
-let emit = defineEmits(["setMeasurements"]);
+let props = defineProps(["customers", "error"]);
 const formStore = useOrderFormStore()
 const selectedCustomer = ref('Select Customer');
 const showDropdown = ref(false);
@@ -17,7 +16,6 @@ let data = props.form
 //select customer and set value
 function selectOption(customer) {
     selectedCustomer.value = customer.name;
-    emit('setMeasurements', customer.measurements)
     formStore.user_id = customer.user_id
     formStore.customer_id = customer.id
     showDropdown.value = false;
@@ -36,10 +34,10 @@ function asset(path) {
             <button @click="toggleDropdown"
                 class="flex cursor-pointer items-center justify-between gap-2 py-2 bg-white rounded-md focus:outline-none">
                 <span class="font-lato font-medium text-base leading-4 tracking-normal">{{ selectedCustomer
-                }}</span>
+                    }}</span>
                 <Icon :icon="showDropdown ? 'icon-park-outline:up' : 'icon-park-outline:down'" width="20" height="20" />
             </button>
-            <!-- <p class="text-red-600 text-sm">{{ errors?.customer_id }}</p> -->
+            <p class="text-red-600 text-sm">{{ error }}</p>
 
             <!-- Dropdown Menu -->
             <div v-if="showDropdown"

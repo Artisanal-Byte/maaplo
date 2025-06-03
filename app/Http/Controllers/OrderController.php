@@ -67,14 +67,9 @@ class OrderController extends Controller
             ->with('measurements')
             ->get()
             ->append('design_details_list'); // Appends the accessor to each model
-
-
-        // $designDetails = ;
-        dd($itemTypes->toArray());
         return Inertia::render('orders/Create', [
             'customers' => $user->customers,
             'itemTypes' => $itemTypes,
-            // 'designDetails' => $designDetails
         ]);
     }
 

@@ -3,7 +3,7 @@ import { ref, defineProps, computed, watch } from 'vue';
 import { Icon } from '@iconify/vue';
 
 const props = defineProps(["itemTypes"]);
-const emits = defineEmits(['setItemId']);
+const emits = defineEmits(['setItemId', 'setSelectDesignDetails']);
 
 const searchQuery = ref('');
 const modelValue = ref('');
@@ -36,6 +36,7 @@ const showClearIcon = computed(() => searchQuery.value.length > 0);
 
 const selectOption = (option) => {
   emits('setItemId', option);
+  emits('setSelectDesignDetails', option.id);
   modelValue.value = option.name;
   searchQuery.value = option.name;
   showDropdown.value = false;
@@ -64,56 +65,29 @@ watch(modelValue, (val) => {
       <h1 class="font-medium leading-4 tracking-normal font-lato">
         Item Type<span class="text-red-500 text-lg">*</span>
       </h1>
-      <Icon
-        :icon="showDropdownitemTypes ? 'icon-park-outline:up' : 'icon-park-outline:down'"
-        width="20"
-        height="20"
-        class="text-black ml-2 mt-1"
-      />
+      <Icon :icon="showDropdownitemTypes ? 'icon-park-outline:up' : 'icon-park-outline:down'" width="20" height="20"
+        class="text-black ml-2 mt-1" />
     </div>
 
     <div v-show="showDropdownitemTypes" class="z-10">
       <div class="relative">
         <!-- Clear Icon -->
-        <Icon
-          v-if="showClearIcon"
-          icon="mdi:close-circle"
-          width="20"
-          height="20"
-          class="absolute top-2.5 right-8 text-gray-500 cursor-pointer"
-          @click="clearSelection"
-        />
+        <Icon v-if="showClearIcon" icon="mdi:close-circle" width="20" height="20"
+          class="absolute top-2.5 right-8 text-gray-500 cursor-pointer" @click="clearSelection" />
 
         <!-- Search Input -->
-        <input
-          type="text"
-          v-model="searchQuery"
-          @focus="showDropdown = true"
-          @blur="handleBlur"
-          placeholder="Search Item Type"
-          class="w-full border border-primary rounded px-3 py-2 focus:outline-none"
-          :class="{ 'border-red-500': isInvalid }"
-        />
+        <input type="text" v-model="searchQuery" @focus="showDropdown = true" @blur="handleBlur"
+          placeholder="Search Item Type" class="w-full border border-primary rounded px-3 py-2 focus:outline-none"
+          :class="{ 'border-red-500': isInvalid }" />
 
         <!-- Dropdown Icon -->
-        <Icon
-          icon="icon-park-outline:down"
-          width="20"
-          height="20"
-          class="absolute top-2.5 right-3 text-gray-500 pointer-events-none"
-        />
+        <Icon icon="icon-park-outline:down" width="20" height="20"
+          class="absolute top-2.5 right-3 text-gray-500 pointer-events-none" />
 
         <!-- Dropdown List -->
-        <ul
-          v-if="showDropdown"
-          class="absolute z-10 mt-1 w-full bg-white border rounded shadow max-h-40 overflow-auto"
-        >
-          <li
-            v-for="option in filteredOptions"
-            :key="option.name"
-            @click="selectOption(option)"
-            class="px-4 py-2 cursor-pointer hover:bg-gray-100"
-          >
+        <ul v-if="showDropdown" class="absolute z-10 mt-1 w-full bg-white border rounded shadow max-h-40 overflow-auto">
+          <li v-for="option in filteredOptions" :key="option.name" @click="selectOption(option)"
+            class="px-4 py-2 cursor-pointer hover:bg-gray-100">
             {{ option.name }}
           </li>
           <li v-if="filteredOptions.length === 0" class="px-4 py-2 text-gray-500 italic">

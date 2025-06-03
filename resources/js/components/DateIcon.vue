@@ -3,6 +3,7 @@ import { computed, ref, defineEmits } from 'vue'
 import { Icon } from '@iconify/vue';
 import { useOrderFormStore } from '@/stores/orderFormStore';
 
+const props = defineProps(['error'])
 let emits = defineEmits(["setOrderData"])
 const selectedDate = useOrderFormStore()
 const dateInput = ref(null)
@@ -31,7 +32,7 @@ const formattedDate = computed(() => {
     <div class="mt-2 flex items-center gap-3">
         <label class="font-lato text-base font-medium leading-4 tracking-normal">
             Delivery Date <span class="text-red-500">*</span>
-            <!-- <p class="text-red-600 text-sm">{{ errors?.delivery_date }}</p> -->
+            <p class="text-red-600 text-sm">{{ error }}</p>
         </label>
 
         <!-- Calendar icon acts as the “open picker” trigger -->
