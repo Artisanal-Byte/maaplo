@@ -4,7 +4,6 @@ import Colors from './Colors.vue';
 import { Icon } from '@iconify/vue';
 import DesignDetails from './DesignDetails.vue';
 import ItemType from './ItemType.vue';
-import Measurements from './Measurements.vue';
 import Notes from './Notes.vue';
 import WorkType from './WorkType.vue';
 import ClothImage from './ClothImage.vue';
@@ -19,7 +18,7 @@ const fileInputCamera = ref(null)
 const props = defineProps(['showModal', 'form', 'itemTypes', 'allDesignDetails', 'itemIndex', 'errorMessage', 'errors']);
 let formStore = useOrderFormStore()
 
-const emit = defineEmits(['close', 'setOrderItemsData']);
+const emit = defineEmits(['close']);
 const measurements = ref([])
 const showImageUpload = ref(false)
 
@@ -29,7 +28,9 @@ const designDetails = ref({})
 function saveItem() {
     previewImage.value = null
     showImageUpload.value = false
-    formStore.pushOrderItem()
+    if (formStore.order_items_template.mode == 'create') {
+        formStore.pushOrderItem()
+    }
     formStore.resetOrderItemTemplate()
     emit('close')
 }
@@ -67,27 +68,37 @@ watch(() => showImageUpload.value, (nVal) => {
     }
 })
 
-// design details
-// watch(() => formStore.order_items_template.template_id, (newId) => {
+const setSelectDesignDetails = (templateId) => {
+    const selectedItemDesign = props.itemTypes.find(item => item.id === templateId);
+    if (!selectedItemDesign || !selectedItemDesign.design_details_list) {
+        designDetails.value = [];
+        return;
+    }
 
-//     //set the design details 
-//     let designDetailsIds = []
-//     designDetailsIds = props.itemTypes.find(item => item.id === newId).design_details
-//     // designDetails.value = props.itemTypes.find(item => item.id === newId).design_details
+    const grouped = {};
 
-//     props.allDesignDetails.forEach(key => {
-//         if (designDetailsIds.includes(key.id)) {
-//             // console.log('body part:', key.body_part);
-//             // console.log('all design details:', props.allDesignDetails);
-//             designDetails.value[key.body_part] = key.id; // or any value you want
-//         }
-//     });
-//     // console.log('bpdy part:', designDetails.value);
+    selectedItemDesign.design_details_list.forEach(item => {
+        const bodyPart = item.body_part_value.body_part;
+        const key = bodyPart.toLowerCase();
 
-//     // designDetails.value = props.allDesignDetails.find(item => item.id === newId).design_details
+        if (!grouped[key]) {
+            grouped[key] = {
+                body_part: bodyPart,
+                value: []
+            };
+        }
 
+        grouped[key].value.push({
+            id: item.id,
+            name: item.value.toLowerCase().replace(/\s+/g, '-'),
+            label: item.value,
+            img: item.image
+        });
+    });
 
-// })
+    designDetails.value = Object.values(grouped);
+};
+
 const previewImage = (file) => {
     return URL.createObjectURL(file)
 }
@@ -119,7 +130,8 @@ const previewImage = (file) => {
                 <div class=" max-h-[75vh] pr-2 space-y-5">
                     <!-- done -->
                     <WorkType />
-                    <ItemType :itemTypes="itemTypes" @setItemId="setItemId" />
+                    <ItemType :itemTypes="itemTypes" @setItemId="setItemId"
+                        @setSelectDesignDetails="setSelectDesignDetails" />
                     <ItemMeasurements :askedMeasurements="measurements" />
                     <DesignDetails :designDetails="designDetails" v-model="formStore.design_detail" />
 
@@ -170,7 +182,7 @@ const previewImage = (file) => {
                     </div>
                     <!-- Trail Date && Delivery Date  -->
 
-                    <TrialAndDeliveryDate  />
+                    <TrialAndDeliveryDate />
 
                     <div class="flex items-center gap-4">
                         <h1 class="font-medium font-lato">Mark as Urgent</h1>

@@ -15,6 +15,7 @@ export const useOrderFormStore = defineStore('orderForm', {
             order_items: [],
             order_items_template:
             {
+                mode: 'create',
                 template_id: null,
                 measurements: [],
                 design_detail: [],
