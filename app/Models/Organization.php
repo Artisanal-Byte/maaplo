@@ -15,7 +15,8 @@ class Organization extends Model
         'organization_logo',
         'gst_number',
         'address',
-
+        'logo_request',
+        'logo_created',
     ];
 
     public function users()
