@@ -36,7 +36,17 @@ const requestLogoCreation = () => {
     toast.info('Logo creation request has been noted. We will Contect Soon you with creating a logo.');
 };
 const hasAttemptedSubmit = ref(false);
+
+const gstRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+
 const createOrganization = () => {
+
+    form.clearErrors(); // Clear old errors
+    const gst = form.gst_number?.toUpperCase() || '';
+    if (gst && (!gstRegex.test(gst) || gst.length !== 15)) {
+        form.errors.gst_number = 'GST Number must be exactly 15 characters and valid format like 12AABCU1234F1Z2';
+        return;
+    }
     // First click: show warning if neither logo nor request
     if (!form.organization_logo && !form.logo_request && !hasAttemptedSubmit.value) {
         showLogoError.value = true;
@@ -92,7 +102,7 @@ const createOrganization = () => {
 
                     <!-- GST Number -->
                     <Input v-model="form.gst_number" label="GST Number" placeholder="Enter GST Number"
-                        :error="form.errors.gst_number">
+                        :error="form.errors.gst_number" @input="form.gst_number = form.gst_number.toUpperCase()">
                     <template #icon>
                         <Icon icon="mdi:certificate-outline" width="24" height="24" />
                     </template>
@@ -125,8 +135,9 @@ const createOrganization = () => {
                     </p>
                 </div>
 
+                <!-- Logo Request -->
                 <div v-if="showLogoError && !form.logo_request"
-                    class="flex items-start gap-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-md mt-4 shadow-sm">
+                    class="flex items-start gap-4 bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-md mt-4 shadow-sm">
                     <div class="flex-shrink-0 pt-1">
                         <Icon icon="mdi:alert-circle-outline" class="text-yellow-500" width="24" height="24" />
                     </div>
