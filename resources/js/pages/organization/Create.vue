@@ -44,7 +44,7 @@ const createOrganization = () => {
     form.clearErrors(); // Clear old errors
     const gst = form.gst_number?.toUpperCase() || '';
     if (gst && (!gstRegex.test(gst) || gst.length !== 15)) {
-        form.errors.gst_number = 'GST Number must be exactly 15 characters and valid format like 12AABCU1234F1Z2';
+        form.errors.gst_number = 'GST Number must be exactly 15 characters and valid format like 12XXXXX1234X1X2';
         return;
     }
     // First click: show warning if neither logo nor request
