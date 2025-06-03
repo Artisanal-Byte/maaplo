@@ -62,19 +62,19 @@ class OrderController extends Controller
         $user->load('customers');
 
         //-- item which have a global scope or created by Authentic user
-        $itemTypes = Template::where('user_id', Auth::id())
+        $itemTypes = $templates = Template::where('user_id', Auth::id())
             ->orWhereNull('user_id')
             ->with('measurements')
-            ->get();
+            ->get()
+            ->append('design_details_list'); // Appends the accessor to each model
 
-        $designDetails = DesignDetail::all()->map(function ($detail) {
-            return $detail->getRawOriginal();
-        });
-        // dd($designDetails);
+
+        // $designDetails = ;
+        dd($itemTypes->toArray());
         return Inertia::render('orders/Create', [
             'customers' => $user->customers,
             'itemTypes' => $itemTypes,
-            'designDetails' => $designDetails
+            // 'designDetails' => $designDetails
         ]);
     }
 

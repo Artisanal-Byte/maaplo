@@ -22,6 +22,8 @@ class DesignDetail extends Model
         'design_details' => 'array',
     ];
 
+    protected $with = ["bodyPartValue"];
+
     protected function bodyPart(): Attribute
     {
         return Attribute::make(
