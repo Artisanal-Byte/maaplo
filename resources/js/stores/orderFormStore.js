@@ -26,7 +26,7 @@ export const useOrderFormStore = defineStore('orderForm', {
                 is_urgent: '',
                 material_cost: null,
                 stiching_cost: null,
-                altering_cost:null,
+                altering_cost: null,
                 item_cost: null,
                 notes: [{}],
                 trial_dates: '',
@@ -68,15 +68,20 @@ export const useOrderFormStore = defineStore('orderForm', {
                 Pattern_img2: null
             }
         },
+        setOrderItemData(index) {
+            if (index >= 0 && index < this.order_items.length) {
+                this.order_items_template = this.order_items[index]
+            }
+        },
+        createOrder() {
+            const { order_items_template, ...formData } = this.$state;
+            const form = useForm({ ...formData });
+            form.post(route('orders.store'));
+        },
         deleteOrderItem(index) {
             if (index >= 0 && index < this.order_items.length) {
                 this.order_items.splice(index, 1)
             }
         },
-        createOrder()
-        {
-            const form = useForm({ ...this.$state });
-            form.post(route('order.create'))
-        }
     },
 })

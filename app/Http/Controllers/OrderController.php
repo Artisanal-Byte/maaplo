@@ -66,8 +66,11 @@ class OrderController extends Controller
             ->orWhereNull('user_id')
             ->with('measurements')
             ->get();
-            
-        $designDetails = DesignDetail::all();
+
+        $designDetails = DesignDetail::all()->map(function ($detail) {
+            return $detail->getRawOriginal();
+        });
+        // dd($designDetails);
         return Inertia::render('orders/Create', [
             'customers' => $user->customers,
             'itemTypes' => $itemTypes,
