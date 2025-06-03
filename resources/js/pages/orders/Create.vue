@@ -88,7 +88,7 @@ watch(() => form.advance_paid, (nPayVal) => {
 const editOrderItem = (index) => {
     form.order_items_template.mode = 'edit'
     form.setOrderItemData(index)
-    form.resetOrderItemTemplate()
+    // form.resetOrderItemTemplate()
     showModal.value = true
 }
 
@@ -104,9 +104,9 @@ const editOrderItem = (index) => {
                         <Icon icon="lsicon:order-edit-filled" width="30" height="30" />
                         New Order
                     </h1>
-                    <!-- <pre>
-                        {{ form }}
-                    </pre> -->
+                    <pre>
+                        {{ errors }}
+                    </pre>
                 </div>
                 <div class="self-center">
                     <Button :disabled="disabled" @click="create">Create Order</Button>

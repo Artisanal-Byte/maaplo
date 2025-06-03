@@ -12,6 +12,7 @@ class StoreOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        // dd($this->all());
         return \Illuminate\Support\Facades\Auth::check();
     }
 
@@ -38,16 +39,16 @@ class StoreOrderRequest extends FormRequest
             'order_items' => ['required', 'array'],
             // 'order_items.*.order_id' => ['required', 'string'],
             'order_items.*.template_id' => ['required', 'numeric'],
-            'order_items.*.measurements' => ['required', 'string'],
-            // 'order_items.*.design_details_ids' => ['required', 'array'],
+            'order_items.*.measurements' => ['required'],
+            'order_items.*.design_detail' => ['required', 'array'],
             'order_items.*.colors' => ['required', 'string', 'max:256'],
             'order_items.*.notes' => ['required', 'array'],
-            'order_items.*.trial_dates.*' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:delivery_date'],
+            'order_items.*.trial_dates' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:delivery_date'],
             'order_items.*.work_type' => ['required', 'string', 'in:New from Material,Only Stitching,Only Altering'],
             'order_items.*.material_code' => ['nullable', 'string', 'max:256'],
             'order_items.*.material_type' => ['nullable', 'string', 'max:256'],
             'order_items.*.refrence_dress' => ['required', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
-            // 'order_items.*.is_urgent' => ['required', 'boolean'],
+            'order_items.*.is_urgent' => ['nullable', 'boolean'],
             'order_items.*.material_cost' => ['nullable', 'numeric', 'min:0'],
             'order_items.*.stiching_cost' => ['nullable', 'numeric', 'min:0'],
             'order_items.*.item_cost' => ['required', 'numeric', 'min:0'],
@@ -91,7 +92,6 @@ class StoreOrderRequest extends FormRequest
             'order_items.*.template_id.numeric' => 'The item template ID must be a number.',
 
             'order_items.*.measurements.required' => 'Measurements are required.',
-            'order_items.*.design_details_ids.required' => 'Design details are required.',
 
             'order_items.*.colors.required' => 'Color information is required.',
             'order_items.*.colors.max' => 'Color information may not be greater than 256 characters.',
@@ -128,29 +128,5 @@ class StoreOrderRequest extends FormRequest
             'order_items.*.item_cost.numeric' => 'Item cost must be a number.',
             'order_items.*.item_cost.min' => 'Item cost must be at least 0.',
         ];
-    }
-
-    public function withValidator($validator)
-    {
-        $validator->after(function ($validator) {
-            foreach ($this->order_items as $index => $item) {
-                $workType = $item['work_type'] ?? null;
-
-                if ($workType === 'New from Material') {
-                    if (empty($item['material']) || empty($item['material_code'])) {
-                        $validator->errors()->add("order_items.$index.material", "Material is required for 'New from Material'.");
-                        $validator->errors()->add("order_items.$index.material_code", "Material code is required for 'New from Material'.");
-                    }
-
-                    if (empty($item['material_cost'])) {
-                        $validator->errors()->add("order_items.$index.material_cost", "Material cost is required for 'New from Material'.");
-                    }
-                }
-
-                if (in_array($workType, ['New from Material', 'Only Stitching']) && empty($item['stiching_cost'])) {
-                    $validator->errors()->add("order_items.$index.stiching_cost", "Stitching cost is required for '$workType'.");
-                }
-            }
-        });
     }
 }
