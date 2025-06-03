@@ -8,12 +8,14 @@ import Button from '@/components/Button.vue';
 
 const toast = new ToastMagic();
 const logoPreview = ref(null);
+const showLogoError = ref(false);
 
 const form = useForm({
     organization_name: '',
     organization_logo: null,
     gst_number: '',
     address: '',
+    logo_request: false,
 });
 
 const logoUrl = computed(() => {
@@ -28,7 +30,23 @@ const handleLogoChange = (event) => {
     }
 };
 
+const requestLogoCreation = () => {
+    form.logo_request = true;
+    showLogoError.value = false;
+    toast.info('Logo creation request has been noted. We will Contect Soon you with creating a logo.');
+};
+const hasAttemptedSubmit = ref(false);
 const createOrganization = () => {
+    // First click: show warning if neither logo nor request
+    if (!form.organization_logo && !form.logo_request && !hasAttemptedSubmit.value) {
+        showLogoError.value = true;
+        hasAttemptedSubmit.value = true;
+        return;
+    }
+
+    // Second click (user confirmed or ignored): proceed with default false if no logo or request
+    form.logo_request = !!form.logo_request;
+
     form.post(route('organization.store'), {
         forceFormData: true,
         onSuccess: () => {
@@ -39,9 +57,12 @@ const createOrganization = () => {
         }
     });
 };
+
+
 </script>
 
 <template>
+
     <Head title="Organization-Create" />
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
@@ -102,6 +123,26 @@ const createOrganization = () => {
                     <p v-if="form.errors.organization_logo" class="text-red-600 text-sm mt-1">
                         {{ form.errors.organization_logo }}
                     </p>
+                </div>
+
+                <div v-if="showLogoError && !form.logo_request"
+                    class="flex items-start gap-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-md mt-4 shadow-sm">
+                    <div class="flex-shrink-0 pt-1">
+                        <Icon icon="mdi:alert-circle-outline" class="text-yellow-500" width="24" height="24" />
+                    </div>
+                    <div class="flex-1 flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold text-sm mb-1">
+                                Organization logo Request
+                            </p>
+                            <p class="text-sm text-yellow-700 mb-0">
+                                Do you need to create a logo for your organization ?
+                            </p>
+                        </div>
+                        <Button @click="requestLogoCreation" class="color-primary h-8" :textSize="'sm'">
+                            Yes, Create Organization Logo
+                        </Button>
+                    </div>
                 </div>
 
                 <!-- Submit Button -->

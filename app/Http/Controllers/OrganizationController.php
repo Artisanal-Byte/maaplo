@@ -26,11 +26,13 @@ class OrganizationController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $data = $request->validate([
             'organization_name' => 'nullable|string',
             'organization_logo' => 'nullable|file|max:5120',
             'gst_number' => 'nullable|string',
             'address' => 'nullable|string',
+            'logo_request' => 'nullable|boolean',
         ]);
 
         try {
@@ -41,6 +43,8 @@ class OrganizationController extends Controller
                 'organization_name' => $data['organization_name'],
                 'gst_number' => $data['gst_number'],
                 'address' => $data['address'],
+                'logo_request' => $data['logo_request'] ?? false,
+                'logo_created' => false,
             ]);
 
             // Step 2: Handle logo upload
