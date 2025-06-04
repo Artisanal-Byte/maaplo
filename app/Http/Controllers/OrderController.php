@@ -28,7 +28,7 @@ class OrderController extends Controller
          *
          *  -> User -> Orders -> Customer
          *
-         *  -> order->order items `order items by default load in Order Model` 
+         *  -> order->order items `order items by default load in Order Model`
          *
          **/
 
@@ -39,7 +39,6 @@ class OrderController extends Controller
             $orders = $user->load('orders.customer');
             return Inertia::render('orders/Index', ["orders" => $orders]);
         }
-
         //-- if User Not Found
         abort(404);
     }
@@ -49,11 +48,6 @@ class OrderController extends Controller
      */
     public function create()
     {
-        /**
-         *
-         * -> user -> customers
-         *
-         */
 
         $user = Auth::user();
 
@@ -77,12 +71,9 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $storeOrderRequest)
     {
-        // dd($storeOrderRequest->all()); // For debugging purposes
         try {
-            // Validate the incoming data
             $validatedOrderData = $storeOrderRequest->validated();
 
-            // Prepare order items data
             $orderData = OrderData::prepareOrderItemsData($validatedOrderData);
 
             // Generate a unique order number
@@ -94,16 +85,13 @@ class OrderController extends Controller
 
             // Process order items
             $validatedOrderItemsData = $validatedOrderData['order_items'];
-            // dd($validatedOrderItemsData);
 
             // Begin a database transaction
             DB::beginTransaction();
 
             // Check if $orderData contains 'order_data' or just directly use the data
             if (isset($orderData['order_data'])) {
-                // Ensure 'order_number' is included in the $orderData array if not already set
                 $orderData['order_data']['order_number'] = $validatedOrderData['order_number'];
-                // dd($orderData['order_data']);
                 // Create the order record
                 Order::create($orderData['order_data']);
             } else {
@@ -113,7 +101,6 @@ class OrderController extends Controller
                 // Create the order record
                 $Order = Order::create($orderData);
             }
-            // dd($validatedOrderItemsData);
 
             // Process each order item
             foreach ($validatedOrderItemsData as &$item) {
@@ -122,9 +109,7 @@ class OrderController extends Controller
 
                 $item['is_urgent'] = filter_var($item['is_urgent'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
                 $item['is_urgent'] = $item['is_urgent'] == 1 ? 'yes' : 'no'; // Force fallback to `false` if null
-                // dd($item['is_urgent']);
 
-                // JSON encode if needed
                 if (isset($item['measurements']) && is_array($item['measurements'])) {
                     $item['measurements'] = json_encode($item['measurements']);
                 }
@@ -143,51 +128,34 @@ class OrderController extends Controller
                 if (isset($item['refrence_dress']) && $item['refrence_dress'] instanceof \Illuminate\Http\UploadedFile) {
                     $item['refrence_dress'] = $item['refrence_dress']->store('reference_dresses', 'public');
                 }
-                if (isset($item['cloth_img1']) && $item['cloth_img1'] instanceof \Illuminate\Http\UploadedFile) {
-                    $item['cloth_img1'] = $item['cloth_img1']->store('cloth_img1', 'public');
-                }
-                if (isset($item['cloth_img2']) && $item['cloth_img2'] instanceof \Illuminate\Http\UploadedFile) {
-                    $item['cloth_img2'] = $item['cloth_img2']->store('cloth_img2', 'public');
-                }
-                if (isset($item['Pattern_img1']) && $item['Pattern_img1'] instanceof \Illuminate\Http\UploadedFile) {
-                    $item['Pattern_img1'] = $item['Pattern_img1']->store('Pattern_img1', 'public');
-                }
-                if (isset($item['Pattern_img2']) && $item['Pattern_img2'] instanceof \Illuminate\Http\UploadedFile) {
-                    $item['Pattern_img2'] = $item['Pattern_img2']->store('Pattern_img2', 'public');
-                }
 
                 // Double-check required fields
                 if (!isset($item['delivery_date']) || empty($item['delivery_date'])) {
-                    throw new Exception("Missing required field: delivery_date for one of the order items.");
+                    throw new \Exception("Missing required field: delivery_date for one of the order items.");
                 }
             }
+            unset($item);
 
-            unset($item); // Unset the reference after the loop
             // Insert the transformed order items into the database
             foreach ($validatedOrderItemsData as $item) {
                 OrderItem::create($item);
             }
-            // Commit the transaction
             DB::commit();
 
-            // Redirect to the orders index page with success message
             return redirect()->route('orders.index')->with('success', 'Order created successfully.');
-            // }
         } catch (Exception $exception) {
-            // Rollback if an error occurs
             dd($exception->getMessage()); // For debugging purposes
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => $exception->getMessage()]);
         }
     }
 
-
-
     /**
      * Display the specified resource.
      */
     public function show(Order $order)
     {
+        $order->load('customer');
         return Inertia::render('orders/Show', [
             'order' => $order,
         ]);
@@ -198,6 +166,7 @@ class OrderController extends Controller
      */
     public function edit(Order $order)
     {
+
         return Inertia::render('orders/Edit', [
             'order' => $order,
         ]);
