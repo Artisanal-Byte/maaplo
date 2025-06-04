@@ -78,8 +78,7 @@ class OrderController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StoreOrderRequest $storeOrderRequest)
-    {
-        // dd($storeOrderRequest->all());
+    {   
         try {
             $validatedOrderData = $storeOrderRequest->validated();
             $orderData =  OrderData::prepareOrderItemsData($validatedOrderData);
@@ -91,15 +90,12 @@ class OrderController extends Controller
             $validatedOrderData['status'] = 'created';
 
             $validatedOrderItemsData = $validatedOrderData['order_items'];
-            dd($validatedOrderData);
             DB::beginTransaction();
 
             //- Create Order
 
             $Order = Order::create($validatedOrderData);
-            // dd($validatedOrderItemsData);
             foreach ( $validatedOrderData['order_items'] as &$item) {
-                // dd($item);
                 unset($item['template_id']);
                 $item['order_id'] = $Order->id;
                 $item['design_detail'] = json_encode($item['design_detail']);
