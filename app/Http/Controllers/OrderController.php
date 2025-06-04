@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\GetTemplateHelper;
+use App\Helpers\OrderData;
 use App\Helpers\UniqueOrderNumber; // Ensure this class exists in the specified namespace or create it if missing
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\DesignDetail;
@@ -77,34 +78,50 @@ class OrderController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StoreOrderRequest $storeOrderRequest)
-    {
+    {   
         try {
+            $validatedOrderData = $storeOrderRequest->validated();
+            $orderData =  OrderData::prepareOrderItemsData($validatedOrderData);
 
             //-- Make A unique a combination of Order number And User Id
-            $validatedOrderData = $storeOrderRequest->validated();
             $uniqueOrderNumber = new UniqueOrderNumber();
             $validatedOrderData['order_number'] = $uniqueOrderNumber->make();
 
             $validatedOrderData['status'] = 'created';
 
             $validatedOrderItemsData = $validatedOrderData['order_items'];
-
             DB::beginTransaction();
 
             //- Create Order
 
-            $Order = Order::create($validatedOrderData);
+            $Order = Order::create($orderData['orderData']);
+            foreach ( $validatedOrderData['order_items'] as &$item) {
+                unset($item['template_id']);
+                $item['order_id'] = $Order->id;
+                $item['design_detail'] = json_encode($item['design_detail']);
+                if (isset($item['measurements'])) {
+                    $item['measurements'] = json_encode($item['measurements']);
+                }
 
-            $validatedOrderData['order_id'] = $Order->id;
+                if (isset($item['notes'])) {
+                    $item['notes'] = json_encode($item['notes']);
+                }
+
+                if (isset($item['refrence_dress']) && $item['refrence_dress'] instanceof \Illuminate\Http\UploadedFile) {
+                    $item['refrence_dress'] = $item['refrence_dress']->store('reference_dresses', 'public');
+                }
+            }
+            unset($item);
 
             //- Add Order Items of Created Order
-
-            OrderItem::insert($validatedOrderItemsData);
+            // dd($validatedOrderItemsData);
+            return ['orderData'=>$orderData,'orderItemData'=>$orderItemsData];
+            OrderItem::insert($validatedOrderItemsData['orderItemData']);
 
             DB::commit();
             return redirect()->route('orders.index')->with('success', 'Order created successfully.');
         } catch (Exception $exception) {
-
+            dd($exception->getMessage());   
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => $exception->getMessage()]);
         }

@@ -31,6 +31,9 @@ function saveItem() {
     if (formStore.order_items_template.mode == 'create') {
         formStore.pushOrderItem()
     }
+    // if (condition) {
+        
+    // }
     formStore.resetOrderItemTemplate()
     emit('close')
 }
