@@ -108,13 +108,13 @@ class OrderController extends Controller
                 // dd($orderData['order_data']);
                 // Create the order record
                 Order::create($orderData['order_data']);
-                // } else {
-                //     // Ensure 'order_number' is included in the $orderData array if not already set
-                //     $orderData['order_number'] = $validatedOrderData['order_number'];
+                } else {
+                    // Ensure 'order_number' is included in the $orderData array if not already set
+                    $orderData['order_number'] = $validatedOrderData['order_number'];
 
-                //     // Create the order record
-                //     $Order = Order::create($orderData);
-                // }
+                    // Create the order record
+                    $Order = Order::create($orderData);
+                }
                 // dd($validatedOrderItemsData);
 
                 // Process each order item
@@ -164,7 +164,7 @@ class OrderController extends Controller
 
                 // Redirect to the orders index page with success message
                 return redirect()->route('orders.index')->with('success', 'Order created successfully.');
-            }
+            // }
         } catch (Exception $exception) {
             // Rollback if an error occurs
             dd($exception->getMessage()); // For debugging purposes
