@@ -11,6 +11,7 @@ class Order extends Model
     use SoftDeletes;
 
     protected $table = 'orders';
+    protected $with = ['orderItems'];
 
     // Define the fillable fields for mass assignment
     protected $fillable = [

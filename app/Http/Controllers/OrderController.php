@@ -38,7 +38,6 @@ class OrderController extends Controller
         if ($user) {
 
             $orders = $user->load('orders.customer');
-
             return Inertia::render('orders/Index', ["Inde" => $orders]);
         }
 
