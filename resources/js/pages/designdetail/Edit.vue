@@ -13,18 +13,22 @@ const props = defineProps({
     errors: Object,
     bodyParts: Array,
 });
+console.log('props', props.bodyParts);
+console.log('designDetail', props.designDetail);
 const existingBodyParts = ref(props.bodyParts || []);
 
+const existingPart = props.bodyParts.find(part => part.id === props.designDetail.body_part_id);
 
 const form = useForm({
     body_section: props.designDetail.body_section,
     gender: props.designDetail.gender,
-    body_part_id: null,
-    new_body_part: '',
+    body_part_id: existingPart ? existingPart.id : '',
+    new_body_part: existingPart ? '' : (props.designDetail.body_part_value?.body_part || ''),
     value: props.designDetail.value,
     image: props.designDetail.image,
 });
 
+console.log('form', form.new_body_part);
 const imagePreview = computed(() => {
     return form.image?.includes('<svg') ? form.image : null;
 });
@@ -44,6 +48,14 @@ watch(() => form.image, (newVal) => {
     }
 });
 
+watch(() => form.body_part_id, (newVal) => {
+    if (newVal) form.new_body_part = '';
+});
+
+watch(() => form.new_body_part, (newVal) => {
+    if (newVal) form.body_part_id = '';
+});
+
 const isSvgMarkup = (str = '') => {
     return str.trim().startsWith('<svg');
 };
@@ -53,6 +65,10 @@ const isValidPathData = (str = '') => {
 };
 
 const updateDesignDetail = () => {
+    if (!form.body_part_id && !form.new_body_part) {
+        toast.error('Please select an existing Body Part or enter a new one.');
+        return;
+    }
     form.transform(data => ({
         ...data,
         _method: 'put',
@@ -121,20 +137,21 @@ const updateDesignDetail = () => {
                         <label class="block text-sm font-semibold text-gray-800 mb-1">
                             Body Part <span class="text-red-500">*</span>
                         </label>
-                        <select v-model="form.body_part_id"
+                        <select v-model="form.body_part_id" :disabled="!!form.new_body_part"
                             class="w-full border rounded-md py-2 px-3 text-sm shadow-sm focus:ring-primary focus:border-primary">
-                            <option value="">-- Select existing Body Part --</option>
+                            <option value="">-- Select   --</option>
                             <option v-for="part in props.bodyParts" :key="part.id" :value="part.id">
                                 {{ part.body_part }}
                             </option>
                         </select>
                         <div class="text-gray-500 text-sm mt-1">Or enter a new body part below:</div>
                         <Input type="text" v-model="form.new_body_part" placeholder="New body part"
-                            :error="props.errors.body_part" class="mt-2">
+                            :disabled="!!form.body_part_id" :error="props.errors.body_part" class="mt-2">
                         <template #icon>
                             <Icon icon="mdi:human-male-height" width="20" height="20" />
                         </template>
                         </Input>
+
                     </div>
 
                     <!-- Value -->
@@ -154,7 +171,6 @@ const updateDesignDetail = () => {
                 </template>
                 </Input>
 
-                <!-- SVG Preview -->
                 <!-- SVG Preview -->
                 <div
                     class="mt-6 border border-gray-300 rounded-lg p-6 bg-gray-50 flex justify-center items-center min-h-[120px]">
