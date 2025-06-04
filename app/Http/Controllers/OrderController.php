@@ -26,19 +26,18 @@ class OrderController extends Controller
     {
         /**
          *
-         *  -> user -> orders -> customer
+         *  -> User -> Orders -> Customer
          *
-         *  -> order items
+         *  -> order->order items `order items by default load in Order Model` 
          *
          **/
 
         $user = Auth::user();
-        $orders = [];
+        $orders = null;
 
         if ($user) {
-
             $orders = $user->load('orders.customer');
-            return Inertia::render('orders/Index', ["Inde" => $orders]);
+            return Inertia::render('orders/Index', ["orders" => $orders]);
         }
 
         //-- if User Not Found
