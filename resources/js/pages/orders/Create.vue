@@ -104,9 +104,6 @@ const editOrderItem = (index) => {
                         <Icon icon="lsicon:order-edit-filled" width="30" height="30" />
                         New Order
                     </h1>
-                    <pre>
-                        {{ errors }}
-                    </pre>
                 </div>
                 <div class="self-center">
                     <Button :disabled="disabled" @click="create">Create Order</Button>
