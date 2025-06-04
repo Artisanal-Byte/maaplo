@@ -8,6 +8,7 @@ import { Icon } from '@iconify/vue';
 import { defineProps, computed, reactive, ref, watch } from 'vue';
 
 const props = defineProps(['orders'])
+console.log('Orders:', props.orders);
 const searchTerm = ref('');
 // const orders = ref([]);
 const selectedStatus = ref('');
@@ -189,8 +190,8 @@ function toggleDropdownDelivery() {
             <div class="px-4 mt-10 py-6 gap-[10px] rounded-[10px] shadow-[0px_0px_8.6px_0px_#005FAF40]">
                 <!-- Orders list -->
                 <div class="space-y-4">
-                    <OrderList v-if="orders?.length > 0" v-for="order in orders" :bgColor="bgColor"
-                        :borderColor="borderColor" />
+                    <OrderList v-if="orders?.orders?.length > 0" v-for="order in orders?.orders" :bgColor="bgColor"
+                        :borderColor="borderColor" :order="order" />
                     <span v-else>No Orders</span>
                 </div>
             </div>

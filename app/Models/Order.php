@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -49,13 +50,17 @@ class Order extends Model
         return $this->hasMany(OrderItem::class, 'order_id');
     }
 
+    public function getDeliveryDateAttribute($value)
+    {
+        return Carbon::parse($value)->format('d-m-Y');
+    }
+
 
     protected function status(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => ucwords($value),
-            set: fn ($value) => strtolower($value),
+            get: fn($value) => ucwords($value),
+            set: fn($value) => strtolower($value),
         );
     }
-
 }
