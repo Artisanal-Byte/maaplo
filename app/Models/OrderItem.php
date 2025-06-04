@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -60,6 +61,15 @@ class OrderItem extends Model
     public function Template()
     {
         return $this->belongsTo(Template::class);
+    }
+
+    public function getDeliveryDateAttribute($value)
+    {
+        return Carbon::parse($value)->format('d-m-Y');
+    }
+    public function getTrialDatesAttribute($value)
+    {
+        return Carbon::parse($value)->format('d-m-Y');
     }
 
     // Accessors & Mutators

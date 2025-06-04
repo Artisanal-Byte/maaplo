@@ -1,5 +1,6 @@
 <script setup>
 import { Icon } from '@iconify/vue';
+import { Link } from '@inertiajs/vue3';
 const props = defineProps({
     bgColor: {
         default: '#FFFCE6'
@@ -9,9 +10,9 @@ const props = defineProps({
         default: '#837200'
     },
     order: {
-    type: Object,
-    required: true
-  }
+        type: Object,
+        required: true
+    }
 });
 
 </script>
@@ -26,12 +27,12 @@ const props = defineProps({
             <div>
                 <h1
                     class="font-[Lato] font-medium text-[18px] leading-[16px] tracking-[0] text-center text-secondary p-2">
-                    1</h1>
+                    # Order No.{{ order.order_number }}</h1>
             </div>
             <div>
                 <h1
                     class="font-[Lato] font-medium text-[18px] leading-[16px] tracking-[0] text-center text-secondary p-2">
-                    Richa Shah
+                    Customer: {{ order?.customer?.name }}
                 </h1>
             </div>
 
@@ -40,21 +41,28 @@ const props = defineProps({
             <div>
                 <p
                     class="font-[Lato] font-medium text-[18px] leading-[16px] tracking-[0] text-center text-secondary p-2">
-                    Items - 5</p>
+                    Items: {{ order?.order_items?.length }}</p>
             </div>
             <div>
                 <p
                     class="font-[Lato] font-medium text-[18px] leading-[16px] tracking-[0] text-center text-secondary p-2">
-                    Delivery - 14-04-2025</p>
+                    Delivery Date: {{ order?.delivery_date }}</p>
             </div>
         </div>
         <div>
-            <p class="font-[Lato] font-medium text-[18px] leading-[16px] tracking-[0]  text-secondary p-2">Status - In
-                Progress</p>
+            <p class="font-[Lato] font-medium text-[18px] leading-[16px] tracking-[0]  text-secondary p-2">
+                Status: {{ order?.status }}</p>
         </div>
         <div class="flex justify-end gap-3">
+            <Link :href="route('orders.show', props.order.id)">
+            <Icon icon="teenyicons:eye-solid" width="18" height="18" class="text-[#005FAF]" />
+            </Link>
+            <Link :href="route('orders.edit', props.order.id)">
             <Icon icon="ri:edit-fill" width="18" height="18" class="text-[#005FAF]" />
+            </Link>
+            <Link :href="route('orders.destroy', props.order.id)">
             <Icon icon="ic:baseline-delete" width="18" height="18" class="text-[#E73939]" />
+            </Link>
         </div>
 
     </div>
