@@ -17,19 +17,31 @@ class OrderItem extends Model
         'item_template_id',
         'name',
         'measurements',
-        'design_details',
+        'design_detail',
         'colors',
         'material',
         'trial_dates',
         'price',
         'status',
+        'is_urgent',         // ✅ Add this
+        'item_cost',
+        'material_code',
+        'material_cost',
+        'material_type',
+        'notes',
+        'refrence_dress',
+        'stiching_cost',
+        'altering_cost',
+        'delivery_date',
+        'work_type',
     ];
 
     protected $casts = [
         'measurements' => 'array',
-        'design_details' => 'array',
+        'design_detail' => 'array',
         'trial_dates' => 'date',
         'price' => 'decimal:2',
+        // 'is_urgent' => 'boolean',
     ];
 
     // Relationships

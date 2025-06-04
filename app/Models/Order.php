@@ -26,7 +26,7 @@ class Order extends Model
     ];
 
     protected $casts = [
-        'notes' => 'array',             
+        'notes' => 'array',
         'delivery_date' => 'date',
         'close_date' => 'date',
         'total_amount' => 'decimal:2',
@@ -48,13 +48,13 @@ class Order extends Model
         return $this->hasMany(OrderItem::class, 'order_id');
     }
 
-   
+
     protected function status(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => ucword($value),
+            get: fn ($value) => ucwords($value),
             set: fn ($value) => strtolower($value),
         );
     }
-    
+
 }
