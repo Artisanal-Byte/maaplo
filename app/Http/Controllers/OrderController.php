@@ -94,7 +94,7 @@ class OrderController extends Controller
 
             //- Create Order
 
-            $Order = Order::create($validatedOrderData);
+            $Order = Order::create($orderData['orderData']);
             foreach ( $validatedOrderData['order_items'] as &$item) {
                 unset($item['template_id']);
                 $item['order_id'] = $Order->id;
@@ -115,7 +115,8 @@ class OrderController extends Controller
 
             //- Add Order Items of Created Order
             // dd($validatedOrderItemsData);
-            OrderItem::insert($validatedOrderItemsData);
+            return ['orderData'=>$orderData,'orderItemData'=>$orderItemsData];
+            OrderItem::insert($validatedOrderItemsData['orderItemData']);
 
             DB::commit();
             return redirect()->route('orders.index')->with('success', 'Order created successfully.');
