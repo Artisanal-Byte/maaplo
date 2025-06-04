@@ -12,10 +12,6 @@ import { useOrderFormStore } from '@/stores/orderFormStore';
 
 const props = defineProps(["users", "customers", "itemTypes", "errors"])
 
-watch(() => props.errors, (e) => {
-    console.log('error', e);
-})
-
 const showModal = ref(false);
 const disabled = ref(false);
 const toast = new ToastMagic();

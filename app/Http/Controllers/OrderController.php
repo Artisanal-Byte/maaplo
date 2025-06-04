@@ -106,62 +106,72 @@ class OrderController extends Controller
                 // dd($orderData['order_data']);
                 // Create the order record
                 Order::create($orderData['order_data']);
-                } else {
-                    // Ensure 'order_number' is included in the $orderData array if not already set
-                    $orderData['order_number'] = $validatedOrderData['order_number'];
+            } else {
+                // Ensure 'order_number' is included in the $orderData array if not already set
+                $orderData['order_number'] = $validatedOrderData['order_number'];
 
-                    // Create the order record
-                    $Order = Order::create($orderData);
-                }
-                // dd($validatedOrderItemsData);
+                // Create the order record
+                $Order = Order::create($orderData);
+            }
+            // dd($validatedOrderItemsData);
 
-                // Process each order item
-                foreach ($validatedOrderItemsData as &$item) {
-                    unset($item['template_id']);
-                    $item['order_id'] = $Order->id;
+            // Process each order item
+            foreach ($validatedOrderItemsData as &$item) {
+                unset($item['template_id']);
+                $item['order_id'] = $Order->id;
 
-                    $item['is_urgent'] = filter_var($item['is_urgent'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-                    $item['is_urgent'] = $item['is_urgent'] == 1 ? 'yes' : 'no'; // Force fallback to `false` if null
-                    // dd($item['is_urgent']);
+                $item['is_urgent'] = filter_var($item['is_urgent'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+                $item['is_urgent'] = $item['is_urgent'] == 1 ? 'yes' : 'no'; // Force fallback to `false` if null
+                // dd($item['is_urgent']);
 
-                    // JSON encode if needed
-                    if (isset($item['measurements']) && is_array($item['measurements'])) {
-                        $item['measurements'] = json_encode($item['measurements']);
-                    }
-
-                    if (isset($item['design_detail']) && is_array($item['design_detail'])) {
-                        $item['design_detail'] = json_encode($item['design_detail']);
-                    } elseif (!isset($item['design_detail']) || $item['design_detail'] === null) {
-                        $item['design_detail'] = json_encode([]);  // Provide default empty array JSON
-                    }
-
-                    if (isset($item['notes']) && is_array($item['notes'])) {
-                        $item['notes'] = json_encode($item['notes']);
-                    }
-
-                    // Handle file upload
-                    if (isset($item['refrence_dress']) && $item['refrence_dress'] instanceof \Illuminate\Http\UploadedFile) {
-                        $item['refrence_dress'] = $item['refrence_dress']->store('reference_dresses', 'public');
-                    }
-
-                    // Double-check required fields
-                    if (!isset($item['delivery_date']) || empty($item['delivery_date'])) {
-                        throw new \Exception("Missing required field: delivery_date for one of the order items.");
-                    }
+                // JSON encode if needed
+                if (isset($item['measurements']) && is_array($item['measurements'])) {
+                    $item['measurements'] = json_encode($item['measurements']);
                 }
 
-
-                unset($item); // Unset the reference after the loop
-
-                // Insert the transformed order items into the database
-                foreach ($validatedOrderItemsData as $item) {
-                    OrderItem::create($item);
+                if (isset($item['design_detail']) && is_array($item['design_detail'])) {
+                    $item['design_detail'] = json_encode($item['design_detail']);
+                } elseif (!isset($item['design_detail']) || $item['design_detail'] === null) {
+                    $item['design_detail'] = json_encode([]);  // Provide default empty array JSON
                 }
-                // Commit the transaction
-                DB::commit();
 
-                // Redirect to the orders index page with success message
-                return redirect()->route('orders.index')->with('success', 'Order created successfully.');
+                if (isset($item['notes']) && is_array($item['notes'])) {
+                    $item['notes'] = json_encode($item['notes']);
+                }
+
+                // Handle file upload
+                if (isset($item['refrence_dress']) && $item['refrence_dress'] instanceof \Illuminate\Http\UploadedFile) {
+                    $item['refrence_dress'] = $item['refrence_dress']->store('reference_dresses', 'public');
+                }
+                if (isset($item['cloth_img1']) && $item['cloth_img1'] instanceof \Illuminate\Http\UploadedFile) {
+                    $item['cloth_img1'] = $item['cloth_img1']->store('cloth_img1', 'public');
+                }
+                if (isset($item['cloth_img2']) && $item['cloth_img2'] instanceof \Illuminate\Http\UploadedFile) {
+                    $item['cloth_img2'] = $item['cloth_img2']->store('cloth_img2', 'public');
+                }
+                if (isset($item['Pattern_img1']) && $item['Pattern_img1'] instanceof \Illuminate\Http\UploadedFile) {
+                    $item['Pattern_img1'] = $item['Pattern_img1']->store('Pattern_img1', 'public');
+                }
+                if (isset($item['Pattern_img2']) && $item['Pattern_img2'] instanceof \Illuminate\Http\UploadedFile) {
+                    $item['Pattern_img2'] = $item['Pattern_img2']->store('Pattern_img2', 'public');
+                }
+
+                // Double-check required fields
+                if (!isset($item['delivery_date']) || empty($item['delivery_date'])) {
+                    throw new Exception("Missing required field: delivery_date for one of the order items.");
+                }
+            }
+
+            unset($item); // Unset the reference after the loop
+            // Insert the transformed order items into the database
+            foreach ($validatedOrderItemsData as $item) {
+                OrderItem::create($item);
+            }
+            // Commit the transaction
+            DB::commit();
+
+            // Redirect to the orders index page with success message
+            return redirect()->route('orders.index')->with('success', 'Order created successfully.');
             // }
         } catch (Exception $exception) {
             // Rollback if an error occurs

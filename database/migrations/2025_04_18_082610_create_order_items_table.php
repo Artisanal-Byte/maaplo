@@ -32,6 +32,10 @@ return new class extends Migration {
             $table->date('trial_dates');
             $table->date('delivery_date');
             $table->enum('status', ["created", "in process", "processed", "delivered", "completed", "cancelled"])->default("created");
+            $table->text('cloth_img1')->nullable();
+            $table->text('cloth_img2')->nullable();
+            $table->text('Pattern_img1')->nullable();
+            $table->text('Pattern_img2')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

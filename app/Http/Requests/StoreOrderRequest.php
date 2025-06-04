@@ -53,6 +53,10 @@ class StoreOrderRequest extends FormRequest
             'order_items.*.material_cost' => ['nullable', 'numeric', 'min:0'],
             'order_items.*.stiching_cost' => ['nullable', 'numeric', 'min:0'],
             'order_items.*.item_cost' => ['required', 'numeric', 'min:0'],
+            'order_items.*.cloth_img1' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
+            'order_items.*.cloth_img2' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
+            'order_items.*.Pattern_img1' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
+            'order_items.*.Pattern_img2' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:2048']
         ];
     }
 
@@ -128,6 +132,22 @@ class StoreOrderRequest extends FormRequest
             'order_items.*.item_cost.required' => 'Item cost is required.',
             'order_items.*.item_cost.numeric' => 'Item cost must be a number.',
             'order_items.*.item_cost.min' => 'Item cost must be at least 0.',
+            
+            'order_items.*.cloth_img1.image' => 'Cloth Image 1 must be a valid image.',
+            'order_items.*.cloth_img1.mimes' => 'Cloth Image 1 must be a file of type: jpeg, png, webp.',
+            'order_items.*.cloth_img1.max'   => 'Cloth Image 1 must not be greater than 2MB.',
+
+            'order_items.*.cloth_img2.image' => 'Cloth Image 2 must be a valid image.',
+            'order_items.*.cloth_img2.mimes' => 'Cloth Image 2 must be a file of type: jpeg, png, webp.',
+            'order_items.*.cloth_img2.max'   => 'Cloth Image 2 must not be greater than 2MB.',
+
+            'order_items.*.Pattern_img1.image' => 'Pattern Image 1 must be a valid image.',
+            'order_items.*.Pattern_img1.mimes' => 'Pattern Image 1 must be a file of type: jpeg, png, webp.',
+            'order_items.*.Pattern_img1.max'   => 'Pattern Image 1 must not be greater than 2MB.',
+
+            'order_items.*.Pattern_img2.image' => 'Pattern Image 2 must be a valid image.',
+            'order_items.*.Pattern_img2.mimes' => 'Pattern Image 2 must be a file of type: jpeg, png, webp.',
+            'order_items.*.Pattern_img2.max'   => 'Pattern Image 2 must not be greater than 2MB.',
         ];
     }
 }

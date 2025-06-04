@@ -34,6 +34,10 @@ class OrderItem extends Model
         'altering_cost',
         'delivery_date',
         'work_type',
+        'cloth_img1',
+        'cloth_img2',
+        'Pattern_img1',
+        'Pattern_img2'
     ];
 
     protected $casts = [
