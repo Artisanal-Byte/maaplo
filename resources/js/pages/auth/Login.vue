@@ -3,6 +3,7 @@ import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import GuestLayout from '@/layouts/GuestLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 
@@ -90,8 +91,9 @@ const submit = () => {
 </template> -->
 
 <template>
+    <GuestLayout/>
     <div
-        class="relative max-w-7xl bg-[#FBFBFB] flex items-center justify-center px-4 py-8 lg:px-8 lg:py-12 mx-auto w-full max-h-7xl mt-10 lg:mt-20">
+        class="relative max-w-7xl bg-[#FBFBFB] flex items-center justify-center px-4 py-8 lg:px-8 lg:py-12 mx-auto w-full max-h-7xl mt-0 lg:mt-0">
         <!-- Container for form and black background side-by-side -->
         <div class="flex flex-col lg:flex-row items-center justify-between w-full max-w-[1400px] mx-auto">
 
