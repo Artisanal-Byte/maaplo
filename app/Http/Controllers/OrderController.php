@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\DesignDetilsHelper;
 use App\Helpers\GetTemplateHelper;
+use App\Helpers\ImageHelper;
 use App\Helpers\OrderData;
 use App\Helpers\UniqueOrderNumber; // Ensure this class exists in the specified namespace or create it if missing
 use App\Http\Requests\StoreOrderRequest;
@@ -13,6 +14,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -25,14 +27,6 @@ class OrderController extends Controller
      */
     public function index()
     {
-        /**
-         *
-         *  -> User -> Orders -> Customer
-         *
-         *  -> order->order items `order items by default load in Order Model`
-         *
-         **/
-
         $user = Auth::user();
         $orders = null;
 
@@ -72,9 +66,11 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $storeOrderRequest)
     {
+        // dd($storeOrderRequest);
         try {
             $validatedOrderData = $storeOrderRequest->validated();
-
+            $username = auth()->user()->name;
+            $userId = auth()->id();
             $orderData = OrderData::prepareOrderItemsData($validatedOrderData);
 
             // Generate a unique order number
@@ -86,7 +82,7 @@ class OrderController extends Controller
 
             // Process order items
             $validatedOrderItemsData = $validatedOrderData['order_items'];
-
+            $customerId = $validatedOrderData['customer_id'];
             // Begin a database transaction
             DB::beginTransaction();
 
@@ -109,7 +105,7 @@ class OrderController extends Controller
                 $item['order_id'] = $Order->id;
 
                 $item['is_urgent'] = filter_var($item['is_urgent'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-                $item['is_urgent'] = $item['is_urgent'] == 1 ? 'yes' : 'no'; // Force fallback to `false` if null
+                $item['is_urgent'] = $item['is_urgent'] == 1 ? 'yes' : 'no';
 
                 if (isset($item['measurements']) && is_array($item['measurements'])) {
                     $item['measurements'] = json_encode($item['measurements']);
@@ -118,21 +114,43 @@ class OrderController extends Controller
                 if (isset($item['design_detail']) && is_array($item['design_detail'])) {
                     $item['design_detail'] = json_encode($item['design_detail']);
                 } elseif (!isset($item['design_detail']) || $item['design_detail'] === null) {
-                    $item['design_detail'] = json_encode([]);  // Provide default empty array JSON
+                    $item['design_detail'] = json_encode([]);
                 }
 
                 if (isset($item['notes']) && is_array($item['notes'])) {
                     $item['notes'] = json_encode($item['notes']);
                 }
 
-                // Handle file upload
-                if (isset($item['refrence_dress']) && $item['refrence_dress'] instanceof \Illuminate\Http\UploadedFile) {
-                    $item['refrence_dress'] = $item['refrence_dress']->store('reference_dresses', 'public');
-                }
-
-                // Double-check required fields
                 if (!isset($item['delivery_date']) || empty($item['delivery_date'])) {
                     throw new \Exception("Missing required field: delivery_date for one of the order items.");
+                }
+
+                // Temporarily store file references, remove them for DB
+                $fileUploads = [];
+                foreach (['refrence_dress', 'cloth_img1', 'cloth_img2', 'Pattern_img1', 'Pattern_img2'] as $field) {
+                    if (isset($item[$field]) && $item[$field] instanceof UploadedFile) {
+                        $fileUploads[$field] = $item[$field];
+                        unset($item[$field]);
+                    }
+                }
+
+                // Save item and get ID
+                $orderItem = OrderItem::create($item);
+
+                // Process images with real item ID
+                foreach ($fileUploads as $field => $uploadedFile) {
+                    $storedPath = ImageHelper::storeOrderItemImage(
+                        $uploadedFile,
+                        $username,
+                        $userId,
+                        $Order->id,
+                        $customerId,
+                        $orderItem->id, // ✅ Real integer ID
+                        $field
+                    );
+
+                    // Save the image path to DB
+                    $orderItem->update([$field => $storedPath]);
                 }
             }
             unset($item);
@@ -158,22 +176,8 @@ class OrderController extends Controller
     {
         $storeorderdata = $order->load('customer', 'orderItems')->toArray();
 
-        //    dd($storeorderdata);
-        // Extract design detail IDs from order items
-        // $designDetailIds = array_values(
-        //     collect($order->orderItems)
-        //         ->pluck('design_detail')
-        //         ->filter()
-        //         ->flatMap(fn($item) => json_decode($item))
-        //         ->map(fn($id) => (int) $id)
-        //         ->unique()
-        //         ->toArray()
-        // );
-        // // dd($designDetailIds);
-        // Use the helper to get design details data
         $orderItems = $storeorderdata['order_items'];
         $designDetailsData = DesignDetilsHelper::getDesignDetailsData($orderItems);
-        // dd($designDetailsData);
         return Inertia::render('orders/Show', [
             'order' => $order,
             'designDetails' => $designDetailsData,
@@ -185,7 +189,6 @@ class OrderController extends Controller
      */
     public function edit(Order $order)
     {
-
         return Inertia::render('orders/Edit', [
             'order' => $order,
         ]);
