@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <div class="px-5 md:px-24 lg:px-0 mt-10 lg:mt-0 sm:mx-auto">
+        <div class="px-5 md:px-24 lg:px-0 mt-10 lg:mt-0 mx-auto lg:mx-0">
             <x-icon name="home" class="w-8 h-8 text-blue-500" />
         </div>
     </div>
