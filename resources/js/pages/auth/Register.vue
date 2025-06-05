@@ -23,60 +23,85 @@ const submit = () => {
 </script>
 
 <template>
-    <!-- <AuthBase title="Create an account" description="Enter your details below to create your account">
-        <Head title="Register" /> -->
-    <div class="relative min-h-screen flex items-center px-4">
-        <!-- Background image -->
-        <img src="/images/imgg.png" alt="Background" class="absolute inset-0 w-full h-full object-cover" />
+    <div
+        class="relative max-w-7xl bg-[#FBFBFB] flex items-center justify-center px-4 py-8 lg:px-8 lg:py-12 mx-auto w-full max-h-7xl mt-10 lg:mt-20">
+        <div class="flex flex-col lg:flex-row items-center justify-between w-full max-w-[1400px] mx-auto">
 
-        <div class="relative z-10 mt-8 lg:mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary w-full max-w-md ml-0 lg:ml-20">
-            <form @submit.prevent="submit" class="flex flex-col gap-6">
-                <h1 class="text-2xl font-bold text-gray-800 text-center">Create an Account</h1>
-                <div class="grid gap-6">
-                    <div class="grid gap-2">
-                        <Label for="name">Name</Label>
-                        <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name"
-                            v-model="form.name" placeholder="Full name" class="border border-primary" />
-                        <InputError :message="form.errors.name" />
-                    </div>
+            <!-- Left Side: Register Form -->
+            <div class="w-full lg:w-1/2 flex justify-center">
+                <div class="relative z-10 ">
+                    <form @submit.prevent="submit" class="flex flex-col gap-6 w-full max-w-sm">
+                        <h1
+                            class="font-lato font-bold text-[40px] leading-[100%] tracking-[0%] text-center text-gray-800">
+                            Register
+                        </h1>
+                        <p class="font-lato text-[18px] font-normal text-center text-gray-600">
+                            Please fill in your details to create a new account.
+                        </p>
 
-                    <div class="grid gap-2">
-                        <Label for="email">Email address</Label>
-                        <Input id="email" type="email" required :tabindex="2" autocomplete="email" v-model="form.email"
-                            placeholder="email@example.com" class="border border-primary" />
-                        <InputError :message="form.errors.email" />
-                    </div>
+                        <!-- Name -->
+                        <div class="grid gap-2">
+                            <!-- <Label for="name">Name</Label> -->
+                            <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name"
+                                v-model="form.name" placeholder="Name" class="border border-black h-12" />
+                            <InputError :message="form.errors.name" />
+                        </div>
 
-                    <div class="grid gap-2">
-                        <Label for="password">Password</Label>
-                        <Input id="password" type="password" required :tabindex="3" autocomplete="new-password"
-                            v-model="form.password" placeholder="Password" class="border border-primary" />
-                        <InputError :message="form.errors.password" />
-                    </div>
+                        <!-- Email -->
+                        <div class="grid gap-2">
+                            <!-- <Label for="email">Email address</Label> -->
+                            <Input id="email" type="email" required :tabindex="2" autocomplete="email"
+                                v-model="form.email" placeholder="Email" class="border border-black h-12" />
+                            <InputError :message="form.errors.email" />
+                        </div>
 
-                    <div class="grid gap-2">
-                        <Label for="password_confirmation">Confirm password</Label>
-                        <Input id="password_confirmation" type="password" required :tabindex="4"
-                            autocomplete="new-password" v-model="form.password_confirmation"
-                            placeholder="Confirm password" class="border border-primary"/>
-                        <InputError :message="form.errors.password_confirmation" />
-                    </div>
+                        <!-- Password -->
+                        <div class="grid gap-2">
+                            <!-- <Label for="password">Password</Label> -->
+                            <Input id="password" type="password" required :tabindex="3" autocomplete="new-password"
+                                v-model="form.password" placeholder="Password" class="border border-black h-12" />
+                            <InputError :message="form.errors.password" />
+                        </div>
 
-                    <Button type="submit" class="mt-2 w-full bg-primary hover:bg-primary rounded-full" tabindex="5"
-                        :disabled="form.processing">
-                        <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                        Create account
-                    </Button>
+                        <!-- Confirm Password -->
+                        <div class="grid gap-2">
+                            <!-- <Label for="password_confirmation">Confirm Password</Label> -->
+                            <Input id="password_confirmation" type="password" required :tabindex="4"
+                                autocomplete="new-password" v-model="form.password_confirmation"
+                                placeholder="Confirm password" class="border border-black h-12" />
+                            <InputError :message="form.errors.password_confirmation" />
+                        </div>
+
+                        <!-- Submit Button -->
+                        <Button type="submit"
+                            class="w-full mt-2 bg-[#263238] text-white hover:bg-[#263238]-dark rounded-md py-2"
+                            tabindex="5" :disabled="form.processing">
+                            <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin mr-2" />
+                            Create account
+                        </Button>
+
+                        <!-- Already have an account -->
+                        <div class="text-center text-sm text-muted-foreground mt-4">
+                            Already have an account?
+                            <TextLink :href="route('login')" class="text-primary underline underline-offset-2"
+                                :tabindex="6">
+                                Log in
+                            </TextLink>
+                        </div>
+                    </form>
                 </div>
+            </div>
 
-                <div class="text-center text-sm text-muted-foreground">
-                    Already have an account?
-                    <TextLink :href="route('login')" class="underline-offset-4 text-primary" :tabindex="6">Log in
-                    </TextLink>
+
+            <!-- Right Side: Image Card -->
+            <div class="hidden lg:block w-full lg:w-1/2 flex justify-center">
+                <div
+                    class="w-[500px] h-[500px] rounded-tl-[20px] rounded-tr-[20px] rounded-br-[20px] rounded-bl-[50px] bg-black shadow-[0px_4px_75.3px_0px_#FFFFFF] overflow-hidden">
+                    <img src="/images/loginpage.svg" alt="Login Illustration"
+                        class="w-full h-full object-cover rounded-tl-[20px] rounded-tr-[20px] rounded-br-[20px] rounded-bl-[50px]" />
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
-    <!-- </AuthBase> -->
 </template>
