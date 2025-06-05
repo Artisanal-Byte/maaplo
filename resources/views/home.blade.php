@@ -2,137 +2,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Convergence&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<script>
-    function setActiveButton(id) {
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(btn => {
-            btn.classList.remove('bg-primary', 'text-white');
-            btn.classList.add('text-black', 'bg-transparent');
-        });
+<script src="{{ asset('js/custom.js') }}" defer></script>
 
-        const activeBtn = document.getElementById(id);
-        activeBtn.classList.remove('text-black', 'bg-transparent');
-        activeBtn.classList.add('bg-primary', 'text-white');
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        // Feature Slider
-        let featureIndex = 1;
-        showSlidesFeature(featureIndex);
-
-        window.currentSlideFeature = function(n) {
-            showSlidesFeature(featureIndex = n);
-        };
-
-        function showSlidesFeature(n) {
-            const slides = document.getElementsByClassName("mySlides-feature");
-            const dots = document.getElementsByClassName("dot-feature");
-
-            if (n > slides.length) featureIndex = 1;
-            if (n < 1) featureIndex = slides.length;
-
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-
-            for (let i = 0; i < dots.length; i++) {
-                dots[i].classList.remove("bg-primary");
-                dots[i].classList.add("bg-gray-300");
-            }
-
-            slides[featureIndex - 1].style.display = "block";
-            dots[featureIndex - 1].classList.add("bg-primary");
-            dots[featureIndex - 1].classList.remove("bg-gray-300");
-        }
-
-        // Testimonials Slider
-        let testimonialsIndex = 1;
-        showSlidesTestimonials(testimonialsIndex);
-
-        window.currentSlideTestimonials = function(n) {
-            showSlidesTestimonials(testimonialsIndex = n);
-        };
-
-        function showSlidesTestimonials(n) {
-            const slides = document.getElementsByClassName("mySlides-testimonials");
-            const dots = document.getElementsByClassName("dot-testimonials");
-
-            if (n > slides.length) testimonialsIndex = 1;
-            if (n < 1) testimonialsIndex = slides.length;
-
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-
-            for (let i = 0; i < dots.length; i++) {
-                dots[i].classList.remove("bg-primary");
-                dots[i].classList.add("bg-gray-300");
-            }
-
-            slides[testimonialsIndex - 1].style.display = "block";
-            dots[testimonialsIndex - 1].classList.add("bg-primary");
-            dots[testimonialsIndex - 1].classList.remove("bg-gray-300");
-        }
-
-        // Who it’s For Slider
-        let whoForIndex = 1;
-        showSlidesWhoFor(whoForIndex);
-
-        window.currentSlideWhoFor = function(n) {
-            showSlidesWhoFor(whoForIndex = n);
-        }
-
-        function showSlidesWhoFor(n) {
-            const slides = document.getElementsByClassName("mySlides-who-for");
-            const dots = document.getElementsByClassName("dot-who-for");
-
-            if (n > slides.length) whoForIndex = 1;
-            if (n < 1) whoForIndex = slides.length;
-
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-
-            for (let i = 0; i < dots.length; i++) {
-                dots[i].classList.remove("bg-primary");
-                dots[i].classList.add("bg-gray-300");
-            }
-
-            slides[whoForIndex - 1].style.display = "block";
-            dots[whoForIndex - 1].classList.add("bg-primary");
-            dots[whoForIndex - 1].classList.remove("bg-gray-300");
-        }
-
-        // See Our Blogs Slider
-        let blogsIndex = 1;
-        showSlidesBlogs(blogsIndex);
-
-        window.currentSlideBlogs = function(n) {
-            showSlidesBlogs(blogsIndex = n);
-        }
-
-        function showSlidesBlogs(n) {
-            const slides = document.getElementsByClassName("mySlides-blogs");
-            const dots = document.getElementsByClassName("dot-blogs");
-
-            if (n > slides.length) blogsIndex = 1;
-            if (n < 1) blogsIndex = slides.length;
-
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-
-            for (let i = 0; i < dots.length; i++) {
-                dots[i].classList.remove("bg-primary");
-                dots[i].classList.add("bg-gray-300");
-            }
-
-            slides[blogsIndex - 1].style.display = "block";
-            dots[blogsIndex - 1].classList.add("bg-primary");
-            dots[blogsIndex - 1].classList.remove("bg-gray-300");
-        }
-    });
-</script>
 @section('content')
     {{-- section 1 --}}
     <div class="flex flex-col lg:flex-row lg:justify-between lg:px-20 px-0">
@@ -557,8 +428,181 @@
                 </div>
             </div>
 
+            {{-- mobile view --}}
             {{-- card  --}}
-            <div class="flex flex-col lg:flex-row lg:justify-center lg:items-center gap-5 mt-20">
+            <div class="lg:hidden block flex flex-col lg:justify-center lg:items-center gap-5 mt-20">
+                <div
+                    class="w-[320px] lg:w-[350px] lg:h-auto border-t-[12px] border-primary rounded-[10px] bg-white shadow-[0px_4px_8.7px_0px_#16789340]">
+                    <!-- Header - Click to toggle dropdown -->
+                    <div id="toggleDropdown" onclick="toggleDropdown(1)" class="cursor-pointer p-4 bg-[#FBFBFB]">
+                        <div class="flex flex-row justify-between">
+                            <div>
+                                <h1 class="text-[30px] leading-[100%] font-normal text-left font-convergence">
+                                    Free Plan
+                                </h1>
+                            </div>
+                            <div>
+                                {{-- <x-icon name="icon-up" id="iconUp" /> --}}
+                                <x-icon name="icon-down" id="iconDown" />
+                            </div>
+                        </div>
+
+                        <h1 class="text-[24px] mt-3 leading-[100%] font-extrabold text-left font-lato">
+                            $2500
+                        </h1>
+                        <p class="mt-4 text-[15px] leading-[152%] font-medium text-left font-lato">
+                            USD / monthly
+                        </p>
+                    </div>
+
+                    <!-- Dropdown content -->
+                    <div id="dropdownContent1" style="display: none;">
+                        <div class="border-gray-300 mt-6 pt-4 px-6">
+                            <ul
+                                class="text-left text-[15px] leading-[152%] font-lato border-y border-primary divide-y divide-[#167893] marker:text-primary">
+                                <li class="py-3 flex items-center gap-4">
+                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
+                                    Lorem Ipsum
+                                </li>
+                                <li class="py-3 flex items-center gap-4">
+                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
+                                    Lorem Ipsum
+                                </li>
+                                <li class="py-3 flex items-center gap-4">
+                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
+                                    Lorem Ipsum
+                                </li>
+                                <li class="py-3 flex items-center gap-4">
+                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
+                                    Lorem Ipsum
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="px-6 mt-8 mb-10 lg:mb-0">
+                            <button
+                                class="w-full mt-5 px-[15px] text-lg font-bold py-1 lg:py-[8px] bg-primary text-white hover:bg-[#DEEFF4] rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
+                                <a href="/">Get Started</a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="w-[320px] lg:w-[350px] lg:h-auto border-t-[12px] border-primary rounded-[10px] bg-white shadow-[0px_4px_8.7px_0px_#16789340]">
+                    <!-- Header - Click to toggle dropdown -->
+                    <div id="toggleDropdown2" onclick="toggleDropdown(2)" class="cursor-pointer p-4 bg-[#FBFBFB]">
+                        <div class="flex flex-row justify-between">
+                            <div>
+                                <h1 class="text-[30px] leading-[100%] font-normal text-left font-convergence">
+                                    Free Plan
+                                </h1>
+                            </div>
+                            <div>
+                                {{-- <x-icon name="icon-up" id="iconUp" /> --}}
+                                <x-icon name="icon-down" id="iconDown" />
+                            </div>
+                        </div>
+
+                        <h1 class="text-[24px] mt-3 leading-[100%] font-extrabold text-left font-lato">
+                            $2500
+                        </h1>
+                        <p class="mt-4 text-[15px] leading-[152%] font-medium text-left font-lato">
+                            USD / monthly
+                        </p>
+                    </div>
+
+                    <!-- Dropdown content -->
+                    <div id="dropdownContent2" style="display: none;">
+                        <div class="border-gray-300 mt-6 pt-4 px-6">
+                            <ul
+                                class="text-left text-[15px] leading-[152%] font-lato border-y border-primary divide-y divide-[#167893] marker:text-primary">
+                                <li class="py-3 flex items-center gap-4">
+                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
+                                    Lorem Ipsum
+                                </li>
+                                <li class="py-3 flex items-center gap-4">
+                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
+                                    Lorem Ipsum
+                                </li>
+                                <li class="py-3 flex items-center gap-4">
+                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
+                                    Lorem Ipsum
+                                </li>
+                                <li class="py-3 flex items-center gap-4">
+                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
+                                    Lorem Ipsum
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="px-6 mt-8 mb-10 lg:mb-0">
+                            <button
+                                class="w-full mt-5 px-[15px] text-lg font-bold py-1 lg:py-[8px] bg-primary text-white hover:bg-[#DEEFF4] rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
+                                <a href="/">Get Started</a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="w-[320px] lg:w-[350px] lg:h-auto border-t-[12px] border-primary rounded-[10px] bg-white shadow-[0px_4px_8.7px_0px_#16789340]">
+                    <!-- Header - Click to toggle dropdown -->
+                    <div id="toggleDropdown3" onclick="toggleDropdown(3)" class="cursor-pointer p-4 bg-[#FBFBFB]">
+                        <div class="flex flex-row justify-between">
+                            <div>
+                                <h1 class="text-[30px] leading-[100%] font-normal text-left font-convergence">
+                                    Free Plan
+                                </h1>
+                            </div>
+                            <div>
+                                {{-- <x-icon name="icon-up" id="iconUp" /> --}}
+                                <x-icon name="icon-down" id="iconDown" />
+                            </div>
+                        </div>
+
+                        <h1 class="text-[24px] mt-3 leading-[100%] font-extrabold text-left font-lato">
+                            $2500
+                        </h1>
+                        <p class="mt-4 text-[15px] leading-[152%] font-medium text-left font-lato">
+                            USD / monthly
+                        </p>
+                    </div>
+
+                    <!-- Dropdown content -->
+                    <div id="dropdownContent3" style="display: none;">
+                        <div class="border-gray-300 mt-6 pt-4 px-6">
+                            <ul
+                                class="text-left text-[15px] leading-[152%] font-lato border-y border-primary divide-y divide-[#167893] marker:text-primary">
+                                <li class="py-3 flex items-center gap-4">
+                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
+                                    Lorem Ipsum
+                                </li>
+                                <li class="py-3 flex items-center gap-4">
+                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
+                                    Lorem Ipsum
+                                </li>
+                                <li class="py-3 flex items-center gap-4">
+                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
+                                    Lorem Ipsum
+                                </li>
+                                <li class="py-3 flex items-center gap-4">
+                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
+                                    Lorem Ipsum
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="px-6 mt-8 mb-10 lg:mb-0">
+                            <button
+                                class="w-full mt-5 px-[15px] text-lg font-bold py-1 lg:py-[8px] bg-primary text-white hover:bg-[#DEEFF4] rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
+                                <a href="/">Get Started</a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- dasktop view --}}
+            {{-- card  --}}
+            <div class="hidden lg:flex flex-row lg:justify-center lg:items-center gap-5 mt-20">
                 <div
                     class="w-[320px] lg:w-[350px] lg:h-[600px] border-t-[12px] border-primary rounded-[10px] bg-white shadow-[0px_4px_8.7px_0px_#16789340]">
                     <h1 class="mt-12 text-[30px] leading-[100%] font-normal text-center font-convergence">
@@ -601,7 +645,6 @@
                         </button>
                     </div>
                 </div>
-
 
                 <div
                     class="w-[320px] lg:w-[350px] lg:h-[600px] border-t-[12px] border-primary rounded-[10px] bg-white shadow-[0px_4px_8.7px_0px_#16789340]">
@@ -691,7 +734,6 @@
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
