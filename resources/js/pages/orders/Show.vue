@@ -1,10 +1,10 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue'
-import { Head,Link } from '@inertiajs/vue3'
+import { Head, Link } from '@inertiajs/vue3'
 import { computed } from 'vue'
 import { Icon } from '@iconify/vue';
-const props = defineProps(['order'])
-
+const props = defineProps(['order', 'designDetails'])
+console.log('designDetails', props.designDetails);
 const parsedItemDetails = computed(() => {
     return props.order?.order_items?.map(item => ({
         ...item,
@@ -13,6 +13,8 @@ const parsedItemDetails = computed(() => {
         parsedMeasurements: JSON.parse(item?.measurements || '{}'),
     })) || []
 })
+
+
 </script>
 
 <template>
@@ -58,12 +60,16 @@ const parsedItemDetails = computed(() => {
                     <div>
                         <h3 class="font-semibold text-yellow-800 mb-2">📝 Notes</h3>
                         <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg text-sm">
-                            <div v-for="(note, noteIndex) in order?.notes || []" :key="noteIndex">
-                                <div><strong class="text-gray-700">Label:</strong> {{ note.label }}</div>
-                                <div><strong class="text-gray-700">Text:</strong> {{ note.text }}</div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div v-for="(note, noteIndex) in order?.notes || []" :key="noteIndex"
+                                    class="border border-yellow-100 p-3 rounded-md">
+                                    <div><strong class="text-gray-700">Label:</strong> {{ note.label }}</div>
+                                    <div><strong class="text-gray-700">Text:</strong> {{ note.text }}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 <!-- Order Items Section -->
@@ -76,27 +82,29 @@ const parsedItemDetails = computed(() => {
                         <h3 class="text-2xl font-bold mb-4 text-primary text-center">Item {{ index + 1 }}</h3>
 
                         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm mb-6">
-                            <div><span class="font-medium">🎨 Colors:</span> {{ item?.colors }}</div>
-                            <div><span class="font-medium">🧵 Material Type:</span> {{ item?.material_type }}</div>
-                            <div><span class="font-medium">📄 Material Code:</span> {{ item?.material_code }}</div>
-                            <div><span class="font-medium">🧶 Work Type:</span> {{ item?.work_type }}</div>
+                            <div><span class="font-semibold">🎨 Colors :</span> {{ item?.colors }}</div>
+                            <div><span class="font-semibold">🧵 Material Type :</span> {{ item?.material_type }}</div>
+                            <div><span class="font-semibold">📄 Material Code :</span> {{ item?.material_code }}</div>
+                            <div><span class="font-semibold">🧶 Work Type :</span> {{ item?.work_type }}</div>
                             <div>
-                                <span class="font-medium">⚡ Urgent:</span>
+                                <span class="font-semibold">⚡ Urgent:</span>
                                 <span class="inline-block bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs">{{
                                     item?.is_urgent }}</span>
                             </div>
                             <div>
-                                <span class="font-medium">📌 Status:</span>
+                                <span class="font-semibold">📌 Status:</span>
                                 <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs">{{
                                     item?.status }}</span>
                             </div>
-                            <div><span class="font-medium">🧾 Material Cost:</span> ₹{{ item?.material_cost }}</div>
-                            <div><span class="font-medium">🧵 Stitching Cost:</span> ₹{{ item?.stiching_cost }}</div>
-                            <div><span class="font-medium">✂ Altering Cost:</span> ₹{{ item?.altering_cost }}</div>
-                            <div><span class="font-medium">💰 Item Cost:</span> ₹{{ item?.item_cost }}</div>
-                            <div><span class="font-medium">🧪 Trial Date:</span> {{ item?.trial_dates }}
+                            <div><span class="font-semibold">🧾 Material Cost:</span> ₹ {{ item?.material_cost }}</div>
+                            <div><span class="font-semibold">🧵 Stitching Cost:</span> ₹ {{ item?.stiching_cost }}</div>
+                            <div><span class="font-semibold">✂ Altering Cost:</span> ₹ {{ item?.altering_cost ?? '00.0'
+                                }}
                             </div>
-                            <div><span class="font-medium">📦 Delivery Date:</span> {{ item?.delivery_date }}
+                            <div><span class="font-semibold">💰 Item Cost:</span> ₹ {{ item?.item_cost }}</div>
+                            <div><span class="font-semibold">🧪 Trial Date:</span> {{ item?.trial_dates }}
+                            </div>
+                            <div><span class="font-semibold">📦 Delivery Date:</span> {{ item?.delivery_date }}
                             </div>
                         </div>
 
@@ -104,7 +112,7 @@ const parsedItemDetails = computed(() => {
                         <div class="mb-4">
                             <h4 class="font-semibold text-indigo-800 mb-1">📏 Measurements</h4>
                             <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-lg text-sm">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
                                     <div v-for="(value, key) in item?.parsedMeasurements" :key="key" class="mb-1">
                                         <strong class="capitalize">{{ key }} :</strong> {{ value }}
                                     </div>
@@ -112,35 +120,40 @@ const parsedItemDetails = computed(() => {
                             </div>
                         </div>
 
-
                         <!-- Design Detail -->
                         <div class="mb-4">
                             <h4 class="font-semibold text-green-800 mb-1">🎨 Design Detail</h4>
                             <div class="bg-green-50 border border-green-200 p-4 rounded-lg text-sm">
-                                <div v-for="(value, key) in item?.parsedDesignDetail" :key="key" class="mb-1">
-                                    <strong class="capitalize">{{ key }}:</strong> {{ value }}
+                                <div v-for="(value, key) in item.parsedDesignDetail" :key="key" class="mb-1">
+                                    <template v-if="key == 0">
+                                        <strong>Body Part:</strong> {{ props.designDetails['body_part'] }}
+                                    </template>
+                                    <template v-else>
+                                        <strong>Body Section:</strong> {{ props.designDetails['body_section']  }}
+                                    </template>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Item Notes -->
+                        <div>
+                            <h3 class="font-semibold text-yellow-800 mb-1 ">📝 Item Notes</h3>
+                            <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg text-sm">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <div v-for="(note, noteIndex) in item?.parsedNotes || []" :key="noteIndex">
+                                        <div><strong class="text-gray-700">Label:</strong> {{ note.label }}</div>
+                                        <div><strong class="text-gray-700">Text:</strong> {{ note.text }}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Reference Dress -->
-                        <div class="mb-4">
+                         <!-- Reference Dress -->
+                        <div class="mt-4">
                             <h4 class="font-semibold">👗 Reference Dress</h4>
                             <a :href="item?.refrence_dress" target="_blank"
                                 class="text-blue-600 underline break-all text-sm">
                                 {{ item?.refrence_dress }}
                             </a>
-                        </div>
-
-                        <!-- Item Notes -->
-                        <div>
-                            <h3 class="font-semibold text-yellow-800 mb-1">📝 Item Notes</h3>
-                            <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg text-sm">
-                                <div v-for="(note, noteIndex) in item?.parsedNotes || []" :key="noteIndex">
-                                    <div><strong class="text-gray-700">Label:</strong> {{ note.label }}</div>
-                                    <div><strong class="text-gray-700">Text:</strong> {{ note.text }}</div>
-                                </div>
-                            </div>
                         </div>
 
                     </div>

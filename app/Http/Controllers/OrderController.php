@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\DesignDetilsHelper;
 use App\Helpers\GetTemplateHelper;
 use App\Helpers\OrderData;
 use App\Helpers\UniqueOrderNumber; // Ensure this class exists in the specified namespace or create it if missing
@@ -155,9 +156,27 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        $order->load('customer');
+        $storeorderdata = $order->load('customer', 'orderItems')->toArray();
+
+        //    dd($storeorderdata);
+        // Extract design detail IDs from order items
+        // $designDetailIds = array_values(
+        //     collect($order->orderItems)
+        //         ->pluck('design_detail')
+        //         ->filter()
+        //         ->flatMap(fn($item) => json_decode($item))
+        //         ->map(fn($id) => (int) $id)
+        //         ->unique()
+        //         ->toArray()
+        // );
+        // // dd($designDetailIds);
+        // Use the helper to get design details data
+        $orderItems = $storeorderdata['order_items'];
+        $designDetailsData = DesignDetilsHelper::getDesignDetailsData($orderItems);
+        // dd($designDetailsData);
         return Inertia::render('orders/Show', [
             'order' => $order,
+            'designDetails' => $designDetailsData,
         ]);
     }
 
