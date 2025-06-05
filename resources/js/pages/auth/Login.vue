@@ -103,7 +103,7 @@ const submit = () => {
                     <form @submit.prevent="submit" class="flex flex-col gap-6 w-full max-w-sm">
                         <div>
                             <h1
-                                class="font-lato font-bold text-[48px] leading-[100%] tracking-[0%] text-center text-gray-800">
+                                class="font-lato font-bold text-[40px] leading-[100%] tracking-[0%] text-center text-gray-800">
                                 Welcome Back
                             </h1>
 
