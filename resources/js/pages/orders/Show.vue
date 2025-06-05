@@ -1,10 +1,11 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue'
 import { Head, Link } from '@inertiajs/vue3'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { Icon } from '@iconify/vue';
+
 const props = defineProps(['order', 'designDetails'])
-console.log('designDetails', props.designDetails);
+
 const parsedItemDetails = computed(() => {
     return props.order?.order_items?.map(item => ({
         ...item,
@@ -14,7 +15,17 @@ const parsedItemDetails = computed(() => {
     })) || []
 })
 
+const showModal = ref(false)
+const selectedImage = ref(null)
+function openImageModal(imageUrl) {
+    selectedImage.value = imageUrl
+    showModal.value = true
+}
 
+function closeModal() {
+    showModal.value = false
+    selectedImage.value = null
+}
 </script>
 
 <template>
@@ -69,7 +80,6 @@ const parsedItemDetails = computed(() => {
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 <!-- Order Items Section -->
@@ -129,10 +139,9 @@ const parsedItemDetails = computed(() => {
                                         <strong>Body Part:</strong> {{ props.designDetails['body_part'] }}
                                     </template>
                                     <template v-else>
-                                        <strong>Body Section:</strong> {{ props.designDetails['body_section']  }}
+                                        <strong>Body Section:</strong> {{ props.designDetails['body_section'] }}
                                     </template>
                                 </div>
-
                             </div>
                         </div>
                         <!-- Item Notes -->
@@ -147,18 +156,55 @@ const parsedItemDetails = computed(() => {
                                 </div>
                             </div>
                         </div>
-                         <!-- Reference Dress -->
-                        <div class="mt-4">
-                            <h4 class="font-semibold">👗 Reference Dress</h4>
-                            <a :href="item?.refrence_dress" target="_blank"
-                                class="text-blue-600 underline break-all text-sm">
-                                {{ item?.refrence_dress }}
-                            </a>
-                        </div>
+                        <!-- Reference Dress & Other Images -->
+                        <div class="mt-6">
+                            <h4 class="font-semibold mb-4 text-lg">👗 Reference Dress & Other Images</h4>
+                            <div class="flex flex-col md:flex-row gap-8">
 
+                                <!-- Left: Reference Dress -->
+                                <div class="flex-1">
+                                    <h5 class="font-semibold text-sm mb-2">Reference Dress</h5>
+                                    <div v-if="item.refrence_dress"
+                                        class="w-[100px] h-[100px] overflow-hidden rounded-md border shadow cursor-pointer"
+                                        @click="openImageModal(`/${item.refrence_dress}`)">
+                                        <img :src="`/${item.refrence_dress}`" alt="Reference Dress"
+                                            class="object-cover w-full h-full" />
+                                        <p class="text-xs mt-1 text-center break-all">refrence_dress</p>
+                                    </div>
+                                </div>
+
+                                <!-- Right: Other Images -->
+                                <div class="flex-1">
+                                    <h5 class="font-semibold text-sm mb-2">Other Images (Cloth & Pattern)</h5>
+                                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                        <template
+                                            v-for="field in ['cloth_img1', 'cloth_img2', 'Pattern_img1', 'Pattern_img2']"
+                                            :key="field">
+                                            <div v-if="item[field]"
+                                                class="w-full aspect-square overflow-hidden rounded-md border shadow cursor-pointer"
+                                                @click="openImageModal(`/${item[field]}`)">
+                                                <img :src="`/${item[field]}`" :alt="field"
+                                                    class="object-cover w-full h-full" />
+                                                <p class="text-xs mt-1 text-center break-all">{{ field }}</p>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
+                <!-- Image Modal -->
+                <div v-if="showModal"
+                    class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 transition-opacity duration-300">
+                    <div
+                        class="relative bg-white rounded-lg overflow-hidden max-w-4xl w-full max-h-[90vh] p-4 transform transition-transform duration-300">
+                        <button @click="closeModal" class="absolute top-3 right-3 text-primary text-4xl font-bold z-10">
+                            &times;
+                        </button>
+                        <img :src="selectedImage" class="w-full h-auto max-h-[80vh] object-contain" />
+                    </div>
+                </div>
             </section>
         </div>
     </AppLayout>
