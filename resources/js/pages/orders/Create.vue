@@ -28,7 +28,6 @@ let create = () => {
         form.advance_paid = null
         return
     }
-
     form.createOrder()
 }
 
@@ -105,6 +104,7 @@ const editOrderItem = (index) => {
                     <Button :disabled="disabled" @click="create">Create Order</Button>
                 </div>
             </div>
+
             <div class="flex flex-col mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
 
                 <h1 class="text-xl font-bold lg:mt-0 mt-4">Enter Details</h1>
@@ -188,6 +188,7 @@ const editOrderItem = (index) => {
                                 </tbody>
                             </table>
                         </div>
+                        <h2>Grand Total : {{ form.total_amount }}</h2>
 
                         <!-- Delete Confirmation Modal -->
                         <div v-if="showDeletePopup"

@@ -20,9 +20,9 @@ return new class extends Migration {
             $table->json('design_detail');
             $table->string('colors');
             $table->string('work_type')->nullable()->after('material_code');
-            $table->string('material_type');
+            $table->string('material_type')->nullable();
             $table->string('material_code')->nullable();
-            $table->text('refrence_dress')->default(null);
+            $table->text('refrence_dress')->nullable();
             $table->enum('is_urgent', ['yes', 'no'])->default('no');
             $table->decimal('material_cost', 10, 2)->nullable();
             $table->decimal('stiching_cost', 10, 2)->nullable();

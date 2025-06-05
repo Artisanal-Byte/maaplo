@@ -69,6 +69,18 @@ export const useOrderFormStore = defineStore('orderForm', {
                 Pattern_img2: null
             }
         },
+        resetOrderData(){
+            this.user_id= null
+            this.customer_id=null
+            this.status='create'
+            this.total_amount= null
+            this.advance_paid=null
+            this.delivery_date= ''
+            this.close_date= ''
+            this.notes= [{ label: '', text: '' }]
+            this.order_items=[]
+            this.resetOrderItemTemplate()
+        },
         setOrderItemData(index) {
             if (index >= 0 && index < this.order_items.length) {
                 this.order_items_template = this.order_items[index]
@@ -78,6 +90,7 @@ export const useOrderFormStore = defineStore('orderForm', {
             const { order_items_template, ...formData } = this.$state;
             const form = useForm({ ...formData });
             form.post(route('orders.store'));
+            this.resetOrderData()
         },
         deleteOrderItem(index) {
             if (index >= 0 && index < this.order_items.length) {

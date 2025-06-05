@@ -16,6 +16,21 @@ class StoreOrderRequest extends FormRequest
         return \Illuminate\Support\Facades\Auth::check();
     }
 
+    public function withValidator($validator)
+{
+    $orderItems = $this->input('order_items', []);
+
+    foreach ($orderItems as $index => $item) {
+        // Apply rules only if work_type is 'New from Material'
+        if (isset($item['work_type']) && $item['work_type'] === 'New from Material') {
+            $validator->addRules([
+                "order_items.$index.material_type" => ['required', 'string', 'max:256'],
+                "order_items.$index.material_code" => ['required', 'string', 'max:256'],
+            ]);
+        }
+    }
+}
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -48,7 +63,7 @@ class StoreOrderRequest extends FormRequest
             'order_items.*.work_type' => ['required', 'string', 'in:New from Material,Only Stitching,Only Altering'],
             'order_items.*.material_code' => ['nullable', 'string', 'max:256'],
             'order_items.*.material_type' => ['nullable', 'string', 'max:256'],
-            'order_items.*.refrence_dress' => ['required', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
+            'order_items.*.refrence_dress' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
             'order_items.*.is_urgent' => ['nullable', 'boolean'],
             'order_items.*.material_cost' => ['nullable', 'numeric', 'min:0'],
             'order_items.*.stiching_cost' => ['nullable', 'numeric', 'min:0'],
@@ -132,7 +147,7 @@ class StoreOrderRequest extends FormRequest
             'order_items.*.item_cost.required' => 'Item cost is required.',
             'order_items.*.item_cost.numeric' => 'Item cost must be a number.',
             'order_items.*.item_cost.min' => 'Item cost must be at least 0.',
-            
+
             'order_items.*.cloth_img1.image' => 'Cloth Image 1 must be a valid image.',
             'order_items.*.cloth_img1.mimes' => 'Cloth Image 1 must be a file of type: jpeg, png, webp.',
             'order_items.*.cloth_img1.max'   => 'Cloth Image 1 must not be greater than 2MB.',
