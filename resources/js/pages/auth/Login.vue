@@ -91,7 +91,7 @@ const submit = () => {
 </template> -->
 
 <template>
-    <GuestLayout/>
+    <GuestLayout>
     <div
         class="relative max-w-7xl bg-[#FBFBFB] flex items-center justify-center px-4 py-8 lg:px-8 lg:py-12 mx-auto w-full max-h-7xl mt-0 lg:mt-0">
         <!-- Container for form and black background side-by-side -->
@@ -186,5 +186,5 @@ const submit = () => {
             </div>
         </div>
     </div>
-
+    </GuestLayout>
 </template>
