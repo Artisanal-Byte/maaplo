@@ -48,7 +48,7 @@
 
             <!-- Desktop Buttons -->
             <div class="hidden lg:flex space-x-4">
-                <button
+                <button onclick="window.location.href='{{ route('demo') }}'"
                     class="px-[15px] py-[8px] text-black hover:bg-primary hover:text-white rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
                     Demo
                 </button>
@@ -81,7 +81,7 @@
     </nav>
 
     {{-- Page Content --}}
-    <main class=" mx-auto">
+    <main class="mx-auto">
         @yield('content')
     </main>
 
@@ -146,11 +146,16 @@
         </div>
 
         <div class="text-center border-t lg:border-none mt-20">
-            <p class="lg:hidden block font-lato mt-5 lg:font-semibold text-[12px] leading-[100%] tracking-[0] text-center text-white">Privacy Policy</p>
-            <p class="text-center mt-5 lg:mt-10 font-lato lg:font-semibold text-[15px] leading-none tracking-[0] text-white">
+            <p
+                class="lg:hidden block font-lato mt-5 lg:font-semibold text-[12px] leading-[100%] tracking-[0] text-center text-white">
+                Privacy Policy</p>
+            <p
+                class="text-center mt-5 lg:mt-10 font-lato lg:font-semibold text-[15px] leading-none tracking-[0] text-white">
                 2025 lorem ispaun dolor sit amet - All sed elusmod
             </p>
-            <p class="lg:hidden block font-lato mt-5 lg:font-semibold text-[12px] leading-[100%] tracking-[0] text-center text-white">Privacy Policy</p>
+            <p
+                class="lg:hidden block font-lato mt-5 lg:font-semibold text-[12px] leading-[100%] tracking-[0] text-center text-white">
+                Privacy Policy</p>
         </div>
     </div>
 </body>
