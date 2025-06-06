@@ -26,6 +26,12 @@ function closeModal() {
     showModal.value = false
     selectedImage.value = null
 }
+
+const grandTotal = computed(() => {
+    const total = Number(props.order?.total_amount) || 0;
+    const advance = Number(props.order?.advance_paid) || 0;
+    return total + advance;
+});
 </script>
 
 <template>
@@ -34,15 +40,20 @@ function closeModal() {
     <AppLayout>
         <div class="max-w-6xl mx-auto px-4 py-10 text-gray-800">
             <!-- Header -->
-            <div class="flex justify-between items-center mb-10">
-                <h1 class="text-4xl font-extrabold text-primary">🧾 Order Overview</h1>
+            <div class="relative mb-6 h-10 flex items-center">
+                <!-- Centered Heading -->
+                <h1 class="absolute left-1/2 transform -translate-x-1/2 text-4xl font-extrabold text-primary">
+                    🧾 Order Overview
+                </h1>
 
+                <!-- Back Link on the right -->
                 <Link :href="route('orders.index')"
-                    class="flex items-center gap-2 text-gray-500 hover:text-primary transition-colors duration-200">
+                    class="ml-auto flex items-center gap-2 text-gray-500 hover:text-primary transition-colors duration-200">
                 <Icon icon="material-symbols:arrow-back-rounded" width="26" height="26" />
                 <span class="font-semibold text-lg">Back</span>
                 </Link>
             </div>
+
 
             <!-- Unified Card for Information + Items -->
             <section class="bg-white shadow-2xl rounded-2xl border border-blue-300 p-8 space-y-10">
@@ -61,11 +72,15 @@ function closeModal() {
                                 class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs uppercase tracking-wide">{{
                                     order?.status }}</span>
                         </div>
-                        <div><span class="font-semibold">💰 Total Amount:</span> ₹{{ order?.total_amount }}</div>
+                        <div><span class="font-semibold">💰 Pending Amount:</span> ₹{{ order?.total_amount }}</div>
                         <div><span class="font-semibold">💵 Advance Paid:</span> ₹{{ order?.advance_paid }}</div>
+                        <div><span class="font-semibold">💰 Grand Total:</span> ₹ ₹{{ grandTotal.toLocaleString('en-IN',
+                            { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</div>
+
                         <div><span class="font-semibold">📅 Delivery Date:</span> {{ order?.delivery_date }}
                         </div>
-                        <div><span class="font-semibold">📦 Close Date:</span> {{ order?.close_date }}</div>
+                        <div><span class="font-semibold">📦 Close Date:</span> {{ order?.close_date ?? '-' }}</div>
+
                     </div>
 
                     <div>
@@ -109,7 +124,7 @@ function closeModal() {
                             <div><span class="font-semibold">🧾 Material Cost:</span> ₹ {{ item?.material_cost }}</div>
                             <div><span class="font-semibold">🧵 Stitching Cost:</span> ₹ {{ item?.stiching_cost }}</div>
                             <div><span class="font-semibold">✂ Altering Cost:</span> ₹ {{ item?.altering_cost ?? '00.0'
-                                }}
+                            }}
                             </div>
                             <div><span class="font-semibold">💰 Item Cost:</span> ₹ {{ item?.item_cost }}</div>
                             <div><span class="font-semibold">🧪 Trial Date:</span> {{ item?.trial_dates }}
