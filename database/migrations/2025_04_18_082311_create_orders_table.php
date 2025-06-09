@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('order_number')->unique();
             $table->enum('status', ["created", "in process", "processed", "delivered", "completed", "cancelled"])->default("created");
             $table->decimal('total_amount', 10);
-            $table->decimal('advance_paid', 10);
+            $table->decimal('advance_paid', 10)->default(0);
             $table->date('delivery_date');
             $table->date('close_date')->nullable();
             $table->json('notes');

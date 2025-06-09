@@ -8,7 +8,7 @@ const formStore = useOrderFormStore()
 <template>
     <div class="flex flex-col">
         <Input v-model="formStore.order_items_template.colors" id="favcolor" name="favcolor" label="Color:" type="text" color="grayBorder" margin="md"
-            placeholder="Enter color">
+            placeholder="Enter color" required="true">
         <template #icon>
             <Icon icon="mdi:color" width="22" height="22" class="mt-2" />
         </template>

@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use Devrabiul\ToastMagic\Facades\ToastMagic;
 
 class OrderController extends Controller
 {
@@ -145,7 +146,7 @@ class OrderController extends Controller
                         $userId,
                         $Order->id,
                         $customerId,
-                        $orderItem->id, // ✅ Real integer ID
+                        $orderItem->id,
                         $field
                     );
 
@@ -155,12 +156,8 @@ class OrderController extends Controller
             }
             unset($item);
 
-            // Insert the transformed order items into the database
-            foreach ($validatedOrderItemsData as $item) {
-                OrderItem::create($item);
-            }
             DB::commit();
-
+            ToastMagic::success('Order created successfully!');
             return redirect()->route('orders.index')->with('success', 'Order created successfully.');
         } catch (Exception $exception) {
             dd($exception->getMessage()); // For debugging purposes
@@ -189,10 +186,22 @@ class OrderController extends Controller
      */
     public function edit(Order $order)
     {
+        $user = Auth::user();
+        $user->load('customers');
+
+        $itemTypes = Template::where('user_id', Auth::id())
+            ->orWhereNull('user_id')
+            ->with('measurements')
+            ->get()
+            ->append('design_details_list');
+
         return Inertia::render('orders/Edit', [
-            'order' => $order,
+            'order' => $order->load('orderItems'),
+            'itemTypes' => $itemTypes,
+            'customers' => $user->customers,
         ]);
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -222,6 +231,8 @@ class OrderController extends Controller
             ]);
 
             $order->update($validate);
+
+            ToastMagic::success('Order Updated successfully!');
             return redirect()->route('orders.index')->with('success', 'Order updated successfully.');
         } catch (Exception $exception) {
             return redirect()->back()->withErrors($exception->getMessage());
