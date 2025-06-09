@@ -28,12 +28,13 @@ const designDetails = ref({})
 function saveItem() {
     previewImage.value = null
     showImageUpload.value = false
-    if (formStore.order_items_template.mode == 'create') {
+
+    if (formStore.order_items_template.mode === 'create') {
         formStore.pushOrderItem()
+    } else if (formStore.order_items_template.mode === 'edit') {
+        formStore.updateOrderItem()
     }
-    // if (condition) {
-        
-    // }
+
     formStore.resetOrderItemTemplate()
     emit('close')
 }
@@ -43,7 +44,7 @@ const setItemId = (option) => {
     measurements.value = option.measurements
 
 }
-
+console.log('Received itemTypes in ItemModel:', props.itemTypes);
 // Trigger function for each input
 function triggerUpload(type, index) {
     if (type === 'gallery' && index === 1) {

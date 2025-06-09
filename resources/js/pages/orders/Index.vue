@@ -5,6 +5,7 @@ import OrderList from '@/components/OrderList.vue';
 import SearchList from '@/components/SearchIcon.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Icon } from '@iconify/vue';
+import { Head } from '@inertiajs/vue3';
 import { defineProps, computed, reactive, ref, watch } from 'vue';
 
 const props = defineProps(['orders'])
@@ -61,6 +62,7 @@ function toggleDropdownDelivery() {
 }
 </script>
 <template>
+    <Head title="Orders" />
     <AppLayout>
         <div class="lg:mx-auto max-w-7xl py-8 px-4">
             <!-- Title And Icon -->

@@ -27,16 +27,16 @@ function closeModal() {
     selectedImage.value = null
 }
 
-const grandTotal = computed(() => {
+const pendingAmount = computed(() => {
     const total = Number(props.order?.total_amount) || 0;
     const advance = Number(props.order?.advance_paid) || 0;
-    return total + advance;
+    return total - advance;
 });
 </script>
 
 <template>
 
-    <Head title="Order Overview" />
+    <Head title="Order-Overview" />
     <AppLayout>
         <div class="max-w-6xl mx-auto px-4 py-10 text-gray-800">
             <!-- Header -->
@@ -72,10 +72,15 @@ const grandTotal = computed(() => {
                                 class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs uppercase tracking-wide">{{
                                     order?.status }}</span>
                         </div>
-                        <div><span class="font-semibold">💰 Pending Amount:</span> ₹{{ order?.total_amount }}</div>
-                        <div><span class="font-semibold">💵 Advance Paid:</span> ₹{{ order?.advance_paid }}</div>
-                        <div><span class="font-semibold">💰 Grand Total:</span> ₹ ₹{{ grandTotal.toLocaleString('en-IN',
-                            { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</div>
+                        <div><span class="font-semibold">💰 Grand Total:</span> ₹ {{ order?.total_amount }} </div>
+                        <div><span class="font-semibold">💵 Advance Paid:</span> ₹ {{ order?.advance_paid ?? '00.00' }}
+                        </div>
+                        <div><span class="font-semibold text-red-600">💰 Pending Amount:</span>
+                            ₹ {{ pendingAmount.toLocaleString('en-IN',
+                                { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
+                        </div>
+
+
 
                         <div><span class="font-semibold">📅 Delivery Date:</span> {{ order?.delivery_date }}
                         </div>
@@ -124,7 +129,7 @@ const grandTotal = computed(() => {
                             <div><span class="font-semibold">🧾 Material Cost:</span> ₹ {{ item?.material_cost }}</div>
                             <div><span class="font-semibold">🧵 Stitching Cost:</span> ₹ {{ item?.stiching_cost }}</div>
                             <div><span class="font-semibold">✂ Altering Cost:</span> ₹ {{ item?.altering_cost ?? '00.0'
-                            }}
+                                }}
                             </div>
                             <div><span class="font-semibold">💰 Item Cost:</span> ₹ {{ item?.item_cost }}</div>
                             <div><span class="font-semibold">🧪 Trial Date:</span> {{ item?.trial_dates }}

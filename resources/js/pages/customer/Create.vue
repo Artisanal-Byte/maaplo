@@ -167,7 +167,7 @@ const onPhoneInput = (event: Event) => {
                     <!-- <label class="bblock font-[Lato] text-[18px] leading-[16px] tracking-[0] mb-1">Address <span
                             class="text-red-500">*</span></label> -->
                     <Input type="textarea" v-model="form.address" color="grayBorder" :required="true" label="Address"
-                        :error="errors.address"></Input>
+                        :error="errors.address" placeholder="Enter Your Address"></Input>
                 </div>
 
                 <!-- Gender -->

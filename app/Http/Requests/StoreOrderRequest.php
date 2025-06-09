@@ -17,19 +17,19 @@ class StoreOrderRequest extends FormRequest
     }
 
     public function withValidator($validator)
-{
-    $orderItems = $this->input('order_items', []);
+    {
+        $orderItems = $this->input('order_items', []);
 
-    foreach ($orderItems as $index => $item) {
-        // Apply rules only if work_type is 'New from Material'
-        if (isset($item['work_type']) && $item['work_type'] === 'New from Material') {
-            $validator->addRules([
-                "order_items.$index.material_type" => ['required', 'string', 'max:256'],
-                "order_items.$index.material_code" => ['required', 'string', 'max:256'],
-            ]);
+        foreach ($orderItems as $index => $item) {
+            // Apply rules only if work_type is 'New from Material'
+            if (isset($item['work_type']) && $item['work_type'] === 'New from Material') {
+                $validator->addRules([
+                    "order_items.$index.material_type" => ['required', 'string', 'max:256'],
+                    "order_items.$index.material_code" => ['required', 'string', 'max:256'],
+                ]);
+            }
         }
     }
-}
 
     /**
      * Get the validation rules that apply to the request.
@@ -45,7 +45,7 @@ class StoreOrderRequest extends FormRequest
             //     return $query->where('user_id', $this->user_id);
             // })],
             'total_amount' => ['required', 'numeric', 'min:0'],
-            'advance_paid' => ['required', 'numeric', 'min:0', 'lte:total_amount'],
+            'advance_paid' => ['nullable', 'numeric', 'min:0', 'lte:total_amount'],
             'delivery_date' => ['required', 'date', 'after_or_equal:today'],
             'close_date' => ['nullable', 'date', 'after_or_equal:delivery_date'],
             'notes' => ['nullable', 'array'],
