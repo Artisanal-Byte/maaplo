@@ -67,6 +67,7 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $storeOrderRequest)
     {
+        ini_set('max_execution_time', 60);
         // dd($storeOrderRequest);
         try {
             $validatedOrderData = $storeOrderRequest->validated();
@@ -195,8 +196,31 @@ class OrderController extends Controller
             ->get()
             ->append('design_details_list');
 
+        // Transform order items with template names
+        $orderItems = $order->orderItems->map(function ($item) {
+            $ids = json_decode($item->design_detail, true); // decode JSON to array
+
+            // Get template names
+            $templateNames = Template::whereIn('id', $ids)->pluck('name')->toArray();
+
+            // Return transformed item
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                'price' => $item->price,
+                'template_names' => $templateNames,
+                'refrence_dress_url' => $item->refrence_dress ? asset('/' . $item->refrence_dress) : null,
+                'cloth_img1_url' => $item->cloth_img1 ? asset('/' . $item->cloth_img1) : null,
+                'cloth_img2_url' => $item->cloth_img2 ? asset('/' . $item->cloth_img2) : null,
+                'Pattern_img1_url' => $item->Pattern_img1 ? asset('/' . $item->Pattern_img1) : null,
+                'Pattern_img2_url' => $item->Pattern_img2 ? asset('/' . $item->Pattern_img2) : null,
+            ];
+        });
+        // dd($orderItems);
+        // dd($order,$itemTypes,$orderItems,$user->customers);
         return Inertia::render('orders/Edit', [
-            'order' => $order->load('orderItems'),
+            'order' => $order,
+            'orderItems' => $orderItems, // Pass it to frontend
             'itemTypes' => $itemTypes,
             'customers' => $user->customers,
         ]);
@@ -208,11 +232,14 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
+        // dd($request->all());
+
+        ini_set('max_execution_time', 60); // 60 seconds
         try {
             $validate = $request->validate([
                 'user_id' => ['required', 'exists:users,id'],
                 'customer_id' => ['required', 'exists:customers,id'],
-                'order_number' => ['required', 'string', Rule::unique('orders', 'order_number')->ignore($order->id)],
+                // 'order_number' => ['required', 'string', Rule::unique('orders', 'order_number')->ignore($order->id)],
                 'status' => ['required', 'in:created,in process,processed,delivered,completed,cancelled'],
                 'total_amount' => ['required', 'numeric', 'min:0'],
                 'advance_paid' => ['required', 'numeric', 'min:0', 'lte:total_amount'],
@@ -229,6 +256,7 @@ class OrderController extends Controller
                 'delivery_date.required' => 'Delivery date is required.',
                 'close_date.after_or_equal' => 'Close date must be after or equal to delivery date.',
             ]);
+            // dd($validate);
 
             $order->update($validate);
 

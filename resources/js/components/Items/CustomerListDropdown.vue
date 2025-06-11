@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps } from 'vue';
+import { ref, defineProps,watch, onMounted  } from 'vue';
 import { Icon } from '@iconify/vue';
 import { Link } from '@inertiajs/vue3';
 import { useOrderFormStore } from '@/stores/orderFormStore';
@@ -26,6 +26,12 @@ function selectOption(customer) {
 function asset(path) {
     return '/' + path;
 }
+watch(() => formStore.customer_id, (newVal) => {
+    const found = props.customers.find(c => c.id === newVal);
+    if (found) {
+        selectedCustomer.value = found.name;
+    }
+}, { immediate: true });
 </script>
 <template>
     <div class="w-full border-b border-primary flex justify-between items-center relative">

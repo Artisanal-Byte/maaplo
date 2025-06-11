@@ -1,12 +1,78 @@
 <script setup>
-import { ref, defineEmits, watch } from 'vue'
+import { ref, defineEmits, watch, onMounted } from 'vue'
 import { Icon } from '@iconify/vue'
 import { useOrderFormStore } from '@/stores/orderFormStore'
+
 const formStore = useOrderFormStore()
 const fileInputGallery1 = ref(null)
 const fileInputCamera1 = ref(null)
 const fileInputGallery2 = ref(null)
 const fileInputCamera2 = ref(null)
+
+const props = defineProps(["orderItems", "currentEditIndex"]);
+
+const previewUrl1 = ref(null)
+const previewUrl2 = ref(null)
+
+// Function to convert URL to File object (needed for the store)
+const urlToFile = async (url, filename, mimeType) => {
+    const res = await fetch(url);
+    const buf = await res.arrayBuffer();
+    return new File([buf], filename, { type: mimeType });
+}
+
+const getCurrentItem = () => props.orderItems?.[props.currentEditIndex] || null;
+// Load initial images from URLs on component mount
+onMounted(async () => {
+    formStore.order_items_template.cloth_img1 = null;
+    formStore.order_items_template.cloth_img2 = null;
+    const item = getCurrentItem();
+
+    if (item) {
+        if (item.cloth_img1_url) {
+            try {
+                const file1 = await urlToFile(item.cloth_img1_url, 'cloth_img1.webp', 'image/webp');
+                formStore.order_items_template.cloth_img1 = file1;
+                previewUrl1.value = URL.createObjectURL(file1);
+            } catch (error) {
+                console.error("Error loading cloth_img1:", error);
+            }
+        }
+
+        if (item.cloth_img2_url) {
+            try {
+                const file2 = await urlToFile(item.cloth_img2_url, 'cloth_img2.webp', 'image/webp');
+                formStore.order_items_template.cloth_img2 = file2;
+                previewUrl2.value = URL.createObjectURL(file2);
+            } catch (error) {
+                console.error("Error loading cloth_img2:", error);
+            }
+        }
+    }
+});
+
+watch(() => props.currentEditIndex, async () => {
+    const item = getCurrentItem();
+
+    formStore.order_items_template.cloth_img1 = null;
+    formStore.order_items_template.cloth_img2 = null;
+    previewUrl1.value = null;
+    previewUrl2.value = null;
+
+    if (item) {
+        if (item.cloth_img1_url) {
+            const file1 = await urlToFile(item.cloth_img1_url, 'cloth_img1.webp', 'image/webp');
+            formStore.order_items_template.cloth_img1 = file1;
+            previewUrl1.value = URL.createObjectURL(file1);
+        }
+        if (item.cloth_img2_url) {
+            const file2 = await urlToFile(item.cloth_img2_url, 'cloth_img2.webp', 'image/webp');
+            formStore.order_items_template.cloth_img2 = file2;
+            previewUrl2.value = URL.createObjectURL(file2);
+        }
+    }
+}, { immediate: true });
+
 
 function triggerUpload(type, index) {
     if (type === 'gallery') {
@@ -28,10 +94,6 @@ function onFileChange(event, index) {
     }
 }
 
-
-const previewUrl1 = ref(null)
-const previewUrl2 = ref(null)
-
 watch(() => formStore.order_items_template.cloth_img1, (newFile, oldFile) => {
     if (previewUrl1.value) {
         URL.revokeObjectURL(previewUrl1.value)
@@ -51,11 +113,6 @@ watch(() => formStore.order_items_template.cloth_img2, (newFile, oldFile) => {
         previewUrl2.value = URL.createObjectURL(newFile)
     }
 })
-
-const previewImage = (file) => {
-    if (!file) return null
-    return URL.createObjectURL(file)
-}
 </script>
 
 <template>
@@ -88,9 +145,7 @@ const previewImage = (file) => {
 
                 </div>
                 <div class="bg-[#BDDBDB3D] p-2 rounded h-24 mb-2">
-                    <img v-if="previewUrl1" :src="previewUrl1"
-                         alt="Preview"
-                        class="w-32 h-20 object-cover rounded" />
+                    <img v-if="previewUrl1" :src="previewUrl1" alt="Preview" class="w-32 h-20 object-cover rounded" />
                 </div>
                 <input ref="fileInputGallery1" type="file" class="hidden" accept="image/*"
                     @change="e => onFileChange(e, 1)" />
@@ -122,8 +177,7 @@ const previewImage = (file) => {
                     </div>
                 </div>
                 <div class="bg-[#BDDBDB3D] p-2 rounded h-24 mb-2">
-                    <img v-if="previewUrl2" :src="previewUrl2" alt="Preview"
-                        class="w-32 h-20 object-cover rounded" />
+                    <img v-if="previewUrl2" :src="previewUrl2" alt="Preview" class="w-32 h-20 object-cover rounded" />
                 </div>
                 <input ref="fileInputGallery2" type="file" class="hidden" accept="image/*"
                     @change="e => onFileChange(e, 2)" />

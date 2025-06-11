@@ -9,20 +9,21 @@ import WorkType from './WorkType.vue';
 import ClothImage from './ClothImage.vue';
 import PatternImage from './PatternImage.vue';
 import Button from '../Button.vue';
-import { ref, defineProps, defineEmits, watch, reactive } from 'vue';
+import { ref, defineProps, defineEmits, watch, onMounted } from 'vue';
 import TrialAndDeliveryDate from '../TrialAndDeliveryDate.vue';
 import { useOrderFormStore } from '@/stores/orderFormStore';
 import ItemMeasurements from './ItemMeasurements.vue';
+
 const fileInputGallery = ref(null)
 const fileInputCamera = ref(null)
-const props = defineProps(['showModal', 'form', 'itemTypes', 'allDesignDetails', 'itemIndex', 'errorMessage', 'errors']);
+const props = defineProps(['showModal', 'order', 'form', 'orderItems', 'currentEditIndex', 'itemTypes', 'allDesignDetails', 'itemIndex', 'errorMessage', 'errors']);
+
 let formStore = useOrderFormStore()
 
 const emit = defineEmits(['close']);
 const measurements = ref([])
 const showImageUpload = ref(false)
-
-
+const previewUrl = ref(null);
 const designDetails = ref({})
 // Save and emit
 function saveItem() {
@@ -44,7 +45,6 @@ const setItemId = (option) => {
     measurements.value = option.measurements
 
 }
-console.log('Received itemTypes in ItemModel:', props.itemTypes);
 // Trigger function for each input
 function triggerUpload(type, index) {
     if (type === 'gallery' && index === 1) {
@@ -58,10 +58,9 @@ function onFileChange(event, index) {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
         const url = URL.createObjectURL(file);
-        if (index === 1) {
-            if (showImageUpload.value) {
-                formStore.order_items_template.refrence_dress = file
-            }
+        if (showImageUpload.value) {
+            formStore.order_items_template.refrence_dress = file;
+            previewUrl.value = URL.createObjectURL(file);
         }
     }
 }
@@ -104,8 +103,43 @@ const setSelectDesignDetails = (templateId) => {
 };
 
 const previewImage = (file) => {
+    if (!file || typeof file !== 'object') {
+        return null;
+    }
     return URL.createObjectURL(file)
 }
+
+// Convert image URL to File
+const urlToFile = async (url, filename, mimeType) => {
+    const res = await fetch(url);
+    const buf = await res.arrayBuffer();
+    return new File([buf], filename, { type: mimeType });
+};
+
+// Load reference dress image based on current item
+const loadReferenceDress = async () => {
+    const item = props.orderItems?.[props.currentEditIndex] || null;
+
+    if (item?.refrence_dress_url) {
+        try {
+            const file = await urlToFile(item.refrence_dress_url, 'refrence_dress.webp', 'image/webp');
+            formStore.order_items_template.refrence_dress = file;
+            previewUrl.value = URL.createObjectURL(file);
+            showImageUpload.value = true;
+        } catch (error) {
+            console.error("Error loading reference dress image:", error);
+        }
+    } else {
+        showImageUpload.value = false;
+        formStore.order_items_template.refrence_dress = null;
+        previewUrl.value = null;
+    }
+};
+
+onMounted(loadReferenceDress);
+watch(() => props.currentEditIndex, () => {
+    loadReferenceDress();
+});
 </script>
 
 <template>
@@ -133,11 +167,11 @@ const previewImage = (file) => {
                 <!-- Scrollable Content -->
                 <div class=" max-h-[75vh] pr-2 space-y-5">
                     <!-- done -->
-                    <WorkType />
+                    <WorkType :order="order" :currentEditIndex="currentEditIndex" />
                     <ItemType :itemTypes="itemTypes" @setItemId="setItemId"
-                        @setSelectDesignDetails="setSelectDesignDetails" />
-                    <ItemMeasurements :askedMeasurements="measurements" />
-                    <DesignDetails :designDetails="designDetails" v-model="formStore.design_detail" />
+                        @setSelectDesignDetails="setSelectDesignDetails" :currentEditIndex="currentEditIndex" />
+                    <ItemMeasurements :askedMeasurements="measurements" :order="order" :currentEditIndex="currentEditIndex" />
+                    <DesignDetails :designDetails="designDetails" v-model="formStore.design_detail" :order="order" :currentEditIndex="currentEditIndex" />
 
                     <div class="flex flex-col">
                         <Colors />
@@ -175,9 +209,9 @@ const previewImage = (file) => {
 
                         </div>
                         <div class="bg-[#BDDBDB3D] p-2 rounded h-24 mb-2">
-                            <img v-if="formStore.order_items_template.refrence_dress"
-                                :src="previewImage(formStore.order_items_template.refrence_dress)" alt="Preview"
+                            <img v-if="previewUrl" :src="previewUrl" alt="Preview"
                                 class="w-32 h-20 object-cover rounded" />
+
                         </div>
                         <input ref="fileInputGallery" type="file" class="hidden" accept="image/*"
                             @change="e => onFileChange(e, 1)" />
@@ -186,7 +220,7 @@ const previewImage = (file) => {
                     </div>
                     <!-- Trail Date && Delivery Date  -->
 
-                    <TrialAndDeliveryDate />
+                    <TrialAndDeliveryDate :order="order" :currentEditIndex="currentEditIndex"/>
 
                     <div class="flex items-center gap-4">
                         <h1 class="font-medium font-lato">Mark as Urgent</h1>
@@ -194,8 +228,8 @@ const previewImage = (file) => {
                     </div>
                     <!-- Upload icon, only shown when toggle is ON -->
                     <div class="flex flex-col lg:flex-row justify-between gap-4">
-                        <ClothImage />
-                        <PatternImage />
+                        <ClothImage :orderItems="orderItems" :currentEditIndex="currentEditIndex" />
+                        <PatternImage :orderItems="orderItems" :currentEditIndex="currentEditIndex" />
                     </div>
                     <div class="">
                         <Button @click="saveItem" color="primary" textSize="lg" class="mb-5 w-full">

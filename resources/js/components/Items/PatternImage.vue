@@ -1,13 +1,62 @@
 <script setup>
-import { ref, defineEmits, watch } from 'vue'
+import { ref, defineEmits, watch, onMounted } from 'vue'
 import { Icon } from '@iconify/vue'
 import { useOrderFormStore } from '@/stores/orderFormStore'
+
 const fileInputGallery1 = ref(null)
 const fileInputCamera1 = ref(null)
 const fileInputGallery2 = ref(null)
 const fileInputCamera2 = ref(null)
 const formStore = useOrderFormStore()
 
+const props = defineProps(["orderItems", "currentEditIndex"]);
+const previewUrl1 = ref(null)
+const previewUrl2 = ref(null)
+
+// Function to convert URL to File object (needed for the store)
+const urlToFile = async (url, filename, mimeType) => {
+    const res = await fetch(url);
+    const buf = await res.arrayBuffer();
+    return new File([buf], filename, { type: mimeType });
+}
+
+const getCurrentItem = () => props.orderItems?.[props.currentEditIndex] || null;
+const loadPatternImages = async () => {
+    formStore.order_items_template.Pattern_img1 = null;
+    formStore.order_items_template.Pattern_img2 = null;
+    previewUrl1.value = null;
+    previewUrl2.value = null;
+
+    const item = getCurrentItem();
+
+    if (item) {
+        if (item.Pattern_img1_url) {
+            try {
+                const file1 = await urlToFile(item.Pattern_img1_url, 'Pattern_img1.webp', 'image/webp');
+                formStore.order_items_template.Pattern_img1 = file1;
+                previewUrl1.value = URL.createObjectURL(file1);
+            } catch (error) {
+                console.error("Error loading Pattern_img1:", error);
+            }
+        }
+
+        if (item.Pattern_img2_url) {
+            try {
+                const file2 = await urlToFile(item.Pattern_img2_url, 'Pattern_img2.webp', 'image/webp');
+                formStore.order_items_template.Pattern_img2 = file2;
+                previewUrl2.value = URL.createObjectURL(file2);
+            } catch (error) {
+                console.error("Error loading Pattern_img2:", error);
+            }
+        }
+    }
+};
+
+onMounted(loadPatternImages);
+
+watch(() => props.currentEditIndex, () => {
+    loadPatternImages();
+});
 
 function triggerUpload(type, index) {
     if (type === 'gallery') {
@@ -29,9 +78,6 @@ function onFileChange(event, index) {
     }
 }
 
-const previewUrl1 = ref(null)
-const previewUrl2 = ref(null)
-
 watch(() => formStore.order_items_template.Pattern_img1, (newFile, oldFile) => {
     if (previewUrl1.value) {
         URL.revokeObjectURL(previewUrl1.value)
@@ -51,19 +97,13 @@ watch(() => formStore.order_items_template.Pattern_img2, (newFile, oldFile) => {
         previewUrl2.value = URL.createObjectURL(newFile)
     }
 })
-
-const previewImage = (file) => {
-    if (!file || !(file instanceof File)) return null;
-    return URL.createObjectURL(file);
-}
-
 </script>
 
 <template>
     <div>
         <h1 class="font-medium leading-4 tracking-normal font-lato">Pattern Images</h1>
         <div class="flex gap-10">
-            <!-- Cloth 1 -->
+            <!-- Pattern 1 -->
             <div class="w-40 mt-5 h-full rounded-md p-2 shadow-[0px_0px_6.1px_0px_#00000040] bg-white">
                 <div class="flex items-center justify-between mb-2">
                     <h1 class="font-normal text-[14px] leading-[8px] text-[#8C8C8C] font-lato">Pattern 1</h1>
@@ -97,10 +137,10 @@ const previewImage = (file) => {
                     @change="e => onFileChange(e, 1)" />
             </div>
 
-            <!-- Cloth 2 -->
+            <!-- Pattern 2 -->
             <div class="w-40 mt-5 h-full rounded-md p-2 shadow-[0px_0px_6.1px_0px_#00000040] bg-white">
                 <div class="flex items-center justify-between mb-2">
-                    <h1 class="font-normal text-[14px] leading-[8px] text-[#8C8C8C] font-lato">Pattern 1</h1>
+                    <h1 class="font-normal text-[14px] leading-[8px] text-[#8C8C8C] font-lato">Pattern 2</h1>
                     <div class="flex gap-2">
                         <button @click="triggerUpload('gallery', 2)" class="relative group">
                             <Icon icon="material-symbols:upload" width="16" height="16"
@@ -121,8 +161,7 @@ const previewImage = (file) => {
                     </div>
                 </div>
                 <div class="bg-[#BDDBDB3D] p-2 rounded h-24 mb-2">
-                    <img v-if="previewUrl2" :src="previewUrl2" alt="Preview"
-                        class="w-32 h-20 object-cover rounded" />
+                    <img v-if="previewUrl2" :src="previewUrl2" alt="Preview" class="w-32 h-20 object-cover rounded" />
                 </div>
                 <input ref="fileInputGallery2" type="file" class="hidden" accept="image/*"
                     @change="e => onFileChange(e, 2)" />
