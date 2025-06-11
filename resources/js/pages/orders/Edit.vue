@@ -13,7 +13,7 @@ import { Head } from '@inertiajs/vue3';
 import { nextTick } from 'vue';
 import Loader from '@/components/Loader.vue';
 const props = defineProps(["users", "customers", "itemTypes", "errors", "order", "orderItems"]);
-console.log('orderItems',props.orderItems);
+console.log('itemTypes',props.itemTypes);
 
 const showModal = ref(false);
 const showDeletePopup = ref(false);
@@ -45,16 +45,6 @@ onMounted(() => {
     }
     ready.value = true;
 });
-
-// Watch for item cost recalculation
-// watch(form.order_items, (items) => {
-//     let t = 0;
-//     items.forEach(item => {
-//         t += item.item_cost;
-//     });
-//     totalAmmount.value = t;
-//     form.total_amount = t;
-// });
 
 watch(() => form.order_items, (items) => {
     let t = 0;
@@ -120,9 +110,9 @@ const update = () => {
 };
 
 const getItemTypeName = (id) => {
+    console.log('getItemTypeName called with ID:', id);
     const found = props.itemTypes.find(i => i.id === id);
     return found?.name || `Unknown(ID: ${id})`;
-
 };
 
 watch(() => form.order_items, (items) => {
@@ -143,35 +133,32 @@ watch(() => form.order_items, (items) => {
                 </h1>
                 <Button :disabled="disabled" @click="update">Update Order</Button>
             </div>
-            <div class="mt-6">
-                <label class="block text-sm font-semibold text-gray-800 mb-2">
+            <!-- Status Selector -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-800 mt-5">
                     <span class="flex items-center gap-2">
                         <Icon icon="mdi:clipboard-text-outline" class="text-primary" width="18" height="18" />
                         Order Status
                     </span>
                 </label>
-                <div class="relative">
-                    <select v-model="form.status"
-                        class="appearance-none block w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-sm text-gray-700 bg-white transition duration-150 ease-in-out">
-                        <option value="created">Created</option>
-                        <option value="in process">In Process</option>
-                        <option value="processed">Processed</option>
-                        <option value="delivered">Delivered</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">Cancelled</option>
+                <div class="relative w-full max-w-sm mt-2">
+                    <select id="status" v-model="form.status"
+                        class="appearance-none w-full pl-4 pr-10 py-2.5 rounded-md border border-gray-300 text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out">
+                        <option value="created">🆕 Created</option>
+                        <option value="in process">🔄 In Process</option>
+                        <option value="processed">📦 Processed</option>
+                        <option value="delivered">🚚 Delivered</option>
+                        <option value="completed">✅ Completed</option>
+                        <option value="cancelled">❌ Cancelled</option>
                     </select>
-                    <!-- Custom dropdown icon -->
                     <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400">
-                        <Icon icon="mdi:chevron-down" width="18" height="18" />
+                        <Icon icon="mdi:chevron-down" width="20" height="20" />
                     </div>
                 </div>
-                <!-- Error message -->
-                <p v-if="props.errors.status" class="mt-2 text-sm text-red-600">
-                    {{ props.errors.status }}
-                </p>
+                <p v-if="props.errors.status" class="mt-2 text-sm text-red-600">{{ props.errors.status }}</p>
             </div>
 
-            <div class="mt-10 bg-white p-5 lg:p-7 rounded-lg shadow-md border-t-4 border-primary">
+            <div class="mt-6 bg-white p-5 lg:p-7 rounded-lg shadow-md border-t-4 border-primary">
                 <CustomerListDropdown :customers="customers" :error="props.errors.customer_id"
                     v-model="form.customer_id" />
                 <DateIcon v-model="form.delivery_date" :error="props.errors.delivery_date" />
@@ -191,7 +178,7 @@ watch(() => form.order_items, (items) => {
 
                     <ItemModel :errors="form.errors?.order_items" :showModal="showModal" @close="closeModel"
                         :form="form.order_items_template" :itemTypes="itemTypes" :measurements="[]"
-                        :orderItems="orderItems" :currentEditIndex="currentEditIndex" :order="order"/>
+                        :orderItems="orderItems" :currentEditIndex="currentEditIndex" :order="order" />
 
                     <div class="mt-6 overflow-x-auto rounded-lg shadow-lg">
                         <table class="min-w-full border-collapse bg-white text-sm text-left text-gray-700">
@@ -213,7 +200,7 @@ watch(() => form.order_items, (items) => {
                                             {{ itemTypes }}
                                          </pre> -->
 
-                                        {{ getItemTypeName(item.template_id) }}
+                                        {{ getItemTypeName(item.item_type_id) }}
                                         <!-- {{ getItemTypeName(item.template_id.name) }} -->
                                     </td>
                                     <td class="px-4 py-2 border-b border-gray-200">{{ item.delivery_date }}</td>
@@ -265,7 +252,11 @@ watch(() => form.order_items, (items) => {
                 <div class="mt-5">
                     <Notes v-model:notes="form.notes" :error="props.errors.notes" />
                 </div>
-
+                <!-- Update button -->
+                <Button :color="'primary'" @click="update" :padding="'md'" :rounded="'full'" :textSize="'sm'"
+                    class="lg:mt-5 mt-3 w-full">
+                    Update Order
+                </Button>
                 <!-- Confirm Delete -->
                 <div v-if="showDeletePopup"
                     class="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
@@ -278,11 +269,7 @@ watch(() => form.order_items, (items) => {
                         </div>
                     </div>
                 </div>
-                <!-- Update button -->
-                <Button :color="'primary'" @click="update" :padding="'md'" :rounded="'full'" :textSize="'sm'"
-                    class="lg:mt-5 mt-3">
-                    Update Order
-                </Button>
+
             </div>
         </div>
     </AppLayout>

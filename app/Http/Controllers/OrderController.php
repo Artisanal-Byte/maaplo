@@ -208,6 +208,7 @@ class OrderController extends Controller
                 'id' => $item->id,
                 'name' => $item->name,
                 'price' => $item->price,
+                'template_id' => $item->template_id,
                 'template_names' => $templateNames,
                 'refrence_dress_url' => $item->refrence_dress ? asset('/' . $item->refrence_dress) : null,
                 'cloth_img1_url' => $item->cloth_img1 ? asset('/' . $item->cloth_img1) : null,
@@ -232,7 +233,7 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        // dd($request->all());
+        dd($request->all());
 
         ini_set('max_execution_time', 60); // 60 seconds
         try {
@@ -256,7 +257,7 @@ class OrderController extends Controller
                 'delivery_date.required' => 'Delivery date is required.',
                 'close_date.after_or_equal' => 'Close date must be after or equal to delivery date.',
             ]);
-            // dd($validate);
+            dd($validate);
 
             $order->update($validate);
 
