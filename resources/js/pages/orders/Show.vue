@@ -156,7 +156,7 @@ const pendingAmount = computed(() => {
                             <div class="bg-green-50 border border-green-200 p-4 rounded-lg text-sm">
                                 <div v-for="(value, key) in item.parsedDesignDetail" :key="key" class="mb-2">
                                     <template v-if="key == 0">
-                                        <strong>Body Part:</strong> {{ props.designDetails['body_part'] }}
+                                        <strong>Body Part: </strong> {{ props.designDetails['body_part'] }}
                                     </template>
                                     <template v-else>
                                         <strong>Body Section:</strong> {{ props.designDetails['body_section'] }}
