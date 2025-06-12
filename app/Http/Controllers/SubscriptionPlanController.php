@@ -71,37 +71,46 @@ class SubscriptionPlanController extends Controller
         return response()->json($subscriptionPlan);
     }
 
-    public function edit(SubscriptionPlan $subscriptionplan)
+    public function edit(SubscriptionPlan $subscription_plan)
     {
+        // dd($subscription_plan->toArray());
         return Inertia::render('subscriptionplan/Edit', [
-            'subscriptionPlan' => $subscriptionplan
+            'subscriptionPlan' => $subscription_plan,
         ]);
     }
 
     public function update(Request $request, SubscriptionPlan $subscriptionPlan)
     {
         $data = $request->validate([
-            'plan_title' => 'sometimes|required|string',
+            'plan_title' => 'required|string|max:255',
             'plan_description' => 'nullable|string',
-            'plan_price' => 'numeric',
-            'plan_currency' => 'string|in:INR,USD,EUR',
-            'features' => 'nullable|array',
-            'visibility' => 'boolean',
-            'user_limit' => 'integer',
+            'plan_price' => 'required|numeric',
+            'plan_currency' => 'required|string|in:INR,USD,EUR',
+            'features' => 'required|array|min:1',
+            'features.*' => 'required|string|min:1',
+            'visibility' => 'required|boolean',
+            'user_limit' => 'required|integer|min:1',
         ]);
 
-        if (isset($data['features']) && is_array($data['features'])) {
+        try {
+            DB::beginTransaction();
+
             $formattedFeatures = [];
             foreach ($data['features'] as $index => $value) {
                 $formattedFeatures["feature" . ($index + 1)] = $value;
             }
             $data['features'] = json_encode($formattedFeatures);
+
+            $subscriptionPlan->update($data);
+
+            DB::commit();
+
+            ToastMagic::success('Plan updated successfully!');
+            return redirect()->route('subscription-plans.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('error', 'Update failed: ' . $e->getMessage());
         }
-
-        $subscriptionPlan->update($data);
-
-        ToastMagic::success('Plan updated successfully!');
-        return redirect()->route('subscription-plans.index');
     }
 
     public function destroy(SubscriptionPlan $subscriptionPlan)
