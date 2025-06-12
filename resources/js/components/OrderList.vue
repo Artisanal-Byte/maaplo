@@ -19,8 +19,8 @@ const props = defineProps({
 <template>
 
     <div class=" gap-[10px] rounded-[10px] px-[10px] py-[17px]" :style="{
-        backgroundColor: props.bgColor,
-        border: `1px solid ${props.borderColor}`,
+        backgroundColor: bgColor,
+        border: `1px solid ${borderColor}`,
 
     }">
         <div class="flex flex-row">
@@ -40,17 +40,17 @@ const props = defineProps({
         <div class="flex flex-row justify-between">
             <div>
                 <p
-                    class="font-[Lato] font-medium text-[18px] leading-[16px] tracking-[0] text-center text-secondary p-2">
+                    class="font-[Lato] font-medium text-[16px] leading-[16px] tracking-[0] text-center text-secondary p-2">
                     Items: {{ order?.order_items?.length }}</p>
             </div>
             <div>
                 <p
-                    class="font-[Lato] font-medium text-[18px] leading-[16px] tracking-[0] text-center text-secondary p-2">
+                    class="font-[Lato] font-medium text-[16px] leading-[16px] tracking-[0] text-center text-secondary p-2">
                     Delivery Date: {{ order?.delivery_date }}</p>
             </div>
         </div>
         <div>
-            <p class="font-[Lato] font-medium text-[18px] leading-[16px] tracking-[0]  text-secondary p-2">
+            <p class="font-[Lato] font-medium text-[16px] leading-[16px] tracking-[0]  text-secondary p-2">
                 Status: {{ order?.status }}</p>
         </div>
         <div class="flex justify-end gap-3">

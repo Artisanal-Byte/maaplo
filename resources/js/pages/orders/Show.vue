@@ -42,7 +42,7 @@ const pendingAmount = computed(() => {
             <!-- Header -->
             <div class="relative mb-6 h-10 flex items-center">
                 <!-- Centered Heading -->
-                <h1 class="absolute left-1/2 transform -translate-x-1/2 text-4xl font-extrabold text-primary">
+                <h1 class="absolute  transform text-xl lg:text-3xl font-extrabold text-primary">
                     🧾 Order Overview
                 </h1>
 
@@ -56,11 +56,11 @@ const pendingAmount = computed(() => {
 
 
             <!-- Unified Card for Information + Items -->
-            <section class="bg-white shadow-2xl rounded-2xl border border-blue-300 p-8 space-y-10">
+            <section class="bg-white shadow-2xl rounded-2xl border border-primary p-4 lg:p-8 space-y-10">
 
                 <!-- Order Info Section -->
                 <div>
-                    <h2 class="text-3xl font-semibold  text-primary flex items-center justify-center gap-2">
+                    <h2 class="text-xl lg:text-3xl font-semibold text-primary flex items-center justify-center gap-2">
                         📦 Information
                     </h2>
                     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 mt-8 text-sm">
@@ -69,7 +69,7 @@ const pendingAmount = computed(() => {
                         <div>
                             <span class="font-semibold">🔖 Status:</span>
                             <span
-                                class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs uppercase tracking-wide">{{
+                                class="inline-block bg-blue-100 text-primary px-3 py-1 rounded-full text-xs uppercase tracking-wide">{{
                                     order?.status }}</span>
                         </div>
                         <div><span class="font-semibold">💰 Grand Total:</span> ₹ {{ order?.total_amount }} </div>
@@ -89,8 +89,8 @@ const pendingAmount = computed(() => {
                     </div>
 
                     <div>
-                        <h3 class="font-semibold text-yellow-800 mb-2">📝 Notes</h3>
-                        <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg text-sm">
+                        <h3 class="font-semibold text-yellow-800 mb-2 text-lg">📝 Notes</h3>
+                        <div class="bg-yellow-50 border border-yellow-200 p-2 lg:p-4 rounded-lg text-sm">
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div v-for="(note, noteIndex) in order?.notes || []" :key="noteIndex"
                                     class="border border-yellow-100 p-3 rounded-md">
@@ -104,11 +104,11 @@ const pendingAmount = computed(() => {
 
                 <!-- Order Items Section -->
                 <div>
-                    <h2 class="text-3xl font-semibold text-primary mb-6 flex items-center justify-center gap-2">🧵 Items
+                    <h2 class="text-xl lg:text-3xl font-semibold text-primary mb-7 flex items-center justify-center gap-2">🧵 Items
                     </h2>
 
                     <div v-for="(item, index) in parsedItemDetails" :key="item?.id"
-                        class="border border-gray-200 shadow-sm hover:shadow-md transition-shadow rounded-xl p-6 mb-6 bg-gray-50">
+                        class="border border-gray-200 shadow-sm hover:shadow-md transition-shadow rounded-xl p-4 lg:p-6 mb-6 bg-gray-50">
                         <h3 class="text-2xl font-bold mb-4 text-primary text-center">Item {{ index + 1 }}</h3>
 
                         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm mb-6">
@@ -140,9 +140,9 @@ const pendingAmount = computed(() => {
 
                         <!-- Measurements -->
                         <div class="mb-4">
-                            <h4 class="font-semibold text-indigo-800 mb-1">📏 Measurements</h4>
+                            <h4 class="font-semibold text-indigo-800 mb-1 text-lg">📏 Measurements</h4>
                             <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-lg text-sm">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+                                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-0 lg:gap-5">
                                     <div v-for="(value, key) in item?.parsedMeasurements" :key="key" class="mb-1">
                                         <strong class="capitalize">{{ key }} :</strong> {{ value }}
                                     </div>
@@ -152,9 +152,9 @@ const pendingAmount = computed(() => {
 
                         <!-- Design Detail -->
                         <div class="mb-4">
-                            <h4 class="font-semibold text-green-800 mb-1">🎨 Design Detail</h4>
+                            <h4 class="font-semibold text-green-800 mb-1 text-lg">🎨 Design Detail</h4>
                             <div class="bg-green-50 border border-green-200 p-4 rounded-lg text-sm">
-                                <div v-for="(value, key) in item.parsedDesignDetail" :key="key" class="mb-1">
+                                <div v-for="(value, key) in item.parsedDesignDetail" :key="key" class="mb-2">
                                     <template v-if="key == 0">
                                         <strong>Body Part:</strong> {{ props.designDetails['body_part'] }}
                                     </template>
@@ -166,7 +166,7 @@ const pendingAmount = computed(() => {
                         </div>
                         <!-- Item Notes -->
                         <div>
-                            <h3 class="font-semibold text-yellow-800 mb-1 ">📝 Item Notes</h3>
+                            <h3 class="font-semibold text-yellow-800 mb-1 text-lg">📝 Item Notes</h3>
                             <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg text-sm">
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                     <div v-for="(note, noteIndex) in item?.parsedNotes || []" :key="noteIndex">
