@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             MeasurementSeeder::class,
         ]);
         $this->call(UsersTableSeeder::class);
+        $this->call(BodyPartValueTableSeeder::class);
         $this->call(DesignDetailsTableSeeder::class);
         $this->call(TemplatesTableSeeder::class);
         $this->call(CustomersTableSeeder::class);
