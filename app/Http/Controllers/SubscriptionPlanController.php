@@ -13,7 +13,6 @@ class SubscriptionPlanController extends Controller
     public function index()
     {
         $subscriptionPlans = SubscriptionPlan::all();
-        // dd($subscriptionPlans);
         return Inertia::render('subscriptionplan/Index', [
             'subscriptionPlans' => $subscriptionPlans,
         ]);
@@ -40,7 +39,6 @@ class SubscriptionPlanController extends Controller
         try {
             DB::beginTransaction();
 
-            // Convert array ['a', 'b', 'c'] into {"feature1":"a", "feature2":"b", ...}
             $formattedFeatures = [];
             foreach ($validated['features'] as $index => $value) {
                 $formattedFeatures["feature" . ($index + 1)] = $value;
@@ -106,11 +104,11 @@ class SubscriptionPlanController extends Controller
         return redirect()->route('subscription-plans.index');
     }
 
-
     public function destroy(SubscriptionPlan $subscriptionPlan)
     {
         $subscriptionPlan->delete();
 
-        return response()->json(['message' => 'Deleted successfully']);
+        ToastMagic::success('Plan deleted successfully!');
+        return redirect()->route('subscription-plans.index');
     }
 }
