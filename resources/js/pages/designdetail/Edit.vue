@@ -13,9 +13,6 @@ const props = defineProps({
     errors: Object,
     bodyParts: Array,
 });
-console.log('props', props.bodyParts);
-console.log('designDetail', props.designDetail);
-const existingBodyParts = ref(props.bodyParts || []);
 
 const existingPart = props.bodyParts.find(part => part.id === props.designDetail.body_part_id);
 
@@ -28,10 +25,6 @@ const form = useForm({
     image: props.designDetail.image,
 });
 
-console.log('form', form.new_body_part);
-const imagePreview = computed(() => {
-    return form.image?.includes('<svg') ? form.image : null;
-});
 
 // Watch for SVG and clean it up
 watch(() => form.image, (newVal) => {

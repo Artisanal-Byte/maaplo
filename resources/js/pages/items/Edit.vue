@@ -56,7 +56,6 @@ const updateTemplate = () => {
             setTimeout(() => router.visit(route('items.index')), 1000);
         },
         onError: (errors) => {
-            console.log(errors);
             toast.error('Update failed. Please try again.');
         }
     });
@@ -85,7 +84,6 @@ const isSvgMarkup = (str) => {
     if (typeof str !== 'string') return false;
     return str.trim().startsWith('<svg');
 };
-
 
 const isValidPathData = (str) => {
     if (typeof str !== 'string') return false;
