@@ -40,11 +40,12 @@ class SubscriptionPlanController extends Controller
         return response()->json($subscriptionPlan);
     }
 
-     public function edit(SubscriptionPlan $subscriptionplan)
+    public function edit(SubscriptionPlan $subscriptionplan)
     {
         // dd($organization);
         return Inertia::render('subscriptionplan/Edit', compact('organization'));
     }
+
 
     public function update(Request $request, SubscriptionPlan $subscriptionPlan)
     {
