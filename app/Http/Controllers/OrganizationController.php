@@ -65,7 +65,7 @@ class OrganizationController extends Controller
             $user->save();
 
             DB::commit();
-
+            ToastMagic::success('Organization Updated successfully!');
             return redirect()->route('organization.index')->with('success', 'Organization created and assigned.');
         } catch (\Exception $e) {
             DB::rollBack();
