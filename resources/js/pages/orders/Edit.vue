@@ -13,7 +13,6 @@ import { Head } from '@inertiajs/vue3';
 import { nextTick } from 'vue';
 import Loader from '@/components/Loader.vue';
 const props = defineProps(["users", "customers", "itemTypes", "errors", "order", "orderItems"]);
-console.log('itemTypes',props.itemTypes);
 
 const showModal = ref(false);
 const showDeletePopup = ref(false);
@@ -102,7 +101,7 @@ const update = () => {
     loading.value = true;
     setTimeout(() => {
         loading.value = false;
-    }, 20000);
+    }, 10000);
 
     form.updateOrder(props.order.id).finally(() => {
         loading.value = true;
@@ -110,9 +109,8 @@ const update = () => {
 };
 
 const getItemTypeName = (id) => {
-    console.log('getItemTypeName called with ID:', id);
-    const found = props.itemTypes.find(i => i.id === id);
-    return found?.name || `Unknown(ID: ${id})`;
+    const found = props.itemTypes.find(i => i.id == id);
+    return found?.name;
 };
 
 watch(() => form.order_items, (items) => {
@@ -195,13 +193,7 @@ watch(() => form.order_items, (items) => {
                                     class="hover:bg-gray-100 transition-colors duration-200">
                                     <td class="px-4 py-2 border-b border-gray-200">{{ item.work_type }}</td>
                                     <td class="px-4 py-2 border-b border-gray-200">
-                                        <!-- <pre>{{ item}}</pre> -->
-                                        <!-- <pre>
-                                            {{ itemTypes }}
-                                         </pre> -->
-
-                                        {{ getItemTypeName(item.item_type_id) }}
-                                        <!-- {{ getItemTypeName(item.template_id.name) }} -->
+                                        {{ getItemTypeName(item.id) }}
                                     </td>
                                     <td class="px-4 py-2 border-b border-gray-200">{{ item.delivery_date }}</td>
                                     <td class="px-4 py-2 border-b border-gray-200">

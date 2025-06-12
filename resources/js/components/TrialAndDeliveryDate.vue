@@ -5,8 +5,6 @@ import { Icon } from '@iconify/vue';
 import { useOrderFormStore } from '@/stores/orderFormStore';
 const formStore = useOrderFormStore()
 const props = defineProps(["order", "currentEditIndex"])
-console.log('trial date order', props.order);
-console.log(' currentEditIndex in trial date order', props.currentEditIndex);
 
 watch(() => props.currentEditIndex, (index) => {
     if (

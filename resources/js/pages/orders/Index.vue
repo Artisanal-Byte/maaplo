@@ -9,7 +9,6 @@ import { Head } from '@inertiajs/vue3';
 import { defineProps, computed, reactive, ref, watch } from 'vue';
 
 const props = defineProps(['orders'])
-console.log('Orders:', props.orders);
 const searchTerm = ref('');
 // const orders = ref([]);
 const selectedStatus = ref('');

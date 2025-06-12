@@ -5,9 +5,6 @@ import Input from '../InputWithLabel.vue';
 import { useOrderFormStore } from '@/stores/orderFormStore';
 
 const props = defineProps(["order", "currentEditIndex"]);
-console.log('work_type', props.order);
-console.log('currentEditIndex', props.currentEditIndex);
-
 
 let formStore = useOrderFormStore()
 const showDropdownWorkType = ref(false);

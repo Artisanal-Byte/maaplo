@@ -6,9 +6,6 @@ import { useOrderFormStore } from '@/stores/orderFormStore';
 
 const props = defineProps(["order", "currentEditIndex","designDetails"])
 
-console.log('designDetails page itemTypes', props.order);
-console.log('designDetails page currentEditIndex', props.currentEditIndex);
-
 let tmp = ref()
 const formStore = useOrderFormStore()
 

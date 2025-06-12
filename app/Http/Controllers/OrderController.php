@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\DesignDetilsHelper;
-use App\Helpers\GetTemplateHelper;
 use App\Helpers\ImageHelper;
 use App\Helpers\OrderData;
 use App\Helpers\UniqueOrderNumber; // Ensure this class exists in the specified namespace or create it if missing
 use App\Http\Requests\StoreOrderRequest;
-use App\Models\DesignDetail;
 use App\Models\Template;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -17,7 +15,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Devrabiul\ToastMagic\Facades\ToastMagic;
 
@@ -51,7 +48,7 @@ class OrderController extends Controller
         $user->load('customers');
 
         //-- item which have a global scope or created by Authentic user
-        $itemTypes = $templates = Template::where('user_id', Auth::id())
+        $itemTypes = Template::where('user_id', Auth::id())
             ->orWhereNull('user_id')
             ->with('measurements')
             ->get()
@@ -217,8 +214,7 @@ class OrderController extends Controller
                 'Pattern_img2_url' => $item->Pattern_img2 ? asset('/' . $item->Pattern_img2) : null,
             ];
         });
-        // dd($orderItems);
-        // dd($order,$itemTypes,$orderItems,$user->customers);
+            
         return Inertia::render('orders/Edit', [
             'order' => $order,
             'orderItems' => $orderItems, // Pass it to frontend
@@ -233,12 +229,10 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        dd($request->all());
-
         ini_set('max_execution_time', 60); // 60 seconds
         try {
             $validate = $request->validate([
-                'user_id' => ['required', 'exists:users,id'],
+                // 'user_id' => ['required', 'exists:users,id'],
                 'customer_id' => ['required', 'exists:customers,id'],
                 // 'order_number' => ['required', 'string', Rule::unique('orders', 'order_number')->ignore($order->id)],
                 'status' => ['required', 'in:created,in process,processed,delivered,completed,cancelled'],
@@ -257,7 +251,6 @@ class OrderController extends Controller
                 'delivery_date.required' => 'Delivery date is required.',
                 'close_date.after_or_equal' => 'Close date must be after or equal to delivery date.',
             ]);
-            dd($validate);
 
             $order->update($validate);
 
