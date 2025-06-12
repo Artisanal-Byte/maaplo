@@ -5,9 +5,8 @@ import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
 
-defineProps({
-    plans: Array,
-    authUser: Object
+const props = defineProps({
+    subscriptionPlans: Array,
 });
 
 const toast = new ToastMagic();
@@ -38,6 +37,7 @@ const proceedDelete = () => {
 </script>
 
 <template>
+
     <Head title="Subscription Plans" />
     <AppLayout>
         <div class="max-w-7xl mx-auto py-8 px-4">
@@ -48,61 +48,47 @@ const proceedDelete = () => {
                     Subscription Plans
                 </h1>
                 <Link :href="route('subscription-plans.create')" class="relative group">
-                    <Icon icon="material-symbols:add-circle-outline" width="30" height="30" />
-                    <div
-                        class="absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 pointer-events-none z-10">
-                        Create Plan
-                    </div>
+                <Icon icon="material-symbols:add-circle-outline" width="30" height="30" />
+                <div
+                    class="absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 pointer-events-none z-10">
+                    Create Plan
+                </div>
                 </Link>
             </div>
 
             <!-- Desktop Table -->
-            <div class="hidden md:block mt-6">
-                <table class="min-w-full border border-gray-300 text-sm">
-                    <thead class="bg-primary text-white">
+            <!-- Subscription Plans Table -->
+            <div class="mt-10">
+                <h2 class="text-xl font-bold mb-4">All Subscription Plans</h2>
+                <table class="w-full border">
+                    <thead class="bg-gray-200">
                         <tr>
-                            <th class="p-2 border border-gray-300 text-center">Title</th>
-                            <th class="p-2 border border-gray-300 text-center">Price</th>
-                            <th class="p-2 border border-gray-300 text-center">Currency</th>
-                            <th class="p-2 border border-gray-300 text-center">User Limit</th>
-                            <th class="p-2 border border-gray-300 text-center">Visible</th>
-                            <th class="p-2 border border-gray-300 text-center">Actions</th>
+                            <th class="border px-4 py-2">Title</th>
+                            <th class="border px-4 py-2">Description</th>
+                            <th class="border px-4 py-2">Price</th>
+                            <th class="border px-4 py-2">Currency</th>
+                            <th class="border px-4 py-2">User Limit</th>
+                            <th class="border px-4 py-2">Visibility</th>
+                            <th class="border px-4 py-2">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="plan in plans" :key="plan.id" class="hover:bg-gray-100 transition">
-                            <td class="p-2 border text-center">{{ plan.plan_title }}</td>
-                            <td class="p-2 border text-center">{{ plan.plan_price }}</td>
-                            <td class="p-2 border text-center">{{ plan.plan_currency }}</td>
-                            <td class="p-2 border text-center">{{ plan.user_limit }}</td>
-                            <td class="p-2 border text-center">
-                                <span :class="plan.visibility ? 'text-green-600' : 'text-red-500'">
-                                    {{ plan.visibility ? 'Yes' : 'No' }}
-                                </span>
-                            </td>
-                            <td class="p-2 border text-center">
-                                <div class="flex justify-center gap-3">
-                                    <!-- Edit -->
-                                    <div class="relative group">
-                                        <Link :href="route('subscription-plans.edit', plan.id)">
-                                            <Icon icon="ri:edit-fill" class="text-primary" width="20" height="20" />
-                                        </Link>
-                                        <span
-                                            class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none z-10">
-                                            Edit
-                                        </span>
-                                    </div>
-
-                                    <!-- Delete -->
-                                    <div class="relative group">
-                                        <button @click="confirmDelete(plan)">
-                                            <Icon icon="ic:baseline-delete" class="text-[#E73939]" width="20" height="20" />
-                                        </button>
-                                        <span
-                                            class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none z-10">
-                                            Delete
-                                        </span>
-                                    </div>
+                        <tr v-for="plan in subscriptionPlans" :key="plan.id">
+                            <td class="border px-4 py-2">{{ plan.plan_title }}</td>
+                            <td class="border px-4 py-2">{{ plan.plan_description }}</td>
+                            <td class="border px-4 py-2">{{ plan.plan_price }}</td>
+                            <td class="border px-4 py-2">{{ plan.plan_currency }}</td>
+                            <td class="border px-4 py-2">{{ plan.user_limit }}</td>
+                            <td class="border px-4 py-2">{{ plan.visibility ? 'Visible' : 'Hidden' }}</td>
+                            <td class="border px-4 py-2 text-center">
+                                <div class="flex justify-center gap-4">
+                                    <Link :href="route('subscription-plans.edit', plan.id)"
+                                        class="text-blue-600 hover:underline">
+                                    Edit
+                                    </Link>
+                                    <button @click="confirmDelete(plan)" class="text-red-600 hover:underline">
+                                        Delete
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -112,7 +98,7 @@ const proceedDelete = () => {
 
             <!-- Mobile Cards -->
             <div class="grid grid-cols-1 md:hidden gap-4 mt-6">
-                <div v-for="plan in plans" :key="plan.id" class="bg-white rounded-lg p-4 shadow border">
+                <div v-for="plan in subscriptionPlans" :key="plan.id" class="bg-white rounded-lg p-4 shadow border">
                     <h2 class="text-lg font-semibold text-gray-800">{{ plan.plan_title }}</h2>
                     <p class="text-sm text-gray-500">Price: {{ plan.plan_price }} {{ plan.plan_currency }}</p>
                     <p class="text-sm text-gray-500">Users: {{ plan.user_limit }}</p>
@@ -123,6 +109,7 @@ const proceedDelete = () => {
                     </div>
                 </div>
             </div>
+
 
             <!-- Delete Modal -->
             <div v-if="showDeletePopup"

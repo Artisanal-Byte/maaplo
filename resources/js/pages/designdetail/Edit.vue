@@ -28,12 +28,20 @@ const form = useForm({
 
 // Watch for SVG and clean it up
 watch(() => form.image, (newVal) => {
-    if (typeof newVal === 'string' && newVal.includes('<svg')) {
+    if (newVal?.includes('<svg')) {
         let updated = newVal;
+
+        // Replace width/height if they exist
         updated = updated.replace(/width="[^"]*"/, 'width="50"');
         updated = updated.replace(/height="[^"]*"/, 'height="50"');
-        updated = updated.replace(/style="[^"]*?width:\s*\d+[^;]*;?[^"]*?"/, '');
-        updated = updated.replace(/style="[^"]*?height:\s*\d+[^;]*;?[^"]*?"/, '');
+
+        // Add width/height if missing
+        if (!/width="/.test(updated)) {
+            updated = updated.replace('<svg', '<svg width="50"');
+        }
+        if (!/height="/.test(updated)) {
+            updated = updated.replace('<svg', '<svg height="50"');
+        }
 
         if (updated !== newVal) {
             form.image = updated;
@@ -132,7 +140,7 @@ const updateDesignDetail = () => {
                         </label>
                         <select v-model="form.body_part_id" :disabled="!!form.new_body_part"
                             class="w-full border rounded-md py-2 px-3 text-sm shadow-sm focus:ring-primary focus:border-primary">
-                            <option value="">-- Select   --</option>
+                            <option value="">-- Select --</option>
                             <option v-for="part in props.bodyParts" :key="part.id" :value="part.id">
                                 {{ part.body_part }}
                             </option>
