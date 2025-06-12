@@ -26,12 +26,12 @@ const props = defineProps({
         <div class="flex flex-row">
             <div>
                 <h1
-                    class="font-[Lato] font-medium text-[18px] leading-[16px] tracking-[0] text-center text-secondary p-2">
+                    class="font-[Lato] font-medium text-[15px] lg:text-[18px] leading-[16px] tracking-[0] text-secondary p-2">
                     # Order No.{{ order.order_number }}</h1>
             </div>
             <div>
                 <h1
-                    class="font-[Lato] font-medium text-[18px] leading-[16px] tracking-[0] text-center text-secondary p-2">
+                    class="font-[Lato] font-medium text-[15px] lg:text-[18px] leading-[16px] tracking-[0] text-secondary p-2">
                     Customer: {{ order?.customer?.name }}
                 </h1>
             </div>
@@ -55,10 +55,10 @@ const props = defineProps({
         </div>
         <div class="flex justify-end gap-3">
             <Link :href="route('orders.show', props.order.id)">
-            <Icon icon="teenyicons:eye-solid" width="18" height="18" class="text-[#005FAF]" />
+            <Icon icon="teenyicons:eye-solid" width="18" height="18" class="text-primary" />
             </Link>
             <Link :href="route('orders.edit', props.order.id)">
-            <Icon icon="ri:edit-fill" width="18" height="18" class="text-[#005FAF]" />
+            <Icon icon="ri:edit-fill" width="18" height="18" class="text-primary" />
             </Link>
             <Link :href="route('orders.destroy', props.order.id)">
             <Icon icon="ic:baseline-delete" width="18" height="18" class="text-[#E73939]" />

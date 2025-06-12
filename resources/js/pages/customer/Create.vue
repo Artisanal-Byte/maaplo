@@ -123,7 +123,7 @@ const onPhoneInput = (event: Event) => {
                         <label class="font-medium block mb-1">
                             Contact Number <span class="text-red-500">*</span>
                         </label>
-                        <div class="flex">
+                        <div class="flex gap-5">
                             <!-- Use MobileCountryCode component here -->
                             <MobileCountryCode v-model="form.country_code"  class="rounded-r-none"/>
 

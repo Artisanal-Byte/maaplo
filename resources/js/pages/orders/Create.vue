@@ -189,7 +189,7 @@ const editOrderItem = (index) => {
                         </div>
 
                         <!-- Total-->
-                        <div class="mt-6 flex flex-wrap items-center justify-end gap-8 text-sm text-gray-800">
+                        <div class="mt-6 flex flex-wrap items-center justify-end gap-5 lg:gap-8 text-sm text-gray-800">
                             <h2><span class="font-semibold">Grand Total:</span> ₹ {{ form.total_amount || 0}}</h2>
                             <h2><span class="font-semibold">Advance Paid:</span> ₹ {{ form.advance_paid || 0}}</h2>
                             <h2><span class="font-semibold text-red-600 underline">Balance Due:</span> ₹ {{
