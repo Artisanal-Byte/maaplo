@@ -7,6 +7,7 @@ use App\Helpers\ImageHelper;
 use App\Helpers\OrderData;
 use App\Helpers\UniqueOrderNumber; // Ensure this class exists in the specified namespace or create it if missing
 use App\Http\Requests\StoreOrderRequest;
+use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Template;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -121,7 +122,7 @@ class OrderController extends Controller
                 }
 
                 if (!isset($item['delivery_date']) || empty($item['delivery_date'])) {
-                    throw new \Exception("Missing required field: delivery_date for one of the order items.");
+                    throw new Exception("Missing required field: delivery_date for one of the order items.");
                 }
 
                 // Temporarily store file references, remove them for DB
@@ -214,7 +215,7 @@ class OrderController extends Controller
                 'Pattern_img2_url' => $item->Pattern_img2 ? asset('/' . $item->Pattern_img2) : null,
             ];
         });
-            
+
         return Inertia::render('orders/Edit', [
             'order' => $order,
             'orderItems' => $orderItems, // Pass it to frontend
@@ -223,41 +224,90 @@ class OrderController extends Controller
         ]);
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Order $order)
+    public function update(UpdateOrderRequest $request, Order $order)
     {
-        ini_set('max_execution_time', 60); // 60 seconds
+        ini_set('max_execution_time', 60);
         try {
-            $validate = $request->validate([
-                // 'user_id' => ['required', 'exists:users,id'],
-                'customer_id' => ['required', 'exists:customers,id'],
-                // 'order_number' => ['required', 'string', Rule::unique('orders', 'order_number')->ignore($order->id)],
-                'status' => ['required', 'in:created,in process,processed,delivered,completed,cancelled'],
-                'total_amount' => ['required', 'numeric', 'min:0'],
-                'advance_paid' => ['required', 'numeric', 'min:0', 'lte:total_amount'],
-                'delivery_date' => ['required', 'date', 'after_or_equal:today'],
-                'close_date' => ['nullable', 'date', 'after_or_equal:delivery_date'],
-                'notes' => ['nullable', 'array'],
-            ], [
-                'user_id.required' => 'User ID is required.',
-                'customer_id.required' => 'Customer ID is required.',
-                'order_number.required' => 'Order number is required.',
-                'status.required' => 'Status is required.',
-                'total_amount.required' => 'Total amount is required.',
-                'advance_paid.required' => 'Advance paid is required.',
-                'delivery_date.required' => 'Delivery date is required.',
-                'close_date.after_or_equal' => 'Close date must be after or equal to delivery date.',
-            ]);
+            $validatedData = $request->validated();
+            $userId = Auth::user()->id;
+            $username = Auth::user()->name;
+            $customerId = $validatedData['customer_id'];
 
-            $order->update($validate);
+            $validatedOrderItems = $validatedData['order_items'];
+            unset($validatedData['order_items']); // Remove items from order update
 
-            ToastMagic::success('Order Updated successfully!');
+            DB::beginTransaction();
+
+            // ✅ Update order
+            $order->update($validatedData);
+
+            // ✅ Track existing item IDs to preserve/update or delete others
+            $existingItemIds = $order->orderItems()->pluck('id')->toArray();
+            $incomingItemIds = [];
+
+            foreach ($validatedOrderItems as $item) {
+                $fileUploads = [];
+                foreach (['refrence_dress', 'cloth_img1', 'cloth_img2', 'Pattern_img1', 'Pattern_img2'] as $field) {
+                    if (isset($item[$field]) && $item[$field] instanceof UploadedFile) {
+                        $fileUploads[$field] = $item[$field];
+                        unset($item[$field]);
+                    }
+                }
+
+                // Normalize booleans
+                $item['is_urgent'] = filter_var($item['is_urgent'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 'yes' : 'no';
+
+                // JSON encode fields
+                foreach (['measurements', 'design_detail', 'notes'] as $field) {
+                    if (isset($item[$field]) && is_array($item[$field])) {
+                        $item[$field] = json_encode($item[$field]);
+                    } elseif (!isset($item[$field]) || $item[$field] === null) {
+                        $item[$field] = json_encode([]);
+                    }
+                }
+
+                if (!isset($item['delivery_date']) || empty($item['delivery_date'])) {
+                    throw new Exception("Missing required field: delivery_date for one of the order items.");
+                }
+
+                if (isset($item['id'])) {
+                    // Update existing item
+                    $orderItem = OrderItem::findOrFail($item['id']);
+                    $orderItem->update($item);
+                    $incomingItemIds[] = $orderItem->id;
+                } else {
+                    // Create new item
+                    $item['order_id'] = $order->id;
+                    $orderItem = OrderItem::create($item);
+                    $incomingItemIds[] = $orderItem->id;
+                }
+
+                // Process image uploads
+                foreach ($fileUploads as $field => $uploadedFile) {
+                    $storedPath = ImageHelper::storeOrderItemImage(
+                        $uploadedFile,
+                        $username,
+                        $userId,
+                        $order->id,
+                        $customerId,
+                        $orderItem->id,
+                        $field
+                    );
+                    $orderItem->update([$field => $storedPath]);
+                }
+            }
+
+            $itemsToDelete = array_diff($existingItemIds, $incomingItemIds);
+            OrderItem::whereIn('id', $itemsToDelete)->delete();
+
+            DB::commit();
+
+            ToastMagic::success('Order updated successfully!');
             return redirect()->route('orders.index')->with('success', 'Order updated successfully.');
-        } catch (Exception $exception) {
-            return redirect()->back()->withErrors($exception->getMessage());
+        } catch (Exception $e) {
+            dd($e->getMessage());
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
 

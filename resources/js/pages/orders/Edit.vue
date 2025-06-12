@@ -13,6 +13,7 @@ import { Head } from '@inertiajs/vue3';
 import { nextTick } from 'vue';
 import Loader from '@/components/Loader.vue';
 const props = defineProps(["users", "customers", "itemTypes", "errors", "order", "orderItems"]);
+console.log('itemTypes',props.itemTypes);
 
 const showModal = ref(false);
 const showDeletePopup = ref(false);
@@ -101,7 +102,7 @@ const update = () => {
     loading.value = true;
     setTimeout(() => {
         loading.value = false;
-    }, 10000);
+    }, 20000);
 
     form.updateOrder(props.order.id).finally(() => {
         loading.value = true;
@@ -109,6 +110,7 @@ const update = () => {
 };
 
 const getItemTypeName = (id) => {
+    // console.log('getItemTypeName called with ID:', props.itemTypes);
     const found = props.itemTypes.find(i => i.id == id);
     return found?.name;
 };

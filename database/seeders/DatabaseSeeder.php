@@ -18,12 +18,17 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             'name' => 'Test User',
-            'email' => 'test@example.com',
+            'email' => 'test@gmail.com',
             'password' => Hash::make('user@123')
         ]);
 
         $this->call([
             MeasurementSeeder::class,
         ]);
+        $this->call(UsersTableSeeder::class);
+        $this->call(DesignDetailsTableSeeder::class);
+        $this->call(TemplatesTableSeeder::class);
+        $this->call(CustomersTableSeeder::class);
+        $this->call(MeasurementsTableSeeder::class);
     }
 }

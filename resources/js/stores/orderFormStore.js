@@ -98,6 +98,7 @@ export const useOrderFormStore = defineStore('orderForm', {
             this.resetOrderItemTemplate()
         },
         setOrderItemData(index) {
+
             if (index >= 0 && index < this.order_items.length) {
                 const item = this.order_items[index];
                 this.order_items_template = {
@@ -114,8 +115,10 @@ export const useOrderFormStore = defineStore('orderForm', {
                     delivery_date: item.delivery_date || '',
                     mode: 'edit'
                 };
-                this.editingItemIndex = index;
+                // this.editingItemIndex = index;
             }
+            console.log('cust id :', this.customer_id);
+
         },
 
         createOrder() {
@@ -161,6 +164,8 @@ export const useOrderFormStore = defineStore('orderForm', {
                 ...item,
                 id: item.id,
                 item_cost: Number(item.item_cost) || 0,
+                colors:item.colors,
+                is_urgent:item.isUrgent == 'yes' ? true :false,
                 trial_dates: item.trial_dates || '',
                 cloth_img1_url: item.cloth_img1_url || null,
                 cloth_img2_url: item.cloth_img2_url || null,
