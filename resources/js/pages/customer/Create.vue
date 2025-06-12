@@ -29,7 +29,7 @@ const form = reactive({
     email: null,
     address: '',
     dob: null,
-    measurements: {},
+    measurements: '',
     half_image: '',
     full_image: '',
     half_image_preview: '',
