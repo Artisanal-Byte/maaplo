@@ -24,20 +24,31 @@ class CustomerController extends Controller
         $user = auth()->user();
         $customerCount = Customer::where('user_id', $user->id)->count();
         $customerLimitExceeded = $user->subscription_plan === 'free' && $customerCount >= 5;
-        $customers = Auth::user()->customers()->with(['photos' => fn($q) => $q->where('label', 'Faceimage')])
+        $customers = Auth::user()->customers()
+            ->with(['photos' => fn($q) => $q->where('label', 'Faceimage'), 'orders'])
             ->get()
-            ->map(fn($c) => [
-                'id' => $c->id,
-                'name' => $c->name,
-                'email' => $c->email,
-                'country_code' => $c->country_code,
-                'phone' => $c->phone,
-                'gender' => $c->gender,
-                'dob' => $c->dob,
-                'active_orders' => $c->active_orders ?? null,
-                'payment_due' => $c->payment_due ?? null,
-                'face_image' => optional($c->photos->first())->image_url ? asset($c->photos->first()->image_url) : null,
-            ]);
+            ->map(function ($c) {
+                // Correct definitions
+                $total_payment = $c->orders->sum('total_amount');      // Full cost of all orders
+                $advance_payment = $c->orders->sum('advance_paid');    // What has been paid
+                $payment_due = $total_payment - $advance_payment;      // What's remaining
+
+                return [
+                    'id' => $c->id,
+                    'name' => $c->name,
+                    'email' => $c->email,
+                    'country_code' => $c->country_code,
+                    'phone' => $c->phone,
+                    'gender' => $c->gender,
+                    'dob' => $c->dob,
+                    'active_orders' => $c->active_orders ?? null,
+                    'total_payment' => number_format($total_payment, 2),
+                    'advance_payment' => number_format($advance_payment, 2),
+                    'payment_due' => number_format($payment_due, 2),
+                    'face_image' => optional($c->photos->first())->image_url ? asset($c->photos->first()->image_url) : null,
+                ];
+            });
+
         return Inertia::render('customer/Index', [
             'customers' => $customers,
             'customer_limit_exceeded' => $customerLimitExceeded,
@@ -62,7 +73,7 @@ class CustomerController extends Controller
             'user_id' => $user_id,
             'measurements' => json_encode($setData, true),
             'customer_limit_exceeded' => $customerLimitExceeded,
-             'toAsk' => json_encode($setData, true),
+            'toAsk' => json_encode($setData, true),
             'notes' => $customer->notes ?? [],
         ]);
     }

@@ -22,7 +22,7 @@ function closeAndRedirect() {
         class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50">
         <div class="bg-white mx-4 rounded-xl shadow-lg max-w-md w-full p-6 text-center relative animate-blink-loop">
             <button @click="closeAndRedirect"
-                class="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl font-semibold">
+                class="absolute top-2 right-5 text-gray-400 hover:text-gray-700 text-4xl font-semibold">
                 &times;
             </button>
 
@@ -44,7 +44,7 @@ function closeAndRedirect() {
             <p class="text-gray-600 mb-6">To add more customers, please upgrade your subscription.</p>
 
             <button @click="goToUpgrade"
-                class="bg-primary hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-full shadow transition">
+                class="bg-primary text-white font-semibold px-5 py-2 rounded-full shadow transition">
                 Upgrade Plan
             </button>
         </div>

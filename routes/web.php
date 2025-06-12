@@ -7,6 +7,7 @@ use App\Http\Controllers\DesignDetailsController;
 use App\Http\Controllers\ItemTemplateController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\SubscriptionPlanController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
@@ -42,14 +43,12 @@ Route::middleware(["auth", "verified"])->group(function () {
 
     Route::post('/organization/no-organization', [OrganizationController::class, 'setNoOrganization']);
     Route::resource('customers', CustomerController::class);
-    // Route::resource('orders', OrderController::class)->names(["index"]);
     Route::resource('items', TemplateController::class);
+    Route::resource('subscription-plans', SubscriptionPlanController::class);
     Route::resource('user', UsersController::class);
     Route::resource('organization', OrganizationController::class);
-    //  Route::resource('profile', ProfileController::class);
     Route::post('/admin/users/{id}/toggle-status', [UsersController::class, 'toggleStatus'])->name('admin.toggleStatus');
     Route::resource('design-details', DesignDetailsController::class);
-    // Route::resource('admin', DesignDetailsController::class);
     Route::get('admin', function () {
         return Inertia::render('admin/Index');
     });

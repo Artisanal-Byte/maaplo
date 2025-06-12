@@ -31,12 +31,26 @@ onMounted(() => {
 
 watch(() => form.image, (newVal) => {
     if (newVal?.includes('<svg')) {
-        const updated = newVal
-            .replace(/width="[^"]*"/, 'width="50"')
-            .replace(/height="[^"]*"/, 'height="50"');
-        if (updated !== newVal) form.image = updated;
+        let updated = newVal;
+
+        // Replace width/height if they exist
+        updated = updated.replace(/width="[^"]*"/, 'width="50"');
+        updated = updated.replace(/height="[^"]*"/, 'height="50"');
+
+        // Add width/height if missing
+        if (!/width="/.test(updated)) {
+            updated = updated.replace('<svg', '<svg width="50"');
+        }
+        if (!/height="/.test(updated)) {
+            updated = updated.replace('<svg', '<svg height="50"');
+        }
+
+        if (updated !== newVal) {
+            form.image = updated;
+        }
     }
 });
+
 
 watch(() => form.body_part_id, (newVal) => {
     if (newVal) form.new_body_part = '';
