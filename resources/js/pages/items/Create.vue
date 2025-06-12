@@ -8,7 +8,6 @@ import Input from '@/components/InputWithLabel.vue';
 import SearchSelect from '@/components/SearchSelect.vue';
 import Button from '@/components/Button.vue';
 
-// Import or define ToastMagic instance properly
 const toast = new ToastMagic();
 
 const { props: pageProps } = usePage();
@@ -28,7 +27,7 @@ const form = useForm({
 designDetails.forEach(dd => {
     form.design_details[dd.id] = false;
 });
-console.log('Design Details:', designDetails);
+
 const uniqueDesignDetails = computed(() => {
     const seen = new Set();
     return designDetails.filter(detail => {
@@ -37,7 +36,7 @@ const uniqueDesignDetails = computed(() => {
         return true;
     });
 });
-console.log('Unique Design Details:', uniqueDesignDetails.value);
+
 const formatSlug = (slug) => {
     return slug
         .split('_')

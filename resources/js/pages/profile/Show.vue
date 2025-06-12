@@ -4,7 +4,7 @@ import { Head, Link, usePage } from '@inertiajs/vue3';
 import { router } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
-
+const toast = new ToastMagic();
 const props = defineProps(['user']);
 function goToEdit() {
     router.visit(route('profile.edit'));
@@ -51,7 +51,7 @@ function goToEdit() {
 
                         <div class="flex items-center gap-3">
                             <Icon icon="mdi:office-building" class="text-gray-500" width="20" />
-                            <p><strong>Organization:</strong> {{ props.user.organization_name }}</p>
+                            <p><strong>Organization:</strong> {{ props.user.organization_name ?? 'N/A' }}</p>
                         </div>
 
                         <div class="flex items-center gap-3">
