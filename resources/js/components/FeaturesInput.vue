@@ -52,7 +52,11 @@ const updateFeature = (index, value) => {
         <div v-for="(feature, index) in features" :key="index" class="flex items-center gap-2 mb-2">
             <Input type="text" :label="`Feature ${index + 1}`" :modelValue="feature"
                 @update:modelValue="val => updateFeature(index, val)" placeholder="Enter feature" class="flex-grow"
-                :error="errors?.[`features.${index}`]" required="true" />
+                :error="errors?.[`features.${index}`]" required="true">
+            <template #icon>
+                <Icon icon="material-symbols:add-notes-rounded" width="24" height="24" />
+            </template>
+            </Input>
             <button v-if="features.length > 1" type="button" @click="removeFeature(index)"
                 class="text-red-600 hover:text-red-700 p-1 rounded" title="Remove feature">
                 <Icon icon="mdi:minus-circle-outline" width="24" height="24" />

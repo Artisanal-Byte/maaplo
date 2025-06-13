@@ -56,22 +56,40 @@ const submitForm = () => {
                 <!-- 2x2 Grid for first 4 inputs -->
                 <div class="grid grid-cols-2 gap-6">
                     <Input v-model="form.plan_title" label="Plan Title" placeholder="Enter title"
-                        :error="form.errors.plan_title" required="true" />
+                        :error="form.errors.plan_title" required="true">
+                    <template #icon>
+                        <Icon icon="icon-park-solid:plan" width="24" height="24" />
+                    </template>
+                    </Input>
 
                     <Input v-model="form.plan_description" label="Plan Description" placeholder="Short description"
-                        :error="form.errors.plan_description" />
+                        :error="form.errors.plan_description">
+                    <template #icon>
+                        <Icon icon="ic:outline-business" width="24" height="24" />
+                    </template>
+                    </Input>
 
                     <Input v-model.number="form.plan_price" label="Plan Price" type="number" placeholder="e.g. 99.99"
-                        :error="form.errors.plan_price" required="true" />
+                        :error="form.errors.plan_price" required="true">
+                    <template #icon>
+                        <Icon icon="mdi:currency-brl" width="24" height="24" />
+                    </template>
+                    </Input>
 
                     <Input v-model="form.plan_currency" label="Currency" placeholder="e.g. INR, USD"
-                        :error="form.errors.plan_currency" required="true" />
-
+                        :error="form.errors.plan_currency" required="true">
+                    <template #icon>
+                        <Icon icon="grommet-icons:currency" width="24" height="24" />
+                    </template>
+                    </Input>
                     <!-- The rest below the grid -->
 
                     <Input v-model.number="form.user_limit" label="User Limit" type="number" placeholder="e.g. 5"
-                        :error="form.errors.user_limit" required="true" />
-
+                        :error="form.errors.user_limit" required="true">
+                    <template #icon>
+                        <Icon icon="mdi:car-speed-limiter" width="24" height="24" />
+                    </template>
+                    </Input>
                     <div>
                         <label class="font-medium text-black mb-2 block">Visibility</label>
                         <div class="flex gap-4">
