@@ -47,7 +47,6 @@ class OrderController extends Controller
 
         // Fetch all customers of Users
         $user->load('customers');
-
         //-- item which have a global scope or created by Authentic user
         $itemTypes = Template::where('user_id', Auth::id())
             ->orWhereNull('user_id')
@@ -66,7 +65,6 @@ class OrderController extends Controller
     public function store(StoreOrderRequest $storeOrderRequest)
     {
         ini_set('max_execution_time', 60);
-        // dd($storeOrderRequest);
         try {
             $validatedOrderData = $storeOrderRequest->validated();
             $username = auth()->user()->name;
@@ -227,8 +225,10 @@ class OrderController extends Controller
     public function update(UpdateOrderRequest $request, Order $order)
     {
         ini_set('max_execution_time', 60);
+        // dd($request->all()['customer_id']);
         try {
             $validatedData = $request->validated();
+            // dd
             $userId = Auth::user()->id;
             $username = Auth::user()->name;
             $customerId = $validatedData['customer_id'];
@@ -298,6 +298,7 @@ class OrderController extends Controller
             }
 
             $itemsToDelete = array_diff($existingItemIds, $incomingItemIds);
+            
             OrderItem::whereIn('id', $itemsToDelete)->delete();
 
             DB::commit();
