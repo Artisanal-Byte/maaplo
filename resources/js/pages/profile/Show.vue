@@ -15,7 +15,7 @@ function goToEdit() {
 <template>
     <Head :title="`${props.user.name}-Profile`" />
     <AppLayout>
-        <div class="px-4 py-10 max-w-4xl mx-auto">
+        <div class="px-4 lg:px-0 py-10 max-w-4xl mx-auto">
             <div class="flex justify-between items-center mb-6">
                 <div class="flex">
                     <Icon icon="healthicons:ui-user-profile" width="42" height="42"
@@ -32,8 +32,8 @@ function goToEdit() {
 
             <div
                 class="bg-[#DEEFF4] shadow-lg rounded-xl p-3 lg:p-6 transition-all hover:shadow-xl border border-gray-100">
-                <div class="grid grid-cols-2">
-                    <div class="space-y-4 grid grid-cols-1 text-lg">
+                <div class="grid grid-cols-3">
+                    <div class="space-y-4 grid grid-cols-1 text-lg col-span-2">
                         <div class="flex items-center gap-3 mt-3">
                             <Icon icon="mdi:account" class="text-gray-500" width="20" />
                             <p><strong>Name:</strong> {{ props.user.name }}</p>
