@@ -31,11 +31,11 @@ const form = useForm({
 });
 
 watch(
-  () => form.visibility,
-  (val) => {
-    if (val === 'true') form.visibility = true;
-    else if (val === 'false') form.visibility = false;
-  }
+    () => form.visibility,
+    (val) => {
+        if (val === 'true') form.visibility = true;
+        else if (val === 'false') form.visibility = false;
+    }
 );
 
 const submitForm = () => {
@@ -77,23 +77,49 @@ const submitForm = () => {
             <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-primary space-y-5">
                 <div class="grid grid-cols-2 gap-6">
                     <Input v-model="form.plan_title" label="Plan Title" placeholder="Enter title"
-                        :error="form.errors.plan_title" required />
+                        :error="form.errors.plan_title" required="true">
+                    <template #icon>
+                        <Icon icon="icon-park-solid:plan" width="24" height="24" />
+                    </template>
+                    </Input>
 
                     <Input v-model="form.plan_description" label="Plan Description" placeholder="Short description"
-                        :error="form.errors.plan_description" />
+                        :error="form.errors.plan_description">
+                    <template #icon>
+                        <Icon icon="ic:outline-business" width="24" height="24" />
+                    </template>
+                    </Input>
 
                     <Input v-model.number="form.plan_price" label="Plan Price" type="number" placeholder="e.g. 99.99"
-                        :error="form.errors.plan_price" required />
+                        :error="form.errors.plan_price" required="true">
+                    <template #icon>
+                        <Icon icon="mdi:currency-brl" width="24" height="24" />
+                    </template>
+                    </Input>
 
                     <Input v-model="form.plan_currency" label="Currency" placeholder="e.g. INR, USD"
-                        :error="form.errors.plan_currency" required />
+                        :error="form.errors.plan_currency" required="true">
+                    <template #icon>
+                        <Icon icon="grommet-icons:currency" width="24" height="24" />
+                    </template>
+                    </Input>
 
                     <Input v-model.number="form.user_limit" label="User Limit" type="number" placeholder="e.g. 5"
-                        :error="form.errors.user_limit" required />
+                        :error="form.errors.user_limit" required="true">
+                    <template #icon>
+                        <Icon icon="mdi:car-speed-limiter" width="24" height="24" />
+                    </template>
+                    </Input>
 
                     <!-- Visibility -->
                     <div>
-                        <label class="font-medium text-black mb-2 block">Visibility</label>
+                        <label class="font-medium text-black mb-2 block">
+                            Visibility
+                            <span class="inline-block align-middle ml-1">
+                                <Icon icon="material-symbols:visibility-outline" width="24" height="24" />
+                            </span>
+                        </label>
+
                         <div class="flex gap-4">
                             <label>
                                 <input type="radio" value="true" v-model="form.visibility" class="hidden" />

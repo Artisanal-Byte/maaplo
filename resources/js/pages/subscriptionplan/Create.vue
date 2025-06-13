@@ -91,7 +91,12 @@ const submitForm = () => {
                     </template>
                     </Input>
                     <div>
-                        <label class="font-medium text-black mb-2 block">Visibility</label>
+                        <label class="font-medium text-black mb-2 block">
+                            Visibility
+                            <span class="inline-block align-middle ml-1">
+                                <Icon icon="material-symbols:visibility-outline" width="24" height="24" />
+                            </span>
+                        </label>
                         <div class="flex gap-4">
                             <label>
                                 <input type="radio" :value="true" v-model="form.visibility" class="hidden" />
