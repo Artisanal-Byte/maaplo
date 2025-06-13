@@ -68,8 +68,14 @@ class User extends Authenticatable
 
     public function customers()
     {
-        return $this->belongsToMany(Customer::class, 'users_customers')
-            ->withTimestamps()->latest('updated_at');
+        return $this->hasManyThrough(
+        Customer::class,        // Final model
+        UserCustomer::class,    // Intermediate model
+        'user_id',              // Foreign key on UserCustomer table...
+        'id',                   // Foreign key on Customer table (usually 'id')
+        'id',                   // Local key on User table
+        'customer_id'           // Local key on UserCustomer table
+    );
     }
 
     public function orders()

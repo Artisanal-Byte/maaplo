@@ -1,4 +1,4 @@
-import { useForm } from '@inertiajs/vue3'
+import { router, useForm } from '@inertiajs/vue3'
 import { defineStore } from 'pinia'
 
 export const useOrderFormStore = defineStore('orderForm', {
@@ -48,10 +48,10 @@ export const useOrderFormStore = defineStore('orderForm', {
         },
 
         updateOrderItem() {
-            if (this.editingItemIndex !== null) {
-                this.order_items.splice(this.editingItemIndex, 1, { ...this.order_items_template });
-                this.editingItemIndex = null;
-            }
+            // if (this.editingItemIndex !== null) {
+            this.order_items.splice(this.editingItemIndex, 1, { ...this.order_items_template });
+            this.editingItemIndex = null;
+            // }    
         },
         resetOrderItemTemplate() {
             this.order_items_template = {
@@ -164,8 +164,8 @@ export const useOrderFormStore = defineStore('orderForm', {
                 ...item,
                 id: item.id,
                 item_cost: Number(item.item_cost) || 0,
-                colors:item.colors,
-                is_urgent:item.isUrgent == 'yes' ? true :false,
+                colors: item.colors,
+                is_urgent: item.isUrgent == 'yes' ? true : false,
                 trial_dates: item.trial_dates || '',
                 cloth_img1_url: item.cloth_img1_url || null,
                 cloth_img2_url: item.cloth_img2_url || null,
@@ -185,28 +185,15 @@ export const useOrderFormStore = defineStore('orderForm', {
         },
         async updateOrder(orderId, toast) {
             const { order_items_template, ...formData } = this.$state;
+
             const form = useForm({ ...formData, total_amount: this.total_amount });  // Ensure total_amount is passed
+            // console.log(form.data());
 
             try {
-                await form.put(route('orders.update', orderId), {
-                    onSuccess: () => {
-                        if (toast && typeof toast.success === 'function') {
-                            toast.success('Order updated successfully!');
-                        } else {
-                            console.warn('Toast function is not available');
-                        }
-                        this.resetOrderData();
-                        window.location.href = route('orders.index');
-                    },
-                    onError: (errors) => {
-                        console.error('Update failed:', errors);
-                        if (toast && typeof toast.error === 'function') {
-                            toast.error('Update failed. Please fix the errors.');
-                        } else {
-                            console.warn('Toast function is not available');
-                        }
-                    },
-                });
+                router.post(route('orders.update', orderId), {
+                    _method: 'put',
+                     ...form,
+                })
             } catch (error) {
                 console.error('Update request failed:', error);
                 if (toast && typeof toast.error === 'function') {

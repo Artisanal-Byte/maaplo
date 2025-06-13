@@ -137,6 +137,7 @@ const loadReferenceDress = async () => {
 };
 
 onMounted(loadReferenceDress);
+
 watch(() => props.currentEditIndex, () => {
     loadReferenceDress();
 });
@@ -167,14 +168,18 @@ watch(() => props.currentEditIndex, () => {
                 <!-- Scrollable Content -->
                 <div class=" max-h-[75vh] pr-2 space-y-5">
                     <!-- done -->
-                    <WorkType :order="order" :currentEditIndex="currentEditIndex" />
-                    <ItemType :itemTypes="itemTypes" @setItemId="setItemId"
+                     <!-- errors[`order_items.${currentEditIndex}.colors`] -->
+                    <WorkType :errors="errors" :order="order" :currentEditIndex="currentEditIndex" />
+                    <ItemType :errors="errors" :itemTypes="itemTypes" @setItemId="setItemId"
                         @setSelectDesignDetails="setSelectDesignDetails" :currentEditIndex="currentEditIndex" />
-                    <ItemMeasurements :askedMeasurements="measurements" :order="order" :currentEditIndex="currentEditIndex" />
-                    <DesignDetails :designDetails="designDetails" v-model="formStore.design_detail" :order="order" :currentEditIndex="currentEditIndex" />
+                    <ItemMeasurements :askedMeasurements="measurements" :order="order" :currentEditIndex="currentEditIndex" :errors="errors"/>
+                    <DesignDetails :designDetails="designDetails" v-model="formStore.design_detail" :order="order" :currentEditIndex="currentEditIndex" :errors="errors"/>
 
                     <div class="flex flex-col">
-                        <Colors />
+                        <!-- <pre>
+                            {{ errors }}
+                        </pre> -->
+                        <Colors :errors="errors" :currentEditIndex="currentEditIndex"/>
                         <Notes v-model:notes="formStore.order_items_template.notes" class="mt-5" />
                     </div>
 

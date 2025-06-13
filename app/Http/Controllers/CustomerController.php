@@ -62,7 +62,7 @@ class CustomerController extends Controller
             'user_id' => $user_id,
             'measurements' => json_encode($setData, true),
             'customer_limit_exceeded' => $customerLimitExceeded,
-             'toAsk' => json_encode($setData, true),
+            'toAsk' => json_encode($setData, true),
             'notes' => $customer->notes ?? [],
         ]);
     }

@@ -13,7 +13,6 @@ import { Head } from '@inertiajs/vue3';
 import { nextTick } from 'vue';
 import Loader from '@/components/Loader.vue';
 const props = defineProps(["users", "customers", "itemTypes", "errors", "order", "orderItems"]);
-console.log('itemTypes',props.itemTypes);
 
 const showModal = ref(false);
 const showDeletePopup = ref(false);
@@ -102,7 +101,7 @@ const update = () => {
     loading.value = true;
     setTimeout(() => {
         loading.value = false;
-    }, 20000);
+    }, 1000);
 
     form.updateOrder(props.order.id).finally(() => {
         loading.value = true;
@@ -115,8 +114,6 @@ const getItemTypeName = (id) => {
     return found?.name;
 };
 
-watch(() => form.order_items, (items) => {
-}, { immediate: true });
 </script>
 
 <template>
@@ -124,6 +121,9 @@ watch(() => form.order_items, (items) => {
     <Head title="Order-Edit" />
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
+            <pre>
+                {{ errors[`order_items.${currentEditIndex}.colors`] }}
+            </pre>
             <!-- Use the Loader Component -->
             <Loader v-if="loading" />
             <div class="flex flex-row justify-between">
@@ -157,7 +157,7 @@ watch(() => form.order_items, (items) => {
                 </div>
                 <p v-if="props.errors.status" class="mt-2 text-sm text-red-600">{{ props.errors.status }}</p>
             </div>
-
+            <pre>{{ form }}</pre>
             <div class="mt-6 bg-white p-5 lg:p-7 rounded-lg shadow-md border-t-4 border-primary">
                 <CustomerListDropdown :customers="customers" :error="props.errors.customer_id"
                     v-model="form.customer_id" />
@@ -176,7 +176,7 @@ watch(() => form.order_items, (items) => {
                         </div>
                     </div>
 
-                    <ItemModel :errors="form.errors?.order_items" :showModal="showModal" @close="closeModel"
+                    <ItemModel :errors="errors" :showModal="showModal" @close="closeModel"
                         :form="form.order_items_template" :itemTypes="itemTypes" :measurements="[]"
                         :orderItems="orderItems" :currentEditIndex="currentEditIndex" :order="order" />
 
