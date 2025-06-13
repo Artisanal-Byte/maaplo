@@ -24,7 +24,7 @@ onMounted(() => {
 <template>
     <Head title="Organization's" />
     <AppLayout>
-        <div class="px-4 py-10 max-w-4xl mx-auto">
+        <div class="px-4 lg:px-0 py-10 max-w-4xl mx-auto">
             <div class="flex justify-between items-center mb-6">
                 <div class="flex ">
                     <Icon icon="mdi:office-building-plus" class="text-primary" width="36" height="36" />
@@ -38,7 +38,7 @@ onMounted(() => {
 
             <div v-if="props.organizations.length" class="space-y-6">
                 <div v-for="org in props.organizations" :key="org.id"
-                    class="bg-[#DEEFF4] shadow-md border border-gray-100 rounded-xl p-6 hover:shadow-lg transition">
+                    class="bg-[#DEEFF4] shadow-md border border-gray-100 rounded-xl p-4 lg:p-6 hover:shadow-lg transition">
                     <div class="grid grid-cols-2 lg:gap-6">
                         <!-- Left: Details -->
                         <div class="space-y-4">
