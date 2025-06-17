@@ -3,15 +3,16 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Icon } from '@iconify/vue';
 import DateIcon from '@/components/DateIcon.vue';
 import CustomerListDropdown from '@/components/Items/CustomerListDropdown.vue';
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import ItemModel from '@/components/Items/ItemModel.vue';
 import Button from '@/components/Button.vue';
 import Notes from '@/components/Items/Notes.vue';
 import Input from '@/components/InputWithLabel.vue';
 import { useOrderFormStore } from '@/stores/orderFormStore';
 import { Head } from '@inertiajs/vue3';
-
+import Loader from '@/components/Loader.vue';
 const props = defineProps(["users", "customers", "itemTypes", "errors"])
+console.log('itemTypes in create page',props.itemTypes);
 
 const showModal = ref(false);
 const disabled = ref(false);
@@ -22,6 +23,7 @@ let customerMeasurements = ref({})
 const itemToDelete = ref(null);
 let deleteOrEditOrderIndex = ref()
 let totalAmmount = ref(null)
+const loading = ref(false);
 
 let create = () => {
     if (form.advance_paid > form.total_amount) {
@@ -29,7 +31,13 @@ let create = () => {
         form.advance_paid = null
         return
     }
-    form.createOrder()
+    loading.value = true;
+    setTimeout(() => {
+        loading.value = false;
+    }, 1000);
+    form.createOrder().finally(() => {
+        loading.value = true;
+    });
 }
 
 //total amount of order
@@ -62,8 +70,6 @@ const proceedDelete = () => {
     showDeletePopup.value = false;
 };
 
-
-
 const openItemModel = () => {
     form.order_items_template.mode = 'create'
     if (form.customer_id == null) {
@@ -86,13 +92,46 @@ const editOrderItem = (index) => {
     // form.resetOrderItemTemplate()
     showModal.value = true
 }
+const errorMessages = computed(() => {
+    if (!props.errors) return [];
+    return Object.values(props.errors).flat();
+});
 
+const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    const [year, month, day] = dateStr.split('-');
+    return `${day}-${month}-${year}`;
+};
 </script>
 
 <template>
+
     <Head title="Order-Create" />
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
+            <div v-if="errorMessages.length" class="mb-6 rounded-md border border-red-300 bg-red-50 p-4 shadow-sm">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <Icon icon="mdi:alert-circle" class="h-6 w-6 text-red-600" />
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-semibold text-red-800">
+                            There {{ errorMessages.length === 1 ? 'is' : 'are' }} {{ errorMessages.length }}
+                            error{{ errorMessages.length > 1 ? 's' : '' }} with your submission:
+                        </h3>
+                        <div class="mt-2 text-sm text-red-700">
+                            <ul class="list-disc space-y-1 pl-5">
+                                <li v-for="(error, index) in errorMessages" :key="index">
+                                    {{ error }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Use the Loader Component -->
+            <Loader v-if="loading" />
             <div class="flex flex-row justify-between">
                 <div>
                     <h1
@@ -171,7 +210,7 @@ const editOrderItem = (index) => {
                                             {{itemTypes.find(item => item.id === order_item.template_id)?.name ?? 'N/A'
                                             }}
                                         </td>
-                                        <td class="px-4 py-2 border-b border-gray-200">{{ order_item.delivery_date }}
+                                        <td class="px-4 py-2 border-b border-gray-200">{{ formatDate(order_item.delivery_date) }}
                                         </td>
                                         <td class="px-4 py-2 border-b border-gray-200">
                                             <div class="flex gap-4">
@@ -190,8 +229,8 @@ const editOrderItem = (index) => {
 
                         <!-- Total-->
                         <div class="mt-6 flex flex-wrap items-center justify-end gap-5 lg:gap-8 text-sm text-gray-800">
-                            <h2><span class="font-semibold">Grand Total:</span> ₹ {{ form.total_amount || 0}}</h2>
-                            <h2><span class="font-semibold">Advance Paid:</span> ₹ {{ form.advance_paid || 0}}</h2>
+                            <h2><span class="font-semibold">Grand Total:</span> ₹ {{ form.total_amount || 0 }}</h2>
+                            <h2><span class="font-semibold">Advance Paid:</span> ₹ {{ form.advance_paid || 0 }}</h2>
                             <h2><span class="font-semibold text-red-600 underline">Balance Due:</span> ₹ {{
                                 form.total_amount - (form.advance_paid || 0) }}</h2>
                         </div>
@@ -231,7 +270,7 @@ const editOrderItem = (index) => {
 
                 <Button :color="'primary'" @click="create" :padding="'md'" :rounded="'full'" :textSize="'sm'"
                     class="lg:mt-5 mt-3">
-                    Save
+                    Create Order
                 </Button>
 
             </div>

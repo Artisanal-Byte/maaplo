@@ -113,6 +113,40 @@ watch(() => formStore.order_items_template.cloth_img2, (newFile, oldFile) => {
         previewUrl2.value = URL.createObjectURL(newFile)
     }
 })
+
+
+watch(() => formStore.order_items_template.cloth_img1, (newFile) => {
+    if (previewUrl1.value) {
+        URL.revokeObjectURL(previewUrl1.value);
+        previewUrl1.value = null;
+    }
+
+    if (newFile) {
+        if (newFile.size > 2 * 1024 * 1024) {
+            alert("Cloth Image 1 must be less than 2MB.");
+            formStore.order_items_template.cloth_img1 = null;
+            return;
+        }
+        previewUrl1.value = URL.createObjectURL(newFile);
+    }
+});
+
+watch(() => formStore.order_items_template.cloth_img2, (newFile) => {
+    if (previewUrl2.value) {
+        URL.revokeObjectURL(previewUrl2.value);
+        previewUrl2.value = null;
+    }
+
+    if (newFile) {
+        if (newFile.size > 2 * 1024 * 1024) {
+            alert("Cloth Image 2 must be less than 2MB.");
+            formStore.order_items_template.cloth_img2 = null;
+            return;
+        }
+        previewUrl2.value = URL.createObjectURL(newFile);
+    }
+});
+
 </script>
 
 <template>

@@ -64,6 +64,7 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $storeOrderRequest)
     {
+        // dd($storeOrderRequest->toArray());
         ini_set('max_execution_time', 60);
         try {
             $validatedOrderData = $storeOrderRequest->validated();
@@ -183,6 +184,7 @@ class OrderController extends Controller
      */
     public function edit(Order $order)
     {
+        // dd($order->toArray());
         $user = Auth::user();
         $user->load('customers');
 
@@ -216,7 +218,7 @@ class OrderController extends Controller
 
         return Inertia::render('orders/Edit', [
             'order' => $order,
-            'orderItems' => $orderItems, // Pass it to frontend
+            'orderItems' => $orderItems,
             'itemTypes' => $itemTypes,
             'customers' => $user->customers,
         ]);
@@ -224,6 +226,7 @@ class OrderController extends Controller
 
     public function update(UpdateOrderRequest $request, Order $order)
     {
+        // dd( $request->toArray());
         ini_set('max_execution_time', 60);
         // dd($request->all()['customer_id']);
         try {
@@ -298,7 +301,7 @@ class OrderController extends Controller
             }
 
             $itemsToDelete = array_diff($existingItemIds, $incomingItemIds);
-            
+
             OrderItem::whereIn('id', $itemsToDelete)->delete();
 
             DB::commit();
