@@ -31,11 +31,33 @@ onMounted(() => {
 
 watch(() => form.image, (newVal) => {
     if (newVal?.includes('<svg')) {
-        const updated = newVal
-            .replace(/width="[^"]*"/, 'width="50"')
-            .replace(/height="[^"]*"/, 'height="50"');
-        if (updated !== newVal) form.image = updated;
+        let updated = newVal;
+
+        // Replace width/height if they exist
+        updated = updated.replace(/width="[^"]*"/, 'width="50"');
+        updated = updated.replace(/height="[^"]*"/, 'height="50"');
+
+        // Add width/height if missing
+        if (!/width="/.test(updated)) {
+            updated = updated.replace('<svg', '<svg width="50"');
+        }
+        if (!/height="/.test(updated)) {
+            updated = updated.replace('<svg', '<svg height="50"');
+        }
+
+        if (updated !== newVal) {
+            form.image = updated;
+        }
     }
+});
+
+
+watch(() => form.body_part_id, (newVal) => {
+    if (newVal) form.new_body_part = '';
+});
+
+watch(() => form.new_body_part, (newVal) => {
+    if (newVal) form.body_part_id = '';
 });
 
 
@@ -98,7 +120,7 @@ const createDesignDetail = () => {
                             <option value="Lower">Lower Body</option>
                         </select>
                         <p v-if="form.errors.body_section" class="mt-1 text-sm text-red-600">{{ form.errors.body_section
-                        }}</p>
+                            }}</p>
                     </div>
 
                     <!-- Gender -->
@@ -121,7 +143,7 @@ const createDesignDetail = () => {
                     <div>
                         <label class="block text-sm font-semibold text-gray-800 mb-1">Select Existing Body Part <span
                                 class="text-red-500">*</span></label>
-                        <select v-model="form.body_part_id"
+                        <select v-model="form.body_part_id" :disabled="form.new_body_part.length > 0"
                             class="w-full border rounded-md py-2 px-3 text-sm shadow-sm focus:ring-primary focus:border-primary">
                             <option value="">-- Select Body Part --</option>
                             <option v-for="part in existingBodyParts" :key="part.id" :value="part.id">
@@ -133,7 +155,8 @@ const createDesignDetail = () => {
 
                         <!-- New Body Part Text Input -->
                         <label class="block text-lg font-semibold">New Body Part</label>
-                        <Input type="text" v-model="form.new_body_part" placeholder="Enter new body part" class="mt-2">
+                        <Input type="text" v-model="form.new_body_part" :disabled="form.body_part_id !== ''"
+                            placeholder="Enter new body part" class="mt-2">
                         <template #icon>
                             <Icon icon="mdi:human-male-height" width="20" height="20" />
                         </template>

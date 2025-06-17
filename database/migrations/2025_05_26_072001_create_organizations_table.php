@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
-             $table->string('organization_name')->nullable();
+            $table->string('organization_name')->nullable();
             $table->string('organization_logo')->nullable();
             $table->string('gst_number')->nullable();
             $table->string('address')->nullable();
-
+            $table->boolean('logo_request')->default(false);
+            $table->boolean('logo_created')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

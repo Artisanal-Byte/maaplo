@@ -81,4 +81,10 @@ class Template extends Model
         );
     }
 
+    protected function designDetailsList(): Attribute
+    {
+        return Attribute::get(
+            fn() => DesignDetail::whereIn('id', $this->design_details ?? [])->get()
+        );
+    }
 }

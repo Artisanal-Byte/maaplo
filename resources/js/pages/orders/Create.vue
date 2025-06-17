@@ -6,13 +6,12 @@ import CustomerListDropdown from '@/components/Items/CustomerListDropdown.vue';
 import { ref, watch } from 'vue';
 import ItemModel from '@/components/Items/ItemModel.vue';
 import Button from '@/components/Button.vue';
-import { router, useForm } from '@inertiajs/vue3';
 import Notes from '@/components/Items/Notes.vue';
 import Input from '@/components/InputWithLabel.vue';
-import { useOrder } from '@/composables/useOrderData';
 import { useOrderFormStore } from '@/stores/orderFormStore';
+import { Head } from '@inertiajs/vue3';
 
-const props = defineProps(["users", "customers", "itemTypes", "designDetails", "errors"])
+const props = defineProps(["users", "customers", "itemTypes", "errors"])
 
 const showModal = ref(false);
 const disabled = ref(false);
@@ -24,22 +23,12 @@ const itemToDelete = ref(null);
 let deleteOrEditOrderIndex = ref()
 let totalAmmount = ref(null)
 
-
-let i = 0
-
-let setOrderItemsData = (data) => {
-    form.order_items.push(data)
-    form.order_items[i] = data
-    i++
-}
-
 let create = () => {
     if (form.advance_paid > form.total_amount) {
         alert("advance paid can't be greater than total payment!");
         form.advance_paid = null
         return
     }
-
     form.createOrder()
 }
 
@@ -50,14 +39,14 @@ watch(form.order_items, (items) => {
         t += item.item_cost
     });
     totalAmmount.value = t
-    form.total_amount = t - form.advance_paid
+    form.total_amount = t
 })
 
 const closeModel = () => {
     showModal.value = false
 }
 
-const confirmDelete = (item,index) => {
+const confirmDelete = (item, index) => {
     deleteOrEditOrderIndex.value = index
     itemToDelete.value = item;
     showDeletePopup.value = true;
@@ -73,12 +62,10 @@ const proceedDelete = () => {
     showDeletePopup.value = false;
 };
 
-const setMeasurements = (m) => {
-    customerMeasurements.value = m
-}
+
 
 const openItemModel = () => {
-    form.resetOrderItemTemplate()
+    form.order_items_template.mode = 'create'
     if (form.customer_id == null) {
         alert('Please Select a customer')
         return
@@ -86,24 +73,24 @@ const openItemModel = () => {
     showModal.value = true
 }
 
-
-
 watch(() => form.advance_paid, (nPayVal) => {
-    if (nPayVal == null || nPayVal == 0) {
-        form.total_amount = totalAmmount.value
-    } else {
-        form.total_amount = totalAmmount.value - nPayVal
+    if (nPayVal > totalAmmount.value) {
+        alert("Advance paid can't be greater than total payment!");
+        form.advance_paid = null
     }
 })
- 
+
 const editOrderItem = (index) => {
+    form.order_items_template.mode = 'edit'
     form.setOrderItemData(index)
+    // form.resetOrderItemTemplate()
     showModal.value = true
-} 
+}
 
 </script>
 
 <template>
+    <Head title="Order-Create" />
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex flex-row justify-between">
@@ -113,23 +100,21 @@ const editOrderItem = (index) => {
                         <Icon icon="lsicon:order-edit-filled" width="30" height="30" />
                         New Order
                     </h1>
-                    <!-- <pre>
-                        {{ form }}
-                    </pre> -->
                 </div>
                 <div class="self-center">
                     <Button :disabled="disabled" @click="create">Create Order</Button>
                 </div>
             </div>
+
             <div class="flex flex-col mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
 
                 <h1 class="text-xl font-bold lg:mt-0 mt-4">Enter Details</h1>
 
                 <!-- selected customer list -->
-                <CustomerListDropdown :customers="customers" @setMeasurements="setMeasurements" />
+                <CustomerListDropdown :customers="customers" :error="props.errors.customer_id" />
 
                 <!-- Delivery Date -->
-                <DateIcon />
+                <DateIcon :error="props.errors.delivery_date" />
 
                 <!-- items -->
                 <div class="mt-2">
@@ -160,48 +145,55 @@ const editOrderItem = (index) => {
                         </div>
 
                         <!-- Modal Content -->
-                        <ItemModel :errors="form.errors?.order_items" :itemIndex="i" :showModal="showModal"
-                            @close="closeModel" :form="form.order_items" @setOrderItemsData="setOrderItemsData"
-                            :itemTypes="itemTypes" :measurements="customerMeasurements ?? []"  :allDesignDetails="designDetails"/>
+                        <ItemModel :errors="form.errors?.order_items" :showModal="showModal" @close="closeModel"
+                            :form="form.order_items" :itemTypes="itemTypes"
+                            :measurements="customerMeasurements ?? []" />
                         <p class="text-red-600 text-sm">
-                            <!-- {{ form.errors.order_items }} -->
+                            {{ errors?.order_items }}
                         </p>
 
-                        <!-- table -->
-                        <!-- Items Table -->
-                        <div class="mt-4 overflow-x-auto">
-                            <table class="min-w-full border border-gray-300 text-sm text-left">
-                                <thead class="bg-[#DEEFF4]">
+                        <!-- Enhanced Table -->
+                        <div class="mt-6 overflow-x-auto rounded-lg shadow-lg">
+                            <table class="min-w-full border-collapse bg-white text-sm text-left text-gray-700">
+                                <thead class="bg-[#DEEFF4] text-gray-800 font-semibold uppercase tracking-wider">
                                     <tr>
-                                        <th class="p-2 border">Work Type</th>
-                                        <th class="p-2 border">Item Type</th>
-                                        <th class="p-2 border">Delivery Date</th>
-                                        <th class="p-2 border">Action</th>
+                                        <th class="px-4 py-3 border-b border-gray-300">Work Type</th>
+                                        <th class="px-4 py-3 border-b border-gray-300">Item Type</th>
+                                        <th class="px-4 py-3 border-b border-gray-300">Delivery Date</th>
+                                        <th class="px-4 py-3 border-b border-gray-300">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(order_item, index) in form.order_items" :key="index">
-                                        <td class="p-2 border">{{ order_item.work_type }}</td>
-                                        <td class="p-2 border">
-                                            <!-- {{  }} -->
-                                            <!-- {{itemTypes['privateTemplates'].find(item => item.id ===
-                                                order_item.template_id)?.name ?? itemTypes['publicTemplates'].find(item =>
-                                                    item.id ===
-                                                    order_item.template_id)?.name}} -->
+                                    <tr v-for="(order_item, index) in form.order_items" :key="index"
+                                        class="hover:bg-gray-100 transition-colors duration-200">
+                                        <td class="px-4 py-2 border-b border-gray-200">{{ order_item.work_type }}</td>
+                                        <td class="px-4 py-2 border-b border-gray-200">
+                                            {{itemTypes.find(item => item.id === order_item.template_id)?.name ?? 'N/A'
+                                            }}
                                         </td>
-                                        <td class="p-2 border">{{ order_item.delivery_date }}</td>
-                                        <td class="p-2 border">
+                                        <td class="px-4 py-2 border-b border-gray-200">{{ order_item.delivery_date }}
+                                        </td>
+                                        <td class="px-4 py-2 border-b border-gray-200">
                                             <div class="flex gap-4">
                                                 <Icon icon="material-symbols:edit-rounded" width="24" height="24"
-                                                    class="text-primary cursor-pointer hover:text-blue-700" @click="editOrderItem(index)" />
+                                                    class="text-primary cursor-pointer hover:text-primary transition-colors duration-150"
+                                                    @click="editOrderItem(index)" />
                                                 <Icon icon="mingcute:delete-fill" width="24" height="24"
-                                                    class="text-red-500 cursor-pointer hover:text-red-700"
-                                                    @click="confirmDelete(order_item,index)" />
+                                                    class="text-red-500 cursor-pointer hover:text-red-700 transition-colors duration-150"
+                                                    @click="confirmDelete(order_item, index)" />
                                             </div>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+
+                        <!-- Total-->
+                        <div class="mt-6 flex flex-wrap items-center justify-end gap-5 lg:gap-8 text-sm text-gray-800">
+                            <h2><span class="font-semibold">Grand Total:</span> ₹ {{ form.total_amount || 0}}</h2>
+                            <h2><span class="font-semibold">Advance Paid:</span> ₹ {{ form.advance_paid || 0}}</h2>
+                            <h2><span class="font-semibold text-red-600 underline">Balance Due:</span> ₹ {{
+                                form.total_amount - (form.advance_paid || 0) }}</h2>
                         </div>
 
                         <!-- Delete Confirmation Modal -->
@@ -221,15 +213,15 @@ const editOrderItem = (index) => {
                         </div>
 
                         <div class="mt-5">
-                            <Input type="number" label="Advance Paid" :error="errors.advance_paid" :required="true"
-                                color="grayBorder" placeholder="Enter Advance Paid" v-model="form.advance_paid">
+                            <Input type="number" label="Advance Paid" :error="errors.advance_paid" color="grayBorder"
+                                placeholder="Enter Advance Paid" v-model="form.advance_paid">
                             <template #icon>
                                 <Icon icon="mdi:rupee" width="20" height="20" />
                             </template>
                             </Input>
                         </div>
                         <div class="mt-5">
-                            <Notes v-model:notes="form.notes" />
+                            <Notes v-model:notes="form.notes" :error="errors.notes" />
                         </div>
 
                     </div>

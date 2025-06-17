@@ -6,7 +6,7 @@ import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
 import Input from '@/components/InputWithLabel.vue';
 import ImageModal from '@/components/ImageModal.vue';
-
+const toast = new ToastMagic();
 const props = defineProps<{
     errors: Record<string, string>;
     user: {
@@ -72,6 +72,7 @@ function submit() {
     })).post(route('profile.update'), {
         preserveState: true,
         onSuccess: () => {
+            toast.success("Organization updated successfully!");
             router.visit(route('profile.show'));
         },
         onError: (errors) => {
@@ -99,94 +100,101 @@ function closeImageModal() {
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex justify-between items-center mb-6">
-                <h1 class="text-[24px] font-bold text-primary">Edit Profile</h1>
-                <Link :href="route('profile.show')" class="flex items-center gap-1 text-gray-600 hover:text-black">
+                <div class="flex">
+                    <Icon icon="mingcute:user-edit-fill" width="42" height="42"
+                        class="text-xl font-bold text-primary" />
+                    <h1 class="text-3xl font-bold text-primary mt-1 ml-3">
+                       Edit-Profile
+                    </h1>
+                </div>
+                <Link :href="route('profile.show')" class="flex items-center gap-2 text-gray-500 hover:text-gray-800">
                 <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
-                <span class="text-[16px] font-medium">Back</span>
+                <span class="text-base font-medium">Back</span>
                 </Link>
             </div>
 
-            <div class="flex flex-col lg:mt-5 gap-3 rounded-lg lg:border lg:border-primary p-0 lg:p-4">
-                <Input label="Name" v-model="form.name" :error="errors.name" required="true">
-                <template #icon>
-                    <Icon icon="bitcoin-icons:contacts-filled" width="24" height="24" />
-                </template>
-                </Input>
-
-                <Input label="Email" type="email" v-model="form.email" :error="errors.email" required="true">
-                <template #icon>
-                    <Icon icon="ic:round-email" width="18" height="18" />
-                </template>
-                </Input>
-
-                <Input label="Phone" type="text" v-model="form.phone" :error="errors.phone" required="true">
-                <template #icon>
-                    <Icon icon="ic:round-phone" width="20" height="20" />
-                </template>
-                </Input>
-
-                <Input label="Organization Name" type="text" v-model="form.organization_name"
-                    :error="errors.organization_name" required="true">
-                <template #icon>
-                    <Icon icon="fluent:organization-16-filled" width="20" height="20" />
-                </template>
-                </Input>
-                <!-- Password Input with Visibility Toggle -->
-                <div class="relative">
-                    <Input :type="showPassword ? 'text' : 'password'" v-model="form.password" label="Password"
-                        :error="props.errors.password" placeholder="Leave blank to keep current password."
+            <!-- Card Layout -->
+            <div class="flex flex-col mt-10 gap-5 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                    <Input label="Name" v-model="form.name" :error="errors.name" placeholder="Enter Name"
                         required="true">
                     <template #icon>
-                        <Icon icon="carbon:password" width="20" height="20" />
+                        <Icon icon="bitcoin-icons:contacts-filled" width="24" height="24" />
                     </template>
                     </Input>
-                    <button type="button" @click="showPassword = !showPassword"
-                        class="absolute right-3 top-9 text-gray-600 hover:text-black" tabindex="-1">
-                    </button>
-                </div>
-                <div>
-                    <label for="organization_logo" class="block mb-1 font-semibold">Organization Logo</label>
-                    <input id="organization_logo" type="file" accept="image/*" @change="handleLogoChange"
-                        class="border border-gray-300 rounded px-3 py-2 w-full" required="true" />
-                    <div v-if="organizationLogoUrl" class="mt-2 cursor-pointer"
-                        @click="openImageModal(organizationLogoUrl)">
-                        <img :src="organizationLogoUrl" alt="Organization Logo" class="w-32 h-auto rounded" />
+
+                    <Input label="Email" type="email" v-model="form.email" :error="errors.email"
+                        placeholder="Enter Email" required="true">
+                    <template #icon>
+                        <Icon icon="ic:round-email" width="18" height="18" />
+                    </template>
+                    </Input>
+
+                    <Input label="Phone" type="text" v-model="form.phone" :error="errors.phone"
+                        placeholder="Enter Mobile Number" required="true">
+                    <template #icon>
+                        <Icon icon="ic:round-phone" width="20" height="20" />
+                    </template>
+                    </Input>
+
+                    <Input label="Organization Name" type="text" v-model="form.organization_name"
+                        :error="errors.organization_name" placeholder="Enter Organization Name">
+                    <template #icon>
+                        <Icon icon="fluent:organization-16-filled" width="20" height="20" />
+                    </template>
+                    </Input>
+
+
+
+                    <!-- Organization Logo -->
+                    <div>
+                        <label for="organization_logo" class="block mb-1 font-semibold">Organization Logo</label>
+                        <input id="organization_logo" type="file" accept="image/*" @change="handleLogoChange"
+                            class="border border-gray-300 rounded px-3 py-2 w-full" required />
+                        <div v-if="organizationLogoUrl" class="mt-2 cursor-pointer"
+                            @click="openImageModal(organizationLogoUrl)">
+                            <img :src="organizationLogoUrl" alt="Organization Logo" class="w-32 h-auto rounded" />
+                        </div>
+                        <p v-if="errors.organization_logo" class="text-red-600 text-sm mt-1">{{ errors.organization_logo
+                            }}</p>
                     </div>
-                    <p v-if="errors.organization_logo" class="text-red-600 text-sm mt-1">{{ errors.organization_logo }}
-                    </p>
-                </div>
 
-                <div>
-                    <label for="avatar" class="block mb-1 font-semibold">Avatar</label>
-                    <input id="avatar" type="file" accept="image/*" @change="handleAvatarChange"
-                        class="border border-gray-300 rounded px-3 py-2 w-full" />
-                    <div v-if="avatarUrl" class="mt-2 cursor-pointer" @click="openImageModal(avatarUrl)">
-                        <img :src="avatarUrl" alt="Avatar" class="w-24 h-24 rounded-full object-cover" />
+                    <!-- Avatar -->
+                    <div>
+                        <label for="avatar" class="block mb-1 font-semibold">Avatar</label>
+                        <input id="avatar" type="file" accept="image/*" @change="handleAvatarChange"
+                            class="border border-gray-300 rounded px-3 py-2 w-full" />
+                        <div v-if="avatarUrl" class="mt-2 cursor-pointer" @click="openImageModal(avatarUrl)">
+                            <img :src="avatarUrl" alt="Avatar" class="w-24 h-24 rounded-full object-cover" />
+                        </div>
+                        <p v-if="errors.avatar" class="text-red-600 text-sm mt-1">{{ errors.avatar }}</p>
                     </div>
-                    <p v-if="errors.avatar" class="text-red-600 text-sm mt-1">{{ errors.avatar }}</p>
+
+                    <div class="relative">
+                        <Input :type="showPassword ? 'text' : 'password'" v-model="form.password" label="Password"
+                            :error="props.errors.password" placeholder="Leave blank to keep current password."
+                            required="true">
+                        <template #icon>
+                            <Icon icon="carbon:password" width="20" height="20" />
+                        </template>
+                        </Input>
+                        <button type="button" @click="showPassword = !showPassword"
+                            class="absolute right-3 top-9 text-gray-600 hover:text-black" tabindex="-1">
+                            <Icon :icon="showPassword ? 'mdi:eye-off' : 'mdi:eye'" width="20" height="20" />
+                        </button>
+                    </div>
                 </div>
 
-                <!-- <Input label="Subscription Plan" type="text" v-model="form.subscription_plan"
-                :error="errors.subscription_plan" required>
-            <template #icon>
-                <Icon icon="stash:subscription-list" width="18" height="18" />
-            </template>
-            </Input>
+                <!-- Submit Button -->
+                <div class="mt-4">
+                    <Button @click="submit" :disabled="form.processing" :color="'primary'" :padding="'md'"
+                        :rounded="'full'" :textSize="'sm'" class="w-full h-10 font-bold">
+                        Update Profile
+                    </Button>
+                </div>
 
-            <Input label="  " type="date" v-model="form.validity" :error="errors.validity">
-            <template #icon>
-                <Icon icon="material-symbols:date-range-outline-rounded" width="18" height="18" />
-            </template>
-            </Input> -->
-                <!-- Update Button -->
-                <Button @click="submit" :disabled="form.processing" :color="'primary'" :padding="'md'" :rounded="'full'"
-                    :textSize="'sm'">
-                    Update Profile
-                </Button>
-
+                <!-- Modal Viewer -->
                 <ImageModal :show="showImageModal" :imageUrl="currentImageUrl" @close="closeImageModal" />
-
-
             </div>
         </div>
     </AppLayout>

@@ -5,6 +5,7 @@ import OrderList from '@/components/OrderList.vue';
 import SearchList from '@/components/SearchIcon.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Icon } from '@iconify/vue';
+import { Head } from '@inertiajs/vue3';
 import { defineProps, computed, reactive, ref, watch } from 'vue';
 
 const props = defineProps(['orders'])
@@ -14,8 +15,8 @@ const selectedStatus = ref('');
 const selectedDelivery = ref('');
 const showDropdown = ref(false);
 const showDropdownDelivery = ref(false);
-let borderColor = ref('#837200');
-let bgColor = ref('#FFFCE6');
+const bgColor = ref(['#FFFCE6', '#EAF5FF', '#FFFFFF', '#FFEAEA'])
+const borderColor = ref(['#837200', '#005FAF', '#828282', '#FF0000'])
 let showable = reactive({ showSearch: false, showFilter: false })
 
 // make a emitable function to show and hide the search and filter list
@@ -60,6 +61,8 @@ function toggleDropdownDelivery() {
 }
 </script>
 <template>
+
+    <Head title="Orders" />
     <AppLayout>
         <div class="lg:mx-auto max-w-7xl py-8 px-4">
             <!-- Title And Icon -->
@@ -189,8 +192,9 @@ function toggleDropdownDelivery() {
             <div class="px-4 mt-10 py-6 gap-[10px] rounded-[10px] shadow-[0px_0px_8.6px_0px_#005FAF40]">
                 <!-- Orders list -->
                 <div class="space-y-4">
-                    <OrderList v-if="orders?.length > 0" v-for="order in orders" :bgColor="bgColor"
-                        :borderColor="borderColor" />
+                    <OrderList v-if="orders?.orders?.length > 0" v-for="(order, index) in orders.orders"
+                        :bgColor="bgColor[index % bgColor.length]"
+                        :borderColor="borderColor[index % borderColor.length]" :order="order" />
                     <span v-else>No Orders</span>
                 </div>
             </div>

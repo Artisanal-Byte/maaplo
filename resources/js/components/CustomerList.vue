@@ -9,15 +9,16 @@ const props = defineProps<{
     customer: {
         id: number;
         name: string;
-        country_code:string,
+        country_code: string,
         phone: string;
         email?: string;
         active_orders?: number;
-        payment_due?: number;
+        total_payment?: string;
+        advance_payment?: string;
+        payment_due?: string;
         face_image?: string;
     };
 }>();
-
 const showDropdown = ref(false);
 const showDeletePopup = ref(false);
 
@@ -87,10 +88,13 @@ const deleteCustomer = (customerId: number) => {
                     Active Order : {{ props.customer.active_orders || 'N/A' }}
                 </h1>
                 <h1 class="font-[Lato] font-medium text-[18px] text-black mt-2">
-                    Payment Due : ₹ {{ props.customer.payment_due || '0.00' }}
+                    Total Payment : <span class="text-primary">₹ {{ props.customer.total_payment || '0.00' }}</span>
                 </h1>
                 <h1 class="font-[Lato] font-medium text-[18px] text-black mt-2">
-                    Total Payment : ₹ 0.00
+                    Advance Payment : <span class="text-green-600">₹ +{{ props.customer.advance_payment || '0.00' }}</span>
+                </h1>
+                <h1 class="font-[Lato] font-medium text-[18px] text-black mt-2">
+                    Payment Due : <span class="text-red-600">₹  -{{ props.customer.payment_due || '0.00' }}</span>
                 </h1>
             </div>
 

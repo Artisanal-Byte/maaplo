@@ -29,7 +29,7 @@ const form = reactive({
     email: null,
     address: '',
     dob: null,
-    measurements: null,
+    measurements: '',
     half_image: '',
     full_image: '',
     half_image_preview: '',
@@ -62,7 +62,6 @@ const submitForm = () => {
     });
 };
 
-
 const handleImageUpload = (event: Event, field: 'half_image' | 'full_image') => {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file && file.size > 2 * 1024 * 1024) {
@@ -81,7 +80,6 @@ const onPhoneInput = (event: Event) => {
     input.value = input.value.replace(/\D/g, '').slice(0, 10);
     form.phone = input.value;
 };
-
 </script>
 
 <template>
@@ -93,7 +91,6 @@ const onPhoneInput = (event: Event) => {
 
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex justify-between items-center">
-
                 <h1
                     class="flex items-center gap-2 lg:gap-4 text-[24px] leading-[16px] font-bold text-gray-800 font-[Convergence] text-primary tracking-[0]">
                     <Icon icon="mdi:account-plus" width="28" height="28" />
@@ -126,7 +123,7 @@ const onPhoneInput = (event: Event) => {
                         <label class="font-medium block mb-1">
                             Contact Number <span class="text-red-500">*</span>
                         </label>
-                        <div class="flex">
+                        <div class="flex gap-5">
                             <!-- Use MobileCountryCode component here -->
                             <MobileCountryCode v-model="form.country_code"  class="rounded-r-none"/>
 
@@ -164,10 +161,8 @@ const onPhoneInput = (event: Event) => {
                 </div>
                 <!-- Address -->
                 <div class="md:col-span-2 mt-3">
-                    <!-- <label class="bblock font-[Lato] text-[18px] leading-[16px] tracking-[0] mb-1">Address <span
-                            class="text-red-500">*</span></label> -->
                     <Input type="textarea" v-model="form.address" color="grayBorder" :required="true" label="Address"
-                        :error="errors.address"></Input>
+                        :error="errors.address" placeholder="Enter Your Address"></Input>
                 </div>
 
                 <!-- Gender -->

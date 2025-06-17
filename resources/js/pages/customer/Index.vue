@@ -17,12 +17,14 @@ const props = defineProps<{
         id: number,
         name: string,
         email: string,
-        country_code:string,
+        country_code: string,
         phone: string,
         address: string,
         gender: string,
         active_orders?: number,
-        payment_due?: number,
+        total_payment?: string;
+        advance_payment?: string;
+        payment_due?: string;
         subscription_plan?: string,
     }>,
     customer_limit_exceeded: boolean,
@@ -54,6 +56,7 @@ const filteredCustomers = computed(() => {
 });
 </script>
 <template>
+
     <Head title="Customer" />
     <AppLayout>
         <!-- Limit Reached Modal -->
@@ -98,7 +101,7 @@ const filteredCustomers = computed(() => {
                     class="w-full lg:max-w-7xl border border-gray-300 rounded-full px-4 py-3 text-sm shadow-[0px_0px_4.3px_0px_#16789333] focus:outline-none focus:ring focus:border-gray-400 transition-all" />
             </div>
             <div>
-                            <pre>{{ props.customers.country_code }}</pre>
+                <pre>{{ props.customers.country_code }}</pre>
 
                 <div v-if="filteredCustomers.length">
                     <CustomerList v-for="customer in filteredCustomers" :key="customer.id" :customer="customer" />

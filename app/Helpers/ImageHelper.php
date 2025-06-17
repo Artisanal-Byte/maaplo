@@ -114,4 +114,32 @@ class ImageHelper
             dd($e->getMessage());
         }
     }
+
+    public static function storeOrderItemImage(UploadedFile $image, string $username, int $userId, int $orderId, int $customerId,int $itemId, string $label = 'image'): string
+    {
+        // dd($itemId);
+        try {
+            $timestamp = time();
+            $fileName = "{$label}_{$timestamp}.webp";
+            $folderPath = "order_Images/{$username}_{$userId}/{$orderId}_{$customerId}/{$itemId}";
+            $fullPath = "{$folderPath}/{$fileName}";
+            $directory = storage_path("app/public/{$folderPath}/");
+
+            if (!file_exists($directory)) {
+                mkdir($directory, 0755, true);
+            }
+
+            $storagePath = $directory . $fileName;
+
+            $manager = new ImageManager(config('image.driver'));
+            $image = $manager->read($image);
+            $image = $image->scaleDown(width: 2000, height: 2000);
+            $encoded = $image->toWebp(60);
+            $encoded->save($storagePath);
+
+            return "storage/{$fullPath}";
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+    }
 }

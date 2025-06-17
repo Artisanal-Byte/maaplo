@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -11,6 +12,7 @@ class Order extends Model
     use SoftDeletes;
 
     protected $table = 'orders';
+    protected $with = ['orderItems'];
 
     // Define the fillable fields for mass assignment
     protected $fillable = [
@@ -26,7 +28,7 @@ class Order extends Model
     ];
 
     protected $casts = [
-        'notes' => 'array',             
+        'notes' => 'array',
         'delivery_date' => 'date',
         'close_date' => 'date',
         'total_amount' => 'decimal:2',
@@ -48,13 +50,17 @@ class Order extends Model
         return $this->hasMany(OrderItem::class, 'order_id');
     }
 
-   
+    public function getDeliveryDateAttribute($value)
+    {
+        return Carbon::parse($value)->format('d-m-Y');
+    }
+
+
     protected function status(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => ucword($value),
-            set: fn ($value) => strtolower($value),
+            get: fn($value) => ucwords($value),
+            set: fn($value) => strtolower($value),
         );
     }
-    
 }

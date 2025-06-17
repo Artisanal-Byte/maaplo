@@ -24,7 +24,7 @@ onMounted(() => {
 <template>
     <Head title="Organization's" />
     <AppLayout>
-        <div class="px-4 py-10 max-w-4xl mx-auto">
+        <div class="px-4 lg:px-0 py-10 max-w-4xl mx-auto">
             <div class="flex justify-between items-center mb-6">
                 <div class="flex ">
                     <Icon icon="mdi:office-building-plus" class="text-primary" width="36" height="36" />
@@ -38,10 +38,10 @@ onMounted(() => {
 
             <div v-if="props.organizations.length" class="space-y-6">
                 <div v-for="org in props.organizations" :key="org.id"
-                    class="bg-[#DEEFF4] shadow-md border border-gray-100 rounded-xl p-6 hover:shadow-lg transition">
-                    <div class="grid grid-cols-2 lg:gap-6">
+                    class="bg-[#DEEFF4] shadow-md border border-gray-100 rounded-xl p-4 lg:p-6 hover:shadow-lg transition">
+                    <div class="grid grid-cols-3 lg:gap-6">
                         <!-- Left: Details -->
-                        <div class="space-y-4">
+                        <div class="space-y-4  col-span-2">
                             <div class="flex items-center gap-3">
                                 <Icon icon="mdi:badge-account-outline" class="text-gray-500" width="22" />
                                 <p><strong>Name:</strong> {{ org.organization_name }}</p>
@@ -57,19 +57,19 @@ onMounted(() => {
                                 <p><strong>Address:</strong> {{ org.address || '—' }}</p>
                             </div>
 
-                            <div class="pt-5 pl-2">
+                            <div class="lg:pt-5 pt-3 pl-2">
                                 <Button>
                                     <Link :href="route('organization.edit', org.id)"
                                         class="inline-flex items-center bg-primary text-white rounded hover:bg-primary-dark transition">
-                                    <Icon icon="mdi:pencil" class="mr-1" width="18" />
+                                    <Icon icon="mdi:pencil" class="mr-2" width="18" />
                                     Edit
-                                    </Link>
+                                    </Link> 
                                 </Button>
                             </div>
                         </div>
 
                         <!-- Right: Logo -->
-                        <div class="text-right">
+                        <div class="text-right ">
                             <img :src="org.organization_logo
                                 ? `/storage/${org.organization_logo.replace(/^storage\//, '')}`
                                 : '/images/organization.png'" alt="Organization Logo"

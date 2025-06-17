@@ -8,7 +8,6 @@ import Input from '@/components/InputWithLabel.vue';
 import SearchSelect from '@/components/SearchSelect.vue';
 import Button from '@/components/Button.vue';
 
-// Import or define ToastMagic instance properly
 const toast = new ToastMagic();
 
 const { props: pageProps } = usePage();
@@ -28,7 +27,7 @@ const form = useForm({
 designDetails.forEach(dd => {
     form.design_details[dd.id] = false;
 });
-console.log('Design Details:', designDetails);
+
 const uniqueDesignDetails = computed(() => {
     const seen = new Set();
     return designDetails.filter(detail => {
@@ -37,7 +36,7 @@ const uniqueDesignDetails = computed(() => {
         return true;
     });
 });
-console.log('Unique Design Details:', uniqueDesignDetails.value);
+
 const formatSlug = (slug) => {
     return slug
         .split('_')
@@ -117,8 +116,8 @@ const submitForm = () => {
                     </div>
 
                     <!-- Gender -->
-                    <div>
-                        <label class="font-medium">Gender <span class="text-red-500">*</span></label>
+                    <div class="flex gap-5">
+                        <label class="font-medium mt-3">Gender <span class="text-red-500">*</span></label>
                         <div class="flex gap-4 mt-2">
                             <label>
                                 <input type="radio" name="gender" value="f" v-model="form.gender" class="hidden" />
@@ -139,8 +138,8 @@ const submitForm = () => {
                     </div>
 
                     <!-- Body Part -->
-                    <div>
-                        <label class="font-medium">Body Part <span class="text-red-500">*</span></label>
+                    <div class="flex gap-5">
+                        <label class="font-medium mt-3">Body Part <span class="text-red-500">*</span></label>
                         <div class="flex gap-4 mt-2">
                             <label>
                                 <input type="radio" name="bodyPart" value="upper" v-model="form.body_part"
@@ -173,7 +172,7 @@ const submitForm = () => {
                         <div class="flex justify-between items-center lg:w-full w-80">
                             <span class="text-[16px]">{{ formatSlug(measurement.slug) }}</span>
                             <input type="checkbox" :id="measurement.slug" :value="measurement.slug"
-                                v-model="form.required_measurements" class="form-checkbox w-4 h-4" />
+                                v-model="form.required_measurements" class="form-checkbox w-4 h-4 accent-[#167893]" />
                         </div>
                     </label>
                 </div>
