@@ -12,7 +12,9 @@ import { useOrderFormStore } from '@/stores/orderFormStore';
 import { Head } from '@inertiajs/vue3';
 import { nextTick } from 'vue';
 import Loader from '@/components/Loader.vue';
+
 const props = defineProps(["users", "customers", "itemTypes", "errors", "order", "orderItems"]);
+console.log('itemTypes data in edit page ', props.itemTypes);
 
 const showModal = ref(false);
 const showDeletePopup = ref(false);
@@ -109,11 +111,33 @@ const update = () => {
 };
 
 const getItemTypeName = (id) => {
-    // console.log('getItemTypeName called with ID:', props.itemTypes);
+    if (!id) return 'Unknown';
     const found = props.itemTypes.find(i => i.id == id);
-    return found?.name;
+    return found?.name || 'Unknown';
 };
 
+const errorMessages = computed(() => {
+    if (!props.errors) return [];
+    return Object.values(props.errors).flat(); // flatten in case of array of messages
+});
+
+onMounted(() => {
+    if (props.errors && Object.keys(props.errors).length) {
+        Object.values(props.errors).flat().forEach(message => {
+            toast.error(message);
+        });
+    }
+});
+onMounted(() => {
+    console.log('Order Items:', form.order_items);
+    console.log('Item Types:', props.itemTypes);
+});
+
+const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    const [year, month, day] = dateStr.split('-');
+    return `${day}-${month}-${year}`;
+};
 </script>
 
 <template>
@@ -121,9 +145,27 @@ const getItemTypeName = (id) => {
     <Head title="Order-Edit" />
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
-            <pre>
-                {{ errors[`order_items.${currentEditIndex}.colors`] }}
-            </pre>
+            <div v-if="errorMessages.length" class="mb-6 rounded-md border border-red-300 bg-red-50 p-4 shadow-sm">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <Icon icon="mdi:alert-circle" class="h-6 w-6 text-red-600" />
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-semibold text-red-800">
+                            There {{ errorMessages.length === 1 ? 'is' : 'are' }} {{ errorMessages.length }}
+                            error{{ errorMessages.length > 1 ? 's' : '' }} with your submission:
+                        </h3>
+                        <div class="mt-2 text-sm text-red-700">
+                            <ul class="list-disc space-y-1 pl-5">
+                                <li v-for="(error, index) in errorMessages" :key="index">
+                                    {{ error }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Use the Loader Component -->
             <Loader v-if="loading" />
             <div class="flex flex-row justify-between">
@@ -157,7 +199,6 @@ const getItemTypeName = (id) => {
                 </div>
                 <p v-if="props.errors.status" class="mt-2 text-sm text-red-600">{{ props.errors.status }}</p>
             </div>
-            <pre>{{ form }}</pre>
             <div class="mt-6 bg-white p-5 lg:p-7 rounded-lg shadow-md border-t-4 border-primary">
                 <CustomerListDropdown :customers="customers" :error="props.errors.customer_id"
                     v-model="form.customer_id" />
@@ -178,7 +219,8 @@ const getItemTypeName = (id) => {
 
                     <ItemModel :errors="errors" :showModal="showModal" @close="closeModel"
                         :form="form.order_items_template" :itemTypes="itemTypes" :measurements="[]"
-                        :orderItems="orderItems" :currentEditIndex="currentEditIndex" :order="order" />
+                        :orderItems="orderItems" :currentEditIndex="currentEditIndex" :order="order"
+                        @item-updated="recalculateTotal" />
 
                     <div class="mt-6 overflow-x-auto rounded-lg shadow-lg">
                         <table class="min-w-full border-collapse bg-white text-sm text-left text-gray-700">
@@ -195,9 +237,11 @@ const getItemTypeName = (id) => {
                                     class="hover:bg-gray-100 transition-colors duration-200">
                                     <td class="px-4 py-2 border-b border-gray-200">{{ item.work_type }}</td>
                                     <td class="px-4 py-2 border-b border-gray-200">
-                                        {{ getItemTypeName(item.id) }}
+                                        {{ getItemTypeName(item.template_id || item.item_template_id) }}
+
                                     </td>
-                                    <td class="px-4 py-2 border-b border-gray-200">{{ item.delivery_date }}</td>
+                                    <td class="px-4 py-2 border-b border-gray-200">{{ formatDate(item.delivery_date) }}
+                                    </td>
                                     <td class="px-4 py-2 border-b border-gray-200">
                                         <div class="flex text-center">
                                             <Icon icon="material-symbols:edit-rounded" width="24"

@@ -28,8 +28,7 @@ class UpdateOrderRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
-            // 'user_id' => ['required', 'exists:users,id'],
+        $rules = [
             'customer_id' => ['required', 'exists:customers,id'],
             'total_amount' => ['required', 'numeric', 'min:0'],
             'advance_paid' => ['nullable', 'numeric', 'min:0', 'lte:total_amount'],
@@ -38,7 +37,7 @@ class UpdateOrderRequest extends FormRequest
             'notes' => ['nullable', 'array'],
 
             'order_items' => ['required', 'array'],
-            'order_items.*.id' => ['sometimes', 'exists:order_items,id'], // for updating existing items
+            'order_items.*.id' => ['sometimes', 'exists:order_items,id'],
             'order_items.*.template_id' => ['required', 'numeric'],
             'order_items.*.measurements' => ['required'],
             'order_items.*.design_detail' => ['required', 'array'],
@@ -46,20 +45,45 @@ class UpdateOrderRequest extends FormRequest
             'order_items.*.notes' => ['required', 'array'],
             'order_items.*.delivery_date' => ['required', 'date'],
             'order_items.*.trial_dates' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:delivery_date'],
-            'order_items.*.work_type' => ['required', 'string', 'in:New from Material,Only Stitching,Only Altering'],
-            'order_items.*.material_code' => ['nullable', 'string', 'max:256'],
-            'order_items.*.material_type' => ['nullable', 'string', 'max:256'],
-            'order_items.*.refrence_dress' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
-            'order_items.*.is_urgent' => ['nullable', 'boolean'],
+            'order_items.*.work_type' => ['required', 'string', Rule::in(['New from Material', 'Only Stitching', 'Only Altering'])],
+
+            'order_items.*.material_code' => [
+                'nullable',
+                'string',
+                'max:256',
+                function ($attribute, $value, $fail) {
+                    $index = (int) filter_var($attribute, FILTER_SANITIZE_NUMBER_INT);
+                    $workType = $this->input("order_items.$index.work_type");
+                    if ($workType === 'New from Material' && !$value) {
+                        $fail('The material code is required when work type is New from Material.');
+                    }
+                }
+            ],
+            'order_items.*.material_type' => [
+                'nullable',
+                'string',
+                'max:256',
+                function ($attribute, $value, $fail) {
+                    $index = (int) filter_var($attribute, FILTER_SANITIZE_NUMBER_INT);
+                    $workType = $this->input("order_items.$index.work_type");
+                    if ($workType === 'New from Material' && !$value) {
+                        $fail('The material type is required when work type is New from Material.');
+                    }
+                }
+            ],
             'order_items.*.material_cost' => ['nullable', 'numeric', 'min:0'],
             'order_items.*.stiching_cost' => ['nullable', 'numeric', 'min:0'],
             'order_items.*.item_cost' => ['required', 'numeric', 'min:0'],
+            'order_items.*.refrence_dress' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
             'order_items.*.cloth_img1' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
             'order_items.*.cloth_img2' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
             'order_items.*.Pattern_img1' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
             'order_items.*.Pattern_img2' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
         ];
+
+        return $rules;
     }
+
 
     public function messages(): array
     {
