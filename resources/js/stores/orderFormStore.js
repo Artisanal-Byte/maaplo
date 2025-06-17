@@ -48,11 +48,21 @@ export const useOrderFormStore = defineStore('orderForm', {
         },
 
         updateOrderItem() {
-            // if (this.editingItemIndex !== null) {
-            this.order_items.splice(this.editingItemIndex, 1, { ...this.order_items_template });
-            this.editingItemIndex = null;
-            // }    
+            if (this.editingItemIndex !== null) {
+                const safeClone = JSON.parse(JSON.stringify({
+                    ...this.order_items_template,
+                    cloth_img1: null,
+                    cloth_img2: null,
+                    Pattern_img1: null,
+                    Pattern_img2: null,
+                    refrence_dress: null
+                }));
+
+                this.order_items.splice(this.editingItemIndex, 1, safeClone);
+                this.editingItemIndex = null;
+            }
         },
+
         resetOrderItemTemplate() {
             this.order_items_template = {
                 mode: 'create',
@@ -98,12 +108,11 @@ export const useOrderFormStore = defineStore('orderForm', {
             this.resetOrderItemTemplate()
         },
         setOrderItemData(index) {
-
             if (index >= 0 && index < this.order_items.length) {
                 const item = this.order_items[index];
                 this.order_items_template = {
                     ...item,
-                    cloth_img1: null,  // reset file input
+                    cloth_img1: null,
                     cloth_img2: null,
                     cloth_img1_url: item.cloth_img1_url || null,
                     cloth_img2_url: item.cloth_img2_url || null,
@@ -111,14 +120,16 @@ export const useOrderFormStore = defineStore('orderForm', {
                     Pattern_img2: null,
                     Pattern_img1_url: item.Pattern_img1_url || null,
                     Pattern_img2_url: item.Pattern_img2_url || null,
-                    trial_dates: item.trial_dates || '', // Ensure this exists
+                    trial_dates: item.trial_dates || '',
                     delivery_date: item.delivery_date || '',
                     mode: 'edit'
                 };
-                // this.editingItemIndex = index;
-            }
-            console.log('cust id :', this.customer_id);
 
+                // ✅ This is ESSENTIAL
+                this.editingItemIndex = index;
+            }
+
+            console.log('cust id :', this.customer_id);
         },
 
         createOrder() {
@@ -163,6 +174,7 @@ export const useOrderFormStore = defineStore('orderForm', {
             this.order_items = order.order_items.map(item => ({
                 ...item,
                 id: item.id,
+                template_id: item.template_id || item.item_template_id,
                 item_cost: Number(item.item_cost) || 0,
                 colors: item.colors,
                 is_urgent: item.isUrgent == 'yes' ? true : false,
@@ -183,24 +195,87 @@ export const useOrderFormStore = defineStore('orderForm', {
 
             this.resetOrderItemTemplate();
         },
+
         async updateOrder(orderId, toast) {
             const { order_items_template, ...formData } = this.$state;
+            const form = new FormData();
 
-            const form = useForm({ ...formData, total_amount: this.total_amount });  // Ensure total_amount is passed
-            // console.log(form.data());
+            form.append('_method', 'put');
+            form.append('customer_id', formData.customer_id ?? '');
+            form.append('total_amount', formData.total_amount ?? '');
+            form.append('advance_paid', formData.advance_paid ?? '');
+            form.append('delivery_date', formData.delivery_date || '');
+            form.append('close_date', formData.close_date || '');
 
+            // Main order notes
+            (formData.notes || []).forEach((note, i) => {
+                form.append(`notes[${i}][label]`, note.label || '');
+                form.append(`notes[${i}][text]`, note.text || '');
+            });
+
+            // Order items
+            formData.order_items.forEach((item, index) => {
+                form.append(`order_items[${index}][template_id]`, Number(item.template_id) || '');
+
+                // Measurements
+                Object.entries(item.measurements || {}).forEach(([key, val]) => {
+                    form.append(`order_items[${index}][measurements][${key}]`, val ?? '');
+                });
+
+                // Design detail
+                Object.entries(item.design_detail || {}).forEach(([key, val]) => {
+                    form.append(`order_items[${index}][design_detail][${key}]`, val ?? '');
+                });
+
+                // Item notes
+                (item.notes || []).forEach((note, noteIndex) => {
+                    form.append(`order_items[${index}][notes][${noteIndex}][label]`, note.label || '');
+                    form.append(`order_items[${index}][notes][${noteIndex}][text]`, note.text || '');
+                });
+
+                // Basic fields
+                form.append(`order_items[${index}][colors]`, item.colors || '');
+                form.append(`order_items[${index}][trial_dates]`, item.trial_dates || '');
+                form.append(`order_items[${index}][delivery_date]`, item.delivery_date || '');
+                form.append(`order_items[${index}][work_type]`, item.work_type || '');
+                form.append(`order_items[${index}][material_type]`, item.material_type || '');
+                form.append(`order_items[${index}][material_code]`, item.material_code || '');
+                form.append(`order_items[${index}][material_cost]`, item.material_cost ?? '');
+                form.append(`order_items[${index}][stiching_cost]`, item.stiching_cost ?? '');
+                form.append(`order_items[${index}][altering_cost]`, item.altering_cost ?? '');
+                form.append(`order_items[${index}][item_cost]`, item.item_cost ?? '');
+
+                if (item.id) {
+                    form.append(`order_items[${index}][id]`, item.id);
+                }
+
+                // File fields
+                ['refrence_dress', 'cloth_img1', 'cloth_img2', 'Pattern_img1', 'Pattern_img2'].forEach(field => {
+                    if (item[field] instanceof File) {
+                        form.append(`order_items[${index}][${field}]`, item[field]);
+                    }
+                });
+            });
+
+            // Send form
             try {
-                router.post(route('orders.update', orderId), {
-                    _method: 'put',
-                     ...form,
-                })
+                router.post(route('orders.update', orderId), form, {
+                    forceFormData: true,
+                    preserveScroll: true,
+                    onError: (errors) => {
+                        if (toast && typeof toast.error === 'function') {
+                            toast.error('Update failed. Please fix the errors.');
+                        }
+                    }
+                });
             } catch (error) {
                 console.error('Update request failed:', error);
                 if (toast && typeof toast.error === 'function') {
-                    toast.error('Update failed. Please fix the errors.');
+                    toast.error('Unexpected error occurred.');
                 }
             }
         }
+
 
     }
 

@@ -3,6 +3,8 @@ import { ref, defineProps, computed, watch } from 'vue';
 import { Icon } from '@iconify/vue';
 
 const props = defineProps(["itemTypes", "currentEditIndex"]);
+console.log('itemTypes data in itemType.vue', props.itemTypes);
+
 const emits = defineEmits(['setItemId', 'setSelectDesignDetails']);
 
 
@@ -39,24 +41,45 @@ const isInvalid = computed(() => {
 const showClearIcon = computed(() => searchQuery.value.length > 0);
 
 // Pre-fill the itemType if editing
-watch(() => props.currentEditIndex, (newIndex) => {
-    if (newIndex !== null && newIndex !== undefined) {
-        const selectedItem = props.itemTypes[newIndex];
-        if (selectedItem) {
-            modelValue.value = selectedItem.name; // Set the selected itemType name
-            searchQuery.value = selectedItem.name; // Set the search query to the name
+watch(
+    () => props.currentEditIndex,
+    (newIndex) => {
+        if (
+            newIndex !== null &&
+            newIndex !== undefined &&
+            props.itemTypes &&
+            props.itemTypes.length > newIndex
+        ) {
+            const selectedItem = props.itemTypes[newIndex];
+
+            if (selectedItem && selectedItem.id) {
+                modelValue.value = selectedItem.name;
+                searchQuery.value = selectedItem.name;
+
+                // ✅ Emit correctly
+                emits('setItemId', selectedItem);
+                emits('setSelectDesignDetails', selectedItem.id);
+            } else {
+                console.warn('Selected item is invalid or missing ID', selectedItem);
+            }
         }
-    }
-}, { immediate: true }); // Ensure it runs immediately on mount if we're editing
+    },
+    { immediate: true }
+);
 
 // Handle option selection from dropdown
 const selectOption = (option) => {
+    if (!option?.id) {
+        console.warn('Selected option is missing id:', option);
+        return;
+    }
     emits('setItemId', option);
     emits('setSelectDesignDetails', option.id);
     modelValue.value = option.name;
     searchQuery.value = option.name;
     showDropdownitemTypes.value = false;
 };
+
 
 // Close dropdown on blur
 const handleBlur = () => {
