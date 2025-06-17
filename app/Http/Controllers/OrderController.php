@@ -100,7 +100,6 @@ class OrderController extends Controller
 
             // Process each order item
             foreach ($validatedOrderItemsData as &$item) {
-                unset($item['template_id']);
                 $item['order_id'] = $Order->id;
 
                 $item['is_urgent'] = filter_var($item['is_urgent'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
@@ -194,21 +193,30 @@ class OrderController extends Controller
             ->get()
             ->append('design_details_list');
 
-        // Transform order items with template names
         $orderItems = $order->orderItems->map(function ($item) {
-            $ids = json_decode($item->design_detail, true); // decode JSON to array
+            $ids = json_decode($item->design_detail, true) ?? [];
 
-            // Get template names
             $templateNames = Template::whereIn('id', $ids)->pluck('name')->toArray();
 
-            // Return transformed item
             return [
                 'id' => $item->id,
-                'name' => $item->name,
-                'price' => $item->price,
                 'template_id' => $item->template_id,
+                'design_detail' => $item->design_detail,
+                'measurements' => $item->measurements,
+                'item_cost' => $item->item_cost,
+                'colors' => $item->colors,
+                'notes' => $item->notes,
+                'delivery_date' => $item->delivery_date,
+                'trial_dates' => $item->trial_dates,
+                'work_type' => $item->work_type,
+                'material_type' => $item->material_type,
+                'material_code' => $item->material_code,
+                'material_cost' => $item->material_cost,
+                'stiching_cost' => $item->stiching_cost,
+                'altering_cost' => $item->altering_cost,
+                'isUrgent' => $item->is_urgent,
                 'template_names' => $templateNames,
-                'refrence_dress_url' => $item->refrence_dress ? asset('/' . $item->refrence_dress) : null,
+                'refrence_dress' => $item->refrence_dress,
                 'cloth_img1_url' => $item->cloth_img1 ? asset('/' . $item->cloth_img1) : null,
                 'cloth_img2_url' => $item->cloth_img2 ? asset('/' . $item->cloth_img2) : null,
                 'Pattern_img1_url' => $item->Pattern_img1 ? asset('/' . $item->Pattern_img1) : null,
@@ -216,17 +224,20 @@ class OrderController extends Controller
             ];
         });
 
+        // ✅ Attach order_items directly to order
+        $order->order_items = $orderItems;
+
         return Inertia::render('orders/Edit', [
             'order' => $order,
-            'orderItems' => $orderItems,
             'itemTypes' => $itemTypes,
             'customers' => $user->customers,
         ]);
     }
 
+
     public function update(UpdateOrderRequest $request, Order $order)
     {
-        // dd( $request->toArray());
+        // dd($request->toArray());
         ini_set('max_execution_time', 60);
         // dd($request->all()['customer_id']);
         try {

@@ -111,10 +111,14 @@ const update = () => {
 };
 
 const getItemTypeName = (id) => {
+    console.log("Item template_id:", id);
+    console.log("Available itemTypes:", props.itemTypes);
+
     if (!id) return 'Unknown';
     const found = props.itemTypes.find(i => i.id == id);
     return found?.name || 'Unknown';
 };
+
 
 const errorMessages = computed(() => {
     if (!props.errors) return [];
@@ -237,7 +241,7 @@ const formatDate = (dateStr) => {
                                     class="hover:bg-gray-100 transition-colors duration-200">
                                     <td class="px-4 py-2 border-b border-gray-200">{{ item.work_type }}</td>
                                     <td class="px-4 py-2 border-b border-gray-200">
-                                        {{ getItemTypeName(item.template_id || item.item_template_id) }}
+                                        {{ getItemTypeName(item.template_id) }}
 
                                     </td>
                                     <td class="px-4 py-2 border-b border-gray-200">{{ formatDate(item.delivery_date) }}

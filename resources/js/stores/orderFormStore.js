@@ -171,27 +171,32 @@ export const useOrderFormStore = defineStore('orderForm', {
                 ? order.notes
                 : (typeof order.notes === 'string' ? JSON.parse(order.notes || '[]') : []);
 
-            this.order_items = order.order_items.map(item => ({
-                ...item,
-                id: item.id,
-                template_id: item.template_id || item.item_template_id,
-                item_cost: Number(item.item_cost) || 0,
-                colors: item.colors,
-                is_urgent: item.isUrgent == 'yes' ? true : false,
-                trial_dates: item.trial_dates || '',
-                cloth_img1_url: item.cloth_img1_url || null,
-                cloth_img2_url: item.cloth_img2_url || null,
-                Pattern_img1_url: item.Pattern_img1_url || null,
-                Pattern_img2_url: item.Pattern_img2_url || null,
-                delivery_date: item.delivery_date && item.delivery_date.includes('-') ?
-                    (() => {
-                        const p = item.delivery_date.split('-');
-                        return p.length === 3 && p[2].length === 4 ? `${p[2]}-${p[1]}-${p[0]}` : item.delivery_date;
-                    })() : '',
-                measurements: typeof item.measurements === 'string' ? JSON.parse(item.measurements || '{}') : item.measurements,
-                design_detail: typeof item.design_detail === 'string' ? JSON.parse(item.design_detail || '{}') : item.design_detail,
-                notes: typeof item.notes === 'string' ? JSON.parse(item.notes || '[]') : item.notes,
-            }));
+            this.order_items = order.order_items.map(item => {
+                const parsedItem = {
+                    ...item,
+                    id: item.id,
+                    template_id: item.template_id ?? item.item_template_id ?? null, // ✅ Always set this
+                    item_cost: Number(item.item_cost) || 0,
+                    colors: item.colors,
+                    is_urgent: item.isUrgent == 'yes' ? true : false,
+                    trial_dates: item.trial_dates || '',
+                    cloth_img1_url: item.cloth_img1_url || null,
+                    cloth_img2_url: item.cloth_img2_url || null,
+                    Pattern_img1_url: item.Pattern_img1_url || null,
+                    Pattern_img2_url: item.Pattern_img2_url || null,
+                    delivery_date: item.delivery_date && item.delivery_date.includes('-')
+                        ? (() => {
+                            const p = item.delivery_date.split('-');
+                            return p.length === 3 && p[2].length === 4 ? `${p[2]}-${p[1]}-${p[0]}` : item.delivery_date;
+                        })()
+                        : '',
+                    measurements: typeof item.measurements === 'string' ? JSON.parse(item.measurements || '{}') : item.measurements,
+                    design_detail: typeof item.design_detail === 'string' ? JSON.parse(item.design_detail || '{}') : item.design_detail,
+                    notes: typeof item.notes === 'string' ? JSON.parse(item.notes || '[]') : item.notes,
+                };
+
+                return parsedItem;
+            });
 
             this.resetOrderItemTemplate();
         },

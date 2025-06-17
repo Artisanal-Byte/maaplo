@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('order_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             // $table->foreignId('template_id')->constrained()->cascadeOnUpdate();
+            $table->foreignId('template_id')->nullable()->constrained('templates')->cascadeOnUpdate()->nullOnDelete();
             $table->json('measurements');
             $table->json('design_detail');
             $table->string('colors');
