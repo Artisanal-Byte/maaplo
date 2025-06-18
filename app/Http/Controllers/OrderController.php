@@ -214,7 +214,7 @@ class OrderController extends Controller
                 'material_cost' => $item->material_cost,
                 'stiching_cost' => $item->stiching_cost,
                 'altering_cost' => $item->altering_cost,
-                'isUrgent' => $item->is_urgent,
+                'isUrgent' => $item->is_urgent === 'yes' ? true : false,
                 'template_names' => $templateNames,
                 'refrence_dress' => $item->refrence_dress,
                 'cloth_img1_url' => $item->cloth_img1 ? asset('/' . $item->cloth_img1) : null,
@@ -223,6 +223,7 @@ class OrderController extends Controller
                 'Pattern_img2_url' => $item->Pattern_img2 ? asset('/' . $item->Pattern_img2) : null,
             ];
         });
+        // dd($orderItems);
 
         // ✅ Attach order_items directly to order
         $order->order_items = $orderItems;
@@ -234,15 +235,14 @@ class OrderController extends Controller
         ]);
     }
 
-
     public function update(UpdateOrderRequest $request, Order $order)
     {
         // dd($request->toArray());
         ini_set('max_execution_time', 60);
-        // dd($request->all()['customer_id']);
+
         try {
             $validatedData = $request->validated();
-            // dd
+            // dd($validatedData);
             $userId = Auth::user()->id;
             $username = Auth::user()->name;
             $customerId = $validatedData['customer_id'];
@@ -252,15 +252,16 @@ class OrderController extends Controller
 
             DB::beginTransaction();
 
-            // ✅ Update order
+            // ✅ Update the main order
             $order->update($validatedData);
 
-            // ✅ Track existing item IDs to preserve/update or delete others
+            // ✅ Track existing item IDs to determine which to update or delete
             $existingItemIds = $order->orderItems()->pluck('id')->toArray();
             $incomingItemIds = [];
 
             foreach ($validatedOrderItems as $item) {
                 $fileUploads = [];
+
                 foreach (['refrence_dress', 'cloth_img1', 'cloth_img2', 'Pattern_img1', 'Pattern_img2'] as $field) {
                     if (isset($item[$field]) && $item[$field] instanceof UploadedFile) {
                         $fileUploads[$field] = $item[$field];
@@ -268,9 +269,9 @@ class OrderController extends Controller
                     }
                 }
 
-                // Normalize booleans
+                // Normalize boolean
                 $item['is_urgent'] = filter_var($item['is_urgent'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 'yes' : 'no';
-
+                // dd($item['is_urgent'] );
                 // JSON encode fields
                 foreach (['measurements', 'design_detail', 'notes'] as $field) {
                     if (isset($item[$field]) && is_array($item[$field])) {
@@ -284,20 +285,25 @@ class OrderController extends Controller
                     throw new Exception("Missing required field: delivery_date for one of the order items.");
                 }
 
+                // Create or update order item
                 if (isset($item['id'])) {
-                    // Update existing item
                     $orderItem = OrderItem::findOrFail($item['id']);
                     $orderItem->update($item);
                     $incomingItemIds[] = $orderItem->id;
                 } else {
-                    // Create new item
                     $item['order_id'] = $order->id;
                     $orderItem = OrderItem::create($item);
                     $incomingItemIds[] = $orderItem->id;
                 }
 
-                // Process image uploads
+                // ✅ Delete old image and upload new image
                 foreach ($fileUploads as $field => $uploadedFile) {
+                    // Delete old image if it exists
+                    if (!empty($orderItem->$field) && file_exists(public_path($orderItem->$field))) {
+                        @unlink(public_path($orderItem->$field));
+                    }
+
+                    // Store new image
                     $storedPath = ImageHelper::storeOrderItemImage(
                         $uploadedFile,
                         $username,
@@ -307,24 +313,33 @@ class OrderController extends Controller
                         $orderItem->id,
                         $field
                     );
+
+                    // Update DB path
                     $orderItem->update([$field => $storedPath]);
                 }
             }
 
+            // ✅ Delete removed order items
             $itemsToDelete = array_diff($existingItemIds, $incomingItemIds);
-
-            OrderItem::whereIn('id', $itemsToDelete)->delete();
+            OrderItem::whereIn('id', $itemsToDelete)->each(function ($item) {
+                foreach (['refrence_dress', 'cloth_img1', 'cloth_img2', 'Pattern_img1', 'Pattern_img2'] as $field) {
+                    if (!empty($item->$field) && file_exists(public_path($item->$field))) {
+                        @unlink(public_path($item->$field));
+                    }
+                }
+                $item->delete();
+            });
 
             DB::commit();
 
             ToastMagic::success('Order updated successfully!');
             return redirect()->route('orders.index')->with('success', 'Order updated successfully.');
         } catch (Exception $e) {
-            dd($e->getMessage());
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+
 
     /**
      * Remove the specified resource from storage.

@@ -73,6 +73,7 @@ class UpdateOrderRequest extends FormRequest
             ],
             'order_items.*.material_cost' => ['nullable', 'numeric', 'min:0'],
             'order_items.*.stiching_cost' => ['nullable', 'numeric', 'min:0'],
+            'order_items.*.is_urgent' => ['sometimes', 'in:true,false,yes,no'],
             'order_items.*.item_cost' => ['required', 'numeric', 'min:0'],
             'order_items.*.refrence_dress' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
             'order_items.*.cloth_img1' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:2048'],

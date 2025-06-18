@@ -136,11 +136,11 @@ watch(
                         </div>
                         <div class="flex gap-2">
                             <Input type="radio" id="only-stitching" name="work-type" radioValue="Only Stitching"
-                                v-model="currentItem.work_type" label="Only Stitching"  @change="showDropdownWorkType = false"/>
+                                v-model="currentItem.work_type" label="Only Stitching"  />
                         </div>
                         <div class="flex gap-2">
                             <Input type="radio" id="only-altering" name="work-type" radioValue="Only Altering"
-                                v-model="currentItem.work_type" label="Only Altering" @change="showDropdownWorkType = false"/>
+                                v-model="currentItem.work_type" label="Only Altering" />
                         </div>
                     </div>
                 </li>
