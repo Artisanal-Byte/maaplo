@@ -77,10 +77,10 @@ class StoreOrderRequest extends FormRequest
     public function messages(): array
     {
         $messages = [
-            'user_id.required' => 'The user is required.',
+            'user_id.required' => 'Please selecte user — it\'s needed to complete your order.',
             'user_id.exists' => 'The selected user does not exist.',
 
-            'customer_id.required' => 'The customer is required.',
+            'customer_id.required' => 'Please selecte customer — it\'s needed to complete your order.',
             'customer_id.exists' => 'The selected customer does not exist.',
 
             'total_amount.required' => 'The total amount is required.',
