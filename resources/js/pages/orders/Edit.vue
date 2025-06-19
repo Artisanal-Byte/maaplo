@@ -14,7 +14,6 @@ import { nextTick } from 'vue';
 import Loader from '@/components/Loader.vue';
 
 const props = defineProps(["users", "customers", "itemTypes", "errors", "order", "orderItems"]);
-console.log('imges dataaa',props.orderItems);
 
 const showModal = ref(false);
 const showDeletePopup = ref(false);
