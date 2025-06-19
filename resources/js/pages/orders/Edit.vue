@@ -115,6 +115,20 @@ const getItemTypeName = (id) => {
     return found?.name || 'Unknown';
 };
 
+const onItemUpdated = (itemData) => {
+    const index = currentEditIndex.value;
+    if (index !== null) {
+        form.order_items[index] = {
+            ...itemData,
+            cloth_img1: form.order_items_template.cloth_img1,
+            cloth_img2: form.order_items_template.cloth_img2,
+            Pattern_img1: form.order_items_template.Pattern_img1,
+            Pattern_img2: form.order_items_template.Pattern_img2,
+        };
+    }
+};
+
+
 
 const errorMessages = computed(() => {
     if (!props.errors) return [];
