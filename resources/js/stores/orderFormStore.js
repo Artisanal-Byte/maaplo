@@ -133,8 +133,6 @@ export const useOrderFormStore = defineStore('orderForm', {
                 // ✅ This is ESSENTIAL
                 this.editingItemIndex = index;
             }
-
-            console.log('cust id :', this.customer_id);
         },
 
         createOrder() {

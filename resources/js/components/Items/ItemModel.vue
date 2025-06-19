@@ -17,7 +17,6 @@
     const fileInputGallery = ref(null)
     const fileInputCamera = ref(null)
     const props = defineProps(['showModal', 'order', 'form', 'orderItems', 'currentEditIndex', 'itemTypes', 'allDesignDetails', 'itemIndex', 'errorMessage', 'errors']);
-    console.log('orderItems itemmodel', props.order);
 
     let formStore = useOrderFormStore()
 
@@ -199,6 +198,26 @@
     onMounted(loadExistingImages);
     watch(() => props.currentEditIndex, loadExistingImages);
 
+    const loadUrgency = () => {
+        const item = props.orderItems?.[props.currentEditIndex];
+        if (!item) return;
+
+        formStore.order_items_template.is_urgent = !!item.isUrgent;
+    };
+
+    onMounted(() => {
+        loadUrgency();
+        loadReferenceDress();
+        loadExistingImages();
+    });
+
+    watch(() => props.currentEditIndex, () => {
+        loadUrgency();
+        loadReferenceDress();
+        loadExistingImages();
+    });
+
+
 </script>
 
     <template>
@@ -289,8 +308,8 @@
 
                         <div class="flex items-center gap-4">
                             <h1 class="font-medium font-lato">Mark as Urgent</h1>
-                            <ToggleButton :modelValue="formStore.order_items_template.is_urgent"
-                                @update:model="val => formStore.order_items_template.is_urgent = val" />
+                            <ToggleButton v-model:model="formStore.order_items_template.is_urgent"
+                                :orderItems="orderItems" />
 
                         </div>
                         <!-- Upload icon, only shown when toggle is ON -->
