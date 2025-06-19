@@ -76,21 +76,17 @@ class StoreOrderRequest extends FormRequest
 
     public function messages(): array
     {
-        return [
+        $messages = [
             'user_id.required' => 'The user is required.',
             'user_id.exists' => 'The selected user does not exist.',
 
             'customer_id.required' => 'The customer is required.',
             'customer_id.exists' => 'The selected customer does not exist.',
 
-            // 'order_number.required' => 'The order number is required.',
-            // 'order_number.unique' => 'The order number has already been taken.',
-
             'total_amount.required' => 'The total amount is required.',
             'total_amount.numeric' => 'The total amount must be a valid number.',
             'total_amount.min' => 'The total amount must be at least 0.',
 
-            'advance_paid.required' => 'The advance paid amount is required.',
             'advance_paid.numeric' => 'The advance paid must be a number.',
             'advance_paid.min' => 'The advance paid must be at least 0.',
             'advance_paid.lte' => 'The advance paid cannot be greater than the total amount.',
@@ -104,64 +100,74 @@ class StoreOrderRequest extends FormRequest
 
             'notes.array' => 'Notes must be an array.',
 
-            // Order Items
             'order_items.required' => 'At least one order item is required.',
-            // 'order_items.*.order_id.required' => 'The order ID is required for each item.',
-            'order_items.*.template_id.required' => 'The item template ID is required.',
-            'order_items.*.template_id.numeric' => 'The item template ID must be a number.',
-
-            'order_items.*.measurements.required' => 'Measurements are required.',
-
-            'order_items.*.colors.required' => 'Color information is required.',
-            'order_items.*.colors.max' => 'Color information may not be greater than 256 characters.',
-
-            'order_items.*.notes.required' => 'Notes are required.',
-
-            'order_items.*.trial_dates.*.required' => 'Trial date is required.',
-            'order_items.*.trial_dates.*.date' => 'Trial date must be a valid date.',
-            'order_items.*.trial_dates.*.after_or_equal' => 'Trial date cannot be in the past.',
-            'order_items.*.trial_dates.*.before_or_equal' => 'Trial date must be on or before the delivery date.',
-
-            'order_items.*.work_type.required' => 'The work type is required.',
-            'order_items.*.work_type.in' => 'The selected work type must be one of: New from Material, Only Stitching, or Only Altering.',
-
-            'order_items.*.material_code.string' => 'The material code must be a string.',
-            'order_items.*.material_code.max' => 'The material code may not exceed 256 characters.',
-
-            'order_items.*.material_type.string' => 'The material type must be a string.',
-            'order_items.*.material_type.max' => 'The material type may not exceed 256 characters.',
-
-            // 'order_items.*.refrence_dress.required' => 'Reference dress is required.',
-            // 'order_items.*.refrence_dress.in' => 'Reference dress must be either "yes" or "no".',
-
-            // 'order_items.*.is_urgent.required' => 'Urgency information is required.',
-            // 'order_items.*.is_urgent.in' => 'Urgency must be either "yes" or "no".',
-
-            'order_items.*.material_cost.numeric' => 'Material cost must be a number.',
-            'order_items.*.material_cost.min' => 'Material cost must be at least 0.',
-
-            'order_items.*.stiching_cost.numeric' => 'Stitching cost must be a number.',
-            'order_items.*.stiching_cost.min' => 'Stitching cost must be at least 0.',
-
-            'order_items.*.item_cost.required' => 'Item cost is required.',
-            'order_items.*.item_cost.numeric' => 'Item cost must be a number.',
-            'order_items.*.item_cost.min' => 'Item cost must be at least 0.',
-
-            'order_items.*.cloth_img1.image' => 'Cloth Image 1 must be a valid image.',
-            'order_items.*.cloth_img1.mimes' => 'Cloth Image 1 must be a file of type: jpeg, png, webp.',
-            'order_items.*.cloth_img1.max'   => 'Cloth Image 1 must not be greater than 2MB.',
-
-            'order_items.*.cloth_img2.image' => 'Cloth Image 2 must be a valid image.',
-            'order_items.*.cloth_img2.mimes' => 'Cloth Image 2 must be a file of type: jpeg, png, webp.',
-            'order_items.*.cloth_img2.max'   => 'Cloth Image 2 must not be greater than 2MB.',
-
-            'order_items.*.Pattern_img1.image' => 'Pattern Image 1 must be a valid image.',
-            'order_items.*.Pattern_img1.mimes' => 'Pattern Image 1 must be a file of type: jpeg, png, webp.',
-            'order_items.*.Pattern_img1.max'   => 'Pattern Image 1 must not be greater than 2MB.',
-
-            'order_items.*.Pattern_img2.image' => 'Pattern Image 2 must be a valid image.',
-            'order_items.*.Pattern_img2.mimes' => 'Pattern Image 2 must be a file of type: jpeg, png, webp.',
-            'order_items.*.Pattern_img2.max'   => 'Pattern Image 2 must not be greater than 2MB.',
         ];
+
+        foreach ($this->input('order_items', []) as $index => $item) {
+            $itemKey = "order_items.$index";
+
+            $messages["$itemKey.template_id.required"] = "Template ID is required for item #" . ($index + 1) . ".";
+            $messages["$itemKey.template_id.numeric"] = "Template ID must be a number for item #$index.";
+
+            $messages["$itemKey.measurements.required"] = "Measurements are required for item #" . ($index + 1) . ".";
+
+            $messages["$itemKey.design_detail.required"] = "Design detail is required for item #" . ($index + 1) . ".";
+            $messages["$itemKey.design_detail.array"] = "Design detail must be an array for item #$index.";
+
+            $messages["$itemKey.colors.required"] = "Colors are required for item #" . ($index + 1) . ".";
+            $messages["$itemKey.colors.max"] = "Colors must not exceed 256 characters for item #$index.";
+
+            $messages["$itemKey.notes.required"] = "Notes are required for item #$index.";
+
+            $messages["$itemKey.delivery_date.required"] = "Delivery date is required for item #" . ($index + 1) . ".";
+            $messages["$itemKey.delivery_date.date"] = "Delivery date must be a valid date for item #$index.";
+
+            $messages["$itemKey.trial_dates.required"] = "Trial date is required for item #" . ($index + 1) . ".";
+            $messages["$itemKey.trial_dates.date"] = "Trial date must be a valid date for item #$index.";
+            $messages["$itemKey.trial_dates.after_or_equal"] = "Trial date must not be in the past for item #$index.";
+            $messages["$itemKey.trial_dates.before_or_equal"] = "Trial date must be before or equal to the delivery date for item #$index.";
+
+            $messages["$itemKey.work_type.required"] = "Work type is required for item #" . ($index + 1) . ".";
+            $messages["$itemKey.work_type.in"] = "Work type must be one of: New from Material, Only Stitching, Only Altering for item #$index.";
+
+            $messages["$itemKey.material_code.string"] = "Material code must be a string for item #" . ($index + 1) . ".";
+            $messages["$itemKey.material_code.max"] = "Material code may not exceed 256 characters for item #$index.";
+
+            $messages["$itemKey.material_type.string"] = "Material type must be a string for item #" . ($index + 1) . ".";
+            $messages["$itemKey.material_type.max"] = "Material type may not exceed 256 characters for item #$index.";
+
+            $messages["$itemKey.material_cost.numeric"] = "Material cost must be a number for item #" . ($index + 1) . ".";
+            $messages["$itemKey.material_cost.min"] = "Material cost must be at least 0 for item #$index.";
+
+            $messages["$itemKey.stiching_cost.numeric"] = "Stitching cost must be a number for item #" . ($index + 1) . ".";
+            $messages["$itemKey.stiching_cost.min"] = "Stitching cost must be at least 0 for item #$index.";
+
+            $messages["$itemKey.item_cost.required"] = "Item cost is required for item #" . ($index + 1) . ".";
+            $messages["$itemKey.item_cost.numeric"] = "Item cost must be a number for item #$index.";
+            $messages["$itemKey.item_cost.min"] = "Item cost must be at least 0 for item #$index.";
+
+            // Handle all image fields
+            foreach (
+                [
+                    'refrence_dress',
+                    'cloth_img1',
+                    'cloth_img2',
+                    'Pattern_img1',
+                    'Pattern_img2',
+                    'material_code',
+                    'material_type'
+                ] as $imageField
+            ) {
+                $label = ucfirst(str_replace('_', ' ', $imageField));
+                $messages["$itemKey.$imageField.image"] = "$label must be an image for item #$index.";
+                $messages["$itemKey.$imageField.mimes"] = "$label must be of type jpeg, png, or webp for item #$index.";
+                $messages["$itemKey.$imageField.max"] = "$label must not exceed 2MB for item #$index.";
+                $messages["$itemKey.$imageField.mimes"] = "$label must be of type jpeg, png, or webp for item #$index.";
+                $messages["$itemKey.material_type.required"] = "Material type is required for item #$index because work type is 'New from Material'.";
+                $messages["$itemKey.material_code.required"] = "Material code is required for item #$index because work type is 'New from Material'.";
+            }
+        }
+
+        return $messages;
     }
 }

@@ -17,7 +17,7 @@
     const fileInputGallery = ref(null)
     const fileInputCamera = ref(null)
     const props = defineProps(['showModal', 'order', 'form', 'orderItems', 'currentEditIndex', 'itemTypes', 'allDesignDetails', 'itemIndex', 'errorMessage', 'errors']);
-    console.log('itemTypes itemmodel', props.itemTypes);
+    console.log('orderItems itemmodel', props.order);
 
     let formStore = useOrderFormStore()
 
@@ -45,8 +45,6 @@
     }
 
     const setItemId = (option) => {
-        console.log("Selected ItemType option:", option);
-
         if (!option?.id) {
             console.warn("ItemType option has no ID");
             return;
@@ -54,8 +52,6 @@
 
         formStore.order_items_template.template_id = option.id;
         measurements.value = option.measurements || [];
-
-        console.log("Template ID set:", formStore.order_items_template.template_id);
     };
 
     // Trigger function for each input
@@ -176,6 +172,32 @@
     watch(() => props.currentEditIndex, () => {
         loadReferenceDress();
     });
+    const loadExistingImages = async () => {
+        const item = props.orderItems?.[props.currentEditIndex];
+        if (!item) return;
+
+        const map = [
+            { urlKey: 'cloth_img1_url', key: 'cloth_img1' },
+            { urlKey: 'cloth_img2_url', key: 'cloth_img2' },
+            { urlKey: 'Pattern_img1_url', key: 'Pattern_img1' },
+            { urlKey: 'Pattern_img2_url', key: 'Pattern_img2' },
+            { urlKey: 'refrence_dress_url', key: 'refrence_dress' }
+        ];
+
+        for (const { urlKey, key } of map) {
+            if (item[urlKey]) {
+                try {
+                    const file = await urlToFile(item[urlKey], `${key}.webp`, 'image/webp');
+                    formStore.order_items_template[key] = file;
+                } catch (e) {
+                    console.error(`Error loading ${key}:`, e);
+                }
+            }
+        }
+    };
+
+    onMounted(loadExistingImages);
+    watch(() => props.currentEditIndex, loadExistingImages);
 
 </script>
 
@@ -273,7 +295,7 @@
                         </div>
                         <!-- Upload icon, only shown when toggle is ON -->
                         <div class="flex flex-col lg:flex-row justify-between gap-4">
-                            <ClothImage :orderItems="orderItems" :currentEditIndex="currentEditIndex" />
+                            <ClothImage :orderItems="orderItems" :currentEditIndex="currentEditIndex" :order="order" />
                             <PatternImage :orderItems="orderItems" :currentEditIndex="currentEditIndex" />
                         </div>
                         <div class="">

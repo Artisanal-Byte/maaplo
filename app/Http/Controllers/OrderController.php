@@ -216,46 +216,41 @@ class OrderController extends Controller
                 'altering_cost' => $item->altering_cost,
                 'isUrgent' => $item->is_urgent === 'yes' ? true : false,
                 'template_names' => $templateNames,
-                'refrence_dress' => $item->refrence_dress,
+                'refrence_dress' => $item->refrence_dress ? asset('/' . $item->refrence_dress) : null,
                 'cloth_img1_url' => $item->cloth_img1 ? asset('/' . $item->cloth_img1) : null,
                 'cloth_img2_url' => $item->cloth_img2 ? asset('/' . $item->cloth_img2) : null,
                 'Pattern_img1_url' => $item->Pattern_img1 ? asset('/' . $item->Pattern_img1) : null,
                 'Pattern_img2_url' => $item->Pattern_img2 ? asset('/' . $item->Pattern_img2) : null,
+
             ];
         });
-        // dd($orderItems);
-
-        // ✅ Attach order_items directly to order
-        $order->order_items = $orderItems;
 
         return Inertia::render('orders/Edit', [
             'order' => $order,
             'itemTypes' => $itemTypes,
             'customers' => $user->customers,
+            'orderItems' => $orderItems
         ]);
     }
 
     public function update(UpdateOrderRequest $request, Order $order)
     {
-        // dd($request->toArray());
         ini_set('max_execution_time', 60);
 
         try {
             $validatedData = $request->validated();
-            // dd($validatedData);
             $userId = Auth::user()->id;
             $username = Auth::user()->name;
             $customerId = $validatedData['customer_id'];
 
             $validatedOrderItems = $validatedData['order_items'];
-            unset($validatedData['order_items']); // Remove items from order update
+            unset($validatedData['order_items']);
 
             DB::beginTransaction();
 
-            // ✅ Update the main order
+            // Update the main order
             $order->update($validatedData);
 
-            // ✅ Track existing item IDs to determine which to update or delete
             $existingItemIds = $order->orderItems()->pluck('id')->toArray();
             $incomingItemIds = [];
 
@@ -269,10 +264,8 @@ class OrderController extends Controller
                     }
                 }
 
-                // Normalize boolean
                 $item['is_urgent'] = filter_var($item['is_urgent'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 'yes' : 'no';
-                // dd($item['is_urgent'] );
-                // JSON encode fields
+
                 foreach (['measurements', 'design_detail', 'notes'] as $field) {
                     if (isset($item[$field]) && is_array($item[$field])) {
                         $item[$field] = json_encode($item[$field]);
@@ -296,14 +289,14 @@ class OrderController extends Controller
                     $incomingItemIds[] = $orderItem->id;
                 }
 
-                // ✅ Delete old image and upload new image
+                $pathUpdates = [];
+
+                // Delete old image and upload new image for each file field
                 foreach ($fileUploads as $field => $uploadedFile) {
-                    // Delete old image if it exists
                     if (!empty($orderItem->$field) && file_exists(public_path($orderItem->$field))) {
                         @unlink(public_path($orderItem->$field));
                     }
 
-                    // Store new image
                     $storedPath = ImageHelper::storeOrderItemImage(
                         $uploadedFile,
                         $username,
@@ -314,12 +307,15 @@ class OrderController extends Controller
                         $field
                     );
 
-                    // Update DB path
-                    $orderItem->update([$field => $storedPath]);
+                    $pathUpdates[$field] = $storedPath;
+                }
+
+                if (!empty($pathUpdates)) {
+                    $orderItem->update($pathUpdates);
                 }
             }
 
-            // ✅ Delete removed order items
+            // Delete removed order items and their images
             $itemsToDelete = array_diff($existingItemIds, $incomingItemIds);
             OrderItem::whereIn('id', $itemsToDelete)->each(function ($item) {
                 foreach (['refrence_dress', 'cloth_img1', 'cloth_img2', 'Pattern_img1', 'Pattern_img2'] as $field) {
@@ -339,6 +335,7 @@ class OrderController extends Controller
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+
 
 
     /**

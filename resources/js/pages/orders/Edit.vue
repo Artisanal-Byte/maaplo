@@ -14,7 +14,7 @@ import { nextTick } from 'vue';
 import Loader from '@/components/Loader.vue';
 
 const props = defineProps(["users", "customers", "itemTypes", "errors", "order", "orderItems"]);
-console.log('itemTypes data in edit page ', props.itemTypes);
+console.log('imges dataaa',props.orderItems);
 
 const showModal = ref(false);
 const showDeletePopup = ref(false);
@@ -111,9 +111,6 @@ const update = () => {
 };
 
 const getItemTypeName = (id) => {
-    console.log("Item template_id:", id);
-    console.log("Available itemTypes:", props.itemTypes);
-
     if (!id) return 'Unknown';
     const found = props.itemTypes.find(i => i.id == id);
     return found?.name || 'Unknown';
@@ -132,16 +129,14 @@ onMounted(() => {
         });
     }
 });
-onMounted(() => {
-    console.log('Order Items:', form.order_items);
-    console.log('Item Types:', props.itemTypes);
-});
 
 const formatDate = (dateStr) => {
     if (!dateStr) return '';
     const [year, month, day] = dateStr.split('-');
     return `${day}-${month}-${year}`;
 };
+
+
 </script>
 
 <template>
