@@ -124,11 +124,11 @@ class StoreOrderRequest extends FormRequest
 
             $messages["$itemKey.trial_dates.required"] = "Trial date is required for item #" . ($index + 1) . ".";
             $messages["$itemKey.trial_dates.date"] = "Trial date must be a valid date for item #$index.";
-            $messages["$itemKey.trial_dates.after_or_equal"] = "Trial date must not be in the past for item #$index.";
+            $messages["$itemKey.trial_dates.after_or_equal"] = "Trial date must not be in the past for item #" . ($index + 1) . ".";
             $messages["$itemKey.trial_dates.before_or_equal"] = "Trial date must be before or equal to the delivery date for item #$index.";
 
             $messages["$itemKey.work_type.required"] = "Work type is required for item #" . ($index + 1) . ".";
-            $messages["$itemKey.work_type.in"] = "Work type must be one of: New from Material, Only Stitching, Only Altering for item #$index.";
+            $messages["$itemKey.work_type.in"] = "Work type must be one of: New from Material, Only Stitching, Only Altering for item #" . ($index + 1) . ".";
 
             $messages["$itemKey.material_code.string"] = "Material code must be a string for item #" . ($index + 1) . ".";
             $messages["$itemKey.material_code.max"] = "Material code may not exceed 256 characters for item #$index.";
@@ -163,8 +163,8 @@ class StoreOrderRequest extends FormRequest
                 $messages["$itemKey.$imageField.mimes"] = "$label must be of type jpeg, png, or webp for item #$index.";
                 $messages["$itemKey.$imageField.max"] = "$label must not exceed 2MB for item #$index.";
                 $messages["$itemKey.$imageField.mimes"] = "$label must be of type jpeg, png, or webp for item #$index.";
-                $messages["$itemKey.material_type.required"] = "Material type is required for item #$index because work type is 'New from Material'.";
-                $messages["$itemKey.material_code.required"] = "Material code is required for item #$index because work type is 'New from Material'.";
+                $messages["$itemKey.material_type.required"] = "Material type is required for item #" . ($index + 1) . " because work type is 'New from Material'.";
+                $messages["$itemKey.material_code.required"] = "Material code is required for item #" . ($index + 1) . " because work type is 'New from Material'.";
             }
         }
 

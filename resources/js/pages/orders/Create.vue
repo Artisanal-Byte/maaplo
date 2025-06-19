@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Icon } from '@iconify/vue';
 import DateIcon from '@/components/DateIcon.vue';
 import CustomerListDropdown from '@/components/Items/CustomerListDropdown.vue';
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 import ItemModel from '@/components/Items/ItemModel.vue';
 import Button from '@/components/Button.vue';
 import Notes from '@/components/Items/Notes.vue';
@@ -12,7 +12,7 @@ import { useOrderFormStore } from '@/stores/orderFormStore';
 import { Head } from '@inertiajs/vue3';
 import Loader from '@/components/Loader.vue';
 const props = defineProps(["users", "customers", "itemTypes", "errors"])
-console.log('itemTypes in create page',props.itemTypes);
+console.log('itemTypes in create page', props.itemTypes);
 
 const showModal = ref(false);
 const disabled = ref(false);
@@ -102,6 +102,11 @@ const formatDate = (dateStr) => {
     const [year, month, day] = dateStr.split('-');
     return `${day}-${month}-${year}`;
 };
+
+onMounted(() => {
+    form.resetOrderData();
+    form.resetOrderItemTemplate(); // (optional)
+});
 </script>
 
 <template>
@@ -210,7 +215,8 @@ const formatDate = (dateStr) => {
                                             {{itemTypes.find(item => item.id === order_item.template_id)?.name ?? 'N/A'
                                             }}
                                         </td>
-                                        <td class="px-4 py-2 border-b border-gray-200">{{ formatDate(order_item.delivery_date) }}
+                                        <td class="px-4 py-2 border-b border-gray-200">{{
+                                            formatDate(order_item.delivery_date) }}
                                         </td>
                                         <td class="px-4 py-2 border-b border-gray-200">
                                             <div class="flex gap-4">
