@@ -235,23 +235,25 @@ class OrderController extends Controller
 
     public function update(UpdateOrderRequest $request, Order $order)
     {
-        dd($request->toArray());
+        // dd($request->toArray());
         ini_set('max_execution_time', 60);
 
         try {
             $validatedData = $request->validated();
+            // dd($validatedData);
             $userId = Auth::user()->id;
             $username = Auth::user()->name;
             $customerId = $validatedData['customer_id'];
 
             $validatedOrderItems = $validatedData['order_items'];
-            unset($validatedData['order_items']);
+            unset($validatedData['order_items']); // Remove items from order update
 
             DB::beginTransaction();
 
-            // Update the main order
+            // ✅ Update the main order
             $order->update($validatedData);
 
+            // ✅ Track existing item IDs to determine which to update or delete
             $existingItemIds = $order->orderItems()->pluck('id')->toArray();
             $incomingItemIds = [];
 
@@ -265,8 +267,10 @@ class OrderController extends Controller
                     }
                 }
 
+                // Normalize boolean
                 $item['is_urgent'] = filter_var($item['is_urgent'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 'yes' : 'no';
-
+                // dd($item['is_urgent'] );
+                // JSON encode fields
                 foreach (['measurements', 'design_detail', 'notes'] as $field) {
                     if (isset($item[$field]) && is_array($item[$field])) {
                         $item[$field] = json_encode($item[$field]);
@@ -290,14 +294,14 @@ class OrderController extends Controller
                     $incomingItemIds[] = $orderItem->id;
                 }
 
-                $pathUpdates = [];
-
-                // Delete old image and upload new image for each file field
+                // ✅ Delete old image and upload new image
                 foreach ($fileUploads as $field => $uploadedFile) {
+                    // Delete old image if it exists
                     if (!empty($orderItem->$field) && file_exists(public_path($orderItem->$field))) {
                         @unlink(public_path($orderItem->$field));
                     }
 
+                    // Store new image
                     $storedPath = ImageHelper::storeOrderItemImage(
                         $uploadedFile,
                         $username,
@@ -308,15 +312,12 @@ class OrderController extends Controller
                         $field
                     );
 
-                    $pathUpdates[$field] = $storedPath;
-                }
-
-                if (!empty($pathUpdates)) {
-                    $orderItem->update($pathUpdates);
+                    // Update DB path
+                    $orderItem->update([$field => $storedPath]);
                 }
             }
 
-            // Delete removed order items and their images
+            // ✅ Delete removed order items
             $itemsToDelete = array_diff($existingItemIds, $incomingItemIds);
             OrderItem::whereIn('id', $itemsToDelete)->each(function ($item) {
                 foreach (['refrence_dress', 'cloth_img1', 'cloth_img2', 'Pattern_img1', 'Pattern_img2'] as $field) {
@@ -336,6 +337,7 @@ class OrderController extends Controller
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+
 
 
 

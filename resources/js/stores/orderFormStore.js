@@ -49,19 +49,22 @@ export const useOrderFormStore = defineStore('orderForm', {
 
         updateOrderItem() {
             if (this.editingItemIndex !== null) {
-                const safeClone = JSON.parse(JSON.stringify({
-                    ...this.order_items_template,
-                    cloth_img1: null,
-                    cloth_img2: null,
-                    Pattern_img1: null,
-                    Pattern_img2: null,
-                    refrence_dress: null
-                }));
+                const existingItem = this.order_items[this.editingItemIndex];
 
-                this.order_items.splice(this.editingItemIndex, 1, safeClone);
+                const updatedItem = {
+                    ...this.order_items_template,
+                    cloth_img1: this.order_items_template.cloth_img1 || existingItem.cloth_img1,
+                    cloth_img2: this.order_items_template.cloth_img2 || existingItem.cloth_img2,
+                    Pattern_img1: this.order_items_template.Pattern_img1 || existingItem.Pattern_img1,
+                    Pattern_img2: this.order_items_template.Pattern_img2 || existingItem.Pattern_img2,
+                    refrence_dress: this.order_items_template.refrence_dress || existingItem.refrence_dress,
+                };
+
+                this.order_items.splice(this.editingItemIndex, 1, updatedItem);
                 this.editingItemIndex = null;
             }
-        },
+        }
+        ,
 
         resetOrderItemTemplate() {
             this.order_items_template = {
@@ -74,7 +77,7 @@ export const useOrderFormStore = defineStore('orderForm', {
                 material_type: '',
                 material_code: '',
                 refrence_dress: '',
-                is_urgent: '',
+                is_urgent: false,
                 material_cost: null,
                 stiching_cost: null,
                 altering_cost: null,
@@ -103,6 +106,7 @@ export const useOrderFormStore = defineStore('orderForm', {
             this.advance_paid = null
             this.delivery_date = ''
             this.close_date = ''
+
             this.notes = [{ label: '', text: '' }]
             this.order_items = []
             this.resetOrderItemTemplate()
@@ -114,10 +118,11 @@ export const useOrderFormStore = defineStore('orderForm', {
                     ...item,
                     cloth_img1: null,
                     cloth_img2: null,
-                    cloth_img1_url: item.cloth_img1_url || null,
-                    cloth_img2_url: item.cloth_img2_url || null,
                     Pattern_img1: null,
                     Pattern_img2: null,
+                    refrence_dress: null,
+                    cloth_img1_url: item.cloth_img1_url || null,
+                    cloth_img2_url: item.cloth_img2_url || null,
                     Pattern_img1_url: item.Pattern_img1_url || null,
                     Pattern_img2_url: item.Pattern_img2_url || null,
                     trial_dates: item.trial_dates || '',
@@ -129,7 +134,6 @@ export const useOrderFormStore = defineStore('orderForm', {
                 this.editingItemIndex = index;
             }
 
-            console.log('cust id :', this.customer_id);
         },
 
         createOrder() {
@@ -175,7 +179,7 @@ export const useOrderFormStore = defineStore('orderForm', {
                 const parsedItem = {
                     ...item,
                     id: item.id,
-                    template_id: item.template_id ?? item.item_template_id ?? null, // ✅ Always set this
+                    template_id: item.template_id ?? item.item_template_id ?? null,
                     item_cost: Number(item.item_cost) || 0,
                     colors: item.colors,
                     is_urgent: item.isUrgent == 'yes' ? true : false,
@@ -212,6 +216,7 @@ export const useOrderFormStore = defineStore('orderForm', {
             form.append('delivery_date', formData.delivery_date || '');
             form.append('close_date', formData.close_date || '');
 
+
             // Main order notes
             (formData.notes || []).forEach((note, i) => {
                 form.append(`notes[${i}][label]`, note.label || '');
@@ -221,7 +226,7 @@ export const useOrderFormStore = defineStore('orderForm', {
             // Order items
             formData.order_items.forEach((item, index) => {
                 form.append(`order_items[${index}][template_id]`, Number(item.template_id) || '');
-
+                form.append(`order_items[${index}][is_urgent]`, item.is_urgent ? 'true' : 'false');
                 // Measurements
                 Object.entries(item.measurements || {}).forEach(([key, val]) => {
                     form.append(`order_items[${index}][measurements][${key}]`, val ?? '');
@@ -267,6 +272,9 @@ export const useOrderFormStore = defineStore('orderForm', {
                 router.post(route('orders.update', orderId), form, {
                     forceFormData: true,
                     preserveScroll: true,
+                    onSuccess: () => {
+                        this.resetOrderData()
+                    },
                     onError: (errors) => {
                         if (toast && typeof toast.error === 'function') {
                             toast.error('Update failed. Please fix the errors.');

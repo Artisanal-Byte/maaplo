@@ -308,8 +308,7 @@
 
                         <div class="flex items-center gap-4">
                             <h1 class="font-medium font-lato">Mark as Urgent</h1>
-                            <ToggleButton v-model:model="formStore.order_items_template.is_urgent"
-                                :orderItems="orderItems" />
+                            <ToggleButton v-model:model="formStore.order_items_template.is_urgent"/>
 
                         </div>
                         <!-- Upload icon, only shown when toggle is ON -->
