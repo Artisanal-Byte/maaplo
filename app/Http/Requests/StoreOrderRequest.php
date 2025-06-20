@@ -170,8 +170,6 @@ class StoreOrderRequest extends FormRequest
                 $messages["$itemKey.material_code.required"] = "Please enter a material code for item #$displayIndex, since the work type is 'New from Material'.";
             }
         }
-
-
         return $messages;
     }
 }
