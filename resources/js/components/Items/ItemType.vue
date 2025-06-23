@@ -3,7 +3,6 @@ import { ref, defineProps, computed, watch } from 'vue';
 import { Icon } from '@iconify/vue';
 
 const props = defineProps(["itemTypes", "currentEditIndex"]);
-console.log('itemTypes data in itemType.vue', props.itemTypes);
 
 const emits = defineEmits(['setItemId', 'setSelectDesignDetails']);
 

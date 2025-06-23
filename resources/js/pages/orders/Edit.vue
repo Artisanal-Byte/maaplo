@@ -9,12 +9,11 @@ import Button from '@/components/Button.vue';
 import Notes from '@/components/Items/Notes.vue';
 import Input from '@/components/InputWithLabel.vue';
 import { useOrderFormStore } from '@/stores/orderFormStore';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { nextTick } from 'vue';
 import Loader from '@/components/Loader.vue';
 
 const props = defineProps(["users", "customers", "itemTypes", "errors", "order", "orderItems"]);
-console.log('itemTypes data in edit page ', props.itemTypes);
 
 const showModal = ref(false);
 const showDeletePopup = ref(false);
@@ -116,6 +115,21 @@ const getItemTypeName = (id) => {
     return found?.name || 'Unknown';
 };
 
+const onItemUpdated = (itemData) => {
+    const index = currentEditIndex.value;
+    if (index !== null) {
+        form.order_items[index] = {
+            ...itemData,
+            cloth_img1: form.order_items_template.cloth_img1,
+            cloth_img2: form.order_items_template.cloth_img2,
+            Pattern_img1: form.order_items_template.Pattern_img1,
+            Pattern_img2: form.order_items_template.Pattern_img2,
+        };
+    }
+};
+
+
+
 const errorMessages = computed(() => {
     if (!props.errors) return [];
     return Object.values(props.errors).flat(); // flatten in case of array of messages
@@ -128,16 +142,14 @@ onMounted(() => {
         });
     }
 });
-onMounted(() => {
-    console.log('Order Items:', form.order_items);
-    console.log('Item Types:', props.itemTypes);
-});
 
 const formatDate = (dateStr) => {
     if (!dateStr) return '';
     const [year, month, day] = dateStr.split('-');
     return `${day}-${month}-${year}`;
 };
+
+
 </script>
 
 <template>
@@ -175,30 +187,43 @@ const formatDate = (dateStr) => {
                 </h1>
                 <Button :disabled="disabled" @click="update">Update Order</Button>
             </div>
-            <!-- Status Selector -->
-            <div>
-                <label class="block text-sm font-semibold text-gray-800 mt-5">
-                    <span class="flex items-center gap-2">
-                        <Icon icon="mdi:clipboard-text-outline" class="text-primary" width="18" height="18" />
-                        Order Status
-                    </span>
-                </label>
-                <div class="relative w-full max-w-sm mt-2">
-                    <select id="status" v-model="form.status"
-                        class="appearance-none w-full pl-4 pr-10 py-2.5 rounded-md border border-gray-300 text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out">
-                        <option value="created">🆕 Created</option>
-                        <option value="in process">🔄 In Process</option>
-                        <option value="processed">📦 Processed</option>
-                        <option value="delivered">🚚 Delivered</option>
-                        <option value="completed">✅ Completed</option>
-                        <option value="cancelled">❌ Cancelled</option>
-                    </select>
-                    <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400">
-                        <Icon icon="mdi:chevron-down" width="20" height="20" />
+            <!-- Top Bar: Order Status on the left, Back button on the right -->
+            <div class="mt-6 flex justify-between items-center flex-wrap gap-4">
+                <!-- Order Status Dropdown (Left) -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-800">
+                        <span class="flex items-center gap-2">
+                            <Icon icon="mdi:clipboard-text-outline" class="text-primary" width="18" height="18" />
+                            Order Status
+                        </span>
+                    </label>
+                    <div class="relative w-[320px] mt-2">
+                        <select id="status" v-model="form.status"
+                            class="appearance-none w-full pl-4 pr-10 py-2.5 rounded-md border border-gray-300 text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out">
+                            <option value="created">🆕 Created</option>
+                            <option value="in process">🔄 In Process</option>
+                            <option value="processed">📦 Processed</option>
+                            <option value="delivered">🚚 Delivered</option>
+                            <option value="completed">✅ Completed</option>
+                            <option value="cancelled">❌ Cancelled</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400">
+                            <Icon icon="mdi:chevron-down" width="20" height="20" />
+                        </div>
                     </div>
+                    <p v-if="props.errors.status" class="mt-2 text-sm text-red-600">{{ props.errors.status }}</p>
                 </div>
-                <p v-if="props.errors.status" class="mt-2 text-sm text-red-600">{{ props.errors.status }}</p>
+
+                <!-- Back Button (Right) -->
+                <div class="mt-8 sm:mt-6">
+                    <Link :href="route('orders.index')"
+                        class="flex items-center gap-1 text-gray-600 hover:text-black transition">
+                    <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
+                    <span class="text-[16px] font-medium">Back</span>
+                    </Link>
+                </div>
             </div>
+
             <div class="mt-6 bg-white p-5 lg:p-7 rounded-lg shadow-md border-t-4 border-primary">
                 <CustomerListDropdown :customers="customers" :error="props.errors.customer_id"
                     v-model="form.customer_id" />
@@ -237,7 +262,7 @@ const formatDate = (dateStr) => {
                                     class="hover:bg-gray-100 transition-colors duration-200">
                                     <td class="px-4 py-2 border-b border-gray-200">{{ item.work_type }}</td>
                                     <td class="px-4 py-2 border-b border-gray-200">
-                                        {{ getItemTypeName(item.template_id || item.item_template_id) }}
+                                        {{ getItemTypeName(item.template_id) }}
 
                                     </td>
                                     <td class="px-4 py-2 border-b border-gray-200">{{ formatDate(item.delivery_date) }}

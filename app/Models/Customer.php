@@ -33,7 +33,6 @@ class Customer extends Model
     {
         return Attribute::make(
             get: fn($value) => json_decode($value, true)['value'] ?? '',
-            // set: fn($value) => json_encode(['value' => $value])
         );
     }
 
@@ -42,7 +41,6 @@ class Customer extends Model
     {
         return Attribute::make(
             get: fn($value) => json_decode($value, true),
-            // set: fn($value) => json_encode($value)
         );
     }
 
@@ -73,7 +71,6 @@ class Customer extends Model
             get: fn($value) => is_string($value) ? json_decode($value, true) : $value
         );
     }
-
 
     //    Relations
     public function photos()

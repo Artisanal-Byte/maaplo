@@ -32,7 +32,6 @@ class DesignDetailsController extends Controller
     public function create()
     {
         $bodyParts = BodyPartValue::select('id', 'body_part')->orderBy('body_part')->get();
-        // dd($bodyParts);
         // Pass $bodyParts to the Inertia view
         return Inertia::render('designdetail/Create', [
             'bodyParts' => $bodyParts,
@@ -97,8 +96,6 @@ class DesignDetailsController extends Controller
         }
     }
 
-
-
     public function edit(DesignDetail $designDetail)
     {
         $bodyParts = BodyPartValue::select('id', 'body_part')->orderBy('body_part')->get();
@@ -149,7 +146,6 @@ class DesignDetailsController extends Controller
                 $bodyPartId = $bodyPart->id;
             }
 
-
             // Update design detail
             $designDetail->update([
                 'body_section' => $validated['body_section'],
@@ -167,7 +163,6 @@ class DesignDetailsController extends Controller
             return redirect()->back()->withInput()->with('error', 'There was an error: ' . $e->getMessage());
         }
     }
-
 
     public function destroy(DesignDetail $designDetail)
     {

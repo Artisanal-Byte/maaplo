@@ -12,7 +12,7 @@ import { useOrderFormStore } from '@/stores/orderFormStore';
 import { Head } from '@inertiajs/vue3';
 import Loader from '@/components/Loader.vue';
 const props = defineProps(["users", "customers", "itemTypes", "errors"])
-console.log('itemTypes in create page',props.itemTypes);
+console.log('itemTypes in create page', props.itemTypes);
 
 const showModal = ref(false);
 const disabled = ref(false);
@@ -210,7 +210,8 @@ const formatDate = (dateStr) => {
                                             {{itemTypes.find(item => item.id === order_item.template_id)?.name ?? 'N/A'
                                             }}
                                         </td>
-                                        <td class="px-4 py-2 border-b border-gray-200">{{ formatDate(order_item.delivery_date) }}
+                                        <td class="px-4 py-2 border-b border-gray-200">{{
+                                            formatDate(order_item.delivery_date) }}
                                         </td>
                                         <td class="px-4 py-2 border-b border-gray-200">
                                             <div class="flex gap-4">
@@ -232,7 +233,8 @@ const formatDate = (dateStr) => {
                             <h2><span class="font-semibold">Grand Total:</span> ₹ {{ form.total_amount || 0 }}</h2>
                             <h2><span class="font-semibold">Advance Paid:</span> ₹ {{ form.advance_paid || 0 }}</h2>
                             <h2><span class="font-semibold text-red-600 underline">Balance Due:</span> ₹ {{
-                                form.total_amount - (form.advance_paid || 0) }}</h2>
+                                (form.total_amount || 0) - (form.advance_paid || 0)
+                                }}</h2>
                         </div>
 
                         <!-- Delete Confirmation Modal -->
