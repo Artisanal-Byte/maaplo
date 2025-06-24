@@ -166,17 +166,23 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Order $order)
+    public function show(Order $order, Request $request)
     {
         $storeorderdata = $order->load('customer', 'orderItems')->toArray();
 
         $orderItems = $storeorderdata['order_items'];
         $designDetailsData = DesignDetilsHelper::getDesignDetailsData($orderItems);
+
+        // Get the source query parameter, default null
+        $source = $request->query('source');
+
         return Inertia::render('orders/Show', [
             'order' => $order,
             'designDetails' => $designDetailsData,
+            'source' => $source,   // Pass source to Vue component
         ]);
     }
+
 
     /**
      * Show the form for editing the specified resource.

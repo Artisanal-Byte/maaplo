@@ -52,6 +52,10 @@ function closeOrder() {
         }
     });
 }
+
+function viewOrder(orderId) {
+    router.visit(route('orders.show', orderId) + '?source=closed');
+}
 </script>
 
 <template>
@@ -70,7 +74,7 @@ function closeOrder() {
                 <table class="min-w-full table-auto">
                     <thead class="bg-gray-100 text-gray-700 text-sm uppercase tracking-wider">
                         <tr>
-                            <th class="px-6 py-3 text-left">Order ID</th>
+                            <th class="px-6 py-3 text-left">Order Number</th>
                             <th class="px-6 py-3 text-left">Total Amount</th>
                             <th class="px-6 py-3 text-left">Delivery Date</th>
                             <th class="px-6 py-3 text-left">Customer Name</th>
@@ -87,7 +91,7 @@ function closeOrder() {
                         </tr>
                         <tr v-else v-for="order in deliveredOrders" :key="order.id"
                             class="hover:bg-blue-50 transition-all border-t border-gray-100">
-                            <td class="px-6 py-4 font-medium text-gray-800">#{{ order.id }}</td>
+                            <td class="px-6 py-4 font-medium text-gray-800">#{{ order.order_number }}</td>
                             <td class="px-6 py-4 text-gray-700">₹{{ order.total_amount }}</td>
                             <td class="px-6 py-4 text-gray-700">{{ order.delivery_date }}</td>
                             <td class="px-6 py-4 text-gray-700">{{ order.customer?.name ?? 'N/A' }}</td>
@@ -96,10 +100,21 @@ function closeOrder() {
                             </td>
                             <td class="px-6 py-4 text-gray-700">{{ order.customer?.address }}</td>
                             <td class="px-6 py-4 text-right">
-                                <button @click="openCloseOrderModal(order)"
-                                    class="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium transition">
-                                    Close Order
-                                </button>
+                                <div class="flex justify-end items-center gap-3">
+                                    <!-- View Icon Button -->
+                                    <button @click="viewOrder(order.id)"
+                                        class="p-2 rounded-md hover:bg-gray-100 transition" title="View Order">
+                                        <Icon icon="ic:round-visibility" class="text-primary" width="20" height="20" />
+                                    </button>
+
+                                    <!-- Close Order Button -->
+                                    <button @click="openCloseOrderModal(order)"
+                                        class="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium transition hover:bg-primary/90">
+                                        Close Order
+                                    </button>
+                                </div>
+
+
                             </td>
                         </tr>
                     </tbody>
@@ -111,16 +126,16 @@ function closeOrder() {
         <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
             <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 mx-4">
                 <h2 class="text-xl font-semibold text-gray-800 mb-4">Confirm Close</h2>
-                <p class="text-gray-600 mb-6">Are you sure you want to close <strong>Order #{{ selectedOrder.id
-                        }}</strong>?</p>
+                <p class="text-gray-600 mb-6">Are you sure you want to close <strong>Order #{{
+                    selectedOrder.order_number
+                        }}</strong> ?</p>
                 <div class="flex justify-end gap-3">
                     <button @click="closeModal"
                         class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md transition">
-                        Cancel
+                        No
                     </button>
-                    <button @click="closeOrder"
-                        class="px-4 py-2 bg-primary text-white rounded-md transition">
-                        Confirm
+                    <button @click="closeOrder" class="px-4 py-2 bg-primary text-white rounded-md transition">
+                        Yes
                     </button>
                 </div>
             </div>
