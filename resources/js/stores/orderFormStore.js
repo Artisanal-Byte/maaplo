@@ -212,6 +212,7 @@ export const useOrderFormStore = defineStore('orderForm', {
             form.append('customer_id', formData.customer_id ?? '');
             form.append('total_amount', formData.total_amount ?? '');
             form.append('advance_paid', formData.advance_paid ?? '');
+            form.append('status', formData.status ?? '');
             form.append('delivery_date', formData.delivery_date || '');
             form.append('close_date', formData.close_date || '');
 

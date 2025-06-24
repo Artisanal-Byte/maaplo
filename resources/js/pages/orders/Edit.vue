@@ -39,12 +39,16 @@ const recalculateTotal = () => {
 onMounted(() => {
     if (props.order) {
         form.setEditOrder(props.order);
+        if (!form.status) {
+            form.status = 'created'; // fallback default
+        }
         nextTick(() => {
             recalculateTotal();
         });
     }
     ready.value = true;
 });
+
 
 watch(() => form.order_items, (items) => {
     let t = 0;
@@ -98,7 +102,9 @@ const update = () => {
         alert("Advance paid can't be greater than total amount.");
         return;
     }
-
+    if (form.status) {
+        form.status = form.status.toLowerCase();
+    }
     loading.value = true;
     setTimeout(() => {
         loading.value = false;
@@ -200,7 +206,7 @@ const formatDate = (dateStr) => {
                     <div class="relative w-[320px] mt-2">
                         <select id="status" v-model="form.status"
                             class="appearance-none w-full pl-4 pr-10 py-2.5 rounded-md border border-gray-300 text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out">
-                            <option value="created">🆕 Created</option>
+                            <option value="created" selected>🆕 Created</option>
                             <option value="in process">🔄 In Process</option>
                             <option value="processed">📦 Processed</option>
                             <option value="delivered">🚚 Delivered</option>

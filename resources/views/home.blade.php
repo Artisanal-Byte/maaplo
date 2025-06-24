@@ -1,7 +1,16 @@
 @extends('guest-layout')
 <link href="https://fonts.googleapis.com/css2?family=Convergence&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    .hover-rotate-x {
+        transition: transform 0.1ms ease-in-out;
+        transform-style: preserve-3d;
+    }
 
+    .hover-rotate-x:hover {
+        transform: rotateY(360deg);
+    }
+</style>
 <script src="{{ asset('js/custom.js') }}" defer></script>
 
 @section('content')
@@ -22,7 +31,7 @@
 
                 <button
                     class="px-[15px] py-[8px] mt-10 bg-black text-white hover:bg-gray-600 rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200 space-x-2">
-                    <a href="/">Book a Free Demo</a>
+                    <a onclick="window.location.href='{{ route('demo') }}'">Book a Free Demo</a>
                 </button>
             </div>
         </div>
@@ -33,7 +42,7 @@
     </div>
 
     {{-- section 2 --}}
-    <div class="px-5 lg:px-20 mt-16 lg:mt-18 ">
+    <div class="px-5 lg:px-20 mt-16 lg:mt-18">
         <div
             class="lg:h-[250px] bg-[#BEDCDF] border-[12px] border-[#5CA7AF] rounded-[42px] shadow-[0px_2px_9.9px_0px_#88DDE340] flex items-center">
             <div class="flex flex-col lg:flex-row justify-between w-full">
@@ -64,7 +73,7 @@
     </div>
 
     {{-- section 3 --}}
-    <div class="px-5 lg:px-20 mt-16 lg:mt-18">
+    <div id="features" class="px-5 lg:px-20 mt-16 lg:mt-18">
         <h1 class="font-[400] text-[40px] leading-[100%] tracking-[0%] text-center font-[Convergence]">
             Features
         </h1>
@@ -87,11 +96,11 @@
                     simple, and stress-free.
 
                 </p>
-                <button
+                {{-- <button
                     class="mt-3 flex items-center gap-1 text-[15px] font-medium leading-[152%] text-primary font-[Lato]">
                     Learn More
                     <span class="text-[15px] font-bold ml-2">→</span>
-                </button>
+                </button> --}}
 
             </div>
 
@@ -108,11 +117,11 @@
                     can focus
                     on delivering work that fits every client’s unique vision.
                 </p>
-                <button
+                {{-- <button
                     class="mt-10 flex items-center gap-1 text-[15px] font-medium leading-[152%] text-primary font-[Lato]">
                     Learn More
                     <span class="text-[15px] font-bold ml-2">→</span>
-                </button>
+                </button> --}}
             </div>
 
             <div
@@ -128,11 +137,11 @@
                     having a memory that never forgets—so your clients always feel valued.
 
                 </p>
-                <button
+                {{-- <button
                     class="mt-10 flex items-center gap-1 text-[15px] font-medium leading-[152%] text-primary font-[Lato]">
                     Learn More
                     <span class="text-[15px] font-bold ml-2">→</span>
-                </button>
+                </button> --}}
             </div>
 
             <div
@@ -150,11 +159,11 @@
                     process
                     smooth and stress-free.
                 </p>
-                <button
+                {{-- <button
                     class="mt-3 flex items-center gap-1 text-[15px] font-medium leading-[152%] text-primary font-[Lato]">
                     Learn More
                     <span class="text-[15px] font-bold ml-2">→</span>
-                </button>
+                </button> --}}
             </div>
 
             <div
@@ -172,11 +181,11 @@
                     everything you need is right in your pocket.
 
                 </p>
-                <button
+                {{-- <button
                     class="mt-3 flex items-center gap-1 text-[15px] font-medium leading-[152%] text-primary font-[Lato]">
                     Learn More
                     <span class="text-[15px] font-bold ml-2">→</span>
-                </button>
+                </button> --}}
             </div>
 
             <div
@@ -194,11 +203,11 @@
                     stays secure, so you can stay focused.
 
                 </p>
-                <button
+                {{-- <button
                     class="mt-10 flex items-center gap-1 text-[15px] font-medium leading-[152%] text-primary font-[Lato]">
                     Learn More
                     <span class="text-[15px] font-bold ml-2">→</span>
-                </button>
+                </button> --}}
 
             </div>
 
@@ -236,11 +245,11 @@
                     simple, and stress-free.
 
                 </p>
-                <button
+                {{-- <button
                     class="mt-3 flex items-center gap-1 text-[15px] font-medium leading-[152%] text-primary font-[Lato]">
                     Learn More
                     <span class="text-[15px] font-bold ml-2">→</span>
-                </button>
+                </button> --}}
             </div>
             {{-- Features 2 --}}
             <div
@@ -249,18 +258,18 @@
                 <h1 class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence]">Custom
                     Order
                     Management</h1>
-                <p class="mt-3 text-[14px] leading-[152%] font-medium font-[Lato]">
+                <p class="mt-3 mb-7 text-[14px] leading-[152%] font-medium font-[Lato]">
                     From first request to final delivery, manage every step of a custom order with ease. Add design
                     notes,
                     fabric preferences, deadlines, and more—all in one place. MaapLo simplifies the process so you
                     can focus
                     on delivering work that fits every client’s unique vision.
                 </p>
-                <button
+                {{-- <button
                     class="mt-10 flex items-center gap-1 text-[15px] font-medium leading-[152%] text-primary font-[Lato]">
                     Learn More
                     <span class="text-[15px] font-bold ml-2">→</span>
-                </button>
+                </button> --}}
             </div>
             {{-- Features 3 --}}
             <div
@@ -269,18 +278,18 @@
                 <h1 class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence]">Client
                     Directory
                     with Notes</h1>
-                <p class="mt-3 text-[14px] leading-[152%] font-medium font-[Lato]">
+                <p class="mt-3 mb-7 text-[14px] leading-[152%] font-medium font-[Lato]">
                     Stay organized with a smart client database that does more than just store names. Add notes,
                     preferences, past orders, and special requests to offer personalized service every time. It’s
                     like
                     having a memory that never forgets—so your clients always feel valued.
 
                 </p>
-                <button
+                {{-- <button
                     class="mt-10 flex items-center gap-1 text-[15px] font-medium leading-[152%] text-primary font-[Lato]">
                     Learn More
                     <span class="text-[15px] font-bold ml-2">→</span>
-                </button>
+                </button> --}}
             </div>
             {{-- Features 4 --}}
             <div
@@ -297,11 +306,11 @@
                     process
                     smooth and stress-free.
                 </p>
-                <button
+                {{-- <button
                     class="mt-3 flex items-center gap-1 text-[15px] font-medium leading-[152%] text-primary font-[Lato]">
                     Learn More
                     <span class="text-[15px] font-bold ml-2">→</span>
-                </button>
+                </button> --}}
 
                 <!-- content -->
             </div>
@@ -322,11 +331,11 @@
                     everything you need is right in your pocket.
 
                 </p>
-                <button
+                {{-- <button
                     class="mt-3 flex items-center gap-1 text-[15px] font-medium leading-[152%] text-primary font-[Lato]">
                     Learn More
                     <span class="text-[15px] font-bold ml-2">→</span>
-                </button>
+                </button> --}}
             </div>
 
             {{-- Features 6 --}}
@@ -337,7 +346,7 @@
                     Secure Cloud Access
                 </h1>
 
-                <p class="mt-3 text-[14px] leading-[152%] font-medium font-[Lato]">
+                <p class="mt-3 mb-7 text-[14px] leading-[152%] font-medium font-[Lato]">
                     Work with confidence wherever you are. MaapLo stores your data safely in the cloud, ensuring
                     it’s always
                     backed up, protected, and accessible—whether you're at home, in the studio, or on the move. Your
@@ -345,18 +354,18 @@
                     stays secure, so you can stay focused.
 
                 </p>
-                <button
+                {{-- <button
                     class="mt-10 flex items-center gap-1 text-[15px] font-medium leading-[152%] text-primary font-[Lato]">
                     Learn More
                     <span class="text-[15px] font-bold ml-2">→</span>
-                </button>
+                </button> --}}
 
             </div>
         </div>
     </div>
 
     {{-- section 4 --}}
-    <div class="px-5 lg:px-20 mt-16 lg:mt-20">
+    <div id="about" class="px-5 lg:px-20 mt-16 lg:mt-20">
         <h1 class="font-[400] text-[25px] lg:text-[50px] leading-[100%] tracking-[0%] text-center font-[Convergence]">
             Who we are?
         </h1>
@@ -404,7 +413,7 @@
     </div>
 
     {{-- section 5 --}}
-    <div class="lg:px-20 px-0">
+    <div id="pricing" class="lg:px-20 px-0">
         <div
             class="py-10 lg:py-20 mt-5 rounded-[20px] bg-[radial-gradient(50%_50%_at_50%_50%,rgba(219,245,247,0.5)_0%,rgba(237,250,251,0.5)_100%)] flex flex-col items-center justify-center text-center">
             <div>
@@ -1254,8 +1263,9 @@
                         <!-- Top-right Icon -->
                         <div class="lg:absolute lg:top-0 lg:right-0">
                             {{-- <x-icon name="section8-img4" /> --}}
-                            <img src="/images/section8-img3.svg" alt="Section 8 Image"
-                                class="w-[250px] h-[230px] lg:-mr-[80px] mt-5">
+                            <img src="/images/section8-img3.svg" alt=""
+                                class="hover-rotate-x w-[180px] h-[230px] mx-auto mt-5 transition-transform duration-300 hover:rotate-x-[360deg]" />
+
                         </div>
 
                         <!-- Heading Overlapping Below Icon -->
@@ -1354,7 +1364,7 @@
     </div>
 
     {{-- section 9 --}}
-    <div class="bg-[#FBFBFB] px-5 lg:px-20 py-10 lg:py-16">
+    <div id="blogs" class="bg-[#FBFBFB] px-5 lg:px-20 py-10 lg:py-16">
         <!-- Header Section -->
         <div class="text-center">
             <h1 class="font-[Convergence] text-[25px] lg:text-[40px] font-normal leading-[100%]">
@@ -1623,7 +1633,7 @@
     </div>
 
     {{-- section 10 --}}
-    <div class="bg-[#F7F7F7] px-5 lg:px-20 py-10 lg:py-16">
+    <div id="contact" class="bg-[#F7F7F7] px-5 lg:px-20 py-10 lg:py-16">
         <!-- Header Section -->
         <div class="text-center">
             <h1 class="font-[Convergence] text-[25px] lg:text-[40px] font-normal leading-[100%]">
