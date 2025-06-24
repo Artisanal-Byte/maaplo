@@ -14,14 +14,14 @@ class DesignDetailsTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
 
         \DB::table('design_details')->delete();
-        
+
         \DB::table('design_details')->insert(array (
-            0 => 
+            0 =>
             array (
-                'id' => 1,
+                // 'id' => 1,
                 'body_section' => 'Upper',
                 'gender' => 'm',
                 'body_part_id' => 1,
@@ -48,7 +48,7 @@ xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAA
                 'deleted_at' => NULL,
             ),
         ));
-        
-        
+
+
     }
 }
