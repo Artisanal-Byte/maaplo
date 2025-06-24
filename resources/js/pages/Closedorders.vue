@@ -1,8 +1,11 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, router } from '@inertiajs/vue3';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
+
+const page = usePage();
+const toast = new ToastMagic();
 
 const props = defineProps({
     deliveredOrders: Array
@@ -10,6 +13,16 @@ const props = defineProps({
 
 const showModal = ref(false);
 const selectedOrder = ref(null);
+const deliveredOrders = ref(props.deliveredOrders);
+
+onMounted(() => {
+    if (page.props.flash?.success) {
+        toast.success(page.props.flash.success);
+    }
+    if (page.props.flash?.error) {
+        toast.error(page.props.flash.error);
+    }
+});
 
 function openCloseOrderModal(order) {
     selectedOrder.value = order;
@@ -28,11 +41,19 @@ function closeOrder() {
         order_id: selectedOrder.value.id
     }, {
         onSuccess: () => {
+            deliveredOrders.value = deliveredOrders.value.filter(
+                order => order.id !== selectedOrder.value.id
+            );
+            toast.success('Order closed successfully'); // ✅ Toast on success
             closeModal();
+        },
+        onError: () => {
+            toast.error('Failed to close order'); // ✅ Toast on failure
         }
     });
 }
 </script>
+
 
 <template>
 

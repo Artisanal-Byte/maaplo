@@ -40,6 +40,7 @@ class UpdateOrderRequest extends FormRequest
                 'in process',
                 'processed',
                 'delivered',
+                'colsed',
                 'completed',
                 'cancelled'
             ])],

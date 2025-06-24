@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Devrabiul\ToastMagic\Facades\ToastMagic;
 
 class DashboardController extends Controller
 {
@@ -38,15 +39,15 @@ class DashboardController extends Controller
 
     public function close(Request $request)
     {
+        // dd($request->toArray());
         $request->validate([
             'order_id' => 'required|exists:orders,id',
         ]);
-
         $order = Order::find($request->order_id);
         $order->update([
             'status' => 'closed',
         ]);
-
+        ToastMagic::success('Order closed successfully!');
         return redirect()->route('orders.closed');
     }
 }
