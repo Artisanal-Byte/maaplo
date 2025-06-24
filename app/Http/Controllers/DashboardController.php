@@ -35,7 +35,35 @@ class DashboardController extends Controller
             'deliveredOrders' => $deliveredOrders
         ]);
     }
+    public function viewClosedOrders()
+    {
+        $closedOrders = Order::with('customer')
+            ->where('status', 'closed')
+            ->get()
+            ->map(function ($order) {
+                return [
+                    'id' => $order->id,
+                    'order_number' => $order->order_number,
+                    'status' => $order->status,
+                    'total_amount' => $order->total_amount,
+                    'advance_paid' => $order->advance_paid,
+                    'delivery_date' => $order->delivery_date,
+                    // customer nested info
+                    'customer' => [
+                        'name' => optional($order->customer)->name,
+                        'email' => optional($order->customer)->email,
+                        'phone' => optional($order->customer)->phone,
+                        'country_code' => optional($order->customer)->country_code,
+                        'gender' => optional($order->customer)->gender,
+                        'address' => optional($order->customer)->address,
+                    ],
+                ];
+            });
 
+        return Inertia::render('ViewClosedOrder', [
+            'closedOrders' => $closedOrders,
+        ]);
+    }
 
     public function close(Request $request)
     {

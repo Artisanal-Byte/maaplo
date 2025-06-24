@@ -216,7 +216,7 @@ const activeTab = ref('order')
                                 <Icon icon="lsicon:order-done-filled" width="32" height="32" class="text-white" />
                             </div>
                             <div class="relative z-10 text-primary font-[Lato] font-medium text-[24px] tracking-[0]">
-                                Close Order
+                                Close Orders
                             </div>
                             </Link>
                         </div>
