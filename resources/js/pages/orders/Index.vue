@@ -5,7 +5,7 @@ import OrderList from '@/components/OrderList.vue';
 import SearchList from '@/components/SearchIcon.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Icon } from '@iconify/vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { defineProps, computed, reactive, ref, watch } from 'vue';
 
 const props = defineProps(['orders'])
@@ -72,6 +72,14 @@ function toggleDropdownDelivery() {
                         Orders
                     </h1>
                 </div>
+                    <!-- View Closed Orders Button -->
+                    <div class="mt-6">
+                        <Link :href="route('orders.viewClosed')"
+                            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-md shadow">
+                        <Icon icon="ic:round-visibility" class="mr-2" width="20" height="20" />
+                        View Closed Orders
+                        </Link>
+                    </div>
                 <div class="flex gap-4 text-gray-600">
                     <SearchList :showable="showable" @hideOrShow="hideOrShow('search')" />
                     <FilterList :showable="showable" @hideOrShow="hideOrShow('filter')" />

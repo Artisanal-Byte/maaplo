@@ -30,6 +30,8 @@ Route::get('dashboard', DashboardController::class)
     ->name('dashboard');
 Route::middleware(["auth", "verified"])->group(function () {
     Route::get('/orders/closed', [DashboardController::class, 'closedOrdersPage'])->name('orders.closed');
+    Route::get('/orders/view-closed', [DashboardController::class, 'viewClosedOrders'])->name('orders.viewClosed');
+
 
     Route::post('/orders/close', [DashboardController::class, 'close'])->name('orders.close');
     //-- Make resource Route For Orders Process
