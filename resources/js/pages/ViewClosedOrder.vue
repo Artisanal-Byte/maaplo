@@ -24,7 +24,7 @@ const props = defineProps({
                 <div v-for="order in closedOrders" :key="order.id"
                     class="w-full bg-white shadow-md rounded-lg border-l-4 border-primary p-6 hover:shadow-lg transition-shadow">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-semibold text-primary">Order #{{ order.order_number }}</h2>
+                        <h2 class="text-xl font-semibold text-primary">Order Number #{{ order.order_number }}</h2>
 
                     </div>
 

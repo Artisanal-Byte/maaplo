@@ -76,7 +76,7 @@ function viewOrder(orderId) {
                         <tr>
                             <th
                                 class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Order #</th>
+                                Order Number</th>
                             <th
                                 class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                 Amount</th>
