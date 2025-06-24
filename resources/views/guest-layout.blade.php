@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
@@ -23,7 +23,10 @@
     {{-- Navbar --}}
     <nav class="lg:px-20 mx-auto py-4">
         <div class="flex justify-between items-center h-[84px] mx-4 lg:mx-0">
-            <x-icon name="logo" class="w-8 h-8 text-blue-500" />
+            <a href="{{ url('/') }}">
+                <x-icon name="logo" class="w-8 h-8 text-blue-500" />
+            </a>
+            {{-- <x-icon name="logo" class="w-8 h-8 text-blue-500 cursor-pointer" /> --}}
 
             <!-- Hamburger (Mobile) -->
             <div class="lg:hidden">
@@ -39,7 +42,7 @@
             <!-- Desktop Nav -->
             <div class="hidden lg:flex space-x-7 items-center">
                 @foreach (['features' => 'Features', 'about' => 'About Us', 'pricing' => 'Pricing', 'blogs' => 'Blogs', 'contact' => 'Contact Us'] as $id => $name)
-                    <a href="#{{ $id }}"
+                    <a href="{{ route('home') }}#{{ $id }}"
                         class="text-black md:text-[15px] lg:text-[18px] font-lato p-2 hover:text-primary hover:border-b hover:border-primary hover:rounded-md transition duration-200">
                         {{ $name }}
                     </a>
@@ -68,7 +71,7 @@
                 </a>
             @endforeach
             <div class="flex flex-col space-y-2 mt-4">
-                <button
+                <button onclick="window.location.href='{{ route('demo') }}'"
                     class="px-[15px] py-[8px] text-black hover:bg-primary hover:text-white rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
                     Demo
                 </button>

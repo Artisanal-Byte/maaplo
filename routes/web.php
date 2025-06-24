@@ -13,9 +13,12 @@ use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+// Route::get('/', function () {
+//     return view('home');
+// });
 Route::get('/', function () {
     return view('home');
-});
+})->name('home');
 
 Route::get('/demo', function () {
     return view('demo');
