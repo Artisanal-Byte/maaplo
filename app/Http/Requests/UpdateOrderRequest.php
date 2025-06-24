@@ -28,8 +28,21 @@ class UpdateOrderRequest extends FormRequest
 
     public function rules(): array
     {
+        // dd([
+        //     'orderstatus' => $this->input('status'),
+        //     'all_input' => $this->all(),
+        // ]);
+
         $rules = [
             'customer_id' => ['required', 'exists:customers,id'],
+            'status' => ['required', 'string', Rule::in([
+                'created',
+                'in process',
+                'processed',
+                'delivered',
+                'completed',
+                'cancelled'
+            ])],
             'total_amount' => ['required', 'numeric', 'min:0'],
             'advance_paid' => ['nullable', 'numeric', 'min:0', 'lte:total_amount'],
             'delivery_date' => ['required', 'date', 'after_or_equal:today'],
@@ -110,6 +123,8 @@ class UpdateOrderRequest extends FormRequest
             'close_date.date' => 'The close date must be a valid date.',
             'close_date.after_or_equal' => 'The close date cannot be earlier than the delivery date.',
 
+            'status.required' => 'Please select a valid order status.',
+            'status.in' => 'Selected order status is invalid.',
             'notes.array' => 'Notes must be an array.',
 
             'order_items.required' => 'At least one order item is required.',

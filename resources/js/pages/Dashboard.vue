@@ -211,14 +211,14 @@ const activeTab = ref('order')
                     <div
                         class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
-                            <!-- <Link :href="route('orders.create')" class="flex flex-col items-center gap-2"> -->
+                            <Link :href="route('orders.closed')" class="flex flex-col items-center gap-2">
                             <div class="bg-primary p-3 rounded-full">
                                 <Icon icon="lsicon:order-done-filled" width="32" height="32" class="text-white" />
                             </div>
                             <div class="relative z-10 text-primary font-[Lato] font-medium text-[24px] tracking-[0]">
                                 Close Order
                             </div>
-                            <!-- </Link> -->
+                            </Link>
                         </div>
                     </div>
                 </div>
