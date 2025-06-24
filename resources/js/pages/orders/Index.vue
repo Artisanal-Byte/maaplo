@@ -75,7 +75,7 @@ function toggleDropdownDelivery() {
                     <!-- View Closed Orders Button -->
                     <div class="mt-6">
                         <Link :href="route('orders.viewClosed')"
-                            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-md shadow">
+                            class="inline-flex items-center px-4 py-2 bg-primary text-white text-sm font-semibold rounded-md shadow">
                         <Icon icon="ic:round-visibility" class="mr-2" width="20" height="20" />
                         View Closed Orders
                         </Link>
