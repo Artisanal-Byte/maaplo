@@ -64,8 +64,8 @@ function viewOrder(orderId) {
     <AppLayout>
         <div class="max-w-7xl mx-auto py-10 px-4">
             <div class="flex items-center justify-between mb-6">
-                <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
-                    <Icon icon="mdi:truck-delivery-outline" class="text-blue-600" width="28" height="28" />
+                <h1 class="text-3xl font-bold text-primary flex items-center gap-2">
+                    <Icon icon="mdi:truck-delivery-outline" class="text-primary" width="28" height="28" />
                     Delivered Orders
                 </h1>
             </div>

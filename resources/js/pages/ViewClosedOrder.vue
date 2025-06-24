@@ -2,7 +2,7 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { defineProps } from 'vue';
-
+import { Icon } from '@iconify/vue';
 const props = defineProps({
     closedOrders: Array,
 });
@@ -12,27 +12,34 @@ const props = defineProps({
 
     <Head title="Closed Orders" />
     <AppLayout>
-        <div class="max-w-7xl mx-auto px-4 py-8">
-            <h1 class="text-2xl font-bold text-gray-800 mb-6">Closed Orders</h1>
+        <div class="max-w-7xl mx-auto px-4 py-10">
 
-            <div v-if="closedOrders.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-3xl font-bold text-primary flex items-center gap-2">
+                    <Icon icon="material-symbols:order-approve" class="text-primary" width="28" height="28" />
+                    Closed Orders
+                </h1>
+            </div>
+            <div v-if="closedOrders.length" class="space-y-6">
                 <div v-for="order in closedOrders" :key="order.id"
-                    class="bg-white shadow rounded-lg p-4 border-t-4 border-gray-500">
-                    <h2 class="text-lg font-semibold mb-2">Order #{{ order.id }}</h2>
+                    class="w-full bg-white shadow-md rounded-lg border-l-4 border-primary p-6 hover:shadow-lg transition-shadow">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-primary">Order #{{ order.order_number }}</h2>
 
-                    <p class="text-sm text-gray-700">Customer Name: {{ order.customer?.name ?? 'N/A' }}</p>
-                    <p class="text-sm text-gray-700">Phone: {{ order.customer?.country_code }} {{ order.customer?.phone
-                        }}</p>
-                    <p class="text-sm text-gray-700">Address: {{ order.customer?.address ?? 'N/A' }}</p>
+                    </div>
 
-                    <p class="text-sm text-gray-700 mt-3">Total: ₹{{ order.total_amount }}</p>
-                    <p class="text-sm text-gray-700">Delivery Date: {{ order.delivery_date }}</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 text-sm">
+                        <p><strong>Customer Name :</strong> {{ order.customer?.name ?? 'N/A' }}</p>
+                        <p><strong>Phone :</strong> {{ order.customer?.country_code }} {{ order.customer?.phone }}</p>
+                        <p><strong>Address :</strong> {{ order.customer?.address ?? 'N/A' }}</p>
+                        <p><strong>Delivery Date :</strong> {{ order.delivery_date }}</p>
+                        <p class="md:col-span-2"><strong>Total Amount :</strong> ₹{{ order.total_amount }}</p>
+                    </div>
                 </div>
             </div>
 
-            <div v-else class="text-center text-gray-500 py-10">
-                <!-- Replace with an actual icon if needed -->
-                <p class="text-4xl text-gray-400 mb-4">📦</p>
+            <div v-else class="text-center text-gray-400 py-16">
+                <p class="text-5xl mb-4">📦</p>
                 <p class="text-lg font-medium">No closed orders found</p>
             </div>
         </div>
