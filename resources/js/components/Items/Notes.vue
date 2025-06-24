@@ -39,7 +39,7 @@ const updateText = (index: number, value: string) => {
     <div class="notes-section">
         <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3 mb-3">
-                <label class="font-medium">Notes <span class="text-red-500">*</span></label>
+                <label class="font-medium">Notes </label>
                 <span class="text-sm text-gray-600">Total: {{ notes?.length ?? 0 }}</span>
 
                 <!-- Add Note Button -->
@@ -55,7 +55,7 @@ const updateText = (index: number, value: string) => {
                 <div>
                     <Input type="text" :label="`Label ${index + 1}`" :modelValue="note.label"
                         @update:modelValue="updateLabel(index, $event)" :id="`label-${index}`" :name="`label-${index}`"
-                        color="grayBorder" margin="md" placeholder="Write your label" required="true">
+                        color="grayBorder" margin="md" placeholder="Write your label" >
                     <template #icon>
                         <Icon icon="material-symbols-light:note" width="24" height="24" class="mt-2"/>
                     </template>
@@ -64,7 +64,7 @@ const updateText = (index: number, value: string) => {
                 <div class="mt-3">
                     <Input type="textarea" :label="`Notes ${index + 1}`" :modelValue="note.text"
                         @update:modelValue="updateText(index, $event)" :id="`text-${index}`" :name="`text-${index}`"
-                        color="grayBorder" margin="md" placeholder="Write your Note..." required="true"/>
+                        color="grayBorder" margin="md" placeholder="Write your Note..." />
                 </div>
             </div>
 
