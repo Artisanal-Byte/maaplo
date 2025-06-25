@@ -59,10 +59,10 @@ function submitForm() {
                 </template>
                 </Input>
 
-                <div class="mt-8">
-                    <Button  @click="submitForm" :disabled="form.processing" :color="'primary'"
-                        :rounded="'md'"
+                <div class="mt-6 flex">
+                    <Button @click="submitForm" :disabled="form.processing" :color="'primary'" :rounded="'md'"
                         class="w-full flex justify-center items-center hover:scale-105 transition-transform duration-200">
+                        <Icon icon="mdi:send" width="20" height="20" class="mr-2" />
                         Submit Suggestion
                     </Button>
                 </div>

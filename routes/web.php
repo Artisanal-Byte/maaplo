@@ -74,10 +74,13 @@ Route::middleware(["auth", "verified"])->group(function () {
     Route::get('user-create', function () {
         return Inertia::render('admin/UserCreate');
     });
-    Route::get('/suggestion', fn() => Inertia::render('Suggestion'))->name('suggestion');
-    Route::get('/report-error', fn() => Inertia::render('ReportError'))->name('report-error');
-    Route::get('/feature-request', fn() => Inertia::render('FeatureRequest'))->name('feature-request');
+    Route::get('/feature-request', fn() => Inertia::render('featurerequest/Index'))->name('feature-request.index');
+    Route::get('/feature-request/create', fn() => Inertia::render('featureRequest/Create'))->name('feature-request.create');
     Route::post('/feature-request', [FeatureRequestAndSuggestionController::class, 'storeFeatureRequest'])->name('feature-request.store');
+
+    // Suggestion Pages
+    Route::get('/suggestion', fn() => Inertia::render('suggestion/Index'))->name('suggestion.index');
+    Route::get('/suggestion/create', fn() => Inertia::render('suggestion/Create'))->name('suggestion.create');
     Route::post('/suggestion', [FeatureRequestAndSuggestionController::class, 'storeSuggestion'])->name('suggestion.store');
 });
 
