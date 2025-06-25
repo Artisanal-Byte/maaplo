@@ -102,14 +102,19 @@ class Customer extends Model
             if ($customer->isForceDeleting()) {
                 // Permanently delete related photos
                 $customer->photos()->withTrashed()->forceDelete();
+                $customer->orders()->withTrashed()->forceDelete();
+                $customer->userCustomers()->delete();
             } else {
                 // Soft delete related photos
                 $customer->photos()->delete();
+                $customer->orders()->delete(); // soft delete orders
+                $customer->userCustomers()->delete();
             }
         });
 
         static::restoring(function ($customer) {
             $customer->photos()->withTrashed()->restore();
+            $customer->orders()->withTrashed()->restore();
         });
     }
 }

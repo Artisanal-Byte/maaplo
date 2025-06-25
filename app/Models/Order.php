@@ -63,4 +63,19 @@ class Order extends Model
             set: fn($value) => strtolower($value),
         );
     }
+
+    protected static function booted()
+    {
+        static::deleting(function ($order) {
+            if ($order->isForceDeleting()) {
+                $order->orderItems()->forceDelete();
+            } else {
+                $order->orderItems()->delete();
+            }
+        });
+
+        static::restoring(function ($order) {
+            $order->orderItems()->withTrashed()->restore();
+        });
+    }
 }

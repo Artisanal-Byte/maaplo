@@ -14,14 +14,14 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
 
         \DB::table('users')->delete();
-        
+
         \DB::table('users')->insert(array (
-            0 => 
+            0 =>
             array (
-                'id' => 1,
+                // 'id' => 1,
                 'name' => 'Test User',
                 'email' => 'test@gmail.com',
                 'phone' => NULL,
@@ -43,7 +43,7 @@ class UsersTableSeeder extends Seeder
                 'organization_id' => NULL,
             ),
         ));
-        
-        
+
+
     }
 }

@@ -1,11 +1,17 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue'
-import { Head, Link } from '@inertiajs/vue3'
+import { Head, Link, usePage } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
 import { Icon } from '@iconify/vue';
+const props = defineProps({
+    order: Object,
+    designDetails: Object,
+    source: String,
+});
+// const props = defineProps(['order', 'designDetails'])
 
-const props = defineProps(['order', 'designDetails'])
-
+const page = usePage()
+const routeSource = computed(() => page.url.includes('source=closed') ? 'closed' : 'normal')
 const parsedItemDetails = computed(() => {
     return props.order?.order_items?.map(item => ({
         ...item,
@@ -32,6 +38,8 @@ const pendingAmount = computed(() => {
     const advance = Number(props.order?.advance_paid) || 0;
     return total - advance;
 });
+
+
 </script>
 
 <template>
@@ -42,12 +50,14 @@ const pendingAmount = computed(() => {
             <!-- Header -->
             <div class="relative mb-6 h-10 flex items-center">
                 <!-- Centered Heading -->
-                <h1 class="absolute  transform text-xl lg:text-3xl font-extrabold text-primary">
+                <!-- <h1 class="absolute  transform text-xl lg:text-3xl font-extrabold text-primary">
                     🧾 Order Overview
+                </h1> -->
+                <h1 class="text-xl lg:text-3xl font-extrabold text-primary">
+                    {{ routeSource === 'closed' ? '🧾 Closed Order Overview' : '🧾 Order Overview' }}
                 </h1>
-
                 <!-- Back Link on the right -->
-                <Link :href="route('orders.index')"
+                <Link :href="route(routeSource === 'closed' ? 'orders.closed' : 'orders.index')"
                     class="ml-auto flex items-center gap-2 text-gray-500 hover:text-primary transition-colors duration-200">
                 <Icon icon="material-symbols:arrow-back-rounded" width="26" height="26" />
                 <span class="font-semibold text-lg">Back</span>
@@ -104,7 +114,9 @@ const pendingAmount = computed(() => {
 
                 <!-- Order Items Section -->
                 <div>
-                    <h2 class="text-xl lg:text-3xl font-semibold text-primary mb-7 flex items-center justify-center gap-2">🧵 Items
+                    <h2
+                        class="text-xl lg:text-3xl font-semibold text-primary mb-7 flex items-center justify-center gap-2">
+                        🧵 Items
                     </h2>
 
                     <div v-for="(item, index) in parsedItemDetails" :key="item?.id"

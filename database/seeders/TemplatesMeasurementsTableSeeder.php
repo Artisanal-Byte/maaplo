@@ -14,21 +14,21 @@ class TemplatesMeasurementsTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
 
         \DB::table('templates_measurements')->delete();
-        
+
         \DB::table('templates_measurements')->insert(array (
-            0 => 
+            0 =>
             array (
-                'id' => 1,
+                // 'id' => 1,
                 'template_id' => 1,
                 'measurements_id' => 10,
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
         ));
-        
-        
+
+
     }
 }
