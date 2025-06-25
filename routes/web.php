@@ -31,6 +31,8 @@ Route::get('/demo', function () {
 Route::get('dashboard', DashboardController::class)
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+    
 Route::middleware(["auth", "verified"])->group(function () {
     Route::get('/orders/closed', [DashboardController::class, 'closedOrdersPage'])->name('orders.closed');
     Route::get('/orders/view-closed', [DashboardController::class, 'viewClosedOrders'])->name('orders.viewClosed');
