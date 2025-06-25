@@ -11,17 +11,30 @@ use Illuminate\Support\Facades\Log;
 
 class FeatureRequestAndSuggestionController extends Controller
 {
-
     public function indexSuggestion()
     {
-        $suggestions = FeatureRequestAndSuggestion::whereNotNull('suggestion_title')
+        $suggestions = FeatureRequestAndSuggestion::with('user')
+            ->whereNotNull('suggestion_title')
             ->latest()
-            ->get();
+            ->get()
+            ->map(function ($suggestion) {
+                return [
+                    'id' => $suggestion->id,
+                    'suggestion_title' => $suggestion->suggestion_title,
+                    'suggestion_description' => $suggestion->suggestion_description,
+                    'user' => [
+                        'id' => $suggestion->user->id,
+                        'name' => $suggestion->user->name,
+                    ],
+                    'created_at' => $suggestion->created_at,
+                ];
+            });
 
         return inertia('suggestion/Index', [
             'suggestions' => $suggestions,
         ]);
     }
+
 
     public function indexFeatureRequest()
     {
