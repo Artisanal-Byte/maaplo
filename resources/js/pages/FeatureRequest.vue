@@ -49,7 +49,7 @@ const submitForm = () => {
                 <div class="grid grid-cols-1 gap-6">
                     <!-- Feature Name -->
                     <Input v-model="form.feature_name" label="Feature Name" placeholder="Enter the feature name"
-                        :error="form.errors.feature_name" required>
+                        :error="form.errors.feature_name" required="true">
                     <template #icon>
                         <Icon icon="mdi:text-box-outline" width="24" height="24" />
                     </template>
@@ -58,7 +58,7 @@ const submitForm = () => {
                     <!-- Feature Description -->
                     <Input v-model="form.feature_description" type="textarea" label="Feature Description"
                         placeholder="Describe the feature and its purpose" :error="form.errors.feature_description"
-                        required>
+                        required="true">
                     <template #icon>
                         <Icon icon="mdi:comment-text-outline" width="24" height="24" />
                     </template>

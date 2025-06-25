@@ -1,7 +1,6 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
@@ -46,7 +45,7 @@ function submitForm() {
 
             <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-primary">
                 <Input v-model="form.suggestion_title" label="Suggestion Title" placeholder="Enter suggestion title"
-                    :error="form.errors.suggestion_title" required>
+                    :error="form.errors.suggestion_title" required="true">
                 <template #icon>
                     <Icon icon="mdi:title" width="24" height="24" />
                 </template>
@@ -54,14 +53,14 @@ function submitForm() {
 
                 <Input v-model="form.suggestion_description" label="Suggestion Details"
                     placeholder="Describe your suggestion" type="textarea" rows="4"
-                    :error="form.errors.suggestion_description" class="mt-6" required>
+                    :error="form.errors.suggestion_description" class="mt-6" required="true">
                 <template #icon>
                     <Icon icon="mdi:text-box-outline" width="24" height="24" />
                 </template>
                 </Input>
 
                 <div class="mt-8">
-                    <Button type="button" @submit.prevent="submitForm" :disabled="form.processing" :color="'primary'"
+                    <Button  @click="submitForm" :disabled="form.processing" :color="'primary'"
                         :rounded="'md'"
                         class="w-full flex justify-center items-center hover:scale-105 transition-transform duration-200">
                         Submit Suggestion

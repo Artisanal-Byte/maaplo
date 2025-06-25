@@ -14,8 +14,8 @@ class FeatureRequestAndSuggestionController extends Controller
     public function storeFeatureRequest(Request $request)
     {
         $request->validate([
-            'feature_name' => 'nullable|string|max:255',
-            'feature_description' => 'nullable|string',
+            'feature_name' => 'required|string|max:255',
+            'feature_description' => 'required|string',
         ]);
 
         try {
@@ -37,8 +37,8 @@ class FeatureRequestAndSuggestionController extends Controller
     public function storeSuggestion(Request $request)
     {
         $request->validate([
-            'suggestion_title' => 'nullable|string|max:255',
-            'suggestion_description' => 'nullable|string',
+            'suggestion_title' => 'required|string|max:255',
+            'suggestion_description' => 'required|string',
         ]);
 
         try {
