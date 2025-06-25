@@ -9,25 +9,27 @@ const form = useForm({
 });
 
 const submitted = ref(false);
-
+const toast = new ToastMagic();
 function submitForm() {
     form.post('/suggestion', {
         onSuccess: () => {
-            submitted.value = true;
-            form.reset(); // Clear form fields
+            toast.success("Your Suggestion send successfully! we will review it soon.");
+            // submitted.value = true;
+            // form.reset(); // Clear form fields
 
             setTimeout(() => {
                 submitted.value = false;
             }, 4000);
         },
         onError: () => {
-            console.error('Error submitting suggestion:', form.errors);
+            toast.error('Error submitting suggestion:', form.errors);
         }
     });
 }
 </script>
 
 <template>
+
     <Head title="Add Suggestion" />
     <AppLayout>
         <div class="p-6 max-w-xl mx-auto">
@@ -47,7 +49,8 @@ function submitForm() {
 
             <!-- Suggestion Description -->
             <div class="mt-4">
-                <label for="suggestionDescription" class="block text-sm font-medium text-gray-700">Suggestion Details</label>
+                <label for="suggestionDescription" class="block text-sm font-medium text-gray-700">Suggestion
+                    Details</label>
                 <textarea id="suggestionDescription" v-model="form.suggestion_description" rows="4"
                     class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 shadow-sm focus:ring focus:ring-blue-200"
                     placeholder="Describe your suggestion"></textarea>
@@ -65,10 +68,7 @@ function submitForm() {
                 </button>
             </div>
 
-            <!-- Success Message -->
-            <div v-if="submitted" class="mt-4 text-green-600 font-semibold">
-                Suggestion submitted successfully!
-            </div>
+
         </div>
     </AppLayout>
 </template>

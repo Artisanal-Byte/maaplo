@@ -8,11 +8,12 @@
     });
 
     const submitted = ref(false);
-
+    const toast = new ToastMagic();
     function submitForm() {
         form.post('/feature-request', {
             onSuccess: () => {
-                submitted.value = true;
+                toast.success("Your Feature suggestion send successfully!");
+                // submitted.value = true;
                 form.reset(); // Clear form fields
 
                 setTimeout(() => {
@@ -20,6 +21,7 @@
                 }, 4000);
             },
             onError: () => {
+                toast.error("Error submitting feature request:", form.errors);
                 console.error('Error submitting feature request:', form.errors);
             }
         });
@@ -66,10 +68,6 @@
                     </button>
                 </div>
 
-                <!-- Success Message -->
-                <div v-if="submitted" class="mt-4 text-green-600 font-semibold">
-                    Feature request submitted successfully!
-                </div>
             </div>
         </AppLayout>
     </template>

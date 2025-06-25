@@ -5,6 +5,7 @@ import { Icon } from '@iconify/vue';
 import Chart from '@/components/Chart.vue';
 import { Link, router } from "@inertiajs/vue3";
 import { ref } from 'vue';
+
 const showDropdown = ref(false);
 const selectedOption = ref('Yesterday'); // Default text inside input
 
