@@ -25,6 +25,15 @@ defineProps<{
                 <Breadcrumbs :breadcrumbs="breadcrumbs" />
             </template>
         </div>
+        <div class="flex flex-col lg:flex-row lg:items-center lg:gap-4 gap-2">
+        <div>
+        <select name="cars" id="cars">
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="opel">Opel</option>
+            <option value="audi">Audi</option>
+        </select>
+        </div>
         <div class="mt-3 lg:mx-10 mx-0">
             <Link :href="route('profile.show')">
             <!-- <img src="/images/man_avatar.avif" alt="Profile Image" height="45px" width="45px"/> -->
@@ -32,6 +41,7 @@ defineProps<{
                 <img :src="avatarUrl" alt="Profile Image" class="w-full h-full object-cover" />
             </div>
             </Link>
+        </div>
         </div>
 
     </header>
