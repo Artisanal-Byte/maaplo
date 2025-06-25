@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('feature_description')->nullable();
             $table->string('suggestion_title')->nullable();
             $table->text('suggestion_description')->nullable();
+            $table->text('feature_experience')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

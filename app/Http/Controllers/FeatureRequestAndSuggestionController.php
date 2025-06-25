@@ -16,15 +16,17 @@ class FeatureRequestAndSuggestionController extends Controller
         $request->validate([
             'feature_name' => 'required|string|max:255',
             'feature_description' => 'required|string',
+            'feature_experience' => 'required|string',
         ]);
-
+// dd($request->all());
         try {
             FeatureRequestAndSuggestion::create([
                 'user_id' => Auth::id(),
                 'feature_name' => $request->feature_name,
                 'feature_description' => $request->feature_description,
+                'feature_experience' => $request->feature_experience,
             ]);
-            DB::commit();
+            // DB::commit();
             ToastMagic::success('Your Feature suggestion send successfully!');
             return redirect()->route('dashboard');
         } catch (\Exception $e) {

@@ -16,6 +16,7 @@ class FeatureRequestAndSuggestion extends Model
         'feature_description',
         'suggestion_title',
         'suggestion_description',
+        'feature_experience',
     ];
 
     public function user()

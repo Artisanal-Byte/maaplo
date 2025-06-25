@@ -10,7 +10,8 @@ const toast = new ToastMagic();
 
 const form = useForm({
     feature_name: '',
-    feature_description: ''
+    feature_description: '',
+    feature_experience: ''
 });
 
 const submitForm = () => {
@@ -63,6 +64,16 @@ const submitForm = () => {
                         <Icon icon="mdi:comment-text-outline" width="24" height="24" />
                     </template>
                     </Input>
+
+                    <!-- Feature Experience -->
+                    <Input v-model="form.feature_experience" type="textarea" label="Feature Experience"
+                        placeholder="Describe your experience or context for this feature"
+                        :error="form.errors.feature_experience" required="true">
+                    <template #icon>
+                        <Icon icon="mdi:star-circle-outline" width="24" height="24" />
+                    </template>
+                    </Input>
+
                 </div>
 
                 <!-- Submit Button -->
@@ -78,3 +89,4 @@ const submitForm = () => {
         </div>
     </AppLayout>
 </template>
+
