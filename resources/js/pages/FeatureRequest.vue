@@ -28,6 +28,7 @@ const submitForm = () => {
 </script>
 
 <template>
+
     <Head title="Feature Request" />
     <AppLayout>
         <div class="px-4 py-8 max-w-3xl mx-auto">
@@ -38,8 +39,8 @@ const submitForm = () => {
                     Feature Request
                 </h1>
                 <Link :href="route('dashboard')" class="flex items-center gap-2 text-gray-600 hover:text-black">
-                    <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
-                    <span class="text-md font-medium">Back</span>
+                <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
+                <span class="text-md font-medium">Back</span>
                 </Link>
             </div>
 
@@ -47,44 +48,28 @@ const submitForm = () => {
             <div class="bg-white shadow-md border-t-4 border-primary rounded-lg p-6">
                 <div class="grid grid-cols-1 gap-6">
                     <!-- Feature Name -->
-                    <Input
-                        v-model="form.feature_name"
-                        label="Feature Name"
-                        placeholder="Enter the feature name"
-                        :error="form.errors.feature_name"
-                        required
-                    >
-                        <template #icon>
-                            <Icon icon="mdi:text-box-outline" width="24" height="24" />
-                        </template>
+                    <Input v-model="form.feature_name" label="Feature Name" placeholder="Enter the feature name"
+                        :error="form.errors.feature_name" required>
+                    <template #icon>
+                        <Icon icon="mdi:text-box-outline" width="24" height="24" />
+                    </template>
                     </Input>
 
                     <!-- Feature Description -->
-                    <Input
-                        v-model="form.feature_description"
-                        type="textarea"
-                        label="Feature Description"
-                        placeholder="Describe the feature and its purpose"
-                        :error="form.errors.feature_description"
-                        required
-                    >
-                        <template #icon>
-                            <Icon icon="mdi:comment-text-outline" width="24" height="24" />
-                        </template>
+                    <Input v-model="form.feature_description" type="textarea" label="Feature Description"
+                        placeholder="Describe the feature and its purpose" :error="form.errors.feature_description"
+                        required>
+                    <template #icon>
+                        <Icon icon="mdi:comment-text-outline" width="24" height="24" />
+                    </template>
                     </Input>
                 </div>
 
                 <!-- Submit Button -->
                 <div class="mt-6 flex">
-                    <Button
-                        @click="submitForm"
-                        :disabled="form.processing"
-                        :color="'primary'"
-                        :padding="'md'"
-                        :rounded="'full'"
-                        :textSize="'sm'"
-                        class="w-full flex justify-center items-center hover:scale-105 transition-transform duration-200"
-                    >
+                    <Button @click="submitForm" :disabled="form.processing" :color="'primary'" :padding="'md'"
+                        :rounded="'full'" :textSize="'sm'"
+                        class="w-full flex justify-center items-center hover:scale-105 transition-transform duration-200">
                         <Icon icon="mdi:send" width="20" height="20" class="mr-2" />
                         Submit Feature Request
                     </Button>
