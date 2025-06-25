@@ -1,73 +1,95 @@
-    <script setup>
-    import AppLayout from '@/layouts/AppLayout.vue';
-    import { Head, useForm } from '@inertiajs/vue3';
-    import { ref } from 'vue';
-    const form = useForm({
-        feature_name: '',
-        feature_description: ''
+<script setup>
+import AppLayout from '@/layouts/AppLayout.vue';
+import { Head, useForm, Link } from '@inertiajs/vue3';
+import { ref } from 'vue';
+import { Icon } from '@iconify/vue';
+import Input from '@/components/InputWithLabel.vue';
+import Button from '@/components/Button.vue';
+
+const toast = new ToastMagic();
+
+const form = useForm({
+    feature_name: '',
+    feature_description: ''
+});
+
+const submitForm = () => {
+    form.post('/feature-request', {
+        onSuccess: () => {
+            toast.success("Your feature suggestion was sent successfully!");
+            form.reset();
+        },
+        onError: () => {
+            toast.error("Error submitting feature request. Please check the fields.");
+            console.error('Error submitting feature request:', form.errors);
+        }
     });
-
-    const submitted = ref(false);
-    const toast = new ToastMagic();
-    function submitForm() {
-        form.post('/feature-request', {
-            onSuccess: () => {
-                toast.success("Your Feature suggestion send successfully!");
-                // submitted.value = true;
-                form.reset(); // Clear form fields
-
-                setTimeout(() => {
-                    submitted.value = false;
-                }, 4000);
-            },
-            onError: () => {
-                toast.error("Error submitting feature request:", form.errors);
-                console.error('Error submitting feature request:', form.errors);
-            }
-        });
-    }
+};
 </script>
 
-    <template>
+<template>
+    <Head title="Feature Request" />
+    <AppLayout>
+        <div class="px-4 py-8 max-w-3xl mx-auto">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold text-primary font-[Convergence] flex items-center gap-2">
+                    <Icon icon="mdi:lightbulb-on-outline" width="28" height="28" />
+                    Feature Request
+                </h1>
+                <Link :href="route('dashboard')" class="flex items-center gap-2 text-gray-600 hover:text-black">
+                    <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
+                    <span class="text-md font-medium">Back</span>
+                </Link>
+            </div>
 
-        <Head title="Feature Request" />
-        <AppLayout>
-            <div class="p-6 max-w-xl mx-auto">
-                <h1 class="text-2xl font-bold mb-4">Feature Request</h1>
-                <p class="mb-6 text-gray-600">Submit a request for new features below:</p>
+            <!-- Form Card -->
+            <div class="bg-white shadow-md border-t-4 border-primary rounded-lg p-6">
+                <div class="grid grid-cols-1 gap-6">
+                    <!-- Feature Name -->
+                    <Input
+                        v-model="form.feature_name"
+                        label="Feature Name"
+                        placeholder="Enter the feature name"
+                        :error="form.errors.feature_name"
+                        required
+                    >
+                        <template #icon>
+                            <Icon icon="mdi:text-box-outline" width="24" height="24" />
+                        </template>
+                    </Input>
 
-                <!-- Feature Name -->
-                <div>
-                    <label for="featureName" class="block text-sm font-medium text-gray-700">Feature Name</label>
-                    <input id="featureName" v-model="form.feature_name" type="text"
-                        class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 shadow-sm focus:ring focus:ring-blue-200"
-                        placeholder="Enter feature name" />
-                    <div v-if="form.errors.feature_name" class="text-red-500 text-sm mt-1">{{ form.errors.feature_name
-                        }}
-                    </div>
-                </div>
-
-                <!-- Feature Description -->
-                <div>
-                    <label for="featureDescription" class="block text-sm font-medium text-gray-700">What is the use of
-                        this
-                        feature?</label>
-                    <textarea id="featureDescription" v-model="form.feature_description" rows="4"
-                        class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 shadow-sm focus:ring focus:ring-blue-200"
-                        placeholder="Describe how this feature will help"></textarea>
-                    <div v-if="form.errors.feature_description" class="text-red-500 text-sm mt-1">{{
-                        form.errors.feature_description }}</div>
+                    <!-- Feature Description -->
+                    <Input
+                        v-model="form.feature_description"
+                        type="textarea"
+                        label="Feature Description"
+                        placeholder="Describe the feature and its purpose"
+                        :error="form.errors.feature_description"
+                        required
+                    >
+                        <template #icon>
+                            <Icon icon="mdi:comment-text-outline" width="24" height="24" />
+                        </template>
+                    </Input>
                 </div>
 
                 <!-- Submit Button -->
-                <div>
-                    <button type="button" @click="submitForm"
-                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded"
-                        :disabled="form.processing">
-                        Submit Request
-                    </button>
+                <div class="mt-6 flex">
+                    <Button
+                        @click="submitForm"
+                        :disabled="form.processing"
+                        :color="'primary'"
+                        :padding="'md'"
+                        :rounded="'full'"
+                        :textSize="'sm'"
+                        class="w-full flex justify-center items-center hover:scale-105 transition-transform duration-200"
+                    >
+                        <Icon icon="mdi:send" width="20" height="20" class="mr-2" />
+                        Submit Feature Request
+                    </Button>
                 </div>
-
             </div>
-        </AppLayout>
-    </template>
+        </div>
+    </AppLayout>
+</template>
