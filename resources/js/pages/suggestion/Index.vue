@@ -1,8 +1,8 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, usePage } from '@inertiajs/vue3';
+import { Head, usePage, router } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
-
+import { Icon } from '@iconify/vue';
 const page = usePage();
 const suggestions = computed(() => page.props.suggestions || []);
 const expanded = ref({});
@@ -17,7 +17,18 @@ function toggleExpand(id) {
     <Head title="Suggestions" />
     <AppLayout>
         <div class="px-6 py-8 max-w-4xl mx-auto">
-            <h1 class="text-2xl font-bold mb-4">Suggestions</h1>
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-3xl font-extrabold text-primary flex items-center gap-2">
+                    <Icon icon="ic:sharp-settings-suggest" width="32" height="32" style="color: #528fab" />
+                    Suggestions
+                </h1>
+
+                <button @click="router.visit('/dashboard')"
+                    class="inline-flex items-center text-sm font-medium text-primary ">
+                    <Icon icon="mdi:arrow-left" class="mr-1" width="20" height="20" />
+                    Back to Dashboard
+                </button>
+            </div>
 
             <div v-if="suggestions.length === 0" class="text-gray-500">
                 No suggestions found.

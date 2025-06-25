@@ -1,8 +1,8 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head } from '@inertiajs/vue3';
 import { defineProps, ref } from 'vue';
-
+import { Head, router } from '@inertiajs/vue3';
+import { Icon } from '@iconify/vue';
 const props = defineProps({
     featureRequests: Array,
 });
@@ -21,8 +21,18 @@ const getExperience = (feature) => feature.feature_experience || '';
     <Head title="Feature Requests" />
     <AppLayout>
         <div class="px-6 py-8 max-w-3xl mx-auto">
-            <h1 class="text-3xl font-extrabold mb-6 text-indigo-700">Feature Requests</h1>
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-3xl font-extrabold text-primary flex items-center gap-2">
+                    <Icon icon="mage:light-bulb" width="32" height="32" style="color: #528fab" />
+                    Feature Requests
+                </h1>
 
+                <button @click="router.visit('/dashboard')"
+                    class="inline-flex items-center text-sm font-medium text-primary ">
+                    <Icon icon="mdi:arrow-left" class="mr-1" width="20" height="20" />
+                    Back to Dashboard
+                </button>
+            </div>
             <div v-if="featureRequests.length">
                 <ul>
                     <li v-for="feature in featureRequests" :key="feature.id"
