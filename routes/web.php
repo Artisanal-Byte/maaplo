@@ -28,6 +28,8 @@ Route::get('/demo', function () {
 Route::get('dashboard', DashboardController::class)
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+    
 Route::middleware(["auth", "verified"])->group(function () {
 
     //-- Make resource Route For Orders Process
