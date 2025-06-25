@@ -11,6 +11,29 @@ use Illuminate\Support\Facades\Log;
 
 class FeatureRequestAndSuggestionController extends Controller
 {
+
+    public function indexSuggestion()
+    {
+        $suggestions = FeatureRequestAndSuggestion::whereNotNull('suggestion_title')
+            ->latest()
+            ->get();
+
+        return inertia('suggestion/Index', [
+            'suggestions' => $suggestions,
+        ]);
+    }
+
+    public function indexFeatureRequest()
+    {
+        $featureRequests = FeatureRequestAndSuggestion::whereNotNull('feature_name')
+            ->latest()
+            ->get();
+
+        return inertia('featurerequest/Index', [
+            'featureRequests' => $featureRequests,
+        ]);
+    }
+
     public function storeFeatureRequest(Request $request)
     {
         $request->validate([
@@ -18,7 +41,7 @@ class FeatureRequestAndSuggestionController extends Controller
             'feature_description' => 'required|string',
             'feature_experience' => 'required|string',
         ]);
-// dd($request->all());
+        // dd($request->all());
         try {
             FeatureRequestAndSuggestion::create([
                 'user_id' => Auth::id(),
