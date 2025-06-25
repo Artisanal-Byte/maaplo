@@ -154,7 +154,10 @@ const formatDate = (dateStr) => {
     const [year, month, day] = dateStr.split('-');
     return `${day}-${month}-${year}`;
 };
-
+const onItemAdded = (itemData) => {
+    form.order_items.push(itemData);
+    recalculateTotal();
+};
 
 </script>
 
@@ -251,7 +254,7 @@ const formatDate = (dateStr) => {
                     <ItemModel :errors="errors" :showModal="showModal" @close="closeModel"
                         :form="form.order_items_template" :itemTypes="itemTypes" :measurements="[]"
                         :orderItems="orderItems" :currentEditIndex="currentEditIndex" :order="order"
-                        @item-updated="recalculateTotal" />
+                        @item-updated="recalculateTotal" @item-added="onItemAdded"/>
 
                     <div class="mt-6 overflow-x-auto rounded-lg shadow-lg">
                         <table class="min-w-full border-collapse bg-white text-sm text-left text-gray-700">
