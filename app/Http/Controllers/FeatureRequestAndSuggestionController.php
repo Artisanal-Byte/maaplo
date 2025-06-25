@@ -25,14 +25,30 @@ class FeatureRequestAndSuggestionController extends Controller
 
     public function indexFeatureRequest()
     {
-        $featureRequests = FeatureRequestAndSuggestion::whereNotNull('feature_name')
+        $featureRequests = FeatureRequestAndSuggestion::with('user')
+            ->whereNotNull('feature_name')
             ->latest()
-            ->get();
+            ->get()
+            ->map(function ($feature) {
+                return [
+                    'id' => $feature->id,
+                    'feature_name' => $feature->feature_name,
+                    'feature_description' => $feature->feature_description,
+                    'feature_experience' => $feature->feature_experience,
+                    'user' => [
+                        'id' => $feature->user->id,
+                        'name' => $feature->user->name,
+                    ],
+                    'created_at' => $feature->created_at,
+                ];
+            });
 
-        return inertia('featurerequest/Index', [
+        return inertia('featureRequest/Index', [
             'featureRequests' => $featureRequests,
         ]);
     }
+
+
 
     public function storeFeatureRequest(Request $request)
     {
