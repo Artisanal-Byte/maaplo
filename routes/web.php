@@ -7,6 +7,7 @@ use App\Http\Controllers\DesignDetailsController;
 use App\Http\Controllers\ItemTemplateController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\SubscriptionPlanController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UsersController;
@@ -19,6 +20,14 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return view('home');
 })->name('home');
+
+
+//-- Google Login 
+Route::controller(SocialiteController::class)->group(function(){
+    Route::get('auth/google','googleLogin')->name('auth.google');
+    Route::get('auth/google-callback','googleAuthentication')->name('auth.google-callback');
+});
+
 
 Route::get('/demo', function () {
     return view('demo');
