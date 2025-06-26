@@ -13,8 +13,15 @@ const props = defineProps({
         type: Object,
         required: true
     }
-});
 
+});
+const formatStatus = (status) => {
+    if (!status) return '';
+    return status
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+};
 </script>
 <template>
 
@@ -51,7 +58,8 @@ const props = defineProps({
         </div>
         <div>
             <p class="font-[Lato] font-medium text-[16px] leading-[16px] tracking-[0]  text-secondary p-2">
-                Status: {{ order?.status }}</p>
+                Status: {{ formatStatus(order?.status) }}
+            </p>
         </div>
         <div class="flex justify-end gap-3">
             <Link :href="route('orders.show', props.order.id)">
