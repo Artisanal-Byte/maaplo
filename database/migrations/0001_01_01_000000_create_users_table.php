@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->boolean('hash_organization')->default(true);
             $table->string('thumbnail_logo')->nullable();
             $table->enum('subscription_plan', ['free'])->default('free');
+            $table->enum('role', ['user', 'admin'])->default('user');
             $table->boolean('status')->default(true);
             $table->date('validity')->nullable();
             $table->timestamp('email_verified_at')->nullable();

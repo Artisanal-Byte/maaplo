@@ -38,7 +38,7 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
+        dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
