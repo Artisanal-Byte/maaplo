@@ -16,6 +16,7 @@ const props = defineProps([
     'modelValue',
     'width',
     'fonttype',
+    'value',
     'label',
     'radioValue',
     'error',
@@ -79,7 +80,7 @@ const widthClass = {
 
         <template v-if="type === 'radio'">
             <div class="flex gap-2">
-                <input :type="type" :id="id" :name="name" :value="radioValue" v-model="model" :disabled="disabled"
+                <input :type="type" :id="id" :name="name" :value="value" v-model="model" :disabled="disabled"
                     :class="[
                         'transition duration-200 focus:outline-none accent-[#167893] w-4',
                         colorClass,
