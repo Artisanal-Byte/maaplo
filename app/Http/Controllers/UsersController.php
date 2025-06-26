@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ImageHelper;
+use App\Models\SubscriptionPlan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -30,7 +31,10 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return Inertia::render('admin/Create');
+        $plans = SubscriptionPlan::select('id', 'plan_title')->get();
+        return Inertia::render('admin/Create', [
+            'plans' => $plans,
+        ]);
     }
 
     /**
@@ -38,7 +42,7 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -54,7 +58,7 @@ class UsersController extends Controller
         // dd($validated);
 
         $validated['password'] = bcrypt($validated['password']);
-
+        // dd( $validated['password']);
         try {
             DB::beginTransaction();
 
@@ -64,7 +68,7 @@ class UsersController extends Controller
                 'organization_logo' => '',
                 'thumbnail_logo' => '',
             ]);
-
+            // dd($tempUser);
             // If logo image exists, process both original and thumbnail
             if ($request->hasFile('organization_logo')) {
                 $file = $request->file('organization_logo');
@@ -87,6 +91,7 @@ class UsersController extends Controller
             return redirect()->route('user.index')->with('success', 'User created successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
+            \Log::error('User store failed', ['error' => $e->getMessage()]);
             return redirect()->back()->withInput()->with('error', 'There was an error: ' . $e->getMessage());
         }
     }
