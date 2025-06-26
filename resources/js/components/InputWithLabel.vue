@@ -80,7 +80,7 @@ const widthClass = {
 
         <template v-if="type === 'radio'">
             <div class="flex gap-2">
-                <input :type="type" :id="id" :name="name" :value="value" v-model="model" :disabled="disabled"
+                <input :type="type" :id="id" :name="name" :value="radioValue" v-model="model" :disabled="disabled"
                     :class="[
                         'transition duration-200 focus:outline-none accent-[#167893] w-4',
                         colorClass,
@@ -137,7 +137,7 @@ const widthClass = {
             <div class="relative">
                 <label v-if="label" :for="id" :class="[textSizeClass, fonttype]" class="font-medium">
                     {{ label }}
-                    <span v-if="required" class="text-red-500 text-lg">*</span> 
+                    <span v-if="required" class="text-red-500 text-lg">*</span>
                     <span v-else class="text-gray-400 text-sm">(optional)</span>
                 </label>
                 <div class="relative">
