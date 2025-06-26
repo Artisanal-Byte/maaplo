@@ -50,10 +50,30 @@ const filteredOrders = computed(() => {
         const matchesSearch = !searchTerm.value ||
             orderNumber.toLowerCase().includes(search) ||
             customerName.toLowerCase().includes(search);
-console.log('order.status',order.status);
 
         const matchesStatus = !selectedStatus.value || order.status.toLowerCase() == selectedStatus.value.toLowerCase();
-        const matchesDelivery = !selectedDelivery.value || order.deliveryDateRange == selectedDelivery.value;
+        const matchesDelivery = !selectedDelivery.value || (() => {
+            const [day, month, year] = order.delivery_date.split('-');
+            const deliveryDate = new Date(`${year}-${month}-${day}`);
+            const today = new Date();
+            const diffDays = Math.ceil((deliveryDate - today) / (1000 * 60 * 60 * 24));
+            console.log('order.delivery_date', order.delivery_date, diffDays);
+
+            if (selectedDelivery.value === 'Within 7 Days') {
+                return diffDays >= 0 && diffDays <= 7;
+            }
+            if (selectedDelivery.value === '7-15 Days') {
+                return diffDays >= 8 && diffDays <= 15;
+            }
+            if (selectedDelivery.value === 'Overdue') {
+                return diffDays < 0;
+            }
+            if (selectedDelivery.value === 'One Month') {
+                return diffDays > 15 && diffDays <= 30;
+            }
+
+            return true;
+        })();
 
         return matchesSearch && matchesStatus && matchesDelivery;
     });
@@ -79,8 +99,6 @@ function toggleDropdownDelivery() {
                     <h1 class="text-[24px] mt-3 leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                         Orders
                     </h1>
-                    <!-- <pre>{{ filteredOrders }}</pre> -->
-                    <!-- <pre>{{ orders }}</pre> -->
                 </div>
                 <!-- View Closed Orders Button -->
                 <div class="mt-6">
@@ -91,9 +109,24 @@ function toggleDropdownDelivery() {
                     </Link>
                 </div>
                 <div class="flex gap-4 text-gray-600">
-                    <SearchList :showable="showable" @hideOrShow="hideOrShow('search')" />
-                    <FilterList :showable="showable" @hideOrShow="hideOrShow" />
+                    <!-- Reset Tooltip -->
+                    <div title="Reset">
+                        <Link :href="route('orders.index')">
+                        <Icon icon="ic:outline-refresh" width="32" height="32" class="mt-1 cursor-pointer" />
+                        </Link>
+                    </div>
+
+                    <!-- Search Tooltip -->
+                    <div title="Search">
+                        <SearchList :showable="showable" @hideOrShow="hideOrShow('search')" />
+                    </div>
+
+                    <!-- Filter Tooltip -->
+                    <div title="Filter">
+                        <FilterList :showable="showable" @hideOrShow="hideOrShow" />
+                    </div>
                 </div>
+
             </div>
             <!-- Search and filter section -->
             <div>
@@ -128,8 +161,8 @@ function toggleDropdownDelivery() {
                                 <li>
                                     <div class="flex flex-col ml-2 gap-1 text-black ml-2">
                                         <div>
-                                            <Input type="radio" id="create" name="status" label="Created" radioValue="Created"
-                                                v-model="selectedStatus" />
+                                            <Input type="radio" id="create" name="status" label="Created"
+                                                radioValue="Created" v-model="selectedStatus" />
                                             <!-- <label for="create" class="ml-2">Create</label><br> -->
                                         </div>
                                         <div>
@@ -149,7 +182,8 @@ function toggleDropdownDelivery() {
                                         </div>
                                         <div>
                                             <Input type="radio" id="ready-for-delivery" label="Ready for Delivery"
-                                                name="status" radioValue="ready_for_delivery" v-model="selectedStatus" />
+                                                name="status" radioValue="ready_for_delivery"
+                                                v-model="selectedStatus" />
                                             <!-- <label for="ready-for-delivery" class="ml-2">Ready for Delivery</label><br> -->
                                         </div>
                                         <div>
@@ -181,7 +215,8 @@ function toggleDropdownDelivery() {
                                     <div class="flex flex-col ml-2 gap-1 text-black ml-2">
                                         <div>
                                             <Input type="radio" id="Within-7-Days" label="Within 7
-                                                Days" name="date" radioValue="Within 7 Days" v-model="selectedDelivery" />
+                                                Days" name="date" radioValue="Within 7 Days"
+                                                v-model="selectedDelivery" />
                                             <!-- <label for="Within-7-Days" class="ml-2 text-black">Within 7
                                                 Days</label><br> -->
                                         </div>
@@ -191,8 +226,8 @@ function toggleDropdownDelivery() {
                                             <!-- <label for="7-15-Days" class="ml-2">7-15 Days</label><br> -->
                                         </div>
                                         <div>
-                                            <Input type="radio" id="Overdue" label="Overdue" name="date" radioValue="Overdue"
-                                                v-model="selectedDelivery" />
+                                            <Input type="radio" id="Overdue" label="Overdue" name="date"
+                                                radioValue="Overdue" v-model="selectedDelivery" />
                                             <!-- <label for="Overdue" class="ml-2">Overdue</label><br> -->
                                         </div>
                                         <div>
