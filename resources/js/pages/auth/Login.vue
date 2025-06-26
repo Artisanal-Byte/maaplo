@@ -175,11 +175,11 @@ const submit = () => {
                                     <div class="flex-grow border-t border-gray-400"></div>
                                 </div>
 
-                                <Button type="submit"
+                                <a  :href="route('auth.google')"
                                     class="w-full bg-transparent rounded-md text-black border border-gray-300 hover:bg-gray-100 flex items-center justify-center gap-2 py-5">
                                     <img src="/images/google-icon.svg" alt="Google Icon" class="w-4 h-4" />
                                     Log in with Google
-                                </Button>
+                                </a>
 
                                 <!-- Register link -->
                                 <div class="mt-5 text-center text-sm text-muted-foreground">

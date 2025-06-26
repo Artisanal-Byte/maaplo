@@ -86,12 +86,8 @@ function viewOrder(orderId) {
                             <th
                                 class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                 Customer</th>
-                            <th
-                                class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Phone</th>
-                            <th
-                                class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Address</th>
+
+
                             <th
                                 class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                 Actions</th>
@@ -105,18 +101,15 @@ function viewOrder(orderId) {
                         </tr>
                         <tr v-else v-for="order in deliveredOrders" :key="order.id"
                             class="hover:bg-blue-50 transition duration-200 ease-in-out">
-                            <td class="px-6 py-4 font-medium text-gray-800 whitespace-nowrap">#{{ order.order_number }}
+                            <td class="px-6 py-4 font-medium text-center text-gray-800 whitespace-nowrap">#{{ order.order_number }}
                             </td>
-                            <td class="px-6 py-4 text-gray-700 whitespace-nowrap">₹{{ order.total_amount }}</td>
-                            <td class="px-6 py-4 text-gray-700 whitespace-nowrap">{{ order.delivery_date }}</td>
-                            <td class="px-6 py-4 text-gray-700 whitespace-nowrap">{{ order.customer?.name ?? 'N/A' }}
+                            <td class="px-6 py-4 text-center text-gray-700 whitespace-nowrap">₹{{ order.total_amount }}</td>
+                            <td class="px-6 py-4 text-center text-gray-700 whitespace-nowrap">{{ order.delivery_date }}</td>
+                            <td class="px-6 py-4 text-center text-gray-700 whitespace-nowrap">{{ order.customer?.name ?? 'N/A' }}
                             </td>
-                            <td class="px-6 py-4 text-gray-700 whitespace-nowrap">
-                                {{ order.customer?.country_code }} {{ order.customer?.phone }}
-                            </td>
-                            <td class="px-6 py-4 text-gray-700 whitespace-nowrap">{{ order.customer?.address }}</td>
-                            <td class="px-6 py-4 text-right whitespace-nowrap">
-                                <div class="flex justify-end items-center gap-2">
+
+                            <td class="px-6 py-4 text-center whitespace-nowrap">
+                                <div class="flex justify-center items-center gap-2">
                                     <div class="relative group">
                                         <button @click="viewOrder(order.id)"
                                             class="p-2 rounded-full hover:bg-gray-100 transition relative">

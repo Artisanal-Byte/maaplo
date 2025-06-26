@@ -1344,7 +1344,7 @@
                         <div class="lg:absolute lg:top-0 lg:right-0">
                             {{-- <x-icon name="section8-img5" /> --}}
                             <img src="/images/section8-img5.svg" alt="Section 8 Image"
-                                class="w-[260px] h-[245px] lg:-mr-[100px]">
+                                class="hover-rotate-x  w-[260px] h-[245px] lg:-mr-[100px] transition-transform duration-300 hover:rotate-x-[360deg]">
                         </div>
 
                         <!-- Heading Overlapping Below Icon -->

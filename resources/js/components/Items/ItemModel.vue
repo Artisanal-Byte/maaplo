@@ -30,12 +30,13 @@
     function saveItem() {
         try {
             if (formStore.order_items_template.mode === 'create') {
-                formStore.pushOrderItem();
+                const newItem = formStore.pushOrderItem(); // assume this returns the item or grab from template
+                emit('item-added', { ...formStore.order_items_template }); // 🔥 Add this line
             } else if (formStore.order_items_template.mode === 'edit') {
                 formStore.updateOrderItem(props.currentEditIndex);
+                emit('item-updated');
             }
 
-            emit('item-updated');
             formStore.resetOrderItemTemplate();
             emit('close');
         } catch (err) {
@@ -308,7 +309,7 @@
 
                         <div class="flex items-center gap-4">
                             <h1 class="font-medium font-lato">Mark as Urgent</h1>
-                            <ToggleButton v-model:model="formStore.order_items_template.is_urgent"/>
+                            <ToggleButton v-model:model="formStore.order_items_template.is_urgent" />
 
                         </div>
                         <!-- Upload icon, only shown when toggle is ON -->
