@@ -25,6 +25,7 @@ const props = defineProps([
 
 const model = defineModel('modelValue');
 
+
 // Color classes
 const colorClass = {
     primary: 'bg-primary border border-primary text-black focus:border-primary',

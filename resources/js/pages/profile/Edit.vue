@@ -150,7 +150,7 @@ function closeImageModal() {
                     <div>
                         <label for="organization_logo" class="block mb-1 font-semibold">Organization Logo</label>
                         <input id="organization_logo" type="file" accept="image/*" @change="handleLogoChange"
-                            class="border border-gray-300 rounded px-3 py-2 w-full" required />
+                            class="border border-primary rounded px-3 py-2 w-full" required />
                         <div v-if="organizationLogoUrl" class="mt-2 cursor-pointer"
                             @click="openImageModal(organizationLogoUrl)">
                             <img :src="organizationLogoUrl" alt="Organization Logo" class="w-32 h-auto rounded" />
@@ -163,7 +163,7 @@ function closeImageModal() {
                     <div>
                         <label for="avatar" class="block mb-1 font-semibold">Avatar</label>
                         <input id="avatar" type="file" accept="image/*" @change="handleAvatarChange"
-                            class="border border-gray-300 rounded px-3 py-2 w-full" />
+                            class="border border-primary rounded px-3 py-2 w-full" />
                         <div v-if="avatarUrl" class="mt-2 cursor-pointer" @click="openImageModal(avatarUrl)">
                             <img :src="avatarUrl" alt="Avatar" class="w-24 h-24 rounded-full object-cover" />
                         </div>

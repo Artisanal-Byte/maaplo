@@ -171,22 +171,22 @@ function toggleDropdownDelivery() {
                                     <div class="flex flex-col ml-2 gap-1 text-black ml-2">
                                         <div>
                                             <Input type="radio" id="Within-7-Days" label="Within 7
-                                                Days" name="status" value="Within 7 Days" v-model="selectedDelivery" />
+                                                Days" name="date" value="Within 7 Days" v-model="selectedDelivery" />
                                             <!-- <label for="Within-7-Days" class="ml-2 text-black">Within 7
                                                 Days</label><br> -->
                                         </div>
                                         <div>
-                                            <Input type="radio" id="7-15-Days" label="7-15 Days" name="status"
+                                            <Input type="radio" id="7-15-Days" label="7-15 Days" name="date"
                                                 value="7-15 Days" v-model="selectedDelivery" />
                                             <!-- <label for="7-15-Days" class="ml-2">7-15 Days</label><br> -->
                                         </div>
                                         <div>
-                                            <Input type="radio" id="Overdue" label="Overdue" name="status"
+                                            <Input type="radio" id="Overdue" label="Overdue" name="date"
                                                 value="Overdue" v-model="selectedDelivery" />
                                             <!-- <label for="Overdue" class="ml-2">Overdue</label><br> -->
                                         </div>
                                         <div>
-                                            <Input type="radio" id="One-Month" label="One Month" name="status"
+                                            <Input type="radio" id="One-Month" label="One Month" name="date"
                                                 value="One Month" v-model="selectedDelivery" />
                                             <!-- <label for="One-Month" class="ml-2">One Month</label><br> -->
                                         </div>
