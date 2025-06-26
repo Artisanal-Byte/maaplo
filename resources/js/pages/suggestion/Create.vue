@@ -47,7 +47,7 @@ function submitForm() {
                 <Input v-model="form.suggestion_title" label="Suggestion Title" placeholder="Enter suggestion title"
                     :error="form.errors.suggestion_title" required="true">
                 <template #icon>
-                    <Icon icon="mdi:title" width="24" height="24" />
+                    <Icon icon="fluent:slide-text-title-edit-20-filled" width="24" height="24" />
                 </template>
                 </Input>
 
