@@ -113,7 +113,7 @@ const createDesignDetail = () => {
                             Body Section <span class="text-red-600">*</span>
                         </label>
                         <select id="body_section" v-model="form.body_section"
-                            class="w-full rounded-md border border-gray-300 px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                            class="w-full rounded-md border border-primary px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                             required="true">
                             <option disabled value="">Select body section</option>
                             <option value="Upper">Upper Body</option>
@@ -129,7 +129,7 @@ const createDesignDetail = () => {
                             Gender <span class="text-red-600">*</span>
                         </label>
                         <select id="gender" v-model="form.gender"
-                            class="w-full rounded-md border border-gray-300 px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                            class="w-full rounded-md border border-primary px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                             required>
                             <option disabled value="">Select Gender</option>
                             <option value="m">Male</option>
@@ -144,7 +144,7 @@ const createDesignDetail = () => {
                         <label class="block text-sm font-semibold text-gray-800 mb-1">Select Existing Body Part <span
                                 class="text-red-500">*</span></label>
                         <select v-model="form.body_part_id" :disabled="form.new_body_part.length > 0"
-                            class="w-full border rounded-md py-2 px-3 text-sm shadow-sm focus:ring-primary focus:border-primary">
+                            class="w-full border border-primary rounded-md py-3 mt-1 px-3 text-sm shadow-sm focus:ring-primary focus:border-primary">
                             <option value="">-- Select Body Part --</option>
                             <option v-for="part in existingBodyParts" :key="part.id" :value="part.id">
                                 {{ part.body_part }}

@@ -107,7 +107,7 @@ const updateDesignDetail = () => {
                             Body Section <span class="text-red-500">*</span>
                         </label>
                         <select id="body_section" v-model="form.body_section" required
-                            class="w-full border rounded-md py-2 px-3 text-sm shadow-sm focus:ring-primary focus:border-primary">
+                            class="w-full border border-primary rounded-md py-2 px-3 text-sm shadow-sm focus:ring-primary focus:border-primary">
                             <option disabled value="">Select body section</option>
                             <option value="Upper">Upper Body</option>
                             <option value="Lower">Lower Body</option>
@@ -123,7 +123,7 @@ const updateDesignDetail = () => {
                             Gender <span class="text-red-500">*</span>
                         </label>
                         <select id="gender" v-model="form.gender" required
-                            class="w-full border rounded-md py-2 px-3 text-sm shadow-sm focus:ring-primary focus:border-primary">
+                            class="w-full border border-primary rounded-md py-2 px-3 text-sm shadow-sm focus:ring-primary focus:border-primary">
                             <option value="m">Male</option>
                             <option value="f">Female</option>
                             <option value="o">Other</option>
@@ -139,7 +139,7 @@ const updateDesignDetail = () => {
                             Body Part <span class="text-red-500">*</span>
                         </label>
                         <select v-model="form.body_part_id" :disabled="!!form.new_body_part"
-                            class="w-full border rounded-md py-2 px-3 text-sm shadow-sm focus:ring-primary focus:border-primary">
+                            class="w-full border border-primary rounded-md py-2 px-3 text-sm shadow-sm focus:ring-primary focus:border-primary">
                             <option value="">-- Select --</option>
                             <option v-for="part in props.bodyParts" :key="part.id" :value="part.id">
                                 {{ part.body_part }}
@@ -174,7 +174,7 @@ const updateDesignDetail = () => {
 
                 <!-- SVG Preview -->
                 <div
-                    class="mt-6 border border-gray-300 rounded-lg p-6 bg-gray-50 flex justify-center items-center min-h-[120px]">
+                    class="mt-6 border border-primary rounded-lg p-6 bg-gray-50 flex justify-center items-center min-h-[120px]">
                     <label class="sr-only">SVG Preview</label>
 
                     <!-- Full SVG Markup -->

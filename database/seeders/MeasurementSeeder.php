@@ -41,7 +41,7 @@ SVG,
             ],
             [
                 'id' => 2,
-                'slug' => 'back_neck',
+                'slug' => 'front_neck',
                 'measurements_logo' => <<<SVG
 <svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -241,7 +241,7 @@ SVG,
             ],
             [
                 'id' => 10,
-                'slug' => 'front_neck',
+                'slug' => 'back_neck',
                 'measurements_logo' => <<<SVG
 <svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink">

@@ -118,7 +118,7 @@ const createUser = () => {
                             </label>
                             <div class="relative">
                                 <select id="subscription_plan" v-model="form.subscription_plan" required
-                                    class="appearance-none block w-full bg-white border border-gray-300 rounded-md py-2 px-3 pr-10 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="appearance-none block w-full bg-white border border-primary rounded-md py-3 px-3 pr-10 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                                     <option disabled value="">Select a plan</option>
                                     <option value="free">Free</option>
                                 </select>

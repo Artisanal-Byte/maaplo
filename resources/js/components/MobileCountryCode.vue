@@ -63,7 +63,7 @@ function updateValue(event) {
 <template>
     <div class="relative inline-block w-48">
         <button type="button" @click="toggleDropdown"
-            class="w-full border border-gray-300 rounded px-3 py-2 flex items-center justify-between focus:outline-none">
+            class="w-full border border-primary rounded px-3 py-2 flex items-center justify-between focus:outline-none">
             <div class="flex items-center gap-2">
                 <span :class="`flag-icon flag-icon-${selectedCountry.countryCode}`" class="w-6 h-4 rounded-sm"></span>
                 <span>{{ selectedCountry.name }} {{ selectedCountry.code }}</span>
