@@ -1,11 +1,15 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import { defineProps } from 'vue';
 import { Icon } from '@iconify/vue';
 const props = defineProps({
     closedOrders: Array,
 });
+
+function viewOrder(orderId) {
+    router.visit(route('orders.show', orderId) + '?source=fullclosed');
+}
 </script>
 
 <template>
@@ -35,7 +39,25 @@ const props = defineProps({
                         <p><strong>Delivery Date :</strong> {{ order.delivery_date }}</p>
                         <p class="md:col-span-2"><strong>Total Amount :</strong> ₹{{ order.total_amount }}</p>
                     </div>
+                    <div class="flex justify-end mt-4 group relative">
+                        <button @click="viewOrder(order.id)" class="p-2 rounded-full hover:bg-gray-100 transition">
+                            <Icon icon="ic:round-visibility" class="text-primary" width="24" height="24" />
+                        </button>
+                        <!-- Tooltip -->
+                        <div
+                            class="absolute bottom-full right-0 mb-2 px-3 py-1 text-xs text-white bg-gray-800 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                            View Order
+                        </div>
+                    </div>
+
+
+                    <!-- Tooltip -->
+                    <div
+                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 text-xs text-white bg-gray-800 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 whitespace-nowrap">
+                        View Order
+                    </div>
                 </div>
+
             </div>
 
             <div v-else class="text-center text-gray-400 py-16">

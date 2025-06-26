@@ -11,7 +11,15 @@ const props = defineProps({
 // const props = defineProps(['order', 'designDetails'])
 
 const page = usePage()
-const routeSource = computed(() => page.url.includes('source=closed') ? 'closed' : 'normal')
+const routeSource = computed(() => {
+    if (page.url.includes('source=fullclosed')) {
+        return 'fullclosed';
+    } else if (page.url.includes('source=closed')) {
+        return 'closed';
+    } else {
+        return 'normal';
+    }
+});
 const parsedItemDetails = computed(() => {
     return props.order?.order_items?.map(item => ({
         ...item,
@@ -54,7 +62,13 @@ const pendingAmount = computed(() => {
                     🧾 Order Overview
                 </h1> -->
                 <h1 class="text-xl lg:text-3xl font-extrabold text-primary">
-                    {{ routeSource === 'closed' ? '🧾 Closed Order Overview' : '🧾 Order Overview' }}
+                    {{
+                        routeSource === 'fullclosed'
+                            ? '📦 Fully Closed Order Overview'
+                            : routeSource === 'closed'
+                                ? '🧾 Closed Order Overview'
+                    : '🧾 Order Overview'
+                    }}
                 </h1>
                 <!-- Back Link on the right -->
                 <Link :href="route(routeSource === 'closed' ? 'orders.closed' : 'orders.index')"
