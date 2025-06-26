@@ -11,28 +11,57 @@ use Illuminate\Support\Facades\Log;
 
 class FeatureRequestAndSuggestionController extends Controller
 {
-
     public function indexSuggestion()
     {
-        $suggestions = FeatureRequestAndSuggestion::whereNotNull('suggestion_title')
+        $suggestions = FeatureRequestAndSuggestion::with('user')
+            ->whereNotNull('suggestion_title')
             ->latest()
-            ->get();
+            ->get()
+            ->map(function ($suggestion) {
+                return [
+                    'id' => $suggestion->id,
+                    'suggestion_title' => $suggestion->suggestion_title,
+                    'suggestion_description' => $suggestion->suggestion_description,
+                    'user' => [
+                        'id' => $suggestion->user->id,
+                        'name' => $suggestion->user->name,
+                    ],
+                    'created_at' => $suggestion->created_at,
+                ];
+            });
 
         return inertia('suggestion/Index', [
             'suggestions' => $suggestions,
         ]);
     }
 
+
     public function indexFeatureRequest()
     {
-        $featureRequests = FeatureRequestAndSuggestion::whereNotNull('feature_name')
+        $featureRequests = FeatureRequestAndSuggestion::with('user')
+            ->whereNotNull('feature_name')
             ->latest()
-            ->get();
+            ->get()
+            ->map(function ($feature) {
+                return [
+                    'id' => $feature->id,
+                    'feature_name' => $feature->feature_name,
+                    'feature_description' => $feature->feature_description,
+                    'feature_experience' => $feature->feature_experience,
+                    'user' => [
+                        'id' => $feature->user->id,
+                        'name' => $feature->user->name,
+                    ],
+                    'created_at' => $feature->created_at,
+                ];
+            });
 
-        return inertia('featurerequest/Index', [
+        return inertia('featureRequest/Index', [
             'featureRequests' => $featureRequests,
         ]);
     }
+
+
 
     public function storeFeatureRequest(Request $request)
     {

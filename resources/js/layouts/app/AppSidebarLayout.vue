@@ -21,9 +21,9 @@ withDefaults(defineProps<Props>(), {
             <div class="flex justify-between border-b sticky top-0 z-50 bg-white">
                 <AppSidebar />
                 <AppSidebarHeader :breadcrumbs="breadcrumbs" />
-               
+
             </div>
             <slot />
         </AppContent>
     </AppShell>
-</template>git 
+</template>git
