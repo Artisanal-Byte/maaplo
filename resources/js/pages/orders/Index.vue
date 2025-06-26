@@ -9,6 +9,7 @@ import { Head, Link } from '@inertiajs/vue3';
 import { defineProps, computed, reactive, ref, watch } from 'vue';
 
 const props = defineProps(['orders'])
+
 const searchTerm = ref('');
 // const orders = ref([]);
 const selectedStatus = ref('');
@@ -33,22 +34,31 @@ const hideOrShow = (whichShow) => {
 // debounce the function to avoid too many calls
 function myFn(val) {
     searchTerm.value = val
-    console.log('Searching:', val)
 }
 watch(selectedStatus, (newStatus) => {
-    console.log('Selected Status:', newStatus);
 });
 watch(selectedDelivery, (newDelivery) => {
-    console.log('Selected Delivery:', newDelivery);
 });
 const filteredOrders = computed(() => {
-    return props.orders.value.filter(order => {
-        const matchesSearch = !searchTerm.value || order.name.toLowerCase().includes(searchTerm.value.toLowerCase()) || order.status.toLowerCase().includes(searchTerm.value.toLowerCase());
+    const ordersArray = props.orders?.orders || [];
+    const search = searchTerm.value.toLowerCase();
+
+    return ordersArray.filter(order => {
+        const orderNumber = order.order_number || '';
+        const customerName = order.customer?.name || ''; // ✅ safe access
+
+        const matchesSearch = !searchTerm.value ||
+            orderNumber.toLowerCase().includes(search) ||
+            customerName.toLowerCase().includes(search);
+
         const matchesStatus = !selectedStatus.value || order.status === selectedStatus.value;
         const matchesDelivery = !selectedDelivery.value || order.deliveryDateRange === selectedDelivery.value;
+
         return matchesSearch && matchesStatus && matchesDelivery;
     });
 });
+
+
 
 
 // dropdown function
@@ -71,15 +81,16 @@ function toggleDropdownDelivery() {
                     <h1 class="text-[24px] mt-3 leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                         Orders
                     </h1>
+                    <!-- <pre>{{ orders }}</pre> -->
                 </div>
-                    <!-- View Closed Orders Button -->
-                    <div class="mt-6">
-                        <Link :href="route('orders.viewClosed')"
-                            class="inline-flex items-center px-4 py-2 bg-primary text-white text-sm font-semibold rounded-md shadow">
-                        <Icon icon="ic:round-visibility" class="mr-2" width="20" height="20" />
-                        View Closed Orders
-                        </Link>
-                    </div>
+                <!-- View Closed Orders Button -->
+                <div class="mt-6">
+                    <Link :href="route('orders.viewClosed')"
+                        class="inline-flex items-center px-4 py-2 bg-primary text-white text-sm font-semibold rounded-md shadow">
+                    <Icon icon="ic:round-visibility" class="mr-2" width="20" height="20" />
+                    View Closed Orders
+                    </Link>
+                </div>
                 <div class="flex gap-4 text-gray-600">
                     <SearchList :showable="showable" @hideOrShow="hideOrShow('search')" />
                     <FilterList :showable="showable" @hideOrShow="hideOrShow('filter')" />
@@ -200,7 +211,7 @@ function toggleDropdownDelivery() {
             <div class="px-4 mt-10 py-6 gap-[10px] rounded-[10px] shadow-[0px_0px_8.6px_0px_#005FAF40]">
                 <!-- Orders list -->
                 <div class="space-y-4">
-                    <OrderList v-if="orders?.orders?.length > 0" v-for="(order, index) in orders.orders"
+                    <OrderList v-if="filteredOrders.length > 0" v-for="(order, index) in filteredOrders" :key="order.id"
                         :bgColor="bgColor[index % bgColor.length]"
                         :borderColor="borderColor[index % borderColor.length]" :order="order" />
                     <span v-else>No Orders</span>

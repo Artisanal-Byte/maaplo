@@ -9,6 +9,11 @@ import Input from '@/components/InputWithLabel.vue';
 const toast = new ToastMagic();
 const logoPreview = ref(null);
 const showPassword = ref(false);
+const props = defineProps({
+    plans: Array
+});
+console.log('Plans:', props.plans);
+
 const form = useForm({
     name: '',
     email: '',
@@ -50,12 +55,14 @@ const createUser = () => {
 </script>
 
 <template>
+
     <Head title="User-Create" />
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <!-- Header -->
             <div class="flex justify-between items-center mb-8">
-                <h1 class="text-xl lg:text-3xl text-primary font-bold text-gray-800 font-[Convergence] flex items-center gap-2">
+                <h1
+                    class="text-xl lg:text-3xl text-primary font-bold text-gray-800 font-[Convergence] flex items-center gap-2">
                     <Icon icon="mdi:account-plus" width="28" height="28" />
                     Create User
                 </h1>
@@ -69,7 +76,7 @@ const createUser = () => {
             <div class="mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
                 <!-- Section: User Info -->
                 <div>
-                    <h2 class="text-lg font-semibold text-gray-700 mb-4">User Information</h2>
+                    <!-- <h2 class="text-lg font-semibold text-primary mb-4">Create</h2> -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
                         <Input type="text" v-model="form.name" label="User Name" :required="true"
                             :error="form.errors.name" placeholder="Enter User Name">
@@ -120,9 +127,10 @@ const createUser = () => {
                                 <select id="subscription_plan" v-model="form.subscription_plan" required
                                     class="appearance-none block w-full bg-white border border-gray-300 rounded-md py-2 px-3 pr-10 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                                     <option disabled value="">Select a plan</option>
-                                    <option value="free">Free</option>
+                                    <option v-for="plan in props.plans" :key="plan.id" :value="plan.plan_title">
+                                        {{ plan.plan_title }}
+                                    </option>
                                 </select>
-                                <!-- Custom dropdown arrow -->
                                 <div
                                     class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
                                     <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -136,6 +144,7 @@ const createUser = () => {
                                 {{ form.errors.subscription_plan }}
                             </div>
                         </div>
+
 
                         <Input type="date" v-model="form.validity" label="Validity" :error="form.errors.validity"
                             :required="true">

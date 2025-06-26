@@ -138,8 +138,14 @@ export const useOrderFormStore = defineStore('orderForm', {
         createOrder() {
             const { order_items_template, ...formData } = this.$state;
             const form = useForm({ ...formData });
-            form.post(route('orders.store'));
-            this.resetOrderData()
+            form.post(route('orders.store'),{
+                onSuccess: () => {
+                    this.resetOrderData();
+                },
+                onError: (errors) => {
+                    console.error('Order creation failed:', errors);
+                }
+            });
         },
         deleteOrderItem(index) {
             if (index >= 0 && index < this.order_items.length) {
