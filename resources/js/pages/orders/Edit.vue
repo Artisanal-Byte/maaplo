@@ -209,9 +209,12 @@ const onItemAdded = (itemData) => {
                     <div class="relative w-[320px] mt-2">
                         <select id="status" v-model="form.status"
                             class="appearance-none w-full pl-4 pr-10 py-2.5 rounded-md border border-gray-300 text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out">
-                            <option value="created" selected>🆕 Created</option>
-                            <option value="in process">🔄 In Process</option>
+                            <option value="created">🆕 Created</option>
+                            <option value="in_process">🔄 In Process</option>
                             <option value="processed">📦 Processed</option>
+                            <option value="trial_done">🧪 Trial Done</option>
+                            <option value="in_alteration">✂️ In Alteration</option>
+                            <option value="ready_for_delivery">📬 Ready for Delivery</option>
                             <option value="delivered">🚚 Delivered</option>
                             <option value="completed">✅ Completed</option>
                             <option value="cancelled">❌ Cancelled</option>
@@ -254,7 +257,7 @@ const onItemAdded = (itemData) => {
                     <ItemModel :errors="errors" :showModal="showModal" @close="closeModel"
                         :form="form.order_items_template" :itemTypes="itemTypes" :measurements="[]"
                         :orderItems="orderItems" :currentEditIndex="currentEditIndex" :order="order"
-                        @item-updated="recalculateTotal" @item-added="onItemAdded"/>
+                        @item-updated="recalculateTotal" @item-added="onItemAdded" />
 
                     <div class="mt-6 overflow-x-auto rounded-lg shadow-lg">
                         <table class="min-w-full border-collapse bg-white text-sm text-left text-gray-700">
