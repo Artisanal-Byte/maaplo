@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Icon } from "@iconify/vue";
-import { Link,usePage } from "@inertiajs/vue3";
+import { Link, usePage } from "@inertiajs/vue3";
 import { computed } from "vue";
 import Logo from "./Logo.vue";
 const page = usePage();
@@ -9,12 +9,16 @@ const organizationId = computed(() => page.props.auth.user);
 
 const showDropdown = ref(false);
 const showDropdownCustomer = ref(false);
+const showDropdownSelectAction = ref(false);
 function toggleDropdown() {
     showDropdown.value = !showDropdown.value;
 }
 function toggleDropdownCustomer() {
     showDropdownCustomer.value = !showDropdownCustomer.value;
 }
+const toggleDropdownSelectAction = () => {
+    showDropdownSelectAction.value = !showDropdownSelectAction.value;
+};
 const visible = ref(false);
 </script>
 
@@ -138,7 +142,49 @@ const visible = ref(false);
                 </ul>
                 <!-- Bottom "Preference" Link -->
                 <div class="p-4 absolute inset-x-0 bottom-0">
-                    <a :href="route('organization.index', organizationId)" class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700 hover:text-black">
+
+                    <div class="relative inline-block">
+                        <!-- Dropdown: Positioned above -->
+                        <div v-show="showDropdownSelectAction" class="absolute bottom-full mb-2 z-10 ml-5 w-max">
+                            <ul class="ml-6 list-disc list-inside font-inter font-medium text-[16px] leading-[16px] tracking-[0]"
+                                aria-labelledby="dropdownTrigger">
+                                <div class="flex flex-row rounded hover:bg-gray-100 p-2">
+                                    <Link :href="route('suggestion.create')" class="text-gray-700 hover:text-black">
+                                    Add Suggestion
+                                    </Link>
+                                </div>
+
+                                <div class="flex flex-row py-2 mt-2 rounded hover:bg-gray-100 p-2">
+                                    <Link href="#" class="block text-gray-700 hover:text-black">
+                                    Report Error
+                                    </Link>
+                                </div>
+
+                                <div class="flex flex-row py-2 mt-2 rounded hover:bg-gray-100 p-2">
+                                    <Link :href="route('feature-request.create')"
+                                        class="block text-gray-700 hover:text-black">
+                                    Feature Request
+                                    </Link>
+                                </div>
+                            </ul>
+                        </div>
+
+                        <!-- Trigger -->
+                        <div @click="toggleDropdownSelectAction"
+                            class="flex rounded hover:bg-gray-200 text-gray-700 hover:text-black cursor-pointer">
+                            <div class="flex items-center p-2 rounded">
+                                <Icon icon="file-icons:actionscript" width="20" height="20" />
+                                <span class="ml-2 font-inter font-medium text-[16px] leading-[16px] tracking-[0]">
+                                    Select Action
+                                </span>
+                            </div>
+                            <Icon :icon="showDropdownSelectAction ? 'icon-park-outline:up' : 'icon-park-outline:down'"
+                                width="20" height="20" class="mt-[10px]" />
+                        </div>
+                    </div>
+                    <!-- </li> -->
+                    <a :href="route('organization.index', organizationId)"
+                        class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700 hover:text-black">
                         <Icon icon="lets-icons:setting-fill" width="20" height="20" />
                         <span
                             class="ml-2 font-inter font-medium text-[16px] leading-[16px] tracking-[0]">Preference</span>
