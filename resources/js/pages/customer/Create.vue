@@ -9,6 +9,7 @@ import Notes from '@/components/Items/Notes.vue';
 import Measurements from '@/components/Items/Measurements.vue';
 import CustomerLimitPopup from '@/components/CustomerLimitPopup.vue';
 import MobileCountryCode from '@/components/MobileCountryCode.vue';
+import Loader from '@/components/Loader.vue';
 const customerMeasurements = ref({});
 const props = defineProps<{
     errors: Record<string, string>,
@@ -20,7 +21,7 @@ const props = defineProps<{
 
 }>();
 const toast = new ToastMagic();
-
+const loading = ref(false);
 const form = reactive({
     user_id: props.user_id,
     name: '',
@@ -46,13 +47,14 @@ onMounted(() => {
     }
 });
 const submitForm = () => {
-
+    loading.value = true;
     router.post('/customers', {
         ...form,
         notes: notes.value,
         base_measurements: customerMeasurements.value,
     }, {
         onSuccess: () => {
+            loading.value = false;
             toast.success("Customer created successfully!");
         },
         onError: (errors) => {
@@ -88,7 +90,7 @@ const onPhoneInput = (event: Event) => {
     <AppLayout>
         <!-- Limit Reached Modal -->
         <CustomerLimitPopup :show="showLimitModal" @close="showLimitModal = false" />
-
+        <Loader v-if="loading" :message="'Creating customer...'" />
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex justify-between items-center">
                 <h1
@@ -125,7 +127,7 @@ const onPhoneInput = (event: Event) => {
                         </label>
                         <div class="flex gap-5">
                             <!-- Use MobileCountryCode component here -->
-                            <MobileCountryCode v-model="form.country_code"  class="rounded-r-none"/>
+                            <MobileCountryCode v-model="form.country_code" class="rounded-r-none" />
 
                             <!-- Phone Input -->
                             <Input type="tel" v-model="form.phone" class="rounded-l-none flex-1"
@@ -182,7 +184,7 @@ const onPhoneInput = (event: Event) => {
                 <div class="mt-5">
                     <!-- <label class="block font-[Lato] text-[18px] leading-[16px] tracking-[0] mb-2">Measurements</label> -->
                     <Measurements v-model:measurements="form.measurements" :error="errors.measurements"
-                        :toAsk="measurements" :isOrder="false"/>
+                        :toAsk="measurements" :isOrder="false" />
                     <div v-if="errors.measurements" class="text-red-600 text-sm mt-2">{{ errors.measurements }}</div>
                 </div>
 
