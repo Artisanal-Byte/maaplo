@@ -128,12 +128,13 @@ const updateCustomer = () => {
         };
     }).post(route('customers.update', props.customer.id), {
         onSuccess: () => {
-            loading.value = false;
             toast.success("Customer updated successfully!");
+            loading.value = false;
         },
         onError: (errors) => {
             console.error('Update failed:', errors);
             toast.error("Update failed. Please check the fields and try again.");
+            loading.value = false;
         }
     });
 };

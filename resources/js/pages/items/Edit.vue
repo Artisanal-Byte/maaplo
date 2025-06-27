@@ -62,6 +62,7 @@ const updateTemplate = () => {
         },
         onError: (errors) => {
             toast.error('Update failed. Please try again.');
+            loading.value = false;
         }
     });
 };

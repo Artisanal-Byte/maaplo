@@ -73,6 +73,7 @@ const submitForm = () => {
         },
         onError: () => {
             toast.error("Failed to create Item. Please fill in all the required fields.");
+            loading.value = false;
         },
     });
 };

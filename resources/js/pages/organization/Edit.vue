@@ -5,6 +5,7 @@ import { useForm, Link, Head } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
+import Loader from '@/components/Loader.vue';
 const toast = new ToastMagic();
 
 const props = defineProps({
@@ -13,15 +14,13 @@ const props = defineProps({
 });
 
 const logoPreview = ref(null);
-
+const loading = ref(false);
 const form = useForm({
     organization_name: props.organization.organization_name,
     organization_logo: '',
     gst_number: props.organization.gst_number,
     address: props.organization.address,
 });
-console.log('organization data',props.organization);
-console.log('form data',form);
 
 const logoUrl = computed(() => {
     return logoPreview.value
@@ -42,14 +41,24 @@ const handleLogoChange = (event) => {
 };
 
 const updateOrganization = () => {
-    form.transform((data) => ({
-        ...data,
-        _method: 'put',
-    })).post(route('organization.update', { organization: props.organization.id }), {
-        onSuccess: () => toast.success("Organization updated successfully!"),
-        onError: () => toast.error("Update failed. Please check the fields."),
+    form.transform((data) => {
+        loading.value = true;  // Set loading before sending the request
+        return {
+            ...data,
+            _method: 'put',
+        };
+    }).post(route('organization.update', { organization: props.organization.id }), {
+        onSuccess: () => {
+            toast.success("Organization updated successfully!");
+            loading.value = false;  // Stop loading after success
+        },
+        onError: () => {
+            toast.error("Update failed. Please check the fields.");
+            loading.value = false;  // Stop loading after error
+        },
     });
 };
+
 </script>
 
 <template>
@@ -67,7 +76,8 @@ const updateOrganization = () => {
                 <span class="text-md font-medium">Back</span>
                 </Link>
             </div>
-
+  <!-- Use the Loader Component -->
+            <Loader v-if="loading" :message="'Updating Organization...'" />
             <!-- Form Card -->
             <div class="bg-white lg:p-6 rounded-lg lg:shadow-md space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

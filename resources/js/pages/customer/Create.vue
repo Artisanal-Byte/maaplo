@@ -54,12 +54,14 @@ const submitForm = () => {
         base_measurements: customerMeasurements.value,
     }, {
         onSuccess: () => {
-            loading.value = false;
+
             toast.success("Customer created successfully!");
+            loading.value = false;
         },
         onError: (errors) => {
             toast.error("Failed to create customer. please fill the all the required fields.");
             console.error(errors);
+            loading.value = false;
         },
     });
 };
