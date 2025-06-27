@@ -6,6 +6,7 @@ import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
 import Input from '@/components/InputWithLabel.vue';
 import ImageModal from '@/components/ImageModal.vue';
+import Loader from '@/components/Loader.vue';
 const toast = new ToastMagic();
 const props = defineProps<{
     errors: Record<string, string>;
@@ -22,6 +23,7 @@ const props = defineProps<{
         avatar: null,
     };
 }>();
+const loading = ref(false);
 const showPassword = ref(false);
 const avatarPreview = ref<string | null>(null);
 const form = useForm({
@@ -66,6 +68,7 @@ function handleAvatarChange(event: Event) {
 }
 
 function submit() {
+    loading.value = true;
     form.transform((data) => ({
         ...data,
         _method: 'put',
@@ -74,9 +77,11 @@ function submit() {
         onSuccess: () => {
             toast.success("Organization updated successfully!");
             router.visit(route('profile.show'));
+            loading.value = false;
         },
         onError: (errors) => {
             console.error('Update failed:', errors);
+            loading.value = false;
         }
     });
 }
@@ -112,7 +117,8 @@ function closeImageModal() {
                 <span class="text-base font-medium">Back</span>
                 </Link>
             </div>
-
+            <!-- Use the Loader Component -->
+            <Loader v-if="loading" :message="'Updating Profile...'" />
             <!-- Card Layout -->
             <div class="flex flex-col mt-10 gap-5 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
