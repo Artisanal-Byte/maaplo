@@ -104,7 +104,7 @@ function closeImageModal() {
                     <Icon icon="mingcute:user-edit-fill" width="42" height="42"
                         class="text-xl font-bold text-primary" />
                     <h1 class="text-3xl font-bold text-primary mt-1 ml-3">
-                       Edit-Profile
+                        Edit-Profile
                     </h1>
                 </div>
                 <Link :href="route('profile.show')" class="flex items-center gap-2 text-gray-500 hover:text-gray-800">
@@ -137,12 +137,12 @@ function closeImageModal() {
                     </template>
                     </Input>
 
-                    <Input label="Organization Name" type="text" v-model="form.organization_name"
+                    <!-- <Input label="Organization Name" type="text" v-model="form.organization_name"
                         :error="errors.organization_name" placeholder="Enter Organization Name">
                     <template #icon>
                         <Icon icon="fluent:organization-16-filled" width="20" height="20" />
                     </template>
-                    </Input>
+                    </Input> -->
 
 
 
@@ -158,18 +158,6 @@ function closeImageModal() {
                         <p v-if="errors.organization_logo" class="text-red-600 text-sm mt-1">{{ errors.organization_logo
                             }}</p>
                     </div> -->
-
-                    <!-- Avatar -->
-                    <div>
-                        <label for="avatar" class="block mb-1 font-semibold">Avatar</label>
-                        <input id="avatar" type="file" accept="image/*" @change="handleAvatarChange"
-                            class="border border-primary rounded px-3 py-2 w-full" />
-                        <div v-if="avatarUrl" class="mt-2 cursor-pointer" @click="openImageModal(avatarUrl)">
-                            <img :src="avatarUrl" alt="Avatar" class="w-24 h-24 rounded-full object-cover" />
-                        </div>
-                        <p v-if="errors.avatar" class="text-red-600 text-sm mt-1">{{ errors.avatar }}</p>
-                    </div>
-
                     <div class="relative">
                         <Input :type="showPassword ? 'text' : 'password'" v-model="form.password" label="Password"
                             :error="props.errors.password" placeholder="Leave blank to keep current password."
@@ -183,6 +171,18 @@ function closeImageModal() {
                             <Icon :icon="showPassword ? 'mdi:eye-off' : 'mdi:eye'" width="20" height="20" />
                         </button>
                     </div>
+                    <!-- Avatar -->
+                    <div>
+                        <label for="avatar" class="block mb-1 font-semibold">Avatar</label>
+                        <input id="avatar" type="file" accept="image/*" @change="handleAvatarChange"
+                            class="border border-primary rounded px-3 py-2 w-full" />
+                        <div v-if="avatarUrl" class="mt-2 cursor-pointer" @click="openImageModal(avatarUrl)">
+                            <img :src="avatarUrl" alt="Avatar" class="w-24 h-24 rounded-full object-cover" />
+                        </div>
+                        <p v-if="errors.avatar" class="text-red-600 text-sm mt-1">{{ errors.avatar }}</p>
+                    </div>
+
+
                 </div>
 
                 <!-- Submit Button -->
