@@ -15,12 +15,14 @@ class DashboardController extends Controller
     public function __invoke(Request $request)
     {
         $user = auth()->user();
-
+        $organization = $user->organization;
+        // dd($organization->toArray());
         $organizationName = optional($user->organization)->organization_name;
         $showOrganizationPopup = $user->hash_organization && is_null($organizationName);
 
         return Inertia::render('Dashboard', [
             'organizationName' => $organizationName,
+            'organization' => $organization,
             'showOrganizationPopup' => $showOrganizationPopup,
         ]);
     }

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('organization_name')->nullable();
             $table->string('organization_logo')->nullable();
             $table->string('gst_number')->nullable();

@@ -91,4 +91,5 @@ class User extends Authenticatable
     {
         return $this->validity ? Carbon::parse($this->validity)->format('d/m/Y') : null;
     }
+
 }

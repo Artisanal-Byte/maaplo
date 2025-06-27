@@ -26,7 +26,10 @@ class OrganizationController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
+        // dd([
+        //     'request' => $request->all(),
+        //     'user_id' => auth()->id(),
+        // ]);
         $data = $request->validate([
             'organization_name' => 'nullable|string',
             'organization_logo' => 'nullable|file|max:5120',
@@ -34,7 +37,7 @@ class OrganizationController extends Controller
             'address' => 'nullable|string',
             'logo_request' => 'nullable|boolean',
         ]);
-
+        // dd($data);
         try {
             DB::beginTransaction();
 
@@ -45,6 +48,7 @@ class OrganizationController extends Controller
                 'address' => $data['address'],
                 'logo_request' => $data['logo_request'] ?? false,
                 'logo_created' => false,
+                'user_id' => auth()->id(),
             ]);
 
             // Step 2: Handle logo upload
@@ -72,19 +76,6 @@ class OrganizationController extends Controller
             return redirect()->back()->withInput()->with('error', 'Creation failed: ' . $e->getMessage());
         }
     }
-
-
-    // public function edit(Organization $id)
-    // {
-    //     $organization = Organization::findOrFail($id);
-    //     if (!$organization) {
-    //         return redirect()->route('organization.index')->with('error', 'Organization not found.');
-    //     }
-
-    //     // Pass the organization to the Inertia view
-    //     // return $this->renderEditView($organization);
-    //      return Inertia::render('organization/Edit', compact('organization'));
-    // }
 
     public function edit(Organization $organization)
     {

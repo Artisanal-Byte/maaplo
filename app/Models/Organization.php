@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Organization extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'organization_name',
@@ -17,6 +17,7 @@ class Organization extends Model
         'address',
         'logo_request',
         'logo_created',
+        'user_id',
     ];
 
     public function users()

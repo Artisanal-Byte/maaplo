@@ -147,7 +147,7 @@ function closeImageModal() {
 
 
                     <!-- Organization Logo -->
-                    <div>
+                    <!-- <div>
                         <label for="organization_logo" class="block mb-1 font-semibold">Organization Logo</label>
                         <input id="organization_logo" type="file" accept="image/*" @change="handleLogoChange"
                             class="border border-primary rounded px-3 py-2 w-full" required />
@@ -157,7 +157,7 @@ function closeImageModal() {
                         </div>
                         <p v-if="errors.organization_logo" class="text-red-600 text-sm mt-1">{{ errors.organization_logo
                             }}</p>
-                    </div>
+                    </div> -->
 
                     <!-- Avatar -->
                     <div>
