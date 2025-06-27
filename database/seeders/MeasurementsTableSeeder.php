@@ -18,9 +18,9 @@ class MeasurementsTableSeeder extends Seeder
 
         \DB::table('measurements')->delete();
 
-        \DB::table('measurements')->insert(array (
+        \DB::table('measurements')->insert(array(
             0 =>
-            array (
+            array(
                 // 'id' => 1,
                 'slug' => 'length',
                 'measurements_logo' => '<svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -44,9 +44,10 @@ xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAA
                 'updated_at' => '2025-06-12 09:52:14',
             ),
             1 =>
-            array (
+            array(
                 // 'id' => 2,
-                'slug' => 'back_neck',
+                'slug' => 'front_neck',
+
                 'measurements_logo' => '<svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink">
 <mask id="mask0_515_953" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="16"
@@ -68,7 +69,7 @@ xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAA
                 'updated_at' => '2025-06-12 09:52:14',
             ),
             2 =>
-            array (
+            array(
                 // 'id' => 3,
                 'slug' => 'sleeve_circle',
                 'measurements_logo' => '<svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -92,7 +93,7 @@ xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AA
                 'updated_at' => '2025-06-12 09:52:14',
             ),
             3 =>
-            array (
+            array(
                 // 'id' => 4,
                 'slug' => 'sleeve_length',
                 'measurements_logo' => '<svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +117,7 @@ xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAA
                 'updated_at' => '2025-06-12 09:52:14',
             ),
             4 =>
-            array (
+            array(
                 // 'id' => 5,
                 'slug' => 'seat',
                 'measurements_logo' => '<svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -140,7 +141,7 @@ xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAA
                 'updated_at' => '2025-06-12 09:52:14',
             ),
             5 =>
-            array (
+            array(
                 // 'id' => 6,
                 'slug' => 'arms',
                 'measurements_logo' => '<svg width="21" height="21" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +165,7 @@ xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAA
                 'updated_at' => '2025-06-12 09:52:14',
             ),
             6 =>
-            array (
+            array(
                 // 'id' => 7,
                 'slug' => 'waist',
                 'measurements_logo' => '<svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -188,7 +189,7 @@ xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAA
                 'updated_at' => '2025-06-12 09:52:14',
             ),
             7 =>
-            array (
+            array(
                 // 'id' => 8,
                 'slug' => 'chest',
                 'measurements_logo' => '<svg width="22" height="22" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -212,7 +213,7 @@ xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAA
                 'updated_at' => '2025-06-12 09:52:14',
             ),
             8 =>
-            array (
+            array(
                 // 'id' => 9,
                 'slug' => 'shoulder',
                 'measurements_logo' => '<svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -236,9 +237,10 @@ xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAA
                 'updated_at' => '2025-06-12 09:52:14',
             ),
             9 =>
-            array (
+            array(
                 // 'id' => 10,
-                'slug' => 'front_neck',
+                'slug' => 'back_neck',
+
                 'measurements_logo' => '<svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink">
 <mask id="mask0_515_950" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="16"
@@ -260,7 +262,5 @@ xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAA
                 'updated_at' => '2025-06-12 09:52:14',
             ),
         ));
-
-
     }
 }

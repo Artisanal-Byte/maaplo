@@ -16,6 +16,7 @@ const props = defineProps([
     'modelValue',
     'width',
     'fonttype',
+    'value',
     'label',
     'radioValue',
     'error',
@@ -24,6 +25,7 @@ const props = defineProps([
 ])
 
 const model = defineModel('modelValue');
+
 
 // Color classes
 const colorClass = {
@@ -135,7 +137,7 @@ const widthClass = {
             <div class="relative">
                 <label v-if="label" :for="id" :class="[textSizeClass, fonttype]" class="font-medium">
                     {{ label }}
-                    <span v-if="required" class="text-red-500 text-lg">*</span> 
+                    <span v-if="required" class="text-red-500 text-lg">*</span>
                     <span v-else class="text-gray-400 text-sm">(optional)</span>
                 </label>
                 <div class="relative">

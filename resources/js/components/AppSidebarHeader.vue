@@ -45,7 +45,7 @@ function navigateToPage() {
         </div>
         <div class="flex flex-row lg:items-center lg:gap-4 gap-5 ">
             <!-- Action Dropdown -->
-            <div class="relative inline-block text-left mt-3 lg:mt-0">
+            <!-- <div class="relative inline-block text-left mt-3 lg:mt-0">
                 <select v-model="selectedAction" @change="navigateToPage"
                     class="block w-full appearance-none bg-white border border-gray-300 text-gray-700 text-sm rounded-md px-4 py-2 pr-10 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
                     <option disabled value="">➤ Select Action</option>
@@ -54,14 +54,14 @@ function navigateToPage() {
                     <option value="feature-request">🚀 Feature Request</option>
                 </select>
 
-                <!-- Dropdown icon -->
+             
                 <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </div>
-            </div>
+            </div> -->
 
             <div class="mt-3 lg:mx-10 mx-0">
                 <Link :href="route('profile.show')">

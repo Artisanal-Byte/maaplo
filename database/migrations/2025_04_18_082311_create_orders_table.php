@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('customer_id')->constrained()->cascadeOnUpdate();
             $table->string('order_number')->unique();
-            $table->enum('status', ["created", "in process","closed", "processed", "delivered", "completed", "cancelled"])->default("created");
+            $table->enum('status', ["created", "in_process","closed", "processed", "delivered", "completed", "cancelled","trial_done","in_alteration","ready_for_delivery"])->default("created");
             $table->decimal('total_amount', 10);
             $table->decimal('advance_paid', 10)->default(0);
             $table->date('delivery_date');

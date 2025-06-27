@@ -138,8 +138,14 @@ export const useOrderFormStore = defineStore('orderForm', {
         createOrder() {
             const { order_items_template, ...formData } = this.$state;
             const form = useForm({ ...formData });
-            form.post(route('orders.store'));
-            this.resetOrderData()
+            form.post(route('orders.store'), {
+                onSuccess: () => {
+                    this.resetOrderData();
+                },
+                onError: (errors) => {
+                    console.error('Order creation failed:', errors);
+                }
+            });
         },
         deleteOrderItem(index) {
             if (index >= 0 && index < this.order_items.length) {
@@ -150,7 +156,7 @@ export const useOrderFormStore = defineStore('orderForm', {
             this.user_id = order.user_id;
             this.customer_id = order.customer_id;
             this.status = order.status && [
-                "created", "in process", "processed", "delivered", "completed", "cancelled"
+                "created", "in_process", "processed", "delivered", "completed", "cancelled", "trial_done", "in_alteration", "ready_for_delivery"
             ].includes(order.status.toLowerCase())
                 ? order.status.toLowerCase()
                 : 'created';

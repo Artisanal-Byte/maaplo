@@ -95,7 +95,7 @@ const props = defineProps(['name']);
 
     </div>
 
-    <div v-if="name == 'back-neck'">
+    <div v-if="name == 'front-neck'">
         <svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink">
             <mask id="mask0_515_953" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="16"
@@ -195,7 +195,7 @@ const props = defineProps(['name']);
         </svg>
 
     </div>
-    <div v-if="name === 'front-neck'">
+    <div v-if="name === 'back-neck'">
         <svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink">
             <mask id="mask0_515_950" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="16"

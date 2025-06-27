@@ -28,21 +28,20 @@ class UpdateOrderRequest extends FormRequest
 
     public function rules(): array
     {
-        // dd([
-        //     'orderstatus' => $this->input('status'),
-        //     'all_input' => $this->all(),
-        // ]);
-
         $rules = [
             'customer_id' => ['required', 'exists:customers,id'],
             'status' => ['required', 'string', Rule::in([
                 'created',
-                'in process',
+                'in_process',
                 'processed',
                 'delivered',
                 'colsed',
                 'completed',
-                'cancelled'
+                'cancelled',
+                'ready_for_delivery',
+                'in_alteration',
+                'trial_done',
+
             ])],
             'total_amount' => ['required', 'numeric', 'min:0'],
             'advance_paid' => ['nullable', 'numeric', 'min:0', 'lte:total_amount'],

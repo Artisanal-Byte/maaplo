@@ -12,7 +12,7 @@ import { ref } from 'vue'
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <h1 class="flex items-center gap-2 lg:gap-2 text-[28px] leading-[16px] font-bold text-gray-800 font-[Convergence] text-primary tracking-[0]">
-                <Icon icon="mdi:user" width="34" height="34" /> 
+                <Icon icon="mdi:user" width="34" height="34" />
                 User
             </h1>
             <div class="mt-8 lg:mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
@@ -28,28 +28,28 @@ import { ref } from 'vue'
                         </Input>
                     </div>
                     <div>
-                        <Input type="email" label="Email" color="grayBorder" :required="true">
+                        <Input type="email" label="Email" color="grayBorder" :required="true" placeholder="Enter Email">
                         <template #icon>
                             <Icon icon="ic:round-email" width="20" height="20" class="text-black" />
                         </template>
                         </Input>
                     </div>
                     <div>
-                        <Input type="text" label="Phone" color="grayBorder" :required="true">
+                        <Input type="text" label="Phone" color="grayBorder" :required="true" placeholder="Enter Phone Number">
                         <template #icon>
                             <Icon icon="ic:round-phone" width="20" height="20" class="text-black" />
                         </template>
                         </Input>
                     </div>
                     <div>
-                        <Input type="text" label="Organization Name" color="grayBorder" :required="true">
+                        <Input type="text" label="Organization Name" color="grayBorder" :required="true" placeholder="Enter Organization Name">
                         <template #icon>
                             <Icon icon="fluent:organization-16-filled" width="20" height="20" class="text-black" />
                         </template>
                         </Input>
                     </div>
                     <div>
-                        <Input type="text" label="Subscription Plan" color="grayBorder" :required="true">
+                        <Input type="text" label="Subscription Plan" color="grayBorder" :required="true" placeholder="Enter Subscription Plan">
                         <template #icon>
                             <Icon icon="stash:subscription-list" width="18" height="18" class="text-black" />
                         </template>
