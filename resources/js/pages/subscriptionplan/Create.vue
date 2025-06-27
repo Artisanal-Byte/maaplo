@@ -5,6 +5,8 @@ import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
 import FeaturesInput from '@/components/FeaturesInput.vue';
+import Loader from '@/components/Loader.vue';
+import {  ref } from 'vue';
 const toast = new ToastMagic();
 const form = useForm({
     plan_title: '',
@@ -15,17 +17,20 @@ const form = useForm({
     visibility: true,
     user_limit: 5,
 });
-
+const loading = ref(false);
 const submitForm = () => {
+    loading.value = true;
     const filtered = form.features.filter(f => f.trim() !== '');
     form.features = filtered.length > 0 ? filtered : ['']; // ensure at least one input remains
     form.post(route('subscription-plans.store'), {
         onSuccess: () => {
             toast.success("Subscription plan created successfully!");
             router.visit(route('subscription-plans.index'));
+            loading.value = false;
         },
         onError: () => {
             toast.error("Failed to create subscription plan. Please check the fields.");
+            loading.value = false;
         }
     });
 };
@@ -49,7 +54,8 @@ const submitForm = () => {
                 <span class="ml-1">Back</span>
                 </Link>
             </div>
-
+  <!-- Use the Loader Component -->
+            <Loader v-if="loading" :message="'Creating Subscription Plan...'" />
             <!-- Form Card -->
             <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-primary space-y-5">
 
