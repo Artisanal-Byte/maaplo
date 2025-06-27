@@ -5,7 +5,8 @@ import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
 import SearchSelect from '@/components/SearchSelect.vue';
-
+import Loader from '@/components/Loader.vue';
+import {  ref } from 'vue';
 const toast = new ToastMagic();
 
 const props = defineProps({
@@ -16,6 +17,7 @@ const props = defineProps({
     privateTemplates: Array,
     measurements: Object
 });
+const loading = ref(false);
 
 const form = useForm({
     name: props.item.name,
@@ -46,14 +48,17 @@ const updateTemplate = () => {
         required_measurements: form.required_measurements,
         design_details: trueDesignDetailIds,
     };
-
-    form.transform(data => ({
+   form.transform(data => {
+    loading.value = true;
+    return {
         ...dataToSend,
         _method: 'put',
-    })).post(route('items.update', props.item.id), {
+    };
+}).post(route('items.update', props.item.id), {
         onSuccess: () => {
             toast.success('Template updated successfully!');
             setTimeout(() => router.visit(route('items.index')), 1000);
+            loading.value = false;
         },
         onError: (errors) => {
             toast.error('Update failed. Please try again.');
@@ -110,6 +115,8 @@ const isValidPathData = (str) => {
                     </Link>
                 </div>
             </div>
+              <!-- Use the Loader Component -->
+            <Loader v-if="loading" :message="'Updating Template...'" />
             <div class="flex flex-col mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Select Base Template -->
