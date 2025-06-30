@@ -282,7 +282,7 @@ const onItemAdded = (itemData) => {
                                     <td class="px-4 py-2 border-b border-gray-200">
                                         <div class="flex text-center">
                                             <Icon icon="material-symbols:edit-rounded" width="24"
-                                                @click="editOrderItem(index)" class="cursor-pointer text-blue-500" />
+                                                @click="editOrderItem(index)" class="cursor-pointer mr-4 text-blue-500" />
                                             <Icon icon="mingcute:delete-fill" width="24"
                                                 @click="confirmDelete(item, index)"
                                                 class="cursor-pointer text-red-500" />

@@ -49,7 +49,8 @@ class UsersController extends Controller
             'phone' => 'required|regex:/^[0-9]{10}$/',
             'address' => 'required|string|max:255',
             'organization_name' => 'nullable|string|max:255',
-            'subscription_plan' => 'required|string|max:255',
+            'subscription_plan' => 'required|string|in:free,premium,enterprise',
+
             'validity' => 'required|date',
             'password' => 'required|string|min:8',
             'organization_logo' => 'nullable|file|image|max:5120',
@@ -91,7 +92,7 @@ class UsersController extends Controller
             return redirect()->route('user.index')->with('success', 'User created successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error('User store failed', ['error' => $e->getMessage()]);
+            dd($e->getMessage());
             return redirect()->back()->withInput()->with('error', 'There was an error: ' . $e->getMessage());
         }
     }

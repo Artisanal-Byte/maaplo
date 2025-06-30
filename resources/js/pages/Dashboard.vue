@@ -12,6 +12,7 @@ const selectedOption = ref('Yesterday'); // Default text inside input
 const props = defineProps({
     showOrganizationPopup: Boolean,
     organizationName: String,
+    totalOrders: Number,
 });
 
 const showPopup = ref(props.showOrganizationPopup);
@@ -74,7 +75,7 @@ const activeTab = ref('order')
 
                 <h2
                     class="text-[20px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence] whitespace-nowrap">
-                    Total Orders: 0
+                    Total Orders: <span class="font-bold">{{ props.totalOrders ?? 0 }}</span>
                 </h2>
                 <h1
                     class="text-[20px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence] text-center lg:w-full">
@@ -273,16 +274,18 @@ const activeTab = ref('order')
 </template>
 <style scoped>
 @keyframes slide-in {
-  0% {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
 }
+
 .animate-slide-in {
-  animation: slide-in 0.4s ease-out;
+    animation: slide-in 0.4s ease-out;
 }
 </style>

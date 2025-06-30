@@ -5,7 +5,7 @@ import { Icon } from '@iconify/vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import Button from '@/components/Button.vue';
 import Input from '@/components/InputWithLabel.vue';
-
+import Loader from '@/components/Loader.vue';
 const toast = new ToastMagic();
 const logoPreview = ref(null);
 const showPassword = ref(false);
@@ -26,7 +26,7 @@ const form = useForm({
     organization_logo: null,
     status: true,
 });
-
+const loading = ref(false);
 const logoUrl = computed(() => {
     return logoPreview.value ? logoPreview.value : null;
 });
@@ -40,14 +40,17 @@ const handleLogoChange = (event) => {
 };
 
 const createUser = () => {
+    loading.value = true;
     form.post(route('user.store'), {
         forceFormData: true,
         onSuccess: () => {
             toast.success("User created successfully!");
+            loading.value = false;
         },
         onError: (errors) => {
             toast.error("User creation failed. Please check the fields.");
             console.error(errors);
+            loading.value = false;
         }
     });
 };
@@ -71,7 +74,7 @@ const createUser = () => {
                 <span class="text-md font-medium">Back</span>
                 </Link>
             </div>
-
+            <Loader v-if="loading" :message="'Creating User...'" />
             <!-- Form -->
             <div class="mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
                 <!-- Section: User Info -->

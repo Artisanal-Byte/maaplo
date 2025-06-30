@@ -12,7 +12,7 @@ class StoreOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        dd('store_order_request_authorize', $this->all());
+        // dd('store_order_request_authorize', $this->all());
         return \Illuminate\Support\Facades\Auth::check();
     }
 

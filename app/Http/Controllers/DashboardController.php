@@ -19,11 +19,12 @@ class DashboardController extends Controller
         // dd($organization->toArray());
         $organizationName = optional($user->organization)->organization_name;
         $showOrganizationPopup = $user->hash_organization && is_null($organizationName);
-
+        $totalOrders = \App\Models\Order::where('user_id', $user->id)->count();
         return Inertia::render('Dashboard', [
             'organizationName' => $organizationName,
             'organization' => $organization,
             'showOrganizationPopup' => $showOrganizationPopup,
+            'totalOrders' => $totalOrders,
         ]);
     }
 
