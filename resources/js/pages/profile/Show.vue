@@ -49,10 +49,10 @@ function goToEdit() {
                             <p><strong>Phone:</strong> {{ props.user.phone }}</p>
                         </div>
 
-                        <div class="flex items-center gap-3">
+                        <!-- <div class="flex items-center gap-3">
                             <Icon icon="mdi:office-building" class="text-gray-500" width="20" />
                             <p><strong>Organization:</strong> {{ props.user.organization_name ?? 'N/A' }}</p>
-                        </div>
+                        </div> -->
 
                         <div class="flex items-center gap-3">
                             <Icon icon="mdi:badge-account-outline" class="text-gray-500" width="20" />

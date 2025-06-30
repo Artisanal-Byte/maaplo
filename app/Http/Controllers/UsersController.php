@@ -48,7 +48,7 @@ class UsersController extends Controller
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|regex:/^[0-9]{10}$/',
             'address' => 'required|string|max:255',
-            'organization_name' => 'required|string|max:255',
+            'organization_name' => 'nullable|string|max:255',
             'subscription_plan' => 'required|string|max:255',
             'validity' => 'required|date',
             'password' => 'required|string|min:8',

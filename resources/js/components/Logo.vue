@@ -1,24 +1,24 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Link, usePage } from '@inertiajs/vue3'
+import { Link } from '@inertiajs/vue3'
 
-const page = usePage()
-
-// Correct spelling: thumbnailLogo
-const thumbnailLogo = computed(() => {
-  const logo = (page.props.user?.thumbnail_logo || '') as string
-  return logo ? `/storage/${logo.replace(/^storage\//, '')}` : null
+const props = defineProps({
+  user: {
+    type: Object,
+    required: true
+  }
 })
 
-const fallbackLogo = '/images/maaplologo.png'
+const organizationLogo = computed(() => {
+  const rawLogo = props.user?.organization?.organization_logo || ''
+  return rawLogo
+    ? `/storage/${rawLogo.replace(/^storage\//, '')}`
+    : '/images/maaplologo.png'
+})
 </script>
 
 <template>
   <Link :href="route('dashboard')">
-  <img
-    :src="thumbnailLogo || fallbackLogo"
-    alt="Organization Logo"
-    class="h-10 w-10"
-  />
+    <img :src="organizationLogo" alt="Organization Logo" class="h-10 w-10 object-contain" />
   </Link>
 </template>

@@ -5,8 +5,8 @@ import { Link, usePage } from "@inertiajs/vue3";
 import { computed } from "vue";
 import Logo from "./Logo.vue";
 const page = usePage();
-const organizationId = computed(() => page.props.auth.user);
-
+const user = computed(() => page.props.auth.user);
+const organizationId = computed(() => user.value?.id);
 const showDropdown = ref(false);
 const showDropdownCustomer = ref(false);
 const showDropdownSelectAction = ref(false);
@@ -42,7 +42,7 @@ const visible = ref(false);
             <!-- Header -->
             <div class="flex items-center justify-between px-7 py-5 border-b">
                 <div class="flex items-center gap-2">
-                    <Logo />
+                    <Logo :user="user" />
                     <!-- <span class="font-inter font-medium text-[30px] leading-[16px] tracking-[0]">Logo</span> -->
                 </div>
                 <button @click="visible = false" class="p-1 rounded-md hover:bg-gray-200">

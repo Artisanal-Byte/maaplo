@@ -1,19 +1,19 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import SearchSelect from '@/components/SearchSelect.vue';
 import Button from '@/components/Button.vue';
-
+import Loader from '@/components/Loader.vue';
 const toast = new ToastMagic();
 
 const { props: pageProps } = usePage();
 const measurements = pageProps.measurements || [];
 const designDetails = pageProps.designDetails || [];
-
+const loading = ref(false);
 const form = useForm({
     name: '',
     gender: '',
@@ -63,13 +63,17 @@ const isValidPathData = (str = '') => {
 };
 
 const submitForm = () => {
+    loading.value = true;
     form.post(route('items.store'), {
         onSuccess: () => {
             toast.success("Item created successfully!");
             router.visit(route('items.index'));
+            loading.value = false;
+
         },
         onError: () => {
             toast.error("Failed to create Item. Please fill in all the required fields.");
+            loading.value = false;
         },
     });
 };
@@ -93,7 +97,8 @@ const submitForm = () => {
                     </Link>
                 </div>
             </div>
-
+            <!-- Use the Loader Component -->
+            <Loader v-if="loading" :message="'Creating Template...'" />
             <div class="flex flex-col mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Select Base Template -->

@@ -26,17 +26,18 @@ let totalAmmount = ref(null)
 const loading = ref(false);
 
 let create = () => {
+    loading.value = true;
     if (form.advance_paid > form.total_amount) {
         alert("advance paid can't be greater than total payment!");
         form.advance_paid = null
         return
     }
-    loading.value = true;
-    setTimeout(() => {
-        loading.value = false;
-    }, 50000);
+    // loading.value = true;
+    // setTimeout(() => {
+    //     loading.value = false;
+    // }, 50000);
     form.createOrder().finally(() => {
-        loading.value = true;
+        loading.value = false;
     });
 }
 
@@ -131,7 +132,7 @@ const formatDate = (dateStr) => {
             </div>
 
             <!-- Use the Loader Component -->
-            <Loader v-if="loading" />
+            <Loader v-if="form.isLoading" />
             <div class="flex flex-row justify-between">
                 <div>
                     <h1

@@ -4,6 +4,7 @@ import { defineStore } from 'pinia'
 export const useOrderFormStore = defineStore('orderForm', {
     state: () => (
         {
+            isLoading: false,
             user_id: null,
             customer_id: null,
             status: 'create',
@@ -136,13 +137,16 @@ export const useOrderFormStore = defineStore('orderForm', {
         },
 
         createOrder() {
+            this.isLoading = true;
             const { order_items_template, ...formData } = this.$state;
             const form = useForm({ ...formData });
             form.post(route('orders.store'), {
                 onSuccess: () => {
                     this.resetOrderData();
+                    this.isLoading = false;
                 },
                 onError: (errors) => {
+                    this.isLoading = false;
                     console.error('Order creation failed:', errors);
                 }
             });

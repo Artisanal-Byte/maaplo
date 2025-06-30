@@ -5,13 +5,14 @@ import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
 import FeaturesInput from '@/components/FeaturesInput.vue';
-import { watch } from 'vue';
+import { watch,ref } from 'vue';
+import Loader from '@/components/Loader.vue';
 const props = defineProps({
     subscriptionPlan: Object,
 });
 
 const toast = new ToastMagic();
-
+const loading = ref(false);
 // Parse features safely
 let featuresArray = [];
 try {
@@ -39,7 +40,7 @@ watch(
 );
 
 const submitForm = () => {
-    // Remove empty features
+    loading.value = true;
     const filtered = form.features.filter((f) => f.trim() !== '');
     form.features = filtered.length > 0 ? filtered : [''];
 
@@ -47,9 +48,11 @@ const submitForm = () => {
         onSuccess: () => {
             toast.success('Subscription plan updated successfully!');
             router.visit(route('subscription-plans.index'));
+            loading.value = false;
         },
         onError: () => {
             toast.error('Failed to update subscription plan. Please check the fields.');
+            loading.value = false;
         },
     });
 };
@@ -72,7 +75,8 @@ const submitForm = () => {
                 <span class="ml-1">Back</span>
                 </Link>
             </div>
-
+   <!-- Use the Loader Component -->
+            <Loader v-if="loading" :message="'Updating Subscription Plans...'" />
             <!-- Form Card -->
             <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-primary space-y-5">
                 <div class="grid grid-cols-2 gap-6">

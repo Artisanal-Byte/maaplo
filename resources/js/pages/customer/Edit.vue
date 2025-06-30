@@ -9,6 +9,7 @@ import Input from '@/components/InputWithLabel.vue';
 import Notes from '@/components/Items/Notes.vue';
 import Measurements from '@/components/Items/Measurements.vue';
 import MobileCountryCode from '@/components/MobileCountryCode.vue';
+import Loader from '@/components/Loader.vue';
 const toast = new ToastMagic();
 const props = defineProps<{
     errors: Record<string, string>,
@@ -107,8 +108,9 @@ const onPhoneInput = (event: Event) => {
     input.value = input.value.replace(/\D/g, '').slice(0, 10);
     form.phone = input.value;
 };
-
+const loading = ref(false);
 const updateCustomer = () => {
+    loading.value = true;
     form.transform((data) => {
         // Clean notes: remove empty note entries
         const cleanedNotes = (data.notes || []).filter(
@@ -127,10 +129,12 @@ const updateCustomer = () => {
     }).post(route('customers.update', props.customer.id), {
         onSuccess: () => {
             toast.success("Customer updated successfully!");
+            loading.value = false;
         },
         onError: (errors) => {
             console.error('Update failed:', errors);
             toast.error("Update failed. Please check the fields and try again.");
+            loading.value = false;
         }
     });
 };
@@ -178,6 +182,7 @@ const closeImageModal = () => {
                     </Link>
                 </div>
             </div>
+            <Loader v-if="loading" :message="'Customer Updating...'" />
             <!-- Edit Form -->
             <div class="mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
                 <h1 class="text-xl font-bold lg:mt-0 mt-2">Edit Details</h1>
