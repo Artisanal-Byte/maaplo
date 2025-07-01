@@ -19,7 +19,8 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::with('subscriptionPlan')->get();
+        // dd($users);
         // dd($users);
         return Inertia::render('admin/Index', [
             'users' => $users

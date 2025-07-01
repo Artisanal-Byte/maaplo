@@ -37,6 +37,7 @@ const user = computed(() => page.props.auth.user);
 </script>
 
 <template>
+
     <Head title="Users" />
     <AppLayout>
         <div class="max-w-7xl mx-auto py-8 px-4">
@@ -80,7 +81,8 @@ const user = computed(() => page.props.auth.user);
                             <td class="p-2 border text-center">{{ user.email }}</td>
                             <td class="p-2 border text-center">{{ user.phone ?? 'N/A' }}</td>
                             <td class="p-2 border text-center">{{ user.organization_name ?? 'N/A' }}</td>
-                            <td class="p-2 border text-center">{{ user.subscription_plan }}</td>
+                            <td class="p-2 border text-center">{{ user.subscription_plan?.plan_title ?? 'N/A' }}</td>
+
                             <td class="p-2 border text-center">
                                 <span :class="user.status ? 'text-green-600 font-bold' : 'text-red-600'">
                                     {{ user.status ? 'Active' : 'Deactivated' }}
