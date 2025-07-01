@@ -165,16 +165,23 @@ class DashboardController extends Controller
                 }
             }
         } else if ($type === 'revenue') {
-            // Sum total_amount by day in the date range
+            // Correct: earnings = SUM of advance_paid (received amount)
             $revenues = Order::whereBetween('created_at', [$startDate, $endDate])
-                ->selectRaw('DATE(created_at) as date, SUM(total_amount) as total')
+                ->selectRaw('DATE(created_at) as date, SUM(total_amount) as total_revenue, SUM(advance_paid) as total_earning')
                 ->groupBy('date')
                 ->orderBy('date')
                 ->get();
 
             foreach ($revenues as $revenue) {
                 $labels[] = $revenue->date;
-                $data[] = round($revenue->total, 2);
+                $data[] = round($revenue->total_revenue, 2);
+
+                $chartRows[] = [
+                    'date' => $revenue->date,
+                    'revenue' => round($revenue->total_revenue, 2),
+                    'earning' => round($revenue->total_earning, 2),
+                    'pending' => round($revenue->total_revenue - $revenue->total_earning, 2),
+                ];
             }
         }
 

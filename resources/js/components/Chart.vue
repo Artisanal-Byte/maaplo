@@ -115,10 +115,27 @@ export default {
                     csv += `"${row.date}","${row.name || ''}","${row.email || ''}","${row.phone || ''}"\n`;
                 }
             } else if (this.chartType === 'revenue') {
-                csv += 'Date,Revenue\n';
-                for (let i = 0; i < labels.length; i++) {
-                    csv += `${labels[i]},${this.chartData[i]}\n`;
+                csv += 'Date,Revenue,Total Earning,Total Pending\n';
+
+                let totalRevenue = 0;
+                let totalEarning = 0;
+
+                for (let i = 0; i < this.chartRows.length; i++) {
+                    const row = this.chartRows[i];
+                    const revenue = row.revenue || 0;
+                    const earning = row.earning || 0;
+                    const pending = revenue - earning;
+
+                    totalRevenue += revenue;
+                    totalEarning += earning;
+
+                    csv += `${row.date},${revenue},${earning},${pending}\n`;
                 }
+
+                const totalPending = totalRevenue - totalEarning;
+
+                // Add final total row
+                csv += `Total,${totalRevenue},${totalEarning},${totalPending}\n`;
             }
 
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
