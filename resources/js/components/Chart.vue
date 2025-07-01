@@ -152,13 +152,19 @@ export default {
 </script>
 
 <template>
-    <div class="z-10 example rounded-lg border border-[#167893] mt-8 p-1 lg:p-4 lg:h-[400px] h-[200px]">
-        <apexcharts height="100%" type="line" :options="chartOptions" :series="series" />
-        <!-- CSV Export Button -->
-        <div class="mt-4">
-            <button @click="exportCSV" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+    <!-- Wrapper for button and chart -->
+    <div class="relative">
+
+        <!-- Top right export button -->
+        <div class="flex justify-end mb-2">
+            <button @click="exportCSV" class="bg-primary mt-4 text-white font-bold py-1 px-2 rounded-lg">
                 Export CSV
             </button>
+        </div>
+
+        <!-- Chart container -->
+        <div class="z-10 example rounded-lg border border-[#167893] p-1 lg:p-4 lg:h-[400px] h-[200px]">
+            <apexcharts height="100%" type="line" :options="chartOptions" :series="series" />
         </div>
     </div>
 </template>
