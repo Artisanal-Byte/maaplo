@@ -33,6 +33,6 @@ class DatabaseSeeder extends Seeder
         $this->call(MeasurementsTableSeeder::class);
         $this->call(UsersCustomersTableSeeder::class);
         $this->call(TemplatesMeasurementsTableSeeder::class);
-        $this->call(OrderSeeder::class);
+        // $this->call(OrderSeeder::class);
     }
 }
