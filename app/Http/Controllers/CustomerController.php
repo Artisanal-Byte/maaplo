@@ -23,7 +23,11 @@ class CustomerController extends Controller
     {
         $user = auth()->user();
         $customerCount = Customer::where('user_id', $user->id)->count();
-        $customerLimitExceeded = $user->subscription_plan === 'free' && $customerCount >= 5;
+        $plan = $user->subscriptionPlan;
+
+        $customerLimitExceeded = $plan
+            ? $customerCount >= $plan->user_limit
+            : $customerCount >= 5;
         $customers = Auth::user()->customers()
             ->with(['photos' => fn($q) => $q->where('label', 'Faceimage'), 'orders'])
             ->get()
@@ -330,5 +334,4 @@ class CustomerController extends Controller
         $customer->delete();
         return redirect()->route('customers.index')->with('status', 'Customer deleted successfully!');
     }
-
 }

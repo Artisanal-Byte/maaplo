@@ -157,7 +157,7 @@ class OrderController extends Controller
             ToastMagic::success('Order created successfully!');
             return redirect()->route('orders.index')->with('success', 'Order created successfully.');
         } catch (Exception $exception) {
-            dd($exception->getMessage()); // For debugging purposes
+            // dd($exception->getMessage()); // For debugging purposes
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => $exception->getMessage()]);
         }
