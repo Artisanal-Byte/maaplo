@@ -41,27 +41,43 @@ const handleLogoChange = (event) => {
 };
 
 const updateOrganization = () => {
+    loading.value = true;
+
     form.transform((data) => {
-        loading.value = true;  // Set loading before sending the request
-        return {
-            ...data,
-            _method: 'put',
-        };
+        const payload = { ...data };
+
+        // Don't include organization_logo if no new file selected
+        if (!form.organization_logo) {
+            delete payload.organization_logo;
+        }
+
+        payload._method = 'put';
+        return payload;
     }).post(route('organization.update', { organization: props.organization.id }), {
+        forceFormData: true, // Needed for file upload
         onSuccess: () => {
             toast.success("Organization updated successfully!");
-            loading.value = false;  // Stop loading after success
+
+            // Clear the preview and free memory
+            if (logoPreview.value) {
+                URL.revokeObjectURL(logoPreview.value);
+                logoPreview.value = null;
+            }
+
+            loading.value = false;
         },
         onError: () => {
             toast.error("Update failed. Please check the fields.");
-            loading.value = false;  // Stop loading after error
+            loading.value = false;
         },
     });
 };
 
+
 </script>
 
 <template>
+
     <Head title="Organization-Edit" />
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
@@ -71,12 +87,13 @@ const updateOrganization = () => {
                     <Icon icon="mdi:account-edit" width="28" height="28" />
                     Edit Organization
                 </h1>
-                <Link :href="route('organization.index')" class="flex items-center gap-1 hover:text-black text-gray-600">
+                <Link :href="route('organization.index')"
+                    class="flex items-center gap-1 hover:text-black text-gray-600">
                 <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
                 <span class="text-md font-medium">Back</span>
                 </Link>
             </div>
-  <!-- Use the Loader Component -->
+            <!-- Use the Loader Component -->
             <Loader v-if="loading" :message="'Updating Organization...'" />
             <!-- Form Card -->
             <div class="bg-white lg:p-6 rounded-lg lg:shadow-md space-y-6">

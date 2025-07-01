@@ -85,17 +85,19 @@ class OrganizationController extends Controller
 
     public function update(Request $request, Organization $organization)
     {
+        // dd($request->all());
         $data = $request->validate([
             'organization_name' => 'required|string',
             'organization_logo' => 'nullable|file|max:5120',
             'gst_number' => 'nullable|string|max:15',
             'address' => 'required|string',
         ]);
-
+// dd($data);
         try {
             DB::beginTransaction();
 
             if ($request->hasFile('organization_logo')) {
+                // dd($request->file('organization_logo'));
                 // Delete old organization logo
                 if ($organization->organization_logo) {
                     $orgRelativePath = Str::after($organization->organization_logo, 'storage/');
