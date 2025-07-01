@@ -4,10 +4,14 @@ import { Head } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Chart from '@/components/Chart.vue';
 import { Link, router } from "@inertiajs/vue3";
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import axios from 'axios';
 
 const showDropdown = ref(false);
 const selectedOption = ref('Yesterday'); // Default text inside input
+const chartLabels = ref([]);
+const chartData = ref([]);
+const chartRows = ref([]);
 
 const props = defineProps({
     showOrganizationPopup: Boolean,
@@ -39,6 +43,27 @@ function selectOption(option) {
     showDropdown.value = false;
 }
 const activeTab = ref('order')
+
+watch([selectedOption, activeTab], fetchChartData, { immediate: true });
+
+async function fetchChartData() {
+    try {
+        const response = await axios.get('/dashboard/chart-data', {
+            params: {
+                range: selectedOption.value,
+                type: activeTab.value
+            }
+        });
+
+        chartLabels.value = response.data.labels;
+        chartData.value = response.data.data;
+        chartRows.value = response.data.chartRows; // ✅ capture the full row data
+
+    } catch (error) {
+        console.error('Failed to fetch chart data:', error);
+    }
+}
+
 </script>
 
 <template>
@@ -168,7 +193,8 @@ const activeTab = ref('order')
             </div>
             <!-- Chart Component Section -->
             <div class="">
-                <Chart />
+                <Chart :chart-labels="chartLabels" :chart-data="chartData" :chart-rows="chartRows" :chart-type="activeTab"/>
+
             </div>
 
             <!-- Quick Links Section -->

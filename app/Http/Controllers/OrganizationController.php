@@ -31,10 +31,10 @@ class OrganizationController extends Controller
         //     'user_id' => auth()->id(),
         // ]);
         $data = $request->validate([
-            'organization_name' => 'nullable|string',
+            'organization_name' => 'required|string',
             'organization_logo' => 'nullable|file|max:5120',
             'gst_number' => 'nullable|string',
-            'address' => 'nullable|string',
+            'address' => 'required|string',
             'logo_request' => 'nullable|boolean',
         ]);
         // dd($data);
@@ -86,10 +86,10 @@ class OrganizationController extends Controller
     public function update(Request $request, Organization $organization)
     {
         $data = $request->validate([
-            'organization_name' => 'nullable|string',
-            'organization_logo' => 'nullable|file|max:5120', // Note: use 'file' if you're uploading a file
+            'organization_name' => 'required|string',
+            'organization_logo' => 'nullable|file|max:5120', 
             'gst_number' => 'nullable|string|max:15',
-            'address' => 'nullable|string',
+            'address' => 'required|string',
         ]);
 
         try {

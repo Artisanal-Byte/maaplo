@@ -99,7 +99,7 @@ const createOrganization = () => {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Organization Name -->
                     <Input v-model="form.organization_name" label="Organization Name"
-                        placeholder="Enter Organization Name" :error="form.errors.organization_name" required>
+                        placeholder="Enter Organization Name" :error="form.errors.organization_name" required="true">
                     <template #icon>
                         <Icon icon="ic:outline-business" width="24" height="24" />
                     </template>
@@ -116,7 +116,7 @@ const createOrganization = () => {
                 <!-- Address -->
                 <div class="mt-6">
                     <Input type="textarea" v-model="form.address" label="Address" placeholder="Enter Address"
-                        :error="form.errors.address">
+                        :error="form.errors.address" required="true" rows="3">
                     <template #icon>
                         <Icon icon="mdi:map-marker-outline" width="24" height="24" />
                     </template>

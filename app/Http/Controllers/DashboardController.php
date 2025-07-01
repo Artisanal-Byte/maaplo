@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Models\Customer;
 use Inertia\Inertia;
 use Devrabiul\ToastMagic\Facades\ToastMagic;
+
 
 class DashboardController extends Controller
 {
@@ -80,5 +83,161 @@ class DashboardController extends Controller
         ]);
         ToastMagic::success('Order closed successfully!');
         return redirect()->route('orders.closed');
+    }
+
+    public function getChartData(Request $request)
+    {
+        $type = $request->get('type', 'order'); // order, customer, revenue
+        $range = $request->get('range', 'Yesterday');
+
+        // Define date range based on $range
+        switch ($range) {
+            case 'Yesterday':
+                $startDate = Carbon::yesterday()->startOfDay();
+                $endDate = Carbon::yesterday()->endOfDay();
+                break;
+            case '7 Days Ago':
+                $startDate = Carbon::now()->subDays(7)->startOfDay();
+                $endDate = Carbon::now()->endOfDay();
+                break;
+            case '1 Month Ago':
+                $startDate = Carbon::now()->subMonth()->startOfDay();
+                $endDate = Carbon::now()->endOfDay();
+                break;
+            case '1 Year Ago':
+                $startDate = Carbon::now()->subYear()->startOfDay();
+                $endDate = Carbon::now()->endOfDay();
+                break;
+            default:
+                $startDate = Carbon::now()->subDays(7)->startOfDay();
+                $endDate = Carbon::now()->endOfDay();
+        }
+
+        // Initialize labels and data arrays
+        $labels = [];
+        $data = [];
+        $chartRows = [];
+
+        if ($type === 'order') {
+            $orders = Order::with('customer')
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->orderBy('created_at')
+                ->get();
+
+            $groupedOrders = $orders->groupBy(function ($order) {
+                return $order->created_at->toDateString();
+            });
+
+            foreach ($groupedOrders as $date => $dailyOrders) {
+                $labels[] = $date;
+                $data[] = $dailyOrders->count();
+
+                // Add full details for export
+                foreach ($dailyOrders as $order) {
+                    $chartRows[] = [
+                        'date' => $date,
+                        'orderNumber' => $order->order_number,
+                        'customerName' => optional($order->customer)->name,
+                        'status' => $order->status,
+                    ];
+                }
+            }
+        } elseif ($type === 'customer') {
+            $customers = \App\Models\Customer::whereBetween('created_at', [$startDate, $endDate])
+                ->orderBy('created_at')
+                ->get();
+
+            $grouped = $customers->groupBy(function ($customer) {
+                return $customer->created_at->toDateString();
+            });
+
+            foreach ($grouped as $date => $dailyCustomers) {
+                $labels[] = $date;
+                $data[] = $dailyCustomers->count();
+
+                foreach ($dailyCustomers as $customer) {
+                    $chartRows[] = [
+                        'date' => $date,
+                        'name' => $customer->name,
+                        'email' => $customer->email,
+                        'phone' => $customer->phone,
+                    ];
+                }
+            }
+        } else if ($type === 'revenue') {
+            // Sum total_amount by day in the date range
+            $revenues = Order::whereBetween('created_at', [$startDate, $endDate])
+                ->selectRaw('DATE(created_at) as date, SUM(total_amount) as total')
+                ->groupBy('date')
+                ->orderBy('date')
+                ->get();
+
+            foreach ($revenues as $revenue) {
+                $labels[] = $revenue->date;
+                $data[] = round($revenue->total, 2);
+            }
+        }
+
+        return response()->json([
+            'labels' => $labels,
+            'data' => $data,
+            'chartRows' => $chartRows,
+        ]);
+    }
+
+    public function getCustomerDataLast7Days()
+    {
+        $start = Carbon::now()->subDays(7)->startOfDay();
+        $end = Carbon::now()->endOfDay();
+
+        return Customer::whereBetween('created_at', [$start, $end])
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+    }
+
+    public function getRevenueDataLast7Days()
+    {
+        $start = Carbon::now()->subDays(7)->startOfDay();
+        $end = Carbon::now()->endOfDay();
+
+        return Order::whereBetween('created_at', [$start, $end])
+            ->selectRaw('DATE(created_at) as date, SUM(total_amount) as total')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+    }
+
+    public function exportOrdersToCSV(Request $request)
+    {
+        // Get orders and eager load the associated customer data
+        $orders = Order::with('customer')
+            ->select('orders.id', 'orders.order_number', 'orders.status', 'orders.created_at', 'orders.total_amount', 'orders.advance_paid')
+            ->get();
+
+        // Prepare the CSV header
+        $headers = ['Order Number', 'Customer Name', 'Date', 'Status', 'Total Amount', 'Advance Paid'];
+
+        // Prepare CSV content
+        $csvContent = implode(',', $headers) . "\n";
+        // Add each order as a CSV row
+        foreach ($orders as $order) {
+            $csvRow = [
+                $order->order_number,
+                optional($order->customer)->name,  // Ensure we're accessing the customer name
+                Carbon::parse($order->created_at)->toDateTimeString(),  // Format date
+                $order->status,
+                $order->total_amount,
+                $order->advance_paid,
+            ];
+
+            $csvContent .= implode(',', $csvRow) . "\n";
+        }
+
+        // Return the CSV as a download
+        return response($csvContent)
+            ->header('Content-Type', 'text/csv')
+            ->header('Content-Disposition', 'attachment; filename="orders_export.csv"');
     }
 }
