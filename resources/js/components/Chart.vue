@@ -25,7 +25,6 @@ export default {
         }
     },
     data() {
-        const self = this;
         return {
             chartOptions: {
                 chart: {
@@ -34,44 +33,31 @@ export default {
                         show: true,
                         tools: {
                             download: true,
+                            selection: true,
+                            zoom: true,
+                            zoomin: true,
+                            zoomout: true,
+                            pan: true,
+                            reset: true,
                         },
                         export: {
                             csv: {
-                                formatter: (series, opts) => {
-                                    const labels = self.chartLabels;
-                                    const rows = self.chartRows;
-                                    let csv = '';
-
-                                    if (self.chartType === 'order') {
-                                        csv = 'Date,Order Number,Customer Name,Status\n';
-                                        for (let i = 0; i < labels.length; i++) {
-                                            const row = rows[i] || {};
-                                            csv += `${labels[i]},${row.orderNumber || ''},${row.customerName || ''},${row.status || ''}\n`;
-                                        }
-                                    } else if (self.chartType === 'customer') {
-                                        csv = 'Date,Customer Name,Email,Phone\n';
-                                        for (let i = 0; i < rows.length; i++) {
-                                            const row = rows[i];
-                                            csv += `${row.date},${row.name || ''},${row.email || ''},${row.phone || ''}\n`;
-                                        }
-                                    } else if (self.chartType === 'revenue') {
-                                        csv = 'Date,Revenue\n';
-                                        for (let i = 0; i < labels.length; i++) {
-                                            csv += `${labels[i]},${self.chartData[i]}\n`;
-                                        }
-                                    }
-
-                                    return csv;
-                                }
+                                enabled: false // ✅ disables ApexCharts CSV option in toolbar
+                            },
+                            svg: {
+                                enabled: true
+                            },
+                            png: {
+                                enabled: true
                             }
                         }
                     }
                 },
                 xaxis: {
                     type: 'datetime',
-                },
+                }
             },
-            series: [] // initialized in mounted()
+            series: []
         }
     },
     mounted() {
@@ -89,6 +75,7 @@ export default {
         }
     },
     methods: {
+
         updateSeries(labels, data) {
             this.series = [{
                 name: this.getSeriesName(),
@@ -103,7 +90,7 @@ export default {
                 case 'order':
                     return 'Orders';
                 case 'customer':
-                    return 'New Customers';
+                    return 'Customers';
                 case 'revenue':
                     return 'Revenue';
                 default:

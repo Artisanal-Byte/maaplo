@@ -87,7 +87,7 @@ class OrganizationController extends Controller
     {
         $data = $request->validate([
             'organization_name' => 'required|string',
-            'organization_logo' => 'nullable|file|max:5120', 
+            'organization_logo' => 'nullable|file|max:5120',
             'gst_number' => 'nullable|string|max:15',
             'address' => 'required|string',
         ]);

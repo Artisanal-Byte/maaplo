@@ -211,22 +211,24 @@ class DashboardController extends Controller
 
     public function exportOrdersToCSV(Request $request)
     {
-        // Get orders and eager load the associated customer data
+        // Optional: Accept date range from request (e.g., 'start_date' and 'end_date')
+        $startDate = $request->input('start_date', Carbon::now()->subYear()->startOfDay());
+        $endDate = $request->input('end_date', Carbon::now()->endOfDay());
+
         $orders = Order::with('customer')
+            ->whereBetween('created_at', [$startDate, $endDate])
             ->select('orders.id', 'orders.order_number', 'orders.status', 'orders.created_at', 'orders.total_amount', 'orders.advance_paid')
+            ->orderBy('created_at')
             ->get();
 
-        // Prepare the CSV header
         $headers = ['Order Number', 'Customer Name', 'Date', 'Status', 'Total Amount', 'Advance Paid'];
-
-        // Prepare CSV content
         $csvContent = implode(',', $headers) . "\n";
-        // Add each order as a CSV row
+
         foreach ($orders as $order) {
             $csvRow = [
                 $order->order_number,
-                optional($order->customer)->name,  // Ensure we're accessing the customer name
-                Carbon::parse($order->created_at)->toDateTimeString(),  // Format date
+                optional($order->customer)->name,
+                Carbon::parse($order->created_at)->toDateTimeString(),
                 $order->status,
                 $order->total_amount,
                 $order->advance_paid,
@@ -235,7 +237,6 @@ class DashboardController extends Controller
             $csvContent .= implode(',', $csvRow) . "\n";
         }
 
-        // Return the CSV as a download
         return response($csvContent)
             ->header('Content-Type', 'text/csv')
             ->header('Content-Disposition', 'attachment; filename="orders_export.csv"');
