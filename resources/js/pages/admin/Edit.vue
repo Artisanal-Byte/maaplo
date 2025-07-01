@@ -7,9 +7,11 @@ import { Link } from '@inertiajs/vue3';
 import Button from '@/components/Button.vue';
 import Input from '@/components/InputWithLabel.vue';
 import { ref, computed } from 'vue';
+import Loader from '@/components/Loader.vue';
 const toast = new ToastMagic();
 const showPassword = ref(false);
 const logoPreview = ref(null);
+const loading = ref(false);
 const props = defineProps({
     errors: Object,
     user: Object
@@ -46,16 +48,19 @@ const handleLogoChange = (event) => {
     }
 };
 const updateUser = () => {
+    loading.value = true;
     form.transform((data) => ({
         ...data,
         _method: 'put',
     })).post(route('user.update', props.user.id), {
         onSuccess: () => {
             toast.success("User updated successfully!");
+            loading.value = false;
         },
         onError: (errors) => {
             toast.error("Update failed. Please check the fields.");
             console.error(errors);
+            loading.value = false;
         }
     });
 };
@@ -77,7 +82,7 @@ const updateUser = () => {
                 <span class="text-md font-medium">Back</span>
                 </Link>
             </div>
-
+<Loader v-if="loading" :message="'Updating User...'" />
             <!-- Form Card -->
             <div class="bg-white p-4 lg:p-8 rounded-lg shadow-md space-y-5">
                 <!-- Section: User Info -->

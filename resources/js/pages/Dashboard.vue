@@ -4,14 +4,19 @@ import { Head } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Chart from '@/components/Chart.vue';
 import { Link, router } from "@inertiajs/vue3";
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import axios from 'axios';
 
 const showDropdown = ref(false);
 const selectedOption = ref('Yesterday'); // Default text inside input
+const chartLabels = ref([]);
+const chartData = ref([]);
+const chartRows = ref([]);
 
 const props = defineProps({
     showOrganizationPopup: Boolean,
     organizationName: String,
+    totalOrders: Number,
 });
 
 const showPopup = ref(props.showOrganizationPopup);
@@ -38,6 +43,27 @@ function selectOption(option) {
     showDropdown.value = false;
 }
 const activeTab = ref('order')
+
+watch([selectedOption, activeTab], fetchChartData, { immediate: true });
+
+async function fetchChartData() {
+    try {
+        const response = await axios.get('/dashboard/chart-data', {
+            params: {
+                range: selectedOption.value,
+                type: activeTab.value
+            }
+        });
+
+        chartLabels.value = response.data.labels;
+        chartData.value = response.data.data;
+        chartRows.value = response.data.chartRows; // ✅ capture the full row data
+
+    } catch (error) {
+        console.error('Failed to fetch chart data:', error);
+    }
+}
+
 </script>
 
 <template>
@@ -74,7 +100,7 @@ const activeTab = ref('order')
 
                 <h2
                     class="text-[20px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence] whitespace-nowrap">
-                    Total Orders: 0
+                    Total Orders: <span class="font-bold">{{ props.totalOrders ?? 0 }}</span>
                 </h2>
                 <h1
                     class="text-[20px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence] text-center lg:w-full">
@@ -167,7 +193,8 @@ const activeTab = ref('order')
             </div>
             <!-- Chart Component Section -->
             <div class="">
-                <Chart />
+                <Chart :chart-labels="chartLabels" :chart-data="chartData" :chart-rows="chartRows" :chart-type="activeTab"/>
+
             </div>
 
             <!-- Quick Links Section -->
@@ -273,16 +300,18 @@ const activeTab = ref('order')
 </template>
 <style scoped>
 @keyframes slide-in {
-  0% {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
 }
+
 .animate-slide-in {
-  animation: slide-in 0.4s ease-out;
+    animation: slide-in 0.4s ease-out;
 }
 </style>

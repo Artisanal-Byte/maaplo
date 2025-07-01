@@ -84,6 +84,8 @@ Route::middleware(["auth", "verified"])->group(function () {
 
     Route::get('/suggestion/create', fn() => Inertia::render('suggestion/Create'))->name('suggestion.create');
     Route::post('/suggestion', [FeatureRequestAndSuggestionController::class, 'storeSuggestion'])->name('suggestion.store');
+    Route::get('/dashboard/chart-data', [DashboardController::class, 'getChartData'])->name('dashboard.chart-data');
+    Route::get('/export-orders-csv', [DashboardController::class, 'exportOrdersToCSV']);
 });
 
 require __DIR__ . '/settings.php';

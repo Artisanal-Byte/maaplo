@@ -56,7 +56,7 @@ const submitForm = () => {
         onSuccess: () => {
 
             toast.success("Customer created successfully!");
-            loading.value = false;
+
         },
         onError: (errors) => {
             toast.error("Failed to create customer. please fill the all the required fields.");

@@ -15,7 +15,7 @@ class MeasurementSeeder extends Seeder
     {
         DB::table('measurements')->insert([
             [
-                'id' => 1,
+                // 'id' => 1,
                 'slug' => 'length',
                 'measurements_logo' => <<<SVG
 <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -40,7 +40,7 @@ SVG,
                 'updated_at' => now(),
             ],
             [
-                'id' => 2,
+                // 'id' => 2,
                 'slug' => 'front_neck',
                 'measurements_logo' => <<<SVG
 <svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +65,7 @@ SVG,
                 'updated_at' => now(),
             ],
             [
-                'id' => 3,
+                // 'id' => 3,
                 'slug' => 'sleeve_circle',
                 'measurements_logo' => <<<SVG
 <svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -90,7 +90,7 @@ SVG,
                 'updated_at' => now(),
             ],
             [
-                'id' => 4,
+                // 'id' => 4,
                 'slug' => 'sleeve_length',
                 'measurements_logo' => <<<SVG
 <svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -115,7 +115,7 @@ SVG,
                 'updated_at' => now(),
             ],
             [
-                'id' => 5,
+                // 'id' => 5,
                 'slug' => 'seat',
                 'measurements_logo' => <<<SVG
 <svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -140,7 +140,7 @@ SVG,
                 'updated_at' => now(),
             ],
             [
-                'id' => 6,
+                // 'id' => 6,
                 'slug' => 'arms',
                 'measurements_logo' => <<<SVG
 <svg width="21" height="21" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -165,7 +165,7 @@ SVG,
                 'updated_at' => now(),
             ],
             [
-                'id' => 7,
+                // 'id' => 7,
                 'slug' => 'waist',
                 'measurements_logo' => <<<SVG
 <svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -190,7 +190,7 @@ SVG,
                 'updated_at' => now(),
             ],
             [
-                'id' => 8,
+                // 'id' => 8,
                 'slug' => 'chest',
                 'measurements_logo' => <<<SVG
 <svg width="22" height="22" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -215,7 +215,7 @@ SVG,
                 'updated_at' => now(),
             ],
             [
-                'id' => 9,
+                // 'id' => 9,
                 'slug' => 'shoulder',
                 'measurements_logo' => <<<SVG
 <svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -240,7 +240,7 @@ SVG,
                 'updated_at' => now(),
             ],
             [
-                'id' => 10,
+                // 'id' => 10,
                 'slug' => 'back_neck',
                 'measurements_logo' => <<<SVG
 <svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"

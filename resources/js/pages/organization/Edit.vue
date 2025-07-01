@@ -83,7 +83,7 @@ const updateOrganization = () => {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Name -->
                     <Input v-model="form.organization_name" label="Organization Name"
-                        placeholder="Enter organization name" :error="props.errors.organization_name" required>
+                        placeholder="Enter organization name" :error="props.errors.organization_name" required="true">
                     <template #icon>
                         <Icon icon="ic:outline-business" width="24" height="24" />
                     </template>
@@ -99,7 +99,7 @@ const updateOrganization = () => {
 
                     <!-- Address -->
                     <Input v-model="form.address" label="Address" placeholder="Enter Address"
-                        :error="props.errors.address" required>
+                        :error="props.errors.address" required="true" type="textarea">
                     <template #icon>
                         <Icon icon="mdi:map-marker-outline" width="24" height="24" />
                     </template>

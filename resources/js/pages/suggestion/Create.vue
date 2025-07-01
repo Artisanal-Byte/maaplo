@@ -4,22 +4,26 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
-
+import Loader from '@/components/Loader.vue';
+import { ref } from 'vue';
 const toast = new ToastMagic();
-
+const loading = ref(false);
 const form = useForm({
     suggestion_title: '',
     suggestion_description: ''
 });
 
 function submitForm() {
+    loading.value = true;
     form.post('/suggestion', {
         onSuccess: () => {
             toast.success("Your suggestion was sent successfully! We will review it soon.");
             form.reset();
+            loading.value = false;
         },
         onError: () => {
             toast.error("Error submitting suggestion. Please check the fields.");
+            loading.value = false;
         }
     });
 }
@@ -41,6 +45,8 @@ function submitForm() {
                 <span class="text-md font-medium">Back</span>
                 </Link>
             </div>
+              <!-- Use the Loader Component -->
+            <Loader v-if="loading" :message="'Submitng Suggestion...'" />
             <p class="mb-8 text-gray-600">Submit your suggestion to help us improve:</p>
 
             <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-primary">

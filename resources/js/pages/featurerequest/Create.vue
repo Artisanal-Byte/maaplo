@@ -5,9 +5,9 @@ import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
-
+import Loader from '@/components/Loader.vue';
 const toast = new ToastMagic();
-
+const loading = ref(false);
 const form = useForm({
     feature_name: '',
     feature_description: '',
@@ -15,14 +15,17 @@ const form = useForm({
 });
 
 const submitForm = () => {
+    loading.value = true;
     form.post('/feature-request', {
         onSuccess: () => {
             toast.success("Your feature suggestion was sent successfully!");
             form.reset();
+            loading.value = false;
         },
         onError: () => {
             toast.error("Error submitting feature request. Please check the fields.");
             console.error('Error submitting feature request:', form.errors);
+            loading.value = false;
         }
     });
 };
@@ -44,7 +47,8 @@ const submitForm = () => {
                 <span class="text-md font-medium">Back</span>
                 </Link>
             </div>
-
+ <!-- Use the Loader Component -->
+            <Loader v-if="loading" :message="'Submiting Your Request...'" />
             <!-- Form Card -->
             <div class="bg-white shadow-md border-t-4 border-primary rounded-lg p-6">
                 <div class="grid grid-cols-1 gap-6">

@@ -1,6 +1,6 @@
 <script setup>
 import { Icon } from '@iconify/vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 const props = defineProps({
     bgColor: {
         default: '#FFFCE6'
@@ -22,6 +22,11 @@ const formatStatus = (status) => {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 };
+function deleteOrder(id) {
+    if (confirm('Are you sure you want to delete this order?')) {
+        router.delete(route('orders.destroy', id));
+    }
+}
 </script>
 <template>
 
@@ -68,7 +73,7 @@ const formatStatus = (status) => {
             <Link :href="route('orders.edit', props.order.id)">
             <Icon icon="ri:edit-fill" width="18" height="18" class="text-primary" />
             </Link>
-            <Link :href="route('orders.destroy', props.order.id)">
+            <Link @click="deleteOrder(order.id)">
             <Icon icon="ic:baseline-delete" width="18" height="18" class="text-[#E73939]" />
             </Link>
         </div>

@@ -217,7 +217,7 @@ const formatDate = (dateStr) => {
                                         <td class="px-4 py-2 border-b border-gray-200">
                                             <div class="flex gap-4">
                                                 <Icon icon="material-symbols:edit-rounded" width="24" height="24"
-                                                    class="text-primary cursor-pointer hover:text-primary transition-colors duration-150"
+                                                    class="text-primary cursor-pointer hover:text-primary mr-4 transition-colors duration-150"
                                                     @click="editOrderItem(index)" />
                                                 <Icon icon="mingcute:delete-fill" width="24" height="24"
                                                     class="text-red-500 cursor-pointer hover:text-red-700 transition-colors duration-150"
