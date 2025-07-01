@@ -14,8 +14,10 @@ const logoPreview = ref(null);
 const loading = ref(false);
 const props = defineProps({
     errors: Object,
-    user: Object
+    user: Object,
+    subscriptionPlans: Array,
 });
+console.log('User Data:', props.subscriptionPlans);
 
 const form = useForm({
     name: props.user.name,
@@ -68,6 +70,7 @@ const updateUser = () => {
 </script>
 
 <template>
+
     <Head title="User-Edit" />
     <AppLayout>
         <div class="px-4 py-8 max-w-6xl mx-auto">
@@ -82,7 +85,7 @@ const updateUser = () => {
                 <span class="text-md font-medium">Back</span>
                 </Link>
             </div>
-<Loader v-if="loading" :message="'Updating User...'" />
+            <Loader v-if="loading" :message="'Updating User...'" />
             <!-- Form Card -->
             <div class="bg-white p-4 lg:p-8 rounded-lg shadow-md space-y-5">
                 <!-- Section: User Info -->
@@ -139,7 +142,9 @@ const updateUser = () => {
                             <select id="subscription_plan" v-model="form.subscription_plan" required
                                 class="appearance-none block w-full bg-white border border-gray-300 rounded-md py-2 px-3 pr-10 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                                 <option disabled value="">Select a plan</option>
-                                <option value="free">Free</option>
+                                <option v-for="plan in props.subscriptionPlans" :key="plan.id" :value="plan.plan_title">
+                                    {{ plan.plan_title }}
+                                </option>
                             </select>
                             <!-- Dropdown arrow icon -->
                             <div
