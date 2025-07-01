@@ -25,7 +25,7 @@ class User extends Authenticatable
         'phone',
         'address',
         'organization_name',
-        'subscription_plan',
+        'subscription_plan_id',
         'validity',
         'password',
         'organization_logo',
