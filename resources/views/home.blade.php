@@ -1639,10 +1639,9 @@
             <h1 class="font-[Convergence] text-[25px] lg:text-[40px] font-normal leading-[100%]">
                 Contact us
             </h1>
-            <p class="font-lato text-[15px] text-black mt-5 lg:w-[500px] mx-auto leading-[152%]">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                et
-                dolore magna aliqua.
+            <p class="font-lato text-[15px] text-black mt-5 lg:w-[600px] mx-auto leading-[152%]">
+                Have questions or need support? We're here to help! Reach out to MaapLo for inquiries, collaborations, or
+                assistance. Let’s navigate your path to success- together.
             </p>
         </div>
         <div
@@ -1679,9 +1678,8 @@
                     <h1 class="text-2xl md:text-3xl font-semibold mb-4 text-center md:text-left">Let’s Connect</h1>
 
                     <p class="text-gray-600 mb-6">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore
-                        et dolore magna aliqua.
+                        Every great journey starts with a conversation. Whether you're curious, ready to collaborate, or
+                        just exploring, MaapLo is just a message away. Let’s create something meaningful - together.
                     </p>
 
                     <div class="mb-4">
