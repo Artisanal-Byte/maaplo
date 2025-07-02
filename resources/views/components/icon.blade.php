@@ -9880,7 +9880,7 @@
 @break
 
 @case('maaplo')
-<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="lg:w-[150px] lg:h-[150px] w-[100px] h-[100px] ">
+<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="lg:w-[100] lg:h-[100] w-[100px] h-[100px] ">
 <mask id="mask0_963_1912" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
 <rect width="200" height="200" fill="url(#pattern0_963_1912)"/>
 </mask>
