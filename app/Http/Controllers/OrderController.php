@@ -65,7 +65,6 @@ class OrderController extends Controller
     public function store(StoreOrderRequest $storeOrderRequest)
     {
         // dd($storeOrderRequest->toArray());
-        ini_set('max_execution_time', 60);
         try {
             $validatedOrderData = $storeOrderRequest->validated();
             $username = auth()->user()->name;

@@ -1,6 +1,7 @@
 <script setup>
 import { Icon } from '@iconify/vue';
 import { Link, router } from '@inertiajs/vue3';
+import { ref } from 'vue';
 const props = defineProps({
     bgColor: {
         default: '#FFFCE6'
@@ -15,6 +16,11 @@ const props = defineProps({
     }
 
 });
+
+// Modal control
+const showDeleteModal = ref(false);
+const selectedOrderId = ref(null);
+
 const formatStatus = (status) => {
     if (!status) return '';
     return status
@@ -22,10 +28,17 @@ const formatStatus = (status) => {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 };
-function deleteOrder(id) {
-    if (confirm('Are you sure you want to delete this order?')) {
-        router.delete(route('orders.destroy', id));
-    }
+function openDeleteModal(id) {
+    selectedOrderId.value = id;
+    showDeleteModal.value = true;
+}
+function confirmDelete() {
+    router.delete(route('orders.destroy', selectedOrderId.value), {
+        onFinish: () => {
+            showDeleteModal.value = false;
+            selectedOrderId.value = null;
+        }
+    });
 }
 </script>
 <template>
@@ -73,13 +86,22 @@ function deleteOrder(id) {
             <Link :href="route('orders.edit', props.order.id)">
             <Icon icon="ri:edit-fill" width="18" height="18" class="text-primary" />
             </Link>
-            <button @click="deleteOrder(order.id)">
+            <button @click="openDeleteModal(order.id)">
                 <Icon icon="ic:baseline-delete" width="18" height="18" class="text-[#E73939]" />
             </button>
         </div>
 
     </div>
-
-
+    <!-- Delete Modal -->
+    <div v-if="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded shadow-md max-w-sm w-full">
+            <h2 class="text-lg font-bold mb-4">Delete Confirmation</h2>
+            <p class="mb-4">Are you sure you want to delete this order?</p>
+            <div class="flex justify-end gap-3">
+                <button @click="showDeleteModal = false" class="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+                <button @click="confirmDelete" class="px-4 py-2 bg-red-600 text-white rounded">Delete</button>
+            </div>
+        </div>
+    </div>
 
 </template>
