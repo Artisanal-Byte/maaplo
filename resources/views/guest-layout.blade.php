@@ -91,23 +91,31 @@
     {{-- footer --}}
 
     <div class="bg-[#2B4146] px-5 lg:px-20 pt-16 pb-10">
-        <div class="flex flex-col lg:flex-row justify-between gap-10 text-white">
-            <!-- Logo Column -->
-            <div class="flex items-start">
-                <x-icon name="maaplo" class="w-24 h-auto" />
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-10 text-white">
 
-            <!-- Repeatable Link Columns -->
-            <div>
-                <h1 class="font-lato font-extrabold text-[20px] leading-none mb-4">Product</h1>
+            <!-- Logo Column -->
+            <div class="flex lg:col-span-2 flex-col gap-4 lg:-mt-5">
+                <div>
+                <x-icon name="maaplo" class="w-24 h-24" />
+                </div>
+                <!-- Repeatable Link Columns -->
+                <div>
+                    {{-- <h1 class="font-lato font-extrabold text-[20px] leading-none mb-4">Product</h1>
                 <ul class="space-y-3">
                     <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li>
                     <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li>
                     <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li>
                     <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li>
                     <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li>
-                </ul>
+                </ul> --}}
+                    <p class="font-lato font-semibold text-[15px] tracking-[0] lg:w-[400px]">
+                            Maaplo is a platform that connects people with local artisans, offering a wide range of
+                            handmade products and services.
+                      
+                    </p>
+                </div>
             </div>
+
 
             <div>
                 <h1 class="font-lato font-extrabold text-[20px] leading-none mb-4">Quick Links</h1>
@@ -130,7 +138,7 @@
             </div>
 
             <div>
-                <h1 class="font-lato font-extrabold text-[20px] leading-none mb-4">Product</h1>
+                <h1 class="font-lato font-extrabold text-[20px] leading-none mb-6">Product</h1>
                 <ul class="space-y-3">
                     <li class="font-lato font-medium text-[14px] leading-none">Privacy Policy</li>
                     <li class="font-lato font-medium text-[14px] leading-none">T & C</li>
@@ -139,7 +147,7 @@
                     {{-- <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li> --}}
                 </ul>
             </div>
-            <div class="col-span-2">
+            <div class="lg:col-span-2">
                 <h1 class="font-lato font-extrabold text-[20px] leading-none mb-4">Follow Us</h1>
                 <div class="flex gap-4 mt-10">
                     <x-icon name="instagram" class="w-24 h-auto" />
