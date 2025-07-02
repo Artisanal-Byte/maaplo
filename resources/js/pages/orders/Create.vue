@@ -30,6 +30,7 @@ let create = () => {
     loading.value = true;
     if (form.advance_paid > form.total_amount) {
         alert("advance paid can't be greater than total payment!");
+        toast.success("Order created successfully!");
         form.advance_paid = null
         return
     }

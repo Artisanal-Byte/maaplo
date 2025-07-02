@@ -3,7 +3,8 @@
 namespace App\Helpers;
 
 use App\Models\Order;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UniqueOrderNumber
 {
@@ -20,20 +21,25 @@ class UniqueOrderNumber
     public function make(): string
     {
 
-        $nextOrderNumber = $this->lastOrderNumber + 1;
+        $userId = Auth::id();
+        $maxOrderNumber = Order::withTrashed()
+            ->where('user_id', $userId)
+            ->max(DB::raw('CAST(order_number AS INTEGER)'));
+        $nextOrderNumber = $maxOrderNumber ? $maxOrderNumber + 1 : 1;
 
         $uniqueOrderNumber = str_pad($nextOrderNumber, 6, '0', STR_PAD_LEFT);
 
-        if (!$this->isUnique($uniqueOrderNumber)) {
-            throw new \Exception('The Order Number Getting Same');
+        if ($this->isUnique($uniqueOrderNumber, $userId) === false) {
+            throw new \Exception('Generated order number is not unique.');
         }
 
         return $uniqueOrderNumber;
     }
 
-
-    public function isUnique($orderNumber): bool
+    public function isUnique($orderNumber, int $userId): bool
     {
-        return !Order::where('order_number', $orderNumber)->exists();
+        return !Order::where('user_id', $userId)
+            ->where('order_number', $orderNumber)
+            ->exists();
     }
 }

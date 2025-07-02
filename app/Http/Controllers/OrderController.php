@@ -344,9 +344,6 @@ class OrderController extends Controller
         }
     }
 
-
-
-
     /**
      * Remove the specified resource from storage.
      */
@@ -355,6 +352,7 @@ class OrderController extends Controller
         // dd($order);
         try {
             $order->delete();
+            ToastMagic::success('Order Deleted successfully!');
             return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
         } catch (Exception $exception) {
             return redirect()->back()->withErrors($exception->getMessage());
