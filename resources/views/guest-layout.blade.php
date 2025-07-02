@@ -96,7 +96,7 @@
             <!-- Logo Column -->
             <div class="flex lg:col-span-2 flex-col gap-4 lg:-mt-5">
                 <div>
-                <x-icon name="maaplo" class="w-24 h-24" />
+                    <x-icon name="maaplo" class="w-24 h-24" />
                 </div>
                 <!-- Repeatable Link Columns -->
                 <div>
@@ -109,9 +109,10 @@
                     <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li>
                 </ul> --}}
                     <p class="font-lato font-semibold text-[15px] tracking-[0] lg:w-[400px]">
-                            Maaplo is a platform that connects people with local artisans, offering a wide range of
-                            handmade products and services.
-                      
+                        At MaapLo,We're redefining how garment professionals streamline their daily operations, More
+                        than just a digital tool, MaapLo is a trusted partner designed with a deep understanding of the
+                        personalised clothing industry.
+
                     </p>
                 </div>
             </div>
@@ -141,7 +142,7 @@
                 <h1 class="font-lato font-extrabold text-[20px] leading-none mb-6">Product</h1>
                 <ul class="space-y-3">
                     <li class="font-lato font-medium text-[14px] leading-none">Privacy Policy</li>
-                    <li class="font-lato font-medium text-[14px] leading-none">T & C</li>
+                    <li class="font-lato font-medium text-[14px] leading-none">Terms & Conditions</li>
                     <li class="font-lato font-medium text-[14px] leading-none">Pricing</li>
                     <li class="font-lato font-medium text-[14px] leading-none">Blogs</li>
                     {{-- <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li> --}}

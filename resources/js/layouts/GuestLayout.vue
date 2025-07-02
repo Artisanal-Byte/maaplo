@@ -177,8 +177,9 @@ const navLinks = {
           <img src="/images/maaplo1.svg" class="w-[100px]">
         </div>
         <p class="font-lato font-semibold text-[15px] tracking-[0] lg:w-[400px]">
-          Maaplo is a platform that connects people with local artisans, offering a wide range of handmade products and
-          services.
+          At MaapLo,We're redefining how garment professionals streamline their daily operations, More than just a
+          digital tool, MaapLo is a trusted partner designed with a deep understanding of the personalised clothing
+          industry.
         </p>
       </div>
 
@@ -199,7 +200,7 @@ const navLinks = {
         <h1 class="font-lato font-extrabold text-[20px] leading-none mb-6">Product</h1>
         <ul class="space-y-4">
           <li class="font-lato font-medium text-[14px] leading-none">Privacy Policy</li>
-          <li class="font-lato font-medium text-[14px] leading-none">T & C</li>
+          <li class="font-lato font-medium text-[14px] leading-none">Terms & Conditions</li>
           <li class="font-lato font-medium text-[14px] leading-none">Pricing</li>
           <li class="font-lato font-medium text-[14px] leading-none">Blogs</li>
         </ul>
@@ -210,11 +211,11 @@ const navLinks = {
         <h1 class="font-lato font-extrabold text-[20px] leading-none mb-4">Follow Us</h1>
         <div class="flex gap-4 mt-10">
           <div class="flex gap-4">
-          <Icon icon="mdi:instagram" width="24" height="24" />
-          <Icon icon="ic:baseline-facebook" width="24" height="24" />
-          <Icon icon="iconoir:twitter" width="24" height="24" />
-          <Icon icon="mdi:linkedin" width="24" height="24" />
-        </div>
+            <Icon icon="mdi:instagram" width="24" height="24" />
+            <Icon icon="ic:baseline-facebook" width="24" height="24" />
+            <Icon icon="iconoir:twitter" width="24" height="24" />
+            <Icon icon="mdi:linkedin" width="24" height="24" />
+          </div>
         </div>
         <div class="lg:flex gap-10 mt-5 hidden">
           <input type="text" placeholder="Enter your email"
