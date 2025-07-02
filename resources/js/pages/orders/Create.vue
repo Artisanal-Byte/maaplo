@@ -19,6 +19,7 @@ const disabled = ref(false);
 const toast = new ToastMagic();
 const showDeletePopup = ref(false);
 let form = useOrderFormStore();
+form.advance_paid = form.advance_paid ?? 0;
 let customerMeasurements = ref({})
 const itemToDelete = ref(null);
 let deleteOrEditOrderIndex = ref()
@@ -235,7 +236,7 @@ const formatDate = (dateStr) => {
                             <h2><span class="font-semibold">Advance Paid:</span> ₹ {{ form.advance_paid || 0 }}</h2>
                             <h2><span class="font-semibold text-red-600 underline">Balance Due:</span> ₹ {{
                                 (form.total_amount || 0) - (form.advance_paid || 0)
-                                }}</h2>
+                            }}</h2>
                         </div>
 
                         <!-- Delete Confirmation Modal -->
