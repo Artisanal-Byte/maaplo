@@ -73,9 +73,9 @@ function deleteOrder(id) {
             <Link :href="route('orders.edit', props.order.id)">
             <Icon icon="ri:edit-fill" width="18" height="18" class="text-primary" />
             </Link>
-            <Link @click="deleteOrder(order.id)">
-            <Icon icon="ic:baseline-delete" width="18" height="18" class="text-[#E73939]" />
-            </Link>
+            <button @click="deleteOrder(order.id)">
+                <Icon icon="ic:baseline-delete" width="18" height="18" class="text-[#E73939]" />
+            </button>
         </div>
 
     </div>

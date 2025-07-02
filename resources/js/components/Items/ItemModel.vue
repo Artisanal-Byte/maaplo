@@ -30,7 +30,7 @@
         function saveItem() {
             try {
                 if (!showImageUpload.value) {
-                    console.log("Reference dress upload is disabled, setting to null",showImageUpload.value);
+                    console.log("Reference dress upload is disabled, setting to null", showImageUpload.value);
 
                     formStore.order_items_template.refrence_dress = null;
                     console.log("Reference dress after setting to null:", formStore.order_items_template.refrence_dress);
@@ -231,9 +231,11 @@
             const item = props.orderItems?.[props.currentEditIndex];
             if (!item) return;
 
-            formStore.order_items_template.is_urgent = !!item.isUrgent;
-        };
+            // Use correct key name — maybe 'is_urgent', not 'isUrgent'
+            formStore.order_items_template.is_urgent = !!item.is_urgent;
+            console.log("Loaded is_urgent:", item.is_urgent);
 
+        };
         onMounted(() => {
             loadUrgency();
             loadReferenceDress();
