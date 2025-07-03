@@ -30,10 +30,8 @@
         function saveItem() {
             try {
                 if (!showImageUpload.value) {
-                    console.log("Reference dress upload is disabled, setting to null", showImageUpload.value);
 
                     formStore.order_items_template.refrence_dress = null;
-                    console.log("Reference dress after setting to null:", formStore.order_items_template.refrence_dress);
 
                 } else {
                     if (!formStore.order_items_template.refrence_dress) {
@@ -206,7 +204,7 @@
                 }
             }
 
-            // 🔥 Now handle reference_dress separately
+            // Now handle reference_dress separately
             if (item.refrence_dress) {
                 // Only load if toggle is ON
                 if (showImageUpload.value) {
@@ -248,7 +246,6 @@
             loadExistingImages();
         });
 
-
 </script>
 
         <template>
@@ -276,7 +273,6 @@
                         <!-- Scrollable Content -->
                         <div class=" max-h-[75vh] pr-2 space-y-5">
                             <!-- done -->
-                            <!-- errors[`order_items.${currentEditIndex}.colors`] -->
                             <WorkType :errors="workTypeError" :order="order" :currentEditIndex="currentEditIndex" />
                             <ItemType :errors="errors" :itemTypes="itemTypes" @setItemId="setItemId"
                                 @setSelectDesignDetails="setSelectDesignDetails" :currentEditIndex="currentEditIndex" />

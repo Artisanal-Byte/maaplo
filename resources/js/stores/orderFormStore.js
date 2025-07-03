@@ -288,12 +288,12 @@ export const useOrderFormStore = defineStore('orderForm', {
                     onSuccess: () => {
                         this.resetOrderData()
                         toast.success('Order updated successfully!');
-                        loading.value = false;
+                        this.isLoading = false;
                     },
                     onError: (errors) => {
                         if (toast && typeof toast.error === 'function') {
                             toast.error('Update failed. Please fix the errors.');
-                            loading.value = false;
+                            this.isLoading = false;
                         }
                     }
                 });
