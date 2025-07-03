@@ -106,9 +106,6 @@ const update = () => {
         form.status = form.status.toLowerCase();
     }
     loading.value = true;
-    setTimeout(() => {
-        loading.value = false;
-    }, 1000);
 
     form.updateOrder(props.order.id).finally(() => {
         loading.value = true;

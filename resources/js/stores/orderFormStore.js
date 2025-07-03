@@ -1,5 +1,6 @@
 import { router, useForm } from '@inertiajs/vue3'
 import { defineStore } from 'pinia'
+const toast = new ToastMagic();
 
 export const useOrderFormStore = defineStore('orderForm', {
     state: () => (
@@ -142,7 +143,9 @@ export const useOrderFormStore = defineStore('orderForm', {
             const form = useForm({ ...formData });
             form.post(route('orders.store'), {
                 onSuccess: () => {
+                    toast.success('Order created successfully!');
                     this.resetOrderData();
+
                     this.isLoading = false;
                 },
                 onError: (errors) => {
@@ -214,7 +217,7 @@ export const useOrderFormStore = defineStore('orderForm', {
             this.resetOrderItemTemplate();
         },
 
-        async updateOrder(orderId, toast) {
+        async updateOrder(orderId) {
             const { order_items_template, ...formData } = this.$state;
             const form = new FormData();
 
@@ -284,10 +287,13 @@ export const useOrderFormStore = defineStore('orderForm', {
                     preserveScroll: true,
                     onSuccess: () => {
                         this.resetOrderData()
+                        toast.success('Order updated successfully!');
+                        loading.value = false;
                     },
                     onError: (errors) => {
                         if (toast && typeof toast.error === 'function') {
                             toast.error('Update failed. Please fix the errors.');
+                            loading.value = false;
                         }
                     }
                 });
@@ -295,6 +301,7 @@ export const useOrderFormStore = defineStore('orderForm', {
                 console.error('Update request failed:', error);
                 if (toast && typeof toast.error === 'function') {
                     toast.error('Unexpected error occurred.');
+                    loading.value = false;
                 }
             }
         }
