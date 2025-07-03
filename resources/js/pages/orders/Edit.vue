@@ -131,11 +131,9 @@ const onItemUpdated = (itemData) => {
     }
 };
 
-
-
 const errorMessages = computed(() => {
     if (!props.errors) return [];
-    return Object.values(props.errors).flat(); // flatten in case of array of messages
+    return Object.values(props.errors).flat();
 });
 
 onMounted(() => {
