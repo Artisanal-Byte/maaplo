@@ -100,10 +100,7 @@ class OrderController extends Controller
             // Process each order item
             foreach ($validatedOrderItemsData as &$item) {
                 $item['order_id'] = $Order->id;
-
-                $item['is_urgent'] = filter_var($item['is_urgent'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-                $item['is_urgent'] = $item['is_urgent'] == 1 ? 'yes' : 'no';
-
+                $item['is_urgent'] = filter_var($item['is_urgent'], FILTER_VALIDATE_BOOLEAN);
                 if (isset($item['measurements']) && is_array($item['measurements'])) {
                     $item['measurements'] = json_encode($item['measurements']);
                 }
@@ -219,7 +216,7 @@ class OrderController extends Controller
                 'material_cost' => $item->material_cost,
                 'stiching_cost' => $item->stiching_cost,
                 'altering_cost' => $item->altering_cost,
-                'isUrgent' => $item->is_urgent === 'yes' ? true : false,
+                'isUrgent' => $item->is_urgent,
                 'template_names' => $templateNames,
                 'refrence_dress' => $item->refrence_dress ? asset('/' . $item->refrence_dress) : null,
                 'cloth_img1_url' => $item->cloth_img1 ? asset('/' . $item->cloth_img1) : null,
@@ -273,7 +270,8 @@ class OrderController extends Controller
                 }
 
                 // Normalize boolean
-                $item['is_urgent'] = filter_var($item['is_urgent'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 'yes' : 'no';
+                $item['is_urgent'] = filter_var($item['is_urgent'] ?? false, FILTER_VALIDATE_BOOLEAN);
+
                 // dd($item['is_urgent'] );
                 // JSON encode fields
                 foreach (['measurements', 'design_detail', 'notes'] as $field) {

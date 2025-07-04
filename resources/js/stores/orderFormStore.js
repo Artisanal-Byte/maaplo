@@ -63,9 +63,10 @@ export const useOrderFormStore = defineStore('orderForm', {
 
                 this.order_items.splice(this.editingItemIndex, 1, updatedItem);
                 this.editingItemIndex = null;
+
+                 this.total_amount = this.order_items.reduce((acc, item) => acc + (parseFloat(item.item_cost) || 0), 0);
             }
         },
-
 
         resetOrderItemTemplate() {
             this.order_items_template = {
@@ -194,7 +195,8 @@ export const useOrderFormStore = defineStore('orderForm', {
                     template_id: item.template_id ?? item.item_template_id ?? null,
                     item_cost: Number(item.item_cost) || 0,
                     colors: item.colors,
-                    is_urgent: item.isUrgent == 'yes' ? true : false,
+                    is_urgent: item.is_urgent === true || item.is_urgent === 'true',
+
                     trial_dates: item.trial_dates || '',
                     cloth_img1_url: item.cloth_img1_url || null,
                     cloth_img2_url: item.cloth_img2_url || null,
@@ -286,22 +288,24 @@ export const useOrderFormStore = defineStore('orderForm', {
                     forceFormData: true,
                     preserveScroll: true,
                     onSuccess: () => {
-                        this.resetOrderData()
                         toast.success('Order updated successfully!');
-                        this.isLoading = false;
+                        this.isLoading = false
+                        this.resetOrderData();
                     },
                     onError: (errors) => {
                         if (toast && typeof toast.error === 'function') {
+                            this.isLoading = false
+
                             toast.error('Update failed. Please fix the errors.');
-                            this.isLoading = false;
                         }
                     }
                 });
             } catch (error) {
                 console.error('Update request failed:', error);
                 if (toast && typeof toast.error === 'function') {
-                    toast.error('Unexpected error occurred.');
                     loading.value = false;
+                    toast.error('Unexpected error occurred.');
+
                 }
             }
         }

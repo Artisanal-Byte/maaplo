@@ -210,6 +210,7 @@ const formatDate = (dateStr) => {
                                         <th class="px-4 py-3 border-b border-gray-300">Work Type</th>
                                         <th class="px-4 py-3 border-b border-gray-300">Item Type</th>
                                         <th class="px-4 py-3 border-b border-gray-300">Delivery Date</th>
+                                        <th class="px-4 py-3 border-b border-gray-300">Item Cost</th>
                                         <th class="px-4 py-3 border-b border-gray-300">Action</th>
                                     </tr>
                                 </thead>
@@ -224,6 +225,9 @@ const formatDate = (dateStr) => {
                                         <td class="px-4 py-2 border-b border-gray-200">{{
                                             formatDate(order_item.delivery_date) }}
                                         </td>
+                                        <td class="px-4 py-2 border-b border-gray-200">₹ {{ order_item.item_cost || 0 }}
+                                        </td>
+
                                         <td class="px-4 py-2 border-b border-gray-200">
                                             <div class="flex gap-4">
                                                 <Icon icon="material-symbols:edit-rounded" width="24" height="24"
@@ -245,7 +249,7 @@ const formatDate = (dateStr) => {
                             <h2><span class="font-semibold">Advance Paid:</span> ₹ {{ form.advance_paid || 0 }}</h2>
                             <h2><span class="font-semibold text-red-600 underline">Balance Due:</span> ₹ {{
                                 (form.total_amount || 0) - (form.advance_paid || 0)
-                                }}</h2>
+                            }}</h2>
                         </div>
 
                         <!-- Delete Confirmation Modal -->

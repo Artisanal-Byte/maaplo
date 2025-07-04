@@ -57,6 +57,8 @@ watch(() => form.order_items, (items) => {
     });
     totalAmmount.value = t;
     form.total_amount = t;
+    console.log("Total Amount Recalculated:", totalAmmount.value);
+
 }, { immediate: true });
 
 const openItemModel = () => {
@@ -105,7 +107,7 @@ const update = () => {
     if (form.status) {
         form.status = form.status.toLowerCase();
     }
-    loading.value = true;
+    form.isLoading = true;
 
     form.updateOrder(props.order.id).finally(() => {
         loading.value = true;
@@ -128,6 +130,7 @@ const onItemUpdated = (itemData) => {
             Pattern_img1: form.order_items_template.Pattern_img1,
             Pattern_img2: form.order_items_template.Pattern_img2,
         };
+        recalculateTotal();
     }
 };
 
@@ -183,7 +186,7 @@ const onItemAdded = (itemData) => {
             </div>
 
             <!-- Use the Loader Component -->
-            <Loader v-if="loading" />
+            <Loader v-if="form.isLoading" />
             <div class="flex flex-row justify-between">
                 <h1 class="text-[24px] font-bold flex items-center gap-2 text-primary">
                     <Icon icon="lsicon:order-edit-filled" width="30" height="30" />
@@ -261,6 +264,7 @@ const onItemAdded = (itemData) => {
                                     <th class="px-4 py-3 border-b border-gray-300">Work Type</th>
                                     <th class="px-4 py-3 border-b border-gray-300">Item Type</th>
                                     <th class="px-4 py-3 border-b border-gray-300">Delivery Date</th>
+                                    <th class="px-4 py-3 border-b border-gray-300">Cost (₹)</th>
                                     <th class="px-4 py-3 border-b border-gray-300">Action</th>
                                 </tr>
                             </thead>
@@ -275,9 +279,15 @@ const onItemAdded = (itemData) => {
                                     <td class="px-4 py-2 border-b border-gray-200">{{ formatDate(item.delivery_date) }}
                                     </td>
                                     <td class="px-4 py-2 border-b border-gray-200">
+                                        ₹ {{ item.item_cost?.toLocaleString('en-IN', {
+                                            minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2 }) || '0.00' }}
+                                    </td>
+                                    <td class="px-4 py-2 border-b border-gray-200">
                                         <div class="flex text-center">
                                             <Icon icon="material-symbols:edit-rounded" width="24"
-                                                @click="editOrderItem(index)" class="cursor-pointer mr-4 text-blue-500" />
+                                                @click="editOrderItem(index)"
+                                                class="cursor-pointer mr-4 text-blue-500" />
                                             <Icon icon="mingcute:delete-fill" width="24"
                                                 @click="confirmDelete(item, index)"
                                                 class="cursor-pointer text-red-500" />

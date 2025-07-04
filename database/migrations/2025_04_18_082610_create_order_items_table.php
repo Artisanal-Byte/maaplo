@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->string('material_type')->nullable();
             $table->string('material_code')->nullable();
             $table->text('refrence_dress')->nullable();
-            $table->enum('is_urgent', ['yes', 'no'])->default('no');
+            $table->boolean('is_urgent')->default(false);
             $table->decimal('material_cost', 10, 2)->nullable();
             $table->decimal('stiching_cost', 10, 2)->nullable();
             $table->decimal('altering_cost', 10, 2)->nullable();

@@ -47,7 +47,7 @@ class OrderItem extends Model
         'design_detail' => 'array',
         'trial_dates' => 'date',
         'price' => 'decimal:2',
-        // 'is_urgent' => 'boolean',
+        'is_urgent' => 'boolean',
     ];
 
     // Relationships
