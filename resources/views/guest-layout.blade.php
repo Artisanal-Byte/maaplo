@@ -116,8 +116,6 @@
                     </p>
                 </div>
             </div>
-
-
             <div>
                 <h1 class="font-lato font-extrabold text-[20px] leading-none mb-4">Quick Links</h1>
                 <ul class="space-y-1">
