@@ -28,7 +28,6 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
-// dd( $request->all() );
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
@@ -69,7 +68,7 @@ class ProfileController extends Controller
 
                 $orgFile = $request->file('organization_logo');
                 $orgLogoPath = ImageHelper::imageProccess($orgFile, $userId, $username, $userId, $username, 'org_logo');
-                $thumbnailPath = ImageHelper::saveThumbnail($orgFile, $userId, $username, $userId, $username, 'thumbnail_logo');
+                $thumbnailPath = ImageHelper::imageAvatar($orgFile, $userId, $username, $userId, $username, 'thumbnail_logo');
 
                 $validated['organization_logo'] = $orgLogoPath;
                 $validated['thumbnail_logo'] = $thumbnailPath;
@@ -99,13 +98,14 @@ class ProfileController extends Controller
                 $avatarFile = $request->file('avatar');
                 // dd($avatarFile );
                 $validated['avatar'] = ImageHelper::imageAvatar($avatarFile, $username, $userId);
+            // dd($validated['avatar']);
+
             } else {
                 $validated['avatar'] = $user->avatar;
             }
 
             // dd($user->avatar, $validated['avatar']); // You can uncomment for debug
             $user->update($validated);
-
             DB::commit();
 
             return redirect()->route('profile.show')->with('success', 'Profile updated successfully');

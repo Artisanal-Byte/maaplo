@@ -24,16 +24,12 @@ class User extends Authenticatable
         'email',
         'phone',
         'address',
-        'organization_name',
         'subscription_plan_id',
         'validity',
         'password',
-        'organization_logo',
-        'thumbnail_logo',
         'status',
         'avatar',
         'hash_organization',
-        // 'organization_id'
     ];
 
     /**
