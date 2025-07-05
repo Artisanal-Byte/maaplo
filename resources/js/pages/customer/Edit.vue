@@ -132,7 +132,6 @@ const updateCustomer = () => {
             loading.value = false;
         },
         onError: (errors) => {
-            console.error('Update failed:', errors);
             toast.error("Update failed. Please check the fields and try again.");
             loading.value = false;
         }

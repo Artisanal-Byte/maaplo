@@ -65,7 +65,6 @@ class OrderController extends Controller
     public function store(StoreOrderRequest $storeOrderRequest)
     {
         // dd($storeOrderRequest->toArray());
-        ini_set('max_execution_time', 60);
         try {
             $validatedOrderData = $storeOrderRequest->validated();
             $username = auth()->user()->name;
@@ -157,7 +156,7 @@ class OrderController extends Controller
             ToastMagic::success('Order created successfully!');
             return redirect()->route('orders.index')->with('success', 'Order created successfully.');
         } catch (Exception $exception) {
-            dd($exception->getMessage()); // For debugging purposes
+            // dd($exception->getMessage()); // For debugging purposes
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => $exception->getMessage()]);
         }
@@ -344,9 +343,6 @@ class OrderController extends Controller
         }
     }
 
-
-
-
     /**
      * Remove the specified resource from storage.
      */
@@ -355,6 +351,7 @@ class OrderController extends Controller
         // dd($order);
         try {
             $order->delete();
+            ToastMagic::success('Order Deleted successfully!');
             return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
         } catch (Exception $exception) {
             return redirect()->back()->withErrors($exception->getMessage());

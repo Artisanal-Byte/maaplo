@@ -107,25 +107,45 @@ function toggleDropdownDelivery() {
                     <Icon icon="ic:round-visibility" class="mr-2" width="20" height="20" />
                     View Closed Orders
                     </Link>
+
                 </div>
-                <div class="flex gap-4 text-gray-600">
+                <div class="flex gap-4 text-gray-600 relative z-20">
                     <!-- Reset Tooltip -->
-                    <div title="Reset">
+                    <div class="relative group">
                         <Link :href="route('orders.index')">
                         <Icon icon="ic:outline-refresh" width="32" height="32" class="mt-1 cursor-pointer" />
                         </Link>
+                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
+                    bg-gray-800 text-white text-xs px-3 py-1 rounded-md
+                    opacity-0 group-hover:opacity-100 transition duration-200
+                    whitespace-nowrap pointer-events-none shadow-lg">
+                            Reset
+                        </div>
                     </div>
 
                     <!-- Search Tooltip -->
-                    <div title="Search">
+                    <div class="relative group">
                         <SearchList :showable="showable" @hideOrShow="hideOrShow('search')" />
+                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
+                    bg-gray-800 text-white text-xs px-3 py-1 rounded-md
+                    opacity-0 group-hover:opacity-100 transition duration-200
+                    whitespace-nowrap pointer-events-none shadow-lg">
+                            Search
+                        </div>
                     </div>
 
                     <!-- Filter Tooltip -->
-                    <div title="Filter">
+                    <div class="relative group">
                         <FilterList :showable="showable" @hideOrShow="hideOrShow" />
+                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
+                    bg-gray-800 text-white text-xs px-3 py-1 rounded-md
+                    opacity-0 group-hover:opacity-100 transition duration-200
+                    whitespace-nowrap pointer-events-none shadow-lg">
+                            Filter
+                        </div>
                     </div>
                 </div>
+
 
             </div>
             <!-- Search and filter section -->

@@ -25,7 +25,7 @@ class User extends Authenticatable
         'phone',
         'address',
         'organization_name',
-        'subscription_plan',
+        'subscription_plan_id',
         'validity',
         'password',
         'organization_logo',
@@ -69,13 +69,13 @@ class User extends Authenticatable
     public function customers()
     {
         return $this->hasManyThrough(
-        Customer::class,        // Final model
-        UserCustomer::class,    // Intermediate model
-        'user_id',              // Foreign key on UserCustomer table...
-        'id',                   // Foreign key on Customer table (usually 'id')
-        'id',                   // Local key on User table
-        'customer_id'           // Local key on UserCustomer table
-    );
+            Customer::class,        // Final model
+            UserCustomer::class,    // Intermediate model
+            'user_id',              // Foreign key on UserCustomer table...
+            'id',                   // Foreign key on Customer table (usually 'id')
+            'id',                   // Local key on User table
+            'customer_id'           // Local key on UserCustomer table
+        );
     }
 
     public function orders()
@@ -92,4 +92,8 @@ class User extends Authenticatable
         return $this->validity ? Carbon::parse($this->validity)->format('d/m/Y') : null;
     }
 
+    public function subscriptionPlan()
+    {
+        return $this->belongsTo(SubscriptionPlan::class, 'subscription_plan_id');
+    }
 }

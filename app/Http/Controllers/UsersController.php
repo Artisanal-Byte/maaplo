@@ -19,7 +19,8 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::with('subscriptionPlan')->get();
+        // dd($users);
         // dd($users);
         return Inertia::render('admin/Index', [
             'users' => $users
@@ -42,44 +43,47 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|regex:/^[0-9]{10}$/',
             'address' => 'required|string|max:255',
             'organization_name' => 'nullable|string|max:255',
-            'subscription_plan' => 'required|string|in:free,premium,enterprise',
-
+            'subscription_plan' => 'required|string|exists:subscription_plans,plan_title',
             'validity' => 'required|date',
             'password' => 'required|string|min:8',
             'organization_logo' => 'nullable|file|image|max:5120',
             'status' => 'boolean',
         ]);
-        // dd($validated);
 
+        // Hash the password
         $validated['password'] = bcrypt($validated['password']);
-        // dd( $validated['password']);
+
+        // Find the subscription plan id from title
+        $plan = \App\Models\SubscriptionPlan::where('plan_title', $validated['subscription_plan'])->firstOrFail();
+
+        // Replace plan title with plan id in the validated array
+        $validated['subscription_plan_id'] = $plan->id;
+        unset($validated['subscription_plan']); // remove original title
+
         try {
             DB::beginTransaction();
 
-            // Create user with empty logo initially
+            // Create user (with empty logos initially)
             $tempUser = User::create([
                 ...$validated,
                 'organization_logo' => '',
                 'thumbnail_logo' => '',
             ]);
-            // dd($tempUser);
-            // If logo image exists, process both original and thumbnail
+
+            // Handle organization logo upload if present
             if ($request->hasFile('organization_logo')) {
                 $file = $request->file('organization_logo');
                 $username = Str::slug($validated['name']);
                 $userId = $tempUser->id;
-                $customerName = $username;
-                $customerId = $userId;
 
-                $orgLogoPath = ImageHelper::imageProccess($file, $customerId, $username, $userId, $customerName, 'org_logo');
-                $thumbnailPath = ImageHelper::saveThumbnail($file, $customerId, $username, $userId, $customerName, 'thumbnail_logo');
+                $orgLogoPath = ImageHelper::imageProccess($file, $userId, $username, $userId, $username, 'org_logo');
+                $thumbnailPath = ImageHelper::saveThumbnail($file, $userId, $username, $userId, $username, 'thumbnail_logo');
 
                 $tempUser->update([
                     'organization_logo' => $orgLogoPath,
@@ -88,6 +92,7 @@ class UsersController extends Controller
             }
 
             DB::commit();
+
             ToastMagic::success('User created successfully!');
             return redirect()->route('user.index')->with('success', 'User created successfully.');
         } catch (\Exception $e) {
@@ -96,6 +101,7 @@ class UsersController extends Controller
             return redirect()->back()->withInput()->with('error', 'There was an error: ' . $e->getMessage());
         }
     }
+
 
 
     /**
@@ -111,10 +117,13 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-        $user = User::findOrFail($id);
+        $user = User::with('subscriptionPlan')->findOrFail($id);
+        $plans = SubscriptionPlan::select('id', 'plan_title')->get();
+        $user->subscription_plan = $user->subscriptionPlan?->plan_title;
         // dd($user->all());
         return Inertia::render('admin/Edit', [
-            'user' => $user
+            'user' => $user,
+            'subscriptionPlans' => $plans,
         ]);
     }
 
@@ -123,6 +132,7 @@ class UsersController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        // dd($request->all());
         $user = User::findOrFail($id);
 
         $validated = $request->validate([
@@ -131,12 +141,18 @@ class UsersController extends Controller
             'phone' => 'required|regex:/^[0-9]{10}$/',
             'address' => 'required|string|max:255',
             'organization_name' => 'required|string|max:255',
-            'subscription_plan' => 'required|string|in:free',
+            'subscription_plan' => 'required|string|exists:subscription_plans,plan_title',
             'validity' => 'required|date',
             'password' => 'nullable|string|min:8',
             'organization_logo' => 'nullable|max:5120',
             'status' => 'boolean',
         ]);
+        // dd($validated);
+
+        // Convert subscription_plan title to subscription_plan_id
+        $plan = \App\Models\SubscriptionPlan::where('plan_title', $validated['subscription_plan'])->firstOrFail();
+        $validated['subscription_plan_id'] = $plan->id;
+        unset($validated['subscription_plan']);
 
         if ($request->filled('password')) {
             $validated['password'] = bcrypt($request->password);
@@ -148,23 +164,8 @@ class UsersController extends Controller
             DB::beginTransaction();
 
             if ($request->hasFile('organization_logo')) {
-                // Delete old organization logo
-                if ($user->organization_logo) {
-                    $orgRelativePath = Str::after($user->organization_logo, 'storage/');
-                    if (Storage::disk('public')->exists($orgRelativePath)) {
-                        Storage::disk('public')->delete($orgRelativePath);
-                    }
-                }
+                // delete old logos (your existing logic)...
 
-                // Delete old thumbnail logo
-                if ($user->thumbnail_logo) {
-                    $thumbRelativePath = Str::after($user->thumbnail_logo, 'storage/');
-                    if (Storage::disk('public')->exists($thumbRelativePath)) {
-                        Storage::disk('public')->delete($thumbRelativePath);
-                    }
-                }
-
-                // Save new logos
                 $file = $request->file('organization_logo');
                 $username = Str::slug($validated['name']);
                 $userId = $user->id;

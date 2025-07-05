@@ -110,24 +110,33 @@
             </div>
 
             <div>
-                <h1 class="font-lato font-extrabold text-[20px] leading-none mb-4">Product</h1>
-                <ul class="space-y-3">
-                    <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li>
-                    <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li>
-                    <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li>
-                    <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li>
-                    <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li>
+                <h1 class="font-lato font-extrabold text-[20px] leading-none mb-4">Quick Links</h1>
+                <ul class="space-y-1">
+                    @foreach ([
+        'features' => 'Features',
+        'about' => 'About Us',
+        'pricing' => 'Pricing',
+        'blogs' => 'Blogs',
+        'contact' => 'Contact Us',
+    ] as $id => $label)
+                        <li>
+                            <a href="{{ route('home') }}#{{ $id }}"
+                                class="font-lato font-medium text-[14px] leading-none hover:text-primary">
+                                {{ $label }}
+                            </a>
+                        </li>
+                    @endforeach
                 </ul>
             </div>
 
             <div>
                 <h1 class="font-lato font-extrabold text-[20px] leading-none mb-4">Product</h1>
                 <ul class="space-y-3">
-                    <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li>
-                    <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li>
-                    <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li>
-                    <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li>
-                    <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li>
+                    <li class="font-lato font-medium text-[14px] leading-none">Privacy Policy</li>
+                    <li class="font-lato font-medium text-[14px] leading-none">T & C</li>
+                    <li class="font-lato font-medium text-[14px] leading-none">Pricing</li>
+                    <li class="font-lato font-medium text-[14px] leading-none">Blogs</li>
+                    {{-- <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li> --}}
                 </ul>
             </div>
             <div class="col-span-2">
@@ -154,7 +163,7 @@
                 Privacy Policy</p>
             <p
                 class="text-center mt-5 lg:mt-10 font-lato lg:font-semibold text-[15px] leading-none tracking-[0] text-white">
-                2025 lorem ispaun dolor sit amet - All sed elusmod
+                © 2025 artisanalbyte. All rights reserved.
             </p>
             <p
                 class="lg:hidden block font-lato mt-5 lg:font-semibold text-[12px] leading-[100%] tracking-[0] text-center text-white">

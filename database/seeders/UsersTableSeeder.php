@@ -32,7 +32,7 @@ class UsersTableSeeder extends Seeder
                 'avatar' => NULL,
                 'hash_organization' => true,
                 'thumbnail_logo' => NULL,
-                'subscription_plan' => 'free',
+                'subscription_plan_id' => 1,
                 'status' => true,
                 'validity' => NULL,
                 'email_verified_at' => '2025-06-12 09:52:14',

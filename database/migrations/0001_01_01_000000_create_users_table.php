@@ -22,7 +22,8 @@ return new class extends Migration {
             $table->string('avatar')->nullable();
             $table->boolean('hash_organization')->default(true);
             $table->string('thumbnail_logo')->nullable();
-            $table->enum('subscription_plan', ['free'])->default('free');
+            $table->unsignedBigInteger('subscription_plan_id')->default(1);
+$table->foreign('subscription_plan_id')->references('id')->on('subscription_plans');
             $table->enum('role', ['user', 'admin'])->default('user');
             $table->boolean('status')->default(true);
             $table->date('validity')->nullable();
