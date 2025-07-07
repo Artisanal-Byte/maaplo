@@ -1,0 +1,11 @@
+[
+  {
+    "name": "buildbooker",
+    "ip": "13.203.247.54",
+    "username": "ubuntu",
+    "port": "22",
+    "beforeHooks": "",
+    "afterHooks": "",
+    "path": "/var/www/maaplo"
+  }
+]
