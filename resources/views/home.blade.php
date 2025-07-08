@@ -649,7 +649,7 @@
                     </div>
                     <div class="px-6 mt-8 mb-10 lg:mb-0">
                         <button
-                            class="w-full mt-5 px-[15px] text-lg text-bold py-1 lg:py-[8px] bg-primary text-white hover:bg-[#DEEFF4] rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
+                            class="w-full mt-5 px-[15px] text-lg text-bold py-1 lg:py-[8px] bg-primary text-white hover:bg-[#75959e] rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
                             <a href="/">Get Started</a>
                         </button>
                     </div>
@@ -1709,8 +1709,8 @@
                     <!-- Wrapper div to control alignment -->
                     <div class="flex justify-end lg:justify-start">
                         <button type="submit"
-                            class="mt-4 px-[15px] py-1 lg:py-[8px] w-[100px] bg-black text-white hover:bg-gray-600 
-               rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] 
+                            class="mt-4 px-[15px] py-1 lg:py-[8px] w-[100px] bg-black text-white hover:bg-gray-600
+               rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px]
                hover:scale-105 transition-transform duration-200">
                             <a href="/">Submit</a>
                         </button>
