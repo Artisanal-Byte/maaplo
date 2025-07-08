@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class TemplateController extends Controller
 {
@@ -84,13 +85,14 @@ class TemplateController extends Controller
         $selectedGroupedDetails = collect($validated['design_details'])
             ->filter(fn($val) => $val === true)
             ->keys()
-            ->map(function ($index) use ($groupedDesignDetails) {
+            ->mapWithKeys(function ($index) use ($groupedDesignDetails) {
                 $group = $groupedDesignDetails->values()[$index] ?? collect();
-                $bodyPartLabel = optional($group->first()->bodyPartValue)->body_part ?? 'bodypartvalue';
-                $ids = $group->pluck('id')->implode(',');
-                return "{$bodyPartLabel}/{$ids}";
+                $bodyPartLabelRaw = optional($group->first()->bodyPartValue)->body_part ?? 'bodypartvalue';
+                $bodyPartLabel = Str::snake($bodyPartLabelRaw);
+                $ids = $group->pluck('id')->toArray();
+                return [$bodyPartLabel => $ids];
             })
-            ->toArray(); // Result like ['Front/2,5,7', 'Back/1,3,6']
+            ->toArray();
 
 
         try {
@@ -128,6 +130,7 @@ class TemplateController extends Controller
     public function edit($id)
     {
         $item = Template::findOrFail($id);
+        // dd($item->toArray());
         $measurements = [
             'all' => Measurement::all(['id', 'slug', 'measurements_logo']),
             'selected' => $item->measurements()->pluck('slug')->toArray(),
@@ -165,23 +168,23 @@ class TemplateController extends Controller
             ->get(['id', 'body_part_id', 'value', 'gender'])
             ->groupBy('body_part_id');
 
-        // Get selected design detail IDs from validated input (which are just IDs)
         $selectedDesignDetailIds = collect($validated['design_details'])->map(fn($id) => (int)$id)->all();
 
-        // Build grouped design details string array like "front part/3,4,6"
-        $selectedGroupedDetails = $groupedDesignDetails->map(function ($group) use ($selectedDesignDetailIds) {
-            // Filter IDs in this group that are selected
-            $selectedIds = $group->pluck('id')->filter(fn($id) => in_array($id, $selectedDesignDetailIds));
+        $selectedGroupedDetails = [];
 
-            if ($selectedIds->isEmpty()) {
-                return null;
+        foreach ($groupedDesignDetails as $bodyPartId => $group) {
+            // Only include body parts where at least one design detail is selected
+            if ($group->pluck('id')->intersect($selectedDesignDetailIds)->isEmpty()) {
+                continue;
             }
 
-            $bodyPartLabel = optional($group->first()->bodyPartValue)->body_part ?? 'bodypartvalue';
-            $idsString = $selectedIds->implode(',');
+            $bodyPartLabelRaw = optional($group->first()->bodyPartValue)->body_part ?? 'bodypartvalue';
+            $bodyPartLabel = Str::snake($bodyPartLabelRaw);
 
-            return "{$bodyPartLabel}/{$idsString}";
-        })->filter()->values()->toArray();
+            // Include all design detail IDs from the group (like store method)
+            $selectedGroupedDetails[$bodyPartLabel] = $group->pluck('id')->toArray();
+        }
+
 
         try {
             DB::beginTransaction();

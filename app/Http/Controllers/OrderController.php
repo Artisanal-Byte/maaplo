@@ -8,6 +8,7 @@ use App\Helpers\OrderData;
 use App\Helpers\UniqueOrderNumber; // Ensure this class exists in the specified namespace or create it if missing
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Models\DesignDetail;
 use App\Models\Template;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -51,12 +52,22 @@ class OrderController extends Controller
         $itemTypes = Template::where('user_id', Auth::id())
             ->orWhereNull('user_id')
             ->with('measurements')
-            ->get()
-            ->append('design_details_list'); // Appends the accessor to each model
-            // dd( $itemTypes->toArray()); // For debugging purposes, remove in production
+            ->get(); // Appends the accessor to each model
+        foreach ($itemTypes as $template) {
+            $template->design_detail_models = collect();
+
+            if (is_array($template->design_details)) {
+                $ids = extractDesignDetailIds($template->design_details);
+                $template->design_detail_models = DesignDetail::whereIn('id', $ids)->get();
+            }
+        }
+
+        $allDesignDetails = DesignDetail::with('bodyPartValue')->get();
+        // dd($itemTypes->toArray()); // For debugging purposes, remove in production
         return Inertia::render('orders/Create', [
             'customers' => $user->customers,
             'itemTypes' => $itemTypes,
+            'allDesignDetails' => $allDesignDetails,
         ]);
     }
 
@@ -189,18 +200,42 @@ class OrderController extends Controller
         // dd($order->toArray());
         $user = Auth::user();
         $user->load('customers');
-
+        $allDesignDetails = DesignDetail::with('bodyPartValue')->get();
         $itemTypes = Template::where('user_id', Auth::id())
             ->orWhereNull('user_id')
             ->with('measurements')
-            ->get()
-            ->append('design_details_list');
+            ->get();
+        // dd($itemTypes ->toArray());
+        foreach ($itemTypes as $template) {
+            $template->design_detail_values = [];
+
+            if (is_array($template->design_details)) {
+                $ids = extractDesignDetailIds($template->design_details);
+                $details = DesignDetail::whereIn('id', $ids)->get();
+
+                $grouped = [];
+                foreach ($template->design_details as $bodyPart => $idList) {
+                    $grouped[$bodyPart] = $details->whereIn('id', $idList)->map(function ($dd) {
+                        return [
+                            'id' => $dd->id,
+                            'name' => strtolower(str_replace(' ', '-', $dd->value)),
+                            'label' => $dd->value,
+                            'img' => $dd->image,
+                        ];
+                    })->values();
+                }
+
+                $template->design_detail_values = $grouped;
+            }
+        }
+
 
         $orderItems = $order->orderItems->map(function ($item) {
             $ids = json_decode($item->design_detail, true) ?? [];
+            // dd($ids);
 
             $templateNames = Template::whereIn('id', $ids)->pluck('name')->toArray();
-
+            // dd($templateNames);
             return [
                 'id' => $item->id,
                 'template_id' => $item->template_id,
@@ -227,12 +262,12 @@ class OrderController extends Controller
 
             ];
         });
-
         return Inertia::render('orders/Edit', [
             'order' => $order,
             'itemTypes' => $itemTypes,
             'customers' => $user->customers,
-            'orderItems' => $orderItems
+            'orderItems' => $orderItems,
+            'allDesignDetails' => $allDesignDetails,
         ]);
     }
 

@@ -13,7 +13,7 @@ import { Head, Link } from '@inertiajs/vue3';
 import { nextTick } from 'vue';
 import Loader from '@/components/Loader.vue';
 
-const props = defineProps(["users", "customers", "itemTypes", "errors", "order", "orderItems"]);
+const props = defineProps(["users", "customers", "itemTypes", "errors", "order", "orderItems","allDesignDetails"]);
 
 const showModal = ref(false);
 const showDeletePopup = ref(false);
@@ -57,7 +57,6 @@ watch(() => form.order_items, (items) => {
     });
     totalAmmount.value = t;
     form.total_amount = t;
-    console.log("Total Amount Recalculated:", totalAmmount.value);
 
 }, { immediate: true });
 
@@ -255,7 +254,7 @@ const onItemAdded = (itemData) => {
                     <ItemModel :errors="errors" :showModal="showModal" @close="closeModel"
                         :form="form.order_items_template" :itemTypes="itemTypes" :measurements="[]"
                         :orderItems="orderItems" :currentEditIndex="currentEditIndex" :order="order"
-                        @item-updated="recalculateTotal" @item-added="onItemAdded" />
+                        @item-updated="recalculateTotal" @item-added="onItemAdded" :allDesignDetails="allDesignDetails"/>
 
                     <div class="mt-6 overflow-x-auto rounded-lg shadow-lg">
                         <table class="min-w-full border-collapse bg-white text-sm text-left text-gray-700">

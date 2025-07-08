@@ -102,35 +102,53 @@
         })
 
         const setSelectDesignDetails = (templateId) => {
+
             const selectedItemDesign = props.itemTypes.find(item => item.id === templateId);
-            if (!selectedItemDesign || !selectedItemDesign.design_details_list) {
+
+            if (!selectedItemDesign || !selectedItemDesign.design_details) {
                 designDetails.value = [];
                 return;
             }
 
-            const grouped = {};
+            let details;
+            try {
+                // Check if design_details is a string and parse it
+                details = typeof selectedItemDesign.design_details === 'string'
+                    ? JSON.parse(selectedItemDesign.design_details)
+                    : selectedItemDesign.design_details;
+            } catch (err) {
+                console.error("Failed to parse design_details:", err);
+                designDetails.value = [];
+                return;
+            }
 
-            selectedItemDesign.design_details_list.forEach(item => {
-                const bodyPart = item.body_part_value.body_part;
-                const key = bodyPart.toLowerCase();
+            const grouped = [];
 
-                if (!grouped[key]) {
-                    grouped[key] = {
-                        body_part: bodyPart,
-                        value: []
-                    };
-                }
+            Object.entries(details).forEach(([bodyPartKey, ids]) => {
+                const bodyPartName = bodyPartKey.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
 
-                grouped[key].value.push({
-                    id: item.id,
-                    name: item.value.toLowerCase().replace(/\s+/g, '-'),
-                    label: item.value,
-                    img: item.image
+                // Ensure props.allDesignDetails is defined before filtering
+                const values = (props.allDesignDetails || [])
+                    .filter(dd => ids.includes(dd.id))
+                    .map(dd => ({
+                        id: dd.id,
+                        name: dd.value.toLowerCase().replace(/\s+/g, '-'),
+                        label: dd.value,
+                        img: dd.image,
+                    }));
+
+                grouped.push({
+                    body_part: bodyPartName,
+                    value: values
                 });
             });
 
-            designDetails.value = Object.values(grouped);
+            designDetails.value = grouped;
         };
+
+
+
+
 
         const previewImage = (file) => {
             if (!file || typeof file !== 'object') {
@@ -231,7 +249,6 @@
 
             // Use correct key name — maybe 'is_urgent', not 'isUrgent'
             formStore.order_items_template.is_urgent = !!item.is_urgent;
-            console.log("Loaded is_urgent:", item.is_urgent);
 
         };
         onMounted(() => {

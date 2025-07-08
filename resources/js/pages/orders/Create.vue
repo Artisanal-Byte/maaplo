@@ -11,8 +11,7 @@ import Input from '@/components/InputWithLabel.vue';
 import { useOrderFormStore } from '@/stores/orderFormStore';
 import { Head } from '@inertiajs/vue3';
 import Loader from '@/components/Loader.vue';
-const props = defineProps(["users", "customers", "itemTypes", "errors"])
-console.log('itemTypes in create page', props.itemTypes);
+const props = defineProps(["users", "customers", "itemTypes", "errors","allDesignDetails"])
 
 const showModal = ref(false);
 const disabled = ref(false);
@@ -196,7 +195,7 @@ const formatDate = (dateStr) => {
 
                         <!-- Modal Content -->
                         <ItemModel :errors="form.errors?.order_items" :showModal="showModal" @close="closeModel"
-                            :form="form.order_items" :itemTypes="itemTypes"
+                            :form="form.order_items" :itemTypes="itemTypes" :allDesignDetails="allDesignDetails"
                             :measurements="customerMeasurements ?? []" />
                         <p class="text-red-600 text-sm">
                             {{ errors?.order_items }}

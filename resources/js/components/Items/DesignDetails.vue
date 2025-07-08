@@ -4,7 +4,7 @@ import { Icon } from '@iconify/vue';
 import SvgIcon from '../SvgIcon.vue';
 import { useOrderFormStore } from '@/stores/orderFormStore';
 
-const props = defineProps(["order", "currentEditIndex","designDetails"])
+const props = defineProps(["order", "currentEditIndex", "designDetails"])
 
 let tmp = ref()
 const formStore = useOrderFormStore()
@@ -12,8 +12,8 @@ const formStore = useOrderFormStore()
 watch(() => props.designDetails, (nVal) => {
     tmp.value = nVal
 })
-// Sample dynamic data (can be props later)
 
+// Track body part selections in an object
 const showDropdownDesignDetails = ref(true);
 const designToggles = ref({});
 
@@ -22,13 +22,15 @@ function toggleDropdownDesignDetails() {
 }
 
 function toggleBodyPartDropdown(part) {
+
     designToggles.value[part] = !designToggles.value[part];
 }
 
-function selectDesign(designId) {
-    formStore.order_items_template.design_detail.push(designId)
-}
+function selectDesign(designId, bodyPart) {
+    // Update only the design for the clicked body part
+    formStore.order_items_template.design_detail[bodyPart] = designId;
 
+}
 </script>
 
 <template>
@@ -57,12 +59,13 @@ function selectDesign(designId) {
                         <!-- Body Part Design Options -->
                         <div v-show="designToggles[t.body_part]">
                             <div class="flex flex-row flex-wrap gap-4 ml-10 py-3">
-                                <div v-for="(V, index) in t.value" :key="V.id" @click="selectDesign(V.id)" :class="[
-                                    'cursor-pointer rounded-md p-2 border',
-                                    formStore.order_items_template.design_detail.includes(V.id)
-                                        ? 'border-primary bg-[#DEECF0]'
-                                        : 'border-gray-300'
-                                ]">
+                                <div v-for="(V, index) in t.value" :key="V.id" @click="selectDesign(V.id, t.body_part)"
+                                    :class="[
+                                        'cursor-pointer rounded-md p-2 border',
+                                        formStore.order_items_template.design_detail[t.body_part] === V.id
+                                            ? 'border-primary bg-[#DEECF0]'
+                                            : 'border-gray-300'
+                                    ]">
                                     <SvgIcon :name="V.name" />
                                     <h1 class="font-medium mt-2 text-[12px] text-center">{{ V.label }}</h1>
                                 </div>
