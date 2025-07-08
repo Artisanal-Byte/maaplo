@@ -1,9 +1,18 @@
-<script setup lang="ts">
+<script setup>
 import { router } from '@inertiajs/vue3';
 
 const props = defineProps({
-    show: Boolean
+    show: Boolean,
+    planTitle: {
+        type: String,
+        default: 'Free',
+    },
+    planLimit: {
+        type: Number,
+        default: 5,
+    },
 });
+
 const emit = defineEmits(['close']);
 
 function goToUpgrade() {
@@ -15,7 +24,6 @@ function closeAndRedirect() {
     router.visit(route('customers.index')); // Redirect
 }
 </script>
-
 
 <template>
     <div v-if="props.show"
@@ -38,8 +46,10 @@ function closeAndRedirect() {
 
             <h2 class="text-xl font-bold text-red-600 mb-2">Limit Reached</h2>
             <p class="text-gray-700 mb-2">
-                You’re currently on a <strong class="text-primary">Free</strong> plan and can create up to
-                <strong>5 customers</strong> only.
+                You’re currently on a <strong class="text-primary">{{ props.planTitle }}</strong> plan and can create
+                up
+                to
+                <strong>{{ props.planLimit }} customers</strong> only.
             </p>
             <p class="text-gray-600 mb-6">To add more customers, please upgrade your subscription.</p>
 
@@ -50,17 +60,16 @@ function closeAndRedirect() {
         </div>
     </div>
 </template>
+
 <style>
 @keyframes blink-loop {
 
     0%,
     100% {
-        /* opacity: 1; */
         transform: scale(1);
     }
 
     50% {
-        /* opacity: 0.85; */
         transform: scale(1.03);
     }
 }
