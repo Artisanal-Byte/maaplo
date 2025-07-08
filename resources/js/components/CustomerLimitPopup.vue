@@ -16,7 +16,7 @@ const props = defineProps({
 const emit = defineEmits(['close']);
 
 function goToUpgrade() {
-    router.visit('/upgrade');
+    window.location.href = '/#pricing';
 }
 
 function closeAndRedirect() {
