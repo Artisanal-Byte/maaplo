@@ -7,8 +7,8 @@ import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
 import VueApexCharts from "vue3-apexcharts";
-import vueDebounce from 'vue-debounce'
-import { createPinia } from 'pinia'
+import vueDebounce from 'vue-debounce';
+import { createPinia } from 'pinia';
 
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
