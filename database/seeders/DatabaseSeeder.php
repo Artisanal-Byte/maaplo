@@ -18,11 +18,11 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SubscriptionPlansTableSeeder::class,
         ]);
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@gmail.com',
-            'password' => Hash::make('user@123')
-        ]);
+//        User::factory()->create([
+//            'name' => 'Test User',
+//            'email' => 'test@gmail.com',
+//            'password' => Hash::make('user@123')
+//        ]);
 
         $this->call([
             MeasurementSeeder::class,

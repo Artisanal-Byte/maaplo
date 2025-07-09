@@ -16,6 +16,7 @@ class ImageHelper
      * @param int $userId
      * @param string $customerName
      * @param string $label
+     * @param string $type
      * @return string
      */
     public static function imageProccess(
