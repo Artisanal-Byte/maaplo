@@ -124,7 +124,7 @@ const submit = () => {
                                         <!-- <Label for="email">Email address</Label> -->
                                         <Input id="email" type="email" required autofocus :tabindex="1"
                                             autocomplete="email" v-model="form.email" placeholder="email"
-                                            class="border border-black bg-white h-12" />
+                                            class="border border-black bg-white h-12 text-black" />
                                         <InputError :message="form.errors.email" />
                                     </div>
 
@@ -134,7 +134,7 @@ const submit = () => {
                                             <!-- Password Input -->
                                             <Input :type="showPassword ? 'text' : 'password'" id="password" required
                                                 :tabindex="3" autocomplete="current-password" v-model="form.password"
-                                                placeholder="Password" class="border border-black h-12 bg-white" />
+                                                placeholder="Password" class="border border-black h-12 bg-white text-black" />
                                             <InputError :message="form.errors.password" />
 
                                             <!-- Toggle Icon -->
