@@ -59,10 +59,10 @@ const navLinks = {
       <!-- Desktop Buttons -->
       <div class="hidden lg:flex space-x-4">
         <a :href="route('demo')">
-        <button 
-          class="px-[15px] py-[8px] text-black hover:bg-primary hover:text-white rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
-          Demo
-        </button>
+          <button
+            class="px-[15px] py-[8px] text-black hover:bg-primary hover:text-white rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
+            Demo
+          </button>
         </a>
         <button
           class="px-[15px] py-[8px] bg-black text-white hover:bg-gray-600 rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200 space-x-2">
@@ -79,10 +79,10 @@ const navLinks = {
       </a>
       <div class="flex flex-col space-y-2 mt-4">
         <a :href="route('demo')">
-        <button
-          class="px-[15px] py-[8px] text-black hover:bg-primary hover:text-white rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
-          Demo
-        </button>
+          <button
+            class="px-[15px] py-[8px] text-black hover:bg-primary hover:text-white rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
+            Demo
+          </button>
         </a>
         <button
           class="px-[15px] py-[8px] bg-black text-white hover:bg-gray-600 rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200 space-x-2">
@@ -97,15 +97,13 @@ const navLinks = {
   </div>
 
 
-  <div class="bg-[#2B4146] px-5 lg:px-20 pt-16 pb-10">
+  <!-- <div class="bg-[#2B4146] px-5 lg:px-20 pt-16 pb-10">
     <div class="flex flex-col lg:flex-row justify-between gap-10 text-white">
-      <!-- Logo Column -->
+     
       <div class="flex items-start">
-        <!-- <x-icon name="maaplo" class="w-24 h-auto" /> -->
         <img src="/images/maaplo1.svg" class="w-[150px]">
       </div>
 
-      <!-- Repeatable Link Columns -->
       <div>
         <h1 class="font-lato font-extrabold text-[20px] leading-none mb-4">Product</h1>
         <ul class="space-y-3">
@@ -141,7 +139,6 @@ const navLinks = {
       <div class="col-span-2">
         <h1 class="font-lato font-extrabold text-[20px] leading-none mb-4">Follow Us</h1>
         <div class="flex gap-4 mt-10">
-          <!-- <x-icon name="instagram" class="w-24 h-auto" /> -->
           <Icon icon="mdi:instagram" width="24" height="24" />
           <Icon icon="ic:baseline-facebook" width="24" height="24" />
           <Icon icon="iconoir:twitter" width="24" height="24" />
@@ -168,6 +165,81 @@ const navLinks = {
       <p
         class="lg:hidden block font-lato mt-5 lg:font-semibold text-[12px] leading-[100%] tracking-[0] text-center text-white">
         Privacy Policy</p>
+    </div>
+  </div> -->
+
+  <div class="bg-[#2B4146] px-5 lg:px-20 pt-16 pb-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-10 text-white">
+
+      <!-- Logo and About -->
+      <div class="flex lg:col-span-2 flex-col gap-4 lg:-mt-5">
+        <div>
+          <img src="/images/maaplo1.svg" class="w-[100px]">
+        </div>
+        <p class="font-lato font-semibold text-[15px] tracking-[0] lg:w-[400px]">
+          MaapLo is your smart partner, built to simplify garment workflows with deep insight into the personalised
+          clothing industry.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h1 class="font-lato font-extrabold text-[20px] leading-none mb-4">Quick Links</h1>
+        <ul class="space-y-1">
+          <li v-for="(label, id) in navLinks" :key="id">
+            <a :href="`/#${id}`" class="font-lato font-medium text-[14px] leading-none hover:text-primary">
+              {{ label }}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Product Links -->
+      <div>
+        <h1 class="font-lato font-extrabold text-[20px] leading-none mb-6">Product</h1>
+        <ul class="space-y-4">
+          <li class="font-lato font-medium text-[14px] leading-none">Privacy Policy</li>
+          <li class="font-lato font-medium text-[14px] leading-none">Terms & Conditions</li>
+          <li class="font-lato font-medium text-[14px] leading-none">Pricing</li>
+          <li class="font-lato font-medium text-[14px] leading-none">Blogs</li>
+        </ul>
+      </div>
+
+      <!-- Follow Us and Newsletter -->
+      <div class="lg:col-span-2">
+        <h1 class="font-lato font-extrabold text-[20px] leading-none mb-4">Follow Us</h1>
+        <div class="flex gap-4 mt-10">
+          <div class="flex gap-4">
+            <Icon icon="mdi:instagram" width="24" height="24" />
+            <Icon icon="ic:baseline-facebook" width="24" height="24" />
+            <Icon icon="iconoir:twitter" width="24" height="24" />
+            <Icon icon="mdi:linkedin" width="24" height="24" />
+          </div>
+        </div>
+        <div class="lg:flex gap-10 mt-5 hidden">
+          <input type="text" placeholder="Enter your email"
+            class="mt-4 w-full border text-black border-gray-300 rounded-md p-3 focus:outline-none" />
+          <button type="submit"
+            class="mt-4 font-medium px-[15px] py-1 lg:py-[8px] w-[100px] bg-white text-black hover:bg-gray-600 rounded-md hover:scale-105 transition-transform duration-200">
+            <a href="/">Subscribe</a>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Line -->
+    <div class="text-center border-t lg:border-none mt-20">
+      <p
+        class="lg:hidden block font-lato mt-5 lg:font-semibold text-[12px] leading-[100%] tracking-[0] text-center text-white">
+        Privacy Policy
+      </p>
+      <p class="text-center mt-5 lg:mt-10 font-lato lg:font-semibold text-[15px] leading-none tracking-[0] text-white">
+        © 2025 artisanalbyte. All rights reserved.
+      </p>
+      <p
+        class="lg:hidden block font-lato mt-5 lg:font-semibold text-[12px] leading-[100%] tracking-[0] text-center text-white">
+        Privacy Policy
+      </p>
     </div>
   </div>
 </template>

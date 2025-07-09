@@ -36,8 +36,8 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "App/Helpers/ImageHelper.php",
-            "App/Helpers/UniqueOrderNumber.php",
+            "app/Helpers/ImageHelper.php",
+            "app/Helpers/UniqueOrderNumber.php",
             "app/Helpers/DesignDetailHelper.php"
         ]
     },
