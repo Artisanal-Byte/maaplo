@@ -18,7 +18,7 @@ const navLinks = {
 }
 </script>
 <template>
-  <nav class="lg:px-20 mx-auto py-4">
+  <nav class="lg:px-20 mx-auto py-4 bg-white">
     <!-- Navbar wrapper -->
     <div class="flex justify-between items-center h-[84px] mx-4 lg:mx-0">
 
@@ -92,7 +92,7 @@ const navLinks = {
     </div>
   </nav>
 
-  <div>
+  <div class="bg-white">
     <slot />
   </div>
 

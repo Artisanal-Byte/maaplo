@@ -56,7 +56,7 @@ const submit = () => {
                             <div class="grid gap-2">
                                 <!-- <Label for="name">Name</Label> -->
                                 <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name"
-                                    v-model="form.name" placeholder="Name" class="border border-black h-12" />
+                                    v-model="form.name" placeholder="Name" class="border border-black h-12 bg-white" />
                                 <InputError :message="form.errors.name" />
                             </div>
 
@@ -64,7 +64,7 @@ const submit = () => {
                             <div class="grid gap-2">
                                 <!-- <Label for="email">Email address</Label> -->
                                 <Input id="email" type="email" required :tabindex="2" autocomplete="email"
-                                    v-model="form.email" placeholder="Email" class="border border-black h-12" />
+                                    v-model="form.email" placeholder="Email" class="border border-black h-12 bg-white" />
                                 <InputError :message="form.errors.email" />
                             </div>
 
@@ -74,7 +74,7 @@ const submit = () => {
                                 <div class="relative w-full">
                                     <Input :type="showPassword ? 'text' : 'password'" id="password" required
                                         :tabindex="3" autocomplete="new-password" v-model="form.password"
-                                        placeholder="Password" class="border border-black h-12" />
+                                        placeholder="Password" class="border border-black h-12 bg-white" />
                                     <InputError :message="form.errors.password" />
                                     <!-- Toggle Icon -->
                                     <span class="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
@@ -92,7 +92,7 @@ const submit = () => {
                                     <Input :type="showConfirmationPassword ? 'text' : 'password'" id="password_confirmation"
                                         required :tabindex="4" autocomplete="new-password"
                                         v-model="form.password_confirmation" placeholder="Confirm password"
-                                        class="border border-black h-12" />
+                                        class="border border-black h-12 bg-white" />
                                     <InputError :message="form.errors.password_confirmation" />
                                     <!-- Toggle Icon -->
                                     <span class="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
