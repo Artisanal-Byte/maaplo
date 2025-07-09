@@ -5,6 +5,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DesignDetailsController;
 use App\Http\Controllers\FeatureRequestAndSuggestionController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ItemTemplateController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrganizationController;
@@ -22,7 +23,7 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
-
+Route::get('/', [HomeController::class, 'index'])->name('home');
 //-- Google Login
 Route::controller(SocialiteController::class)->group(function () {
     Route::get('auth/google', 'googleLogin')->name('auth.google');

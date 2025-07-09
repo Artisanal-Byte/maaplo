@@ -12,6 +12,16 @@
     }
 </style>
 <script src="{{ asset('js/custom.js') }}" defer></script>
+<script>
+    function toggleDropdown(id) {
+        const el = document.getElementById(id);
+        if (el.style.display === "none" || el.style.display === "") {
+            el.style.display = "block";
+        } else {
+            el.style.display = "none";
+        }
+    }
+</script>
 
 @section('content')
     {{-- section 1 --}}
@@ -439,310 +449,117 @@
 
             {{-- mobile view --}}
             {{-- card  --}}
-            <div class="lg:hidden block flex flex-col lg:justify-center lg:items-center gap-5 mt-20">
-                <div
-                    class="w-[320px] lg:w-[350px] lg:h-auto border-t-[12px] border-primary rounded-[10px] bg-white shadow-[0px_4px_8.7px_0px_#16789340]">
-                    <!-- Header - Click to toggle dropdown -->
-                    <div id="toggleDropdown" onclick="toggleDropdown(1)" class="cursor-pointer p-4 bg-[#FBFBFB]">
-                        <div class="flex flex-row justify-between">
-                            <div>
-                                <h1 class="text-[30px] leading-[100%] font-normal text-left font-convergence">
-                                    Free Plan
-                                </h1>
+            {{-- mobile view with dynamic dropdowns --}}
+            <div class="lg:hidden block flex flex-col items-center gap-5 mt-20">
+                @foreach ($subscriptionPlans as $index => $plan)
+                    @php
+                        $dropdownId = 'dropdownContent' . $index;
+                        $toggleId = 'toggleDropdown' . $index;
+                    @endphp
+
+                    <div
+                        class="w-[320px] lg:w-[350px] border-t-[12px] border-primary rounded-[10px] bg-white shadow-[0px_4px_8.7px_0px_#16789340]">
+
+                        <!-- Header - Click to toggle dropdown -->
+                        <div id="{{ $toggleId }}" onclick="toggleDropdown('{{ $dropdownId }}')"
+                            class="cursor-pointer p-4 bg-[#FBFBFB]">
+                            <div class="flex flex-row justify-between">
+                                <div>
+                                    <h1 class="text-[30px] leading-[100%] font-normal text-left font-convergence">
+                                        {{ ucfirst($plan->plan_title) }} Plan
+                                    </h1>
+                                </div>
+                                <div>
+                                    <x-icon name="icon-down" id="iconDown{{ $index }}" />
+                                </div>
                             </div>
-                            <div>
-                                {{-- <x-icon name="icon-up" id="iconUp" /> --}}
-                                <x-icon name="icon-down" id="iconDown" />
-                            </div>
+
+                            <h1 class="text-[24px] mt-3 leading-[100%] font-extrabold text-left font-lato">
+                                ${{ $plan->plan_price }}
+                            </h1>
+                            <p class="mt-4 text-[15px] leading-[152%] font-medium text-left font-lato">
+                                {{ $plan->plan_currency }} / {{ $plan->plan_description }}
+                            </p>
                         </div>
 
-                        <h1 class="text-[24px] mt-3 leading-[100%] font-extrabold text-left font-lato">
-                            $2500
-                        </h1>
-                        <p class="mt-4 text-[15px] leading-[152%] font-medium text-left font-lato">
-                            USD / monthly
-                        </p>
-                    </div>
-
-                    <!-- Dropdown content -->
-                    <div id="dropdownContent1" style="display: none;">
-                        <div class="border-gray-300 mt-6 pt-4 px-6">
-                            <ul
-                                class="text-left text-[15px] leading-[152%] font-lato border-y border-primary divide-y divide-[#167893] marker:text-primary">
-                                <li class="py-3 flex items-center gap-4">
-                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                    Lorem Ipsum
-                                </li>
-                                <li class="py-3 flex items-center gap-4">
-                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                    Lorem Ipsum
-                                </li>
-                                <li class="py-3 flex items-center gap-4">
-                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                    Lorem Ipsum
-                                </li>
-                                <li class="py-3 flex items-center gap-4">
-                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                    Lorem Ipsum
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="px-6 mt-8 mb-10 lg:mb-0">
-                            <button
-                                class="w-full mt-5 px-[15px] text-lg font-bold py-1 lg:py-[8px] bg-primary text-white hover:bg-[#DEEFF4] rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
-                                <a href="/">Get Started</a>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div
-                    class="w-[320px] lg:w-[350px] lg:h-auto border-t-[12px] border-primary rounded-[10px] bg-white shadow-[0px_4px_8.7px_0px_#16789340]">
-                    <!-- Header - Click to toggle dropdown -->
-                    <div id="toggleDropdown2" onclick="toggleDropdown(2)" class="cursor-pointer p-4 bg-[#FBFBFB]">
-                        <div class="flex flex-row justify-between">
-                            <div>
-                                <h1 class="text-[30px] leading-[100%] font-normal text-left font-convergence">
-                                    Free Plan
-                                </h1>
+                        <!-- Dropdown content -->
+                        <div id="{{ $dropdownId }}" style="display: none;">
+                            <div class="border-gray-300 mt-6 pt-4 px-6">
+                                @if (is_array($plan->features) || is_object($plan->features))
+                                    <ul
+                                        class="text-left text-[15px] leading-[152%] font-lato border-y border-primary divide-y divide-[#167893] marker:text-primary">
+                                        @foreach ((array) $plan->features as $feature)
+                                            <li class="py-3 flex items-center gap-4">
+                                                <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
+                                                {{ $feature }}
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <p class="text-sm italic text-gray-500 text-center">No features available</p>
+                                @endif
                             </div>
-                            <div>
-                                {{-- <x-icon name="icon-up" id="iconUp" /> --}}
-                                <x-icon name="icon-down" id="iconDown" />
+                            <div class="px-6 mt-8 mb-10 lg:mb-0">
+                                <button
+                                    class="w-full mt-5 px-[15px] text-lg font-bold py-1 lg:py-[8px] bg-primary text-white hover:bg-[#DEEFF4] rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
+                                    <a href="/">Get Started</a>
+                                </button>
                             </div>
                         </div>
-
-                        <h1 class="text-[24px] mt-3 leading-[100%] font-extrabold text-left font-lato">
-                            $2500
-                        </h1>
-                        <p class="mt-4 text-[15px] leading-[152%] font-medium text-left font-lato">
-                            USD / monthly
-                        </p>
                     </div>
-
-                    <!-- Dropdown content -->
-                    <div id="dropdownContent2" style="display: none;">
-                        <div class="border-gray-300 mt-6 pt-4 px-6">
-                            <ul
-                                class="text-left text-[15px] leading-[152%] font-lato border-y border-primary divide-y divide-[#167893] marker:text-primary">
-                                <li class="py-3 flex items-center gap-4">
-                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                    Lorem Ipsum
-                                </li>
-                                <li class="py-3 flex items-center gap-4">
-                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                    Lorem Ipsum
-                                </li>
-                                <li class="py-3 flex items-center gap-4">
-                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                    Lorem Ipsum
-                                </li>
-                                <li class="py-3 flex items-center gap-4">
-                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                    Lorem Ipsum
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="px-6 mt-8 mb-10 lg:mb-0">
-                            <button
-                                class="w-full mt-5 px-[15px] text-lg font-bold py-1 lg:py-[8px] bg-primary text-white hover:bg-[#DEEFF4] rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
-                                <a href="/">Get Started</a>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div
-                    class="w-[320px] lg:w-[350px] lg:h-auto border-t-[12px] border-primary rounded-[10px] bg-white shadow-[0px_4px_8.7px_0px_#16789340]">
-                    <!-- Header - Click to toggle dropdown -->
-                    <div id="toggleDropdown3" onclick="toggleDropdown(3)" class="cursor-pointer p-4 bg-[#FBFBFB]">
-                        <div class="flex flex-row justify-between">
-                            <div>
-                                <h1 class="text-[30px] leading-[100%] font-normal text-left font-convergence">
-                                    Free Plan
-                                </h1>
-                            </div>
-                            <div>
-                                {{-- <x-icon name="icon-up" id="iconUp" /> --}}
-                                <x-icon name="icon-down" id="iconDown" />
-                            </div>
-                        </div>
-
-                        <h1 class="text-[24px] mt-3 leading-[100%] font-extrabold text-left font-lato">
-                            $2500
-                        </h1>
-                        <p class="mt-4 text-[15px] leading-[152%] font-medium text-left font-lato">
-                            USD / monthly
-                        </p>
-                    </div>
-
-                    <!-- Dropdown content -->
-                    <div id="dropdownContent3" style="display: none;">
-                        <div class="border-gray-300 mt-6 pt-4 px-6">
-                            <ul
-                                class="text-left text-[15px] leading-[152%] font-lato border-y border-primary divide-y divide-[#167893] marker:text-primary">
-                                <li class="py-3 flex items-center gap-4">
-                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                    Lorem Ipsum
-                                </li>
-                                <li class="py-3 flex items-center gap-4">
-                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                    Lorem Ipsum
-                                </li>
-                                <li class="py-3 flex items-center gap-4">
-                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                    Lorem Ipsum
-                                </li>
-                                <li class="py-3 flex items-center gap-4">
-                                    <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                    Lorem Ipsum
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="px-6 mt-8 mb-10 lg:mb-0">
-                            <button
-                                class="w-full mt-5 px-[15px] text-lg font-bold py-1 lg:py-[8px] bg-primary text-white hover:bg-[#DEEFF4] rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
-                                <a href="/">Get Started</a>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
+
 
             {{-- dasktop view --}}
             {{-- card  --}}
             <div class="hidden lg:flex flex-row lg:justify-center lg:items-center gap-5 mt-20">
-                <div
-                    class="w-[320px] lg:w-[350px] lg:h-[600px] border-t-[12px] border-primary rounded-[10px] bg-white shadow-[0px_4px_8.7px_0px_#16789340]">
-                    <h1 class="mt-12 text-[30px] leading-[100%] font-normal text-center font-convergence">
-                        Free Plan
-                    </h1>
-                    <x-icon name="start" class="" />
-                    <h1 class="text-[30px] leading-[100%] font-extrabold text-center font-lato -mt-12">
-                        $2500
-                    </h1>
+                @foreach ($subscriptionPlans as $plan)
+                    <div
+                        class="w-[320px] lg:w-[350px] lg:h-[600px] border-t-[12px] border-primary rounded-[10px] bg-white shadow-[0px_4px_8.7px_0px_#16789340]">
+                        <h1 class="mt-12 text-[30px] leading-[100%] font-normal text-center font-convergence">
+                            {{ $plan['plan_title'] }} Plan
+                        </h1>
+                        <x-icon name="start" class="" />
+                        <h1 class="text-[30px] leading-[100%] font-extrabold text-center font-lato -mt-12">
+                            ${{ $plan['plan_price'] }}
+                        </h1>
 
-                    <p class="mt-4 text-[15px] leading-[152%] font-medium text-center font-lato">
-                        USD / monthly
-                    </p>
+                        <p class="mt-4 text-[15px] leading-[152%] font-medium text-center font-lato">
+                            {{ $plan['plan_currency'] }} / {{ $plan['plan_description'] }}
+                        </p>
 
-                    <div class="border-gray-300 mt-6 pt-4 px-6">
-                        <ul
-                            class=" text-left text-[15px] leading-[152%] font-lato border-y border-primary divide-y divide-[#167893] marker:text-primary">
-                            <li class="py-3 flex items-center gap-4">
-                                <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                Lorem Ipsum
-                            </li>
-                            <li class="py-3 flex items-center gap-4">
-                                <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                Lorem Ipsum
-                            </li>
-                            <li class="py-3 flex items-center gap-4">
-                                <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                Lorem Ipsum
-                            </li>
-                            <li class="py-3 flex items-center gap-4">
-                                <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                Lorem Ipsum
-                            </li>
-                        </ul>
+                        <div class="border-gray-300 mt-6 pt-4 px-6">
+                            @php
+                                // Check if features is a string (likely JSON), and decode it if true
+                                if (is_string($plan['features'])) {
+                                    $plan['features'] = json_decode($plan['features'], true); // Decode JSON string into array
+                                }
+                            @endphp
+
+                            @if (is_array($plan['features']) && count($plan['features']) > 0)
+                                <ul
+                                    class="text-left text-[15px] leading-[152%] font-lato border-y border-primary divide-y divide-[#167893] marker:text-primary">
+                                    @foreach ($plan['features'] as $feature)
+                                        <li class="py-3 flex items-center gap-4">
+                                            <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
+                                            {{ $feature }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <p>No features available</p>
+                            @endif
+                        </div>
+
+                        <div class="px-6 mt-8 mb-10 lg:mb-0">
+                            <button
+                                class="w-full mt-5 px-[15px] text-lg text-bold py-1 lg:py-[8px] bg-primary text-white hover:bg-[#75959e] rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
+                                <a href="/">Get Started</a>
+                            </button>
+                        </div>
                     </div>
-                    <div class="px-6 mt-8 mb-10 lg:mb-0">
-                        <button
-                            class="w-full mt-5 px-[15px] text-lg text-bold py-1 lg:py-[8px] bg-primary text-white hover:bg-[#DEEFF4] rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
-                            <a href="/">Get Started</a>
-                        </button>
-                    </div>
-                </div>
-
-                <div
-                    class="w-[320px] lg:w-[350px] lg:h-[600px] border-t-[12px] border-primary rounded-[10px] bg-white shadow-[0px_4px_8.7px_0px_#16789340]">
-                    <h1 class="mt-12 text-[30px] leading-[100%] font-normal text-center font-convergence">
-                        Free Plan
-                    </h1>
-
-                    <h1 class="mt-7 text-[30px] leading-[100%] font-extrabold text-center font-lato">
-                        $2500
-                    </h1>
-
-                    <p class="mt-4 text-[15px] leading-[152%] font-medium text-center font-lato">
-                        USD / monthly
-                    </p>
-
-                    <div class="border-gray-300 mt-6 pt-4 px-6">
-                        <ul
-                            class=" text-left text-[15px] leading-[152%] font-lato border-y border-primary divide-y divide-[#167893] marker:text-primary">
-                            <li class="py-3 flex items-center gap-4">
-                                <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                Lorem Ipsum
-                            </li>
-                            <li class="py-3 flex items-center gap-4">
-                                <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                Lorem Ipsum
-                            </li>
-                            <li class="py-3 flex items-center gap-4">
-                                <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                Lorem Ipsum
-                            </li>
-                            <li class="py-3 flex items-center gap-4">
-                                <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                Lorem Ipsum
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="px-6 mt-8 mb-10 lg:mb-0">
-                        <button
-                            class="w-full mt-5 px-[15px] text-lg text-bold py-1 lg:py-[8px] bg-primary text-white hover:bg-[#DEEFF4] rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
-                            <a href="/">Get Started</a>
-                        </button>
-                    </div>
-                </div>
-
-                <div
-                    class="w-[320px] lg:w-[350px] lg:h-[600px] border-t-[12px] border-primary rounded-[10px] bg-white shadow-[0px_4px_8.7px_0px_#16789340]">
-                    <h1 class="mt-12 text-[30px] leading-[100%] font-normal text-center font-convergence">
-                        Free Plan
-                    </h1>
-
-                    <h1 class="mt-7 text-[30px] leading-[100%] font-extrabold text-center font-lato">
-                        $2500
-                    </h1>
-
-                    <p class="mt-4 text-[15px] leading-[152%] font-medium text-center font-lato">
-                        USD / monthly
-                    </p>
-                    <div class="flex justify-end">
-                        <x-icon name="start1" />
-                    </div>
-
-                    <div class="border-gray-300 px-6">
-                        <ul
-                            class=" text-left text-[15px] leading-[152%] font-lato border-y border-primary divide-y divide-[#167893] marker:text-primary">
-                            <li class="py-3 flex items-center gap-4">
-                                <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                Lorem Ipsum
-                            </li>
-                            <li class="py-3 flex items-center gap-4">
-                                <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                Lorem Ipsum
-                            </li>
-                            <li class="py-3 flex items-center gap-4">
-                                <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                Lorem Ipsum
-                            </li>
-                            <li class="py-3 flex items-center gap-4">
-                                <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
-                                Lorem Ipsum
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="px-6 mt-8  mb-10 lg:mb-0">
-                        <button
-                            class="w-full mt-5 px-[15px] text-lg text-bold py-1 lg:py-[8px] bg-primary text-white hover:bg-[#DEEFF4] rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200">
-                            <a href="/">Get Started</a>
-                        </button>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>
@@ -1709,8 +1526,8 @@
                     <!-- Wrapper div to control alignment -->
                     <div class="flex justify-end lg:justify-start">
                         <button type="submit"
-                            class="mt-4 px-[15px] py-1 lg:py-[8px] w-[100px] bg-black text-white hover:bg-gray-600 
-               rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] 
+                            class="mt-4 px-[15px] py-1 lg:py-[8px] w-[100px] bg-black text-white hover:bg-gray-600
+               rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px]
                hover:scale-105 transition-transform duration-200">
                             <a href="/">Submit</a>
                         </button>

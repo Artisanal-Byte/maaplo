@@ -139,32 +139,36 @@ class ImageHelper
     //     }
     // }
 
-    public static function imageAvatar(UploadedFile $image, string $username, int $userId): string
-    {
+    public static function imageAvatar(
+        UploadedFile $image,
+        string $username,
+        int $userId,
+        string $customerName,
+        int $customerId
+    ): string {
         try {
             $timestamp = time();
             $fileName = "avatar_{$timestamp}.webp";
 
-            // Format the username
+            // Format names
             $usernameFormatted = strtolower(str_replace(' ', '_', $username));
+            $customerNameFormatted = strtolower(str_replace(' ', '_', $customerName));
 
-            // Store in the customers folder without creating a new one for avatars
-            $folderPath = "user_name_{$usernameFormatted}_id_{$userId}/customers";
+            // Same path as imageProccess
+            $folderPath = "user_name_{$usernameFormatted}_id_{$userId}/customers/customers_name_{$customerNameFormatted}_id_{$customerId}/personal_images";
             $fullPath = "{$folderPath}/{$fileName}";
             $directory = storage_path("app/public/{$folderPath}/");
 
-            // Create directory if it doesn't exist
             if (!file_exists($directory)) {
                 mkdir($directory, 0755, true);
             }
 
             $storagePath = $directory . $fileName;
 
-            // Use Intervention Image
+            // Process image
             $manager = new ImageManager(config('image.driver'));
             $image = $manager->read($image);
-            // $image = $image->scaleDown(width: 40, height: 40); // Resize if necessary
-            $encoded = $image->toWebp(40); // Compress to webp
+            $encoded = $image->toWebp(40); // compress avatar more
             $encoded->save($storagePath);
 
             return "storage/{$fullPath}";

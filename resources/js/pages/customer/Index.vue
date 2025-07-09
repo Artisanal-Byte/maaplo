@@ -28,8 +28,9 @@ const props = defineProps<{
         subscription_plan?: string,
     }>,
     customer_limit_exceeded: boolean,
+    plan_title: string,
+    plan_limit: number,
 }>();
-
 const showLimitModal = ref(false);
 
 function handleCreateClick(event: Event) {
@@ -60,7 +61,8 @@ const filteredCustomers = computed(() => {
     <Head title="Customer" />
     <AppLayout>
         <!-- Limit Reached Modal -->
-        <CustomerLimitPopup :show="showLimitModal" @close="showLimitModal = false" />
+        <CustomerLimitPopup :show="showLimitModal" @close="showLimitModal = false" :planTitle="props.plan_title"
+            :planLimit="props.plan_limit" />
 
         <!-- Main Content -->
         <div class="lg:mx-auto max-w-7xl py-8 px-4">

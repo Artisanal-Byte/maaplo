@@ -66,16 +66,16 @@ class DesignDetailsController extends Controller
             // Otherwise, create a new body part
             else {
                 $newBodyPart = trim($validated['new_body_part']);
-
+                $newBodyPartFormatted = str_replace(' ', '_', strtolower($newBodyPart));
                 // Check if this new body part already exists
-                $exists = BodyPartValue::where('body_part', $newBodyPart)->first();
+                $exists = BodyPartValue::where('body_part', $newBodyPartFormatted)->first();
                 if ($exists) {
                     return back()->withErrors([
                         'new_body_part' => 'This Body Part already exists. Please select it from the dropdown.',
                     ])->withInput();
                 }
 
-                $bodyPart = BodyPartValue::create(['body_part' => $newBodyPart]);
+                $bodyPart = BodyPartValue::create(['body_part' => $newBodyPartFormatted]);
                 $bodyPartId = $bodyPart->id;
             }
 
@@ -134,15 +134,15 @@ class DesignDetailsController extends Controller
                 );
             } else {
                 $newBodyPart = trim($validated['new_body_part']);
-
-                $exists = BodyPartValue::where('body_part', $newBodyPart)->first();
+                $newBodyPartFormatted = str_replace(' ', '_', strtolower($newBodyPart));
+                $exists = BodyPartValue::where('body_part', $newBodyPartFormatted)->first();
                 if ($exists) {
                     return back()->withErrors([
                         'new_body_part' => 'This Body Part already exists. Please select it from the dropdown.',
                     ])->withInput();
                 }
 
-                $bodyPart = BodyPartValue::create(['body_part' => $newBodyPart]);
+                $bodyPart = BodyPartValue::create(['body_part' => $newBodyPartFormatted]);
                 $bodyPartId = $bodyPart->id;
             }
 

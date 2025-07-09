@@ -97,7 +97,8 @@ class ProfileController extends Controller
 
                 $avatarFile = $request->file('avatar');
                 // dd($avatarFile );
-                $validated['avatar'] = ImageHelper::imageAvatar($avatarFile, $username, $userId);
+                $validated['avatar'] = ImageHelper::imageAvatar($avatarFile, $username, $userId, $username, $userId);
+
             // dd($validated['avatar']);
 
             } else {
