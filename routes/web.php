@@ -36,7 +36,7 @@ Route::get('dashboard', DashboardController::class)
     ->name('dashboard');
 
 // ✅ Routes for all authenticated users (admin + user)
-Route::middleware(['auth', 'verified','role:user'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/orders/closed', [DashboardController::class, 'closedOrdersPage'])->name('orders.closed');
     Route::get('/orders/view-closed', [DashboardController::class, 'viewClosedOrders'])->name('orders.viewClosed');
     Route::post('/orders/close', [DashboardController::class, 'close'])->name('orders.close');
