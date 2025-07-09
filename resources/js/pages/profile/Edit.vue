@@ -75,7 +75,7 @@ function submit() {
     })).post(route('profile.update'), {
         preserveState: true,
         onSuccess: () => {
-            toast.success("Organization updated successfully!");
+            toast.success("Profile updated successfully!");
             router.visit(route('profile.show'));
             loading.value = false;
         },

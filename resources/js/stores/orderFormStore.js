@@ -1,5 +1,6 @@
 import { router, useForm } from '@inertiajs/vue3'
 import { defineStore } from 'pinia'
+const toast = new ToastMagic();
 
 export const useOrderFormStore = defineStore('orderForm', {
     state: () => (
@@ -20,7 +21,7 @@ export const useOrderFormStore = defineStore('orderForm', {
                 mode: 'create',
                 template_id: null,
                 measurements: [],
-                design_detail: [],
+                design_detail: {},
                 colors: '',
                 work_type: 'New from Material',
                 material_type: '',
@@ -62,16 +63,17 @@ export const useOrderFormStore = defineStore('orderForm', {
 
                 this.order_items.splice(this.editingItemIndex, 1, updatedItem);
                 this.editingItemIndex = null;
+
+                 this.total_amount = this.order_items.reduce((acc, item) => acc + (parseFloat(item.item_cost) || 0), 0);
             }
         },
-
 
         resetOrderItemTemplate() {
             this.order_items_template = {
                 mode: 'create',
                 template_id: null,
                 measurements: [],
-                design_detail: [],
+                design_detail: {},
                 colors: '',
                 work_type: 'New from Material',
                 material_type: '',
@@ -142,7 +144,9 @@ export const useOrderFormStore = defineStore('orderForm', {
             const form = useForm({ ...formData });
             form.post(route('orders.store'), {
                 onSuccess: () => {
+                    toast.success('Order created successfully!');
                     this.resetOrderData();
+
                     this.isLoading = false;
                 },
                 onError: (errors) => {
@@ -191,7 +195,8 @@ export const useOrderFormStore = defineStore('orderForm', {
                     template_id: item.template_id ?? item.item_template_id ?? null,
                     item_cost: Number(item.item_cost) || 0,
                     colors: item.colors,
-                    is_urgent: item.isUrgent == 'yes' ? true : false,
+                    is_urgent: item.is_urgent === true || item.is_urgent === 'true',
+
                     trial_dates: item.trial_dates || '',
                     cloth_img1_url: item.cloth_img1_url || null,
                     cloth_img2_url: item.cloth_img2_url || null,
@@ -214,7 +219,7 @@ export const useOrderFormStore = defineStore('orderForm', {
             this.resetOrderItemTemplate();
         },
 
-        async updateOrder(orderId, toast) {
+        async updateOrder(orderId) {
             const { order_items_template, ...formData } = this.$state;
             const form = new FormData();
 
@@ -283,10 +288,14 @@ export const useOrderFormStore = defineStore('orderForm', {
                     forceFormData: true,
                     preserveScroll: true,
                     onSuccess: () => {
-                        this.resetOrderData()
+                        toast.success('Order updated successfully!');
+                        this.isLoading = false
+                        this.resetOrderData();
                     },
                     onError: (errors) => {
                         if (toast && typeof toast.error === 'function') {
+                            this.isLoading = false
+
                             toast.error('Update failed. Please fix the errors.');
                         }
                     }
@@ -294,7 +303,9 @@ export const useOrderFormStore = defineStore('orderForm', {
             } catch (error) {
                 console.error('Update request failed:', error);
                 if (toast && typeof toast.error === 'function') {
+                    loading.value = false;
                     toast.error('Unexpected error occurred.');
+
                 }
             }
         }

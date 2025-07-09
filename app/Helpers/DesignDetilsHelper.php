@@ -13,18 +13,24 @@ class DesignDetilsHelper
     public static function getDesignDetailsData(array $orderItemsData): array
     {
         $temp = [];
-        foreach ($orderItemsData as $key => $orderItem) {
-            $designDetailIds =  json_decode($orderItem['design_detail']);
-            $getDesignDetailValue = DesignDetail::whereIn('id', $designDetailIds)->get()->toArray();
-            foreach ($getDesignDetailValue as $key => $value) {
-                $formatedValue = [
-                    'body_part' => $value['body_part_value']['body_part'],
-                    'body_section' => $value['value']
+
+        foreach ($orderItemsData as $orderItem) {
+            $designDetailIds = json_decode($orderItem['design_detail'], true);
+
+            if (!is_array($designDetailIds)) {
+                continue; // skip invalid or empty data
+            }
+
+            $designDetails = DesignDetail::whereIn('id', array_values($designDetailIds))->with('bodyPartValue')->get();
+
+            foreach ($designDetails as $detail) {
+                $temp[] = [
+                    'body_part' => $detail->bodyPartValue->body_part ?? 'Unknown',
+                    'body_section' => $detail->value,
                 ];
-                $temp = $formatedValue;
-                // dd($temp);
             }
         }
+
         return $temp;
     }
 }

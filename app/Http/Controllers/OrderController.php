@@ -8,6 +8,7 @@ use App\Helpers\OrderData;
 use App\Helpers\UniqueOrderNumber; // Ensure this class exists in the specified namespace or create it if missing
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Models\DesignDetail;
 use App\Models\Template;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -51,11 +52,22 @@ class OrderController extends Controller
         $itemTypes = Template::where('user_id', Auth::id())
             ->orWhereNull('user_id')
             ->with('measurements')
-            ->get()
-            ->append('design_details_list'); // Appends the accessor to each model
+            ->get(); // Appends the accessor to each model
+        foreach ($itemTypes as $template) {
+            $template->design_detail_models = collect();
+
+            if (is_array($template->design_details)) {
+                $ids = extractDesignDetailIds($template->design_details);
+                $template->design_detail_models = DesignDetail::whereIn('id', $ids)->get();
+            }
+        }
+
+        $allDesignDetails = DesignDetail::with('bodyPartValue')->get();
+        // dd($itemTypes->toArray()); // For debugging purposes, remove in production
         return Inertia::render('orders/Create', [
             'customers' => $user->customers,
             'itemTypes' => $itemTypes,
+            'allDesignDetails' => $allDesignDetails,
         ]);
     }
 
@@ -65,7 +77,6 @@ class OrderController extends Controller
     public function store(StoreOrderRequest $storeOrderRequest)
     {
         // dd($storeOrderRequest->toArray());
-        ini_set('max_execution_time', 60);
         try {
             $validatedOrderData = $storeOrderRequest->validated();
             $username = auth()->user()->name;
@@ -101,10 +112,7 @@ class OrderController extends Controller
             // Process each order item
             foreach ($validatedOrderItemsData as &$item) {
                 $item['order_id'] = $Order->id;
-
-                $item['is_urgent'] = filter_var($item['is_urgent'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-                $item['is_urgent'] = $item['is_urgent'] == 1 ? 'yes' : 'no';
-
+                $item['is_urgent'] = filter_var($item['is_urgent'], FILTER_VALIDATE_BOOLEAN);
                 if (isset($item['measurements']) && is_array($item['measurements'])) {
                     $item['measurements'] = json_encode($item['measurements']);
                 }
@@ -175,14 +183,14 @@ class OrderController extends Controller
 
         // Get the source query parameter, default null
         $source = $request->query('source');
-
+        $allDesignDetails = DesignDetail::with('bodyPartValue')->get();
         return Inertia::render('orders/Show', [
             'order' => $order,
             'designDetails' => $designDetailsData,
-            'source' => $source,   // Pass source to Vue component
+            'source' => $source,
+           'allDesignDetails'=> $allDesignDetails,
         ]);
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -192,18 +200,42 @@ class OrderController extends Controller
         // dd($order->toArray());
         $user = Auth::user();
         $user->load('customers');
-
+        $allDesignDetails = DesignDetail::with('bodyPartValue')->get();
         $itemTypes = Template::where('user_id', Auth::id())
             ->orWhereNull('user_id')
             ->with('measurements')
-            ->get()
-            ->append('design_details_list');
+            ->get();
+        // dd($itemTypes ->toArray());
+        foreach ($itemTypes as $template) {
+            $template->design_detail_values = [];
+
+            if (is_array($template->design_details)) {
+                $ids = extractDesignDetailIds($template->design_details);
+                $details = DesignDetail::whereIn('id', $ids)->get();
+
+                $grouped = [];
+                foreach ($template->design_details as $bodyPart => $idList) {
+                    $grouped[$bodyPart] = $details->whereIn('id', $idList)->map(function ($dd) {
+                        return [
+                            'id' => $dd->id,
+                            'name' => strtolower(str_replace(' ', '-', $dd->value)),
+                            'label' => $dd->value,
+                            'img' => $dd->image,
+                        ];
+                    })->values();
+                }
+
+                $template->design_detail_values = $grouped;
+            }
+        }
+
 
         $orderItems = $order->orderItems->map(function ($item) {
             $ids = json_decode($item->design_detail, true) ?? [];
+            // dd($ids);
 
             $templateNames = Template::whereIn('id', $ids)->pluck('name')->toArray();
-
+            // dd($templateNames);
             return [
                 'id' => $item->id,
                 'template_id' => $item->template_id,
@@ -220,7 +252,7 @@ class OrderController extends Controller
                 'material_cost' => $item->material_cost,
                 'stiching_cost' => $item->stiching_cost,
                 'altering_cost' => $item->altering_cost,
-                'isUrgent' => $item->is_urgent === 'yes' ? true : false,
+                'isUrgent' => $item->is_urgent,
                 'template_names' => $templateNames,
                 'refrence_dress' => $item->refrence_dress ? asset('/' . $item->refrence_dress) : null,
                 'cloth_img1_url' => $item->cloth_img1 ? asset('/' . $item->cloth_img1) : null,
@@ -230,12 +262,12 @@ class OrderController extends Controller
 
             ];
         });
-
         return Inertia::render('orders/Edit', [
             'order' => $order,
             'itemTypes' => $itemTypes,
             'customers' => $user->customers,
-            'orderItems' => $orderItems
+            'orderItems' => $orderItems,
+            'allDesignDetails' => $allDesignDetails,
         ]);
     }
 
@@ -274,7 +306,8 @@ class OrderController extends Controller
                 }
 
                 // Normalize boolean
-                $item['is_urgent'] = filter_var($item['is_urgent'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 'yes' : 'no';
+                $item['is_urgent'] = filter_var($item['is_urgent'] ?? false, FILTER_VALIDATE_BOOLEAN);
+
                 // dd($item['is_urgent'] );
                 // JSON encode fields
                 foreach (['measurements', 'design_detail', 'notes'] as $field) {
@@ -344,9 +377,6 @@ class OrderController extends Controller
         }
     }
 
-
-
-
     /**
      * Remove the specified resource from storage.
      */
@@ -355,6 +385,7 @@ class OrderController extends Controller
         // dd($order);
         try {
             $order->delete();
+            ToastMagic::success('Order Deleted successfully!');
             return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
         } catch (Exception $exception) {
             return redirect()->back()->withErrors($exception->getMessage());

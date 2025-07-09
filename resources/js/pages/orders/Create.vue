@@ -11,8 +11,7 @@ import Input from '@/components/InputWithLabel.vue';
 import { useOrderFormStore } from '@/stores/orderFormStore';
 import { Head } from '@inertiajs/vue3';
 import Loader from '@/components/Loader.vue';
-const props = defineProps(["users", "customers", "itemTypes", "errors"])
-console.log('itemTypes in create page', props.itemTypes);
+const props = defineProps(["users", "customers", "itemTypes", "errors","allDesignDetails"])
 
 const showModal = ref(false);
 const disabled = ref(false);
@@ -26,21 +25,30 @@ let deleteOrEditOrderIndex = ref()
 let totalAmmount = ref(null)
 const loading = ref(false);
 
-let create = () => {
+const create = () => {
     loading.value = true;
+
     if (form.advance_paid > form.total_amount) {
-        alert("advance paid can't be greater than total payment!");
-        form.advance_paid = null
-        return
-    }
-    // loading.value = true;
-    // setTimeout(() => {
-    //     loading.value = false;
-    // }, 50000);
-    form.createOrder().finally(() => {
+        alert("Advance paid can't be greater than total payment!");
+        form.advance_paid = null;
         loading.value = false;
-    });
-}
+        return;
+    }
+
+    form.createOrder()
+        .then(() => {
+            // We expect a toast from the server via flash message — no need to toast here
+        })
+        .catch(error => {
+            // Optionally handle any client-side error here
+            console.error("Order creation failed", error);
+            toast.error("Something went wrong while creating the order.");
+        })
+        .finally(() => {
+            loading.value = false;
+        });
+};
+
 
 //total amount of order
 watch(form.order_items, (items) => {
@@ -187,7 +195,7 @@ const formatDate = (dateStr) => {
 
                         <!-- Modal Content -->
                         <ItemModel :errors="form.errors?.order_items" :showModal="showModal" @close="closeModel"
-                            :form="form.order_items" :itemTypes="itemTypes"
+                            :form="form.order_items" :itemTypes="itemTypes" :allDesignDetails="allDesignDetails"
                             :measurements="customerMeasurements ?? []" />
                         <p class="text-red-600 text-sm">
                             {{ errors?.order_items }}
@@ -201,6 +209,7 @@ const formatDate = (dateStr) => {
                                         <th class="px-4 py-3 border-b border-gray-300">Work Type</th>
                                         <th class="px-4 py-3 border-b border-gray-300">Item Type</th>
                                         <th class="px-4 py-3 border-b border-gray-300">Delivery Date</th>
+                                        <th class="px-4 py-3 border-b border-gray-300">Item Cost</th>
                                         <th class="px-4 py-3 border-b border-gray-300">Action</th>
                                     </tr>
                                 </thead>
@@ -215,6 +224,9 @@ const formatDate = (dateStr) => {
                                         <td class="px-4 py-2 border-b border-gray-200">{{
                                             formatDate(order_item.delivery_date) }}
                                         </td>
+                                        <td class="px-4 py-2 border-b border-gray-200">₹ {{ order_item.item_cost || 0 }}
+                                        </td>
+
                                         <td class="px-4 py-2 border-b border-gray-200">
                                             <div class="flex gap-4">
                                                 <Icon icon="material-symbols:edit-rounded" width="24" height="24"

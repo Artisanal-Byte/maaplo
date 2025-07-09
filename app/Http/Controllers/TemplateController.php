@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class TemplateController extends Controller
 {
@@ -37,14 +38,23 @@ class TemplateController extends Controller
     public function create()
     {
         $data = GetTemplateHelper::getTemplateData();
+
+        $groupedDesignDetails = DesignDetail::with('bodyPartValue')
+            ->get(['id', 'body_part_id', 'value', 'gender'])
+            ->groupBy('body_part_id')
+            ->map(function ($group) {
+                return [
+                    'body_part' => optional($group->first()->bodyPartValue)->body_part,
+                    'design_detail_ids' => $group->pluck('id'),
+                ];
+            })
+            ->values();
+
         return Inertia::render('items/Create', [
             'publicTemplates' => $data['publicTemplates'],
             'privateTemplates' => $data['privateTemplates'],
             'measurements' => $data['allMeasurements'],
-            'designDetails' => DesignDetail::with('bodyPartValue')
-                ->get(['id', 'body_part_id', 'value', 'gender'])
-                ->unique('body_part_id')
-                ->values(),
+            'designDetailsGrouped' => $groupedDesignDetails,
         ]);
     }
 
@@ -53,6 +63,7 @@ class TemplateController extends Controller
      */
     public function store(Request $request)
     {
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f,o',
@@ -61,12 +72,28 @@ class TemplateController extends Controller
             'required_measurements' => 'required|array',
             'design_details' => 'required|array',
         ]);
-        $trueDesignDetails = collect($validated['design_details'])
+        // dd($validated);
+        $designDetailsGrouped = DesignDetail::with('bodyPartValue')
+            ->get(['id', 'body_part_id', 'value', 'gender'])
+            ->groupBy('body_part_id')
+            ->values();
+
+        $groupedDesignDetails = DesignDetail::with('bodyPartValue')
+            ->get(['id', 'body_part_id', 'value', 'gender'])
+            ->groupBy('body_part_id');
+
+        $selectedGroupedDetails = collect($validated['design_details'])
             ->filter(fn($val) => $val === true)
             ->keys()
-            ->map(fn($key) => (int) $key)
-            ->values()
+            ->mapWithKeys(function ($index) use ($groupedDesignDetails) {
+                $group = $groupedDesignDetails->values()[$index] ?? collect();
+                $bodyPartLabelRaw = optional($group->first()->bodyPartValue)->body_part ?? 'bodypartvalue';
+                $bodyPartLabel = Str::snake($bodyPartLabelRaw);
+                $ids = $group->pluck('id')->toArray();
+                return [$bodyPartLabel => $ids];
+            })
             ->toArray();
+
 
         try {
             DB::beginTransaction();
@@ -76,7 +103,9 @@ class TemplateController extends Controller
                 'gender' => $validated['gender'],
                 'body_part' => $validated['body_part'],
                 'svg_logo' => $validated['svg_logo'],
-                'design_details' => $trueDesignDetails,
+                'design_details' => json_encode($selectedGroupedDetails, JSON_UNESCAPED_SLASHES),
+
+
             ]);
             $measurementIds = Measurement::whereIn('slug', $validated['required_measurements'])->pluck('id');
             foreach ($measurementIds as $measurementId) {
@@ -101,6 +130,7 @@ class TemplateController extends Controller
     public function edit($id)
     {
         $item = Template::findOrFail($id);
+        // dd($item->toArray());
         $measurements = [
             'all' => Measurement::all(['id', 'slug', 'measurements_logo']),
             'selected' => $item->measurements()->pluck('slug')->toArray(),
@@ -124,7 +154,6 @@ class TemplateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f',
@@ -133,9 +162,30 @@ class TemplateController extends Controller
             'required_measurements' => 'required|array',
             'design_details' => 'required|array',
         ]);
-        $trueDesignDetails = array_map('intval', $validated['design_details']);
 
-        // dd($trueDesignDetails);
+        // Get all design details grouped by body_part_id
+        $groupedDesignDetails = DesignDetail::with('bodyPartValue')
+            ->get(['id', 'body_part_id', 'value', 'gender'])
+            ->groupBy('body_part_id');
+
+        $selectedDesignDetailIds = collect($validated['design_details'])->map(fn($id) => (int)$id)->all();
+
+        $selectedGroupedDetails = [];
+
+        foreach ($groupedDesignDetails as $bodyPartId => $group) {
+            // Only include body parts where at least one design detail is selected
+            if ($group->pluck('id')->intersect($selectedDesignDetailIds)->isEmpty()) {
+                continue;
+            }
+
+            $bodyPartLabelRaw = optional($group->first()->bodyPartValue)->body_part ?? 'bodypartvalue';
+            $bodyPartLabel = Str::snake($bodyPartLabelRaw);
+
+            // Include all design detail IDs from the group (like store method)
+            $selectedGroupedDetails[$bodyPartLabel] = $group->pluck('id')->toArray();
+        }
+
+
         try {
             DB::beginTransaction();
 
@@ -145,20 +195,21 @@ class TemplateController extends Controller
                 'gender' => $validated['gender'],
                 'body_part' => $validated['body_part'],
                 'svg_logo' => $validated['svg_logo'],
-                'design_details' => $trueDesignDetails,
+                'design_details' => json_encode($selectedGroupedDetails, JSON_UNESCAPED_SLASHES),
             ]);
-            // Get the IDs of the selected measurements by slug
-            $measurementIds = Measurement::whereIn('slug', $validated['required_measurements'])->pluck('id')->toArray();
 
-            // Sync pivot table (replaces old with new)
+            $measurementIds = Measurement::whereIn('slug', $validated['required_measurements'])->pluck('id')->toArray();
             $template->measurements()->sync($measurementIds);
+
             DB::commit();
+
             return redirect()->route('items.index')->with('success', 'Item updated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors($validated->errors())->withInput();
         }
     }
+
 
     /**
      * Remove the specified resource from storage.

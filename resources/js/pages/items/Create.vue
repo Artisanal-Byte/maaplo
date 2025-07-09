@@ -12,7 +12,8 @@ const toast = new ToastMagic();
 
 const { props: pageProps } = usePage();
 const measurements = pageProps.measurements || [];
-const designDetails = pageProps.designDetails || [];
+const designDetailsGrouped = pageProps.designDetailsGrouped || [];
+
 const loading = ref(false);
 const form = useForm({
     name: '',
@@ -24,8 +25,8 @@ const form = useForm({
     design_details: {},
 });
 
-designDetails.forEach(dd => {
-    form.design_details[dd.id] = false;
+designDetailsGrouped.forEach((group, index) => {
+    form.design_details[index] = false;
 });
 
 const uniqueDesignDetails = computed(() => {
@@ -217,32 +218,33 @@ const submitForm = () => {
                 <div class="mt-2">
                     <h2 class="text-md font-semibold mb-4">Design Details Ask:</h2>
                     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div v-for="detail in designDetails" :key="detail.body_part"
+                        <div v-for="(group, index) in designDetailsGrouped" :key="index"
                             class="flex items-center justify-between bg-gray-50 p-2 rounded-md">
                             <span class="font-normal text-[16px] tracking-normal font-lato">
-                                {{ detail.body_part_value?.body_part || detail.body_part }}
+                                {{ group.body_part }}
                             </span>
                             <div class="flex rounded overflow-hidden text-sm">
                                 <button :class="[
                                     'px-4 py-1 focus:outline-none transition',
-                                    form.design_details[detail.id] ? 'bg-primary text-white' : 'bg-gray-200 text-black'
-                                ]" @click="form.design_details[detail.id] = true">
+                                    form.design_details[index] ? 'bg-primary text-white' : 'bg-gray-200 text-black'
+                                ]" @click="form.design_details[index] = true">
                                     Yes
                                 </button>
                                 <button :class="[
                                     'px-4 py-1 focus:outline-none transition',
-                                    form.design_details[detail.id] === false ? 'bg-primary text-white' : 'bg-gray-200 text-black'
-                                ]" @click="form.design_details[detail.id] = false">
+                                    form.design_details[index] === false ? 'bg-primary text-white' : 'bg-gray-200 text-black'
+                                ]" @click="form.design_details[index] = false">
                                     No
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <div v-if="form.errors.design_details" class="text-red-600 text-sm mt-2">{{
-                        form.errors.design_details }}
+                    <div v-if="form.errors.design_details" class="text-red-600 text-sm mt-2">
+                        {{ form.errors.design_details }}
                     </div>
                 </div>
+
 
                 <Button @click="submitForm" color="primary" padding="md" rounded="full" textSize="sm"
                     class="lg:mt-5 mt-3">

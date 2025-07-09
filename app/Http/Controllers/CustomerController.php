@@ -33,9 +33,9 @@ class CustomerController extends Controller
             ->get()
             ->map(function ($c) {
                 // Correct definitions
-                $total_payment = $c->orders->sum('total_amount');      // Full cost of all orders
-                $advance_payment = $c->orders->sum('advance_paid');    // What has been paid
-                $payment_due = $total_payment - $advance_payment;      // What's remaining
+                $total_payment = $c->orders->sum('total_amount');
+                $advance_payment = $c->orders->sum('advance_paid');
+                $payment_due = $total_payment - $advance_payment;
 
                 return [
                     'id' => $c->id,
@@ -56,6 +56,8 @@ class CustomerController extends Controller
         return Inertia::render('customer/Index', [
             'customers' => $customers,
             'customer_limit_exceeded' => $customerLimitExceeded,
+            'plan_title' => $plan ? $plan->plan_title : 'Free',
+            'plan_limit' => $plan ? $plan->user_limit : 5,
         ]);
     }
 
@@ -242,7 +244,7 @@ class CustomerController extends Controller
                 'email' => $validated['email'] ?? null,
                 'gender' => $validated['gender'],
                 'dob' => $validated['dob'],
-                'base_measurements' => json_encode($validated['measurements']),
+                'base_measurements' => json_encode($validated['measurements'] ?? []),
                 'country_code' => $validated['country_code'],
                 'phone' => $validated['phone'],
                 'notes' => json_encode($validated['notes']),
@@ -259,7 +261,6 @@ class CustomerController extends Controller
                 $oldHalfImage = CustomerPhoto::where('customer_id', $customer->id)
                     ->where('label', 'Faceimage')
                     ->first();
-
 
                 if ($oldHalfImage) {
                     $relativePath = Str::after($oldHalfImage->image_url, 'storage/');

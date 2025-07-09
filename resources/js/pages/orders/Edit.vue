@@ -13,7 +13,7 @@ import { Head, Link } from '@inertiajs/vue3';
 import { nextTick } from 'vue';
 import Loader from '@/components/Loader.vue';
 
-const props = defineProps(["users", "customers", "itemTypes", "errors", "order", "orderItems"]);
+const props = defineProps(["users", "customers", "itemTypes", "errors", "order", "orderItems","allDesignDetails"]);
 
 const showModal = ref(false);
 const showDeletePopup = ref(false);
@@ -57,6 +57,7 @@ watch(() => form.order_items, (items) => {
     });
     totalAmmount.value = t;
     form.total_amount = t;
+
 }, { immediate: true });
 
 const openItemModel = () => {
@@ -105,10 +106,7 @@ const update = () => {
     if (form.status) {
         form.status = form.status.toLowerCase();
     }
-    loading.value = true;
-    setTimeout(() => {
-        loading.value = false;
-    }, 1000);
+    form.isLoading = true;
 
     form.updateOrder(props.order.id).finally(() => {
         loading.value = true;
@@ -131,14 +129,13 @@ const onItemUpdated = (itemData) => {
             Pattern_img1: form.order_items_template.Pattern_img1,
             Pattern_img2: form.order_items_template.Pattern_img2,
         };
+        recalculateTotal();
     }
 };
 
-
-
 const errorMessages = computed(() => {
     if (!props.errors) return [];
-    return Object.values(props.errors).flat(); // flatten in case of array of messages
+    return Object.values(props.errors).flat();
 });
 
 onMounted(() => {
@@ -188,7 +185,7 @@ const onItemAdded = (itemData) => {
             </div>
 
             <!-- Use the Loader Component -->
-            <Loader v-if="loading" />
+            <Loader v-if="form.isLoading" />
             <div class="flex flex-row justify-between">
                 <h1 class="text-[24px] font-bold flex items-center gap-2 text-primary">
                     <Icon icon="lsicon:order-edit-filled" width="30" height="30" />
@@ -257,7 +254,7 @@ const onItemAdded = (itemData) => {
                     <ItemModel :errors="errors" :showModal="showModal" @close="closeModel"
                         :form="form.order_items_template" :itemTypes="itemTypes" :measurements="[]"
                         :orderItems="orderItems" :currentEditIndex="currentEditIndex" :order="order"
-                        @item-updated="recalculateTotal" @item-added="onItemAdded" />
+                        @item-updated="recalculateTotal" @item-added="onItemAdded" :allDesignDetails="allDesignDetails"/>
 
                     <div class="mt-6 overflow-x-auto rounded-lg shadow-lg">
                         <table class="min-w-full border-collapse bg-white text-sm text-left text-gray-700">
@@ -266,6 +263,7 @@ const onItemAdded = (itemData) => {
                                     <th class="px-4 py-3 border-b border-gray-300">Work Type</th>
                                     <th class="px-4 py-3 border-b border-gray-300">Item Type</th>
                                     <th class="px-4 py-3 border-b border-gray-300">Delivery Date</th>
+                                    <th class="px-4 py-3 border-b border-gray-300">Cost (₹)</th>
                                     <th class="px-4 py-3 border-b border-gray-300">Action</th>
                                 </tr>
                             </thead>
@@ -280,9 +278,15 @@ const onItemAdded = (itemData) => {
                                     <td class="px-4 py-2 border-b border-gray-200">{{ formatDate(item.delivery_date) }}
                                     </td>
                                     <td class="px-4 py-2 border-b border-gray-200">
+                                        ₹ {{ item.item_cost?.toLocaleString('en-IN', {
+                                            minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2 }) || '0.00' }}
+                                    </td>
+                                    <td class="px-4 py-2 border-b border-gray-200">
                                         <div class="flex text-center">
                                             <Icon icon="material-symbols:edit-rounded" width="24"
-                                                @click="editOrderItem(index)" class="cursor-pointer mr-4 text-blue-500" />
+                                                @click="editOrderItem(index)"
+                                                class="cursor-pointer mr-4 text-blue-500" />
                                             <Icon icon="mingcute:delete-fill" width="24"
                                                 @click="confirmDelete(item, index)"
                                                 class="cursor-pointer text-red-500" />
