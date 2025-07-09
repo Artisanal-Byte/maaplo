@@ -24,7 +24,7 @@
 
 <body>
 {{-- Navbar --}}
-<nav class="lg:px-20 mx-auto py-4">
+<nav class="lg:px-20 mx-auto py-4 bg-white">
 	<div class="flex justify-between items-center h-[84px] mx-4 lg:mx-0">
 		<a href="{{ url('/') }}">
 			<x-icon name="logo" class="w-8 h-8 text-blue-500" />

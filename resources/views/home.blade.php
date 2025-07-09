@@ -25,7 +25,7 @@
 
 @section('content')
     {{-- section 1 --}}
-    <div class="flex flex-col lg:flex-row lg:justify-between lg:px-20 px-0">
+    <div class="flex flex-col lg:flex-row lg:justify-between lg:px-20 px-0 bg-white dark:bg-white">
         <div class="flex justify-center lg:justify-start">
             <div class="lg:py-20 px-5 lg:px-0 lg:w-[600px] text-center lg:text-left">
                 <h1
@@ -52,7 +52,7 @@
     </div>
 
     {{-- section 2 --}}
-    <div class="px-5 lg:px-20 mt-16 lg:mt-18">
+    <div class="px-5 lg:px-20 mt-16 lg:mt-18 bg-white dark:bg-white">
         <div
             class="lg:h-[250px] bg-[#BEDCDF] border-[12px] border-[#5CA7AF] rounded-[42px] shadow-[0px_2px_9.9px_0px_#88DDE340] flex items-center">
             <div class="flex flex-col lg:flex-row justify-between w-full">
@@ -83,7 +83,7 @@
     </div>
 
     {{-- section 3 --}}
-    <div id="features" class="px-5 lg:px-20 mt-16 lg:mt-18">
+    <div id="features" class="px-5 lg:px-20 mt-16 lg:mt-18 bg-white dark:bg-white">
         <h1 class="font-[400] text-[40px] leading-[100%] tracking-[0%] text-center font-[Convergence]">
             Features
         </h1>
@@ -375,7 +375,7 @@
     </div>
 
     {{-- section 4 --}}
-    <div id="about" class="px-5 lg:px-20 mt-16 lg:mt-20">
+    <div id="about" class="px-5 lg:px-20 mt-16 lg:mt-20 bg-white dark:bg-white">
         <h1 class="font-[400] text-[25px] lg:text-[50px] leading-[100%] tracking-[0%] text-center font-[Convergence]">
             Who we are?
         </h1>
@@ -423,7 +423,7 @@
     </div>
 
     {{-- section 5 --}}
-    <div id="pricing" class="lg:px-20 px-0">
+    <div id="pricing" class="lg:px-20 px-0 bg-white dark:bg-white">
         <div
             class="py-10 lg:py-20 mt-5 rounded-[20px] bg-[radial-gradient(50%_50%_at_50%_50%,rgba(219,245,247,0.5)_0%,rgba(237,250,251,0.5)_100%)] flex flex-col items-center justify-center text-center">
             <div>
