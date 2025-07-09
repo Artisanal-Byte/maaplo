@@ -59,7 +59,7 @@ Route::middleware(['auth', 'verified','role:user'])->group(function () {
     Route::resource('design-details', DesignDetailsController::class);
 
     // Allow all users to submit feature/suggestion
-    Route::get('/feature-request/create', fn() => Inertia::render('featureRequest/Create'))->name('feature-request.create');
+    Route::get('/feature-request/create', fn() => Inertia::render('featurerequest/Create'))->name('feature-request.create');
     Route::post('/feature-request', [FeatureRequestAndSuggestionController::class, 'storeFeatureRequest'])->name('feature-request.store');
 
     Route::get('/suggestion/create', fn() => Inertia::render('suggestion/Create'))->name('suggestion.create');
