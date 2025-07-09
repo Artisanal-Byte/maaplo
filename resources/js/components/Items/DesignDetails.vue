@@ -5,7 +5,6 @@ import SvgIcon from '../SvgIcon.vue';
 import { useOrderFormStore } from '@/stores/orderFormStore';
 
 const props = defineProps(["order", "currentEditIndex", "designDetails"])
-console.log("Design Details Props:", props.designDetails);
 
 let tmp = ref()
 const formStore = useOrderFormStore()
