@@ -21,7 +21,7 @@ class SubscriptionPlansTableSeeder extends Seeder
                 'plan_description' => 'Basic features suitable for individuals and small teams.',
                 'plan_price' => 00,
                 'plan_currency' => 'INR',
-                'features' => json_encode(['5 Projects', '10 GB Storage', 'Basic Support']),
+                'features' => json_encode(['5 Customer', 'Unlimited orders', 'Basic Support']),
                 'visibility' => true,
                 'user_limit' => 5,
                 'created_at' => Carbon::now(),
