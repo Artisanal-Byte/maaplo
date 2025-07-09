@@ -109,8 +109,7 @@
                     <li class="font-lato font-medium text-[14px] leading-none">Lorem Ipsum</li>
                 </ul> --}}
                     <p class="font-lato font-semibold text-[15px] tracking-[0] lg:w-[400px]">
-                        At MaapLo,We're redefining how garment professionals streamline their daily operations, More
-                        than just a digital tool, MaapLo is a trusted partner designed with a deep understanding of the
+                        MaapLo is your smart partner, built to simplify garment workflows with deep insight into the
                         personalised clothing industry.
 
                     </p>
