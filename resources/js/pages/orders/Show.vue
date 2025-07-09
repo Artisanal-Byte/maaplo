@@ -7,9 +7,8 @@ const props = defineProps({
     order: Object,
     designDetails: Object,
     source: String,
+    allDesignDetails: Array,
 });
-// const props = defineProps(['order', 'designDetails'])
-
 const page = usePage()
 const routeSource = computed(() => {
     if (page.url.includes('source=fullclosed')) {
@@ -48,6 +47,14 @@ const pendingAmount = computed(() => {
 });
 
 
+const designDetailMap = computed(() => {
+    const map = {};
+    props.allDesignDetails?.forEach(detail => {
+        map[detail.id] = detail;
+    });
+    return map;
+});
+
 </script>
 
 <template>
@@ -67,7 +74,7 @@ const pendingAmount = computed(() => {
                             ? '📦 Fully Closed Order Overview'
                             : routeSource === 'closed'
                                 ? '🧾 Closed Order Overview'
-                    : '🧾 Order Overview'
+                                : '🧾 Order Overview'
                     }}
                 </h1>
                 <!-- Back Link on the right -->
@@ -155,7 +162,7 @@ const pendingAmount = computed(() => {
                             <div><span class="font-semibold">🧾 Material Cost:</span> ₹ {{ item?.material_cost }}</div>
                             <div><span class="font-semibold">🧵 Stitching Cost:</span> ₹ {{ item?.stiching_cost }}</div>
                             <div><span class="font-semibold">✂ Altering Cost:</span> ₹ {{ item?.altering_cost ?? '00.0'
-                                }}
+                            }}
                             </div>
                             <div><span class="font-semibold">💰 Item Cost:</span> ₹ {{ item?.item_cost }}</div>
                             <div><span class="font-semibold">🧪 Trial Date:</span> {{ item?.trial_dates }}
@@ -177,19 +184,26 @@ const pendingAmount = computed(() => {
                         </div>
 
                         <!-- Design Detail -->
+                        <!-- Design Detail -->
                         <div class="mb-4">
                             <h4 class="font-semibold text-green-800 mb-1 text-lg">🎨 Design Detail</h4>
-                            <div class="bg-green-50 border border-green-200 p-4 rounded-lg text-sm">
-                                <div v-for="(value, key) in item.parsedDesignDetail" :key="key" class="mb-2">
-                                    <template v-if="key == 0">
-                                        <strong>Body Part: </strong> {{ props.designDetails['body_part'] }}
-                                    </template>
-                                    <template v-else>
-                                        <strong>Body Section:</strong> {{ props.designDetails['body_section'] }}
-                                    </template>
+                            <div class="bg-green-50 border border-green-200 p-4 rounded-lg text-sm space-y-4">
+                                <div v-for="(designDetailId, bodyPartName) in item.parsedDesignDetail"
+                                    :key="bodyPartName" class="flex justify-between items-start gap-4 border-b pb-3">
+                                    <!-- Left: Text info -->
+                                    <div class="flex-1">
+                                        <div><strong>Body Part:</strong> {{ bodyPartName }}</div>
+                                        <div><strong>Body Section:</strong> {{ designDetailMap[designDetailId]?.value ||
+                                            'N/A' }}</div>
+                                    </div>
+
+                                    <!-- Right: SVG image -->
+                                    <div v-if="designDetailMap[designDetailId]?.image" class="w-18 h-18 flex-shrink-0 mr-4"
+                                        v-html="designDetailMap[designDetailId].image"></div>
                                 </div>
                             </div>
                         </div>
+
                         <!-- Item Notes -->
                         <div>
                             <h3 class="font-semibold text-yellow-800 mb-1 text-lg">📝 Item Notes</h3>

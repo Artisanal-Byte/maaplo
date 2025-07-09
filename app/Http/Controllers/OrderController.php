@@ -183,14 +183,14 @@ class OrderController extends Controller
 
         // Get the source query parameter, default null
         $source = $request->query('source');
-
+        $allDesignDetails = DesignDetail::with('bodyPartValue')->get();
         return Inertia::render('orders/Show', [
             'order' => $order,
             'designDetails' => $designDetailsData,
-            'source' => $source,   // Pass source to Vue component
+            'source' => $source,
+           'allDesignDetails'=> $allDesignDetails,
         ]);
     }
-
 
     /**
      * Show the form for editing the specified resource.
