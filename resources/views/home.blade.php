@@ -86,7 +86,8 @@
     </div>
     {{-- section 3 --}}
     <div id="features" class="px-5 lg:px-20 bg-white dark:bg-white">
-        <h1 class="font-[400] text-black pt-16 lg:pt-18 dark:text-black text-[40px] leading-[100%] tracking-[0%] text-center font-[Convergence]">
+        <h1
+            class="font-[400] text-black pt-16 lg:pt-18 dark:text-black text-[40px] leading-[100%] tracking-[0%] text-center font-[Convergence]">
             Features
         </h1>
 
@@ -96,7 +97,8 @@
             <div
                 class="mySlides-feature rounded-[10px]  bg-[linear-gradient(0deg,_#FFFFFF_40.9%,_rgba(229,255,255,0.6)_116.83%)] shadow-[0px_0px_4px_0px_#00000040] py-8 px-4">
                 <img src="/images/section3-img1.svg" class="mx-auto" />
-                <h1 class="mt-6 text-[18px] lg:text-[25px] text-black dark:text-black leading-[130%] font-normal font-[Convergence]">
+                <h1
+                    class="mt-6 text-[18px] lg:text-[25px] text-black dark:text-black leading-[130%] font-normal font-[Convergence]">
                     Measurement Management & Smart Dashboard
                 </h1>
 
@@ -119,7 +121,9 @@
             <div
                 class="mySlides-feature rounded-[10px] bg-[linear-gradient(0deg,_#FFFFFF_40.9%,_rgba(255,252,229,0.6)_116.83%)] shadow-[0px_0px_4px_0px_#00000040] py-8 px-4">
                 <img src="/images/feature-img2.svg" class="mx-auto" />
-                <h1 class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence text-black dark:text-black]">Custom
+                <h1
+                    class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence text-black dark:text-black]">
+                    Custom
                     Order
                     Management</h1>
                 <p class="mt-3 text-[14px] leading-[152%] font-medium font-[Lato] text-black dark:text-black">
@@ -139,7 +143,9 @@
             <div
                 class="mySlides-feature rounded-[10px]  rounded-[10px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.25)] bg-[linear-gradient(0deg,_#FFFFFF_40.9%,_rgba(229,255,229,0.6)_116.83%)] py-8 px-4">
                 <img src="/images/Feature-img3.svg" class="mx-auto" />
-                <h1 class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">Client
+                <h1
+                    class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">
+                    Client
                     Directory
                     with Notes</h1>
                 <p class="mt-3 text-[14px] leading-[152%] font-medium font-[Lato] text-black dark:text-black">
@@ -160,7 +166,9 @@
                 class="mySlides-feature rounded-[10px] bg-[linear-gradient(0deg,_#FFFFFF_40.9%,_rgba(229,_235,_255,_0.6)_116.83%)] shadow-[0px_0px_4px_0px_#00000040]  py-8 px-4">
                 {{-- <x-icon name="section3-img4" class="w-8 h-8 text-blue-500" /> --}}
                 <img src="/images/Feature-img4.svg" class="mx-auto" />
-                <h1 class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">Order
+                <h1
+                    class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">
+                    Order
                     Tracking &
                     Lifecycle Management
                 </h1>
@@ -181,7 +189,8 @@
             <div
                 class="mySlides-feature rounded-[10px] bg-[linear-gradient(0deg,_#FFFFFF_40.9%,_rgba(255,_237,_229,_0.6)_116.83%)] shadow-[0px_0px_4px_0px_#00000040] py-8 px-4">
                 <img src="/images/Feature-img-5.svg" class="mx-auto" />
-                <h1 class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">
+                <h1
+                    class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">
                     Mobile-first, easy to use interface
                 </h1>
 
@@ -203,7 +212,8 @@
             <div
                 class="mySlides-feature rounded-[10px] bg-[linear-gradient(0deg,_#FFFFFF_40.9%,_rgba(250,_229,_255,_0.6)_116.83%)] shadow-[0px_0px_4px_0px_#00000040] py-8 px-4">
                 <img src="/images/Feature-img6.svg" class="mx-auto" />
-                <h1 class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">
+                <h1
+                    class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">
                     Secure Cloud Access
                 </h1>
 
@@ -245,7 +255,8 @@
             <div
                 class="rounded-[10px] bg-[linear-gradient(0deg,_#FFFFFF_40.9%,_rgba(229,255,255,0.6)_116.83%)] shadow-[0px_0px_4px_0px_#00000040] py-8 px-4">
                 <img src="/images/section3-img1.svg" class="mx-auto" />
-                <h1 class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">
+                <h1
+                    class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">
                     Measurement Management & Smart Dashboard
                 </h1>
 
@@ -267,7 +278,9 @@
             <div
                 class="rounded-[10px] bg-[linear-gradient(0deg,_#FFFFFF_40.9%,_rgba(255,252,229,0.6)_116.83%)] shadow-[0px_0px_4px_0px_#00000040] py-8 px-4">
                 <img src="/images/feature-img2.svg" class="mx-auto" />
-                <h1 class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">Custom
+                <h1
+                    class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">
+                    Custom
                     Order
                     Management</h1>
                 <p class="mt-3 mb-7 text-[14px] leading-[152%] font-medium font-[Lato] text-black dark:text-black">
@@ -287,7 +300,9 @@
             <div
                 class="rounded-[10px]  rounded-[10px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.25)] bg-[linear-gradient(0deg,_#FFFFFF_40.9%,_rgba(229,255,229,0.6)_116.83%)] py-8 px-4">
                 <img src="/images/Feature-img3.svg" class="mx-auto" />
-                <h1 class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">Client
+                <h1
+                    class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">
+                    Client
                     Directory
                     with Notes</h1>
                 <p class="mt-3 mb-7 text-[14px] leading-[152%] font-medium font-[Lato] text-black dark:text-black">
@@ -307,7 +322,9 @@
             <div
                 class="rounded-[10px] bg-[linear-gradient(0deg,_#FFFFFF_40.9%,_rgba(229,_235,_255,_0.6)_116.83%)] shadow-[0px_0px_4px_0px_#00000040]  py-8 px-4">
                 <img src="/images/Feature-img4.svg" class="mx-auto" />
-                <h1 class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">Order
+                <h1
+                    class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">
+                    Order
                     Tracking &
                     Lifecycle Management
                 </h1>
@@ -331,7 +348,8 @@
             <div
                 class="rounded-[10px] bg-[linear-gradient(0deg,_#FFFFFF_40.9%,_rgba(255,_237,_229,_0.6)_116.83%)] shadow-[0px_0px_4px_0px_#00000040] py-8 px-4">
                 <img src="/images/Feature-img-5.svg" class="mx-auto" />
-                <h1 class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">
+                <h1
+                    class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">
                     Mobile-first, easy to use interface
                 </h1>
 
@@ -354,7 +372,8 @@
             <div
                 class="rounded-[10px] bg-[linear-gradient(0deg,_#FFFFFF_40.9%,_rgba(250,_229,_255,_0.6)_116.83%)] shadow-[0px_0px_4px_0px_#00000040] py-8 px-4">
                 <img src="/images/Feature-img6.svg" class="mx-auto" />
-                <h1 class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">
+                <h1
+                    class="mt-6 text-[18px] lg:text-[25px] leading-[130%] font-normal font-[Convergence] text-black dark:text-black">
                     Secure Cloud Access
                 </h1>
 
@@ -374,18 +393,20 @@
 
             </div>
 
-    </div>
+        </div>
     </div>
 
     {{-- section 4 --}}
     <div id="about" class="px-5 lg:px-20  bg-white dark:bg-white">
-        <h1 class="font-[400] text-[25px] lg:text-[50px] pt-16 lg:pt-20 leading-[100%] tracking-[0%] text-center font-[Convergence] text-black">
+        <h1
+            class="font-[400] text-[25px] lg:text-[50px] pt-16 lg:pt-20 leading-[100%] tracking-[0%] text-center font-[Convergence] text-black">
             Who we are?
         </h1>
         <div
             class="flex flex-col lg:flex-row justify-center lg:justify-between mt-5 lg:mt-10 lg:gap-20 items-center lg:items-start">
             <div class="py-5 lg:py-20 lg:w-[700px] text-center lg:text-left">
-                <h1 class="font-[Convergence] font-normal text-[30px] lg:text-[40px] leading-[100%] tracking-[0%] text-black">
+                <h1
+                    class="font-[Convergence] font-normal text-[30px] lg:text-[40px] leading-[100%] tracking-[0%] text-black">
                     Vision
                 </h1>
 
@@ -406,7 +427,8 @@
                     best: creating with care and precision.
                 </p>
 
-                <p class="mt-6 font-[Lato] font-normal text-[15px] leading-[152%] tracking-[0%] text-black">Our mission is to
+                <p class="mt-6 font-[Lato] font-normal text-[15px] leading-[152%] tracking-[0%] text-black">Our mission is
+                    to
                     bridge
                     tradition and technology, helping skilled professionals embrace digital tools without losing the
                     personal touch that defines their work.
@@ -430,7 +452,8 @@
         <div
             class="py-10 lg:py-20 pt-5 rounded-[20px] bg-[radial-gradient(50%_50%_at_50%_50%,rgba(219,245,247,0.5)_0%,rgba(237,250,251,0.5)_100%)] flex flex-col items-center justify-center text-center">
             <div>
-                <h1 class="font-[400] text-[25px] lg:text-[40px] leading-[1] tracking-medium font-[Convergence] text-black">
+                <h1
+                    class="font-[400] text-[25px] lg:text-[40px] leading-[1] tracking-medium font-[Convergence] text-black">
                     Simple Plans. Seamless Value!
                 </h1>
                 <p
@@ -468,7 +491,8 @@
                             class="cursor-pointer p-4 bg-[#FBFBFB]">
                             <div class="flex flex-row justify-between">
                                 <div>
-                                    <h1 class="text-[30px] leading-[100%] font-normal text-left font-convergence text-black">
+                                    <h1
+                                        class="text-[30px] leading-[100%] font-normal text-left font-convergence text-black">
                                         {{ ucfirst($plan->plan_title) }} Plan
                                     </h1>
                                 </div>
@@ -477,7 +501,8 @@
                                 </div>
                             </div>
 
-                            <h1 class="text-[24px] mt-3 leading-[100%] font-extrabold text-left font-lato text-black">
+                            <h1 class="text-[24px] mt-3 leading-[100%] font-extrabold text-left font-lato text-black plan-price"
+                                data-monthly="{{ $plan->plan_price }}" id="price-mobile-{{ $index }}">
                                 ${{ $plan->plan_price }}
                             </h1>
                             <p class="mt-4 text-[15px] leading-[152%] font-medium text-left font-lato text-black">
@@ -524,9 +549,11 @@
                             {{ $plan['plan_title'] }} Plan
                         </h1>
                         <x-icon name="start" class="" />
-                        <h1 class="text-[30px] leading-[100%] font-extrabold text-center font-lato -mt-12 text-black">
+                        <h1 class="text-[30px] leading-[100%] font-extrabold text-center font-lato -mt-12 text-black plan-price"
+                            data-monthly="{{ $plan['plan_price'] }}" id="price-desktop-{{ $loop->index }}">
                             ${{ $plan['plan_price'] }}
                         </h1>
+
 
                         <p class="mt-4 text-[15px] leading-[152%] font-medium text-center font-lato text-black">
                             {{ $plan['plan_currency'] }} / {{ $plan['plan_description'] }}
@@ -568,7 +595,8 @@
     </div>
     {{-- section 6 --}}
     <div class="px-5 lg:px-20 py-10 lg:py-16 lg:pt-20 bg-white dark:bg-white">
-        <h1 class="font-[400] text-[25px] lg:text-[40px] leading-[100%] tracking-[0%] text-center font-[Convergence] text-black">
+        <h1
+            class="font-[400] text-[25px] lg:text-[40px] leading-[100%] tracking-[0%] text-center font-[Convergence] text-black">
             Why Choose MaapLo?
         </h1>
         <p
@@ -584,7 +612,8 @@
                     <h1 class="lg:mt-5 font-lato text-[18px] font-semibold leading-[100%] tracking-[0%] text-primary">
                         1. Smart Design for Your Craft
                     </h1>
-                    <p class="mt-4 font-lato font-normal text-[15px] w-[480px] leading-[152%] tracking-[0%] mt-2 text-black">
+                    <p
+                        class="mt-4 font-lato font-normal text-[15px] w-[480px] leading-[152%] tracking-[0%] mt-2 text-black">
                         MaapLo is built to meet the unique needs of your profession. From accurate measurements to
                         order and
                         preference management, every feature simplifies your workflow. Stay organized and focused
@@ -623,7 +652,8 @@
                     <h1 class="font-lato font-semibold text-[18px] leading-[100%] tracking-[0%] text-[#167893]">
                         4. Budget-Friendly and Scalable
                     </h1>
-                    <p class="mt-3 font-lato font-normal text-[15px] leading-[152%] tracking-[0%] mt-2 max-w-[435px] text-black">
+                    <p
+                        class="mt-3 font-lato font-normal text-[15px] leading-[152%] tracking-[0%] mt-2 max-w-[435px] text-black">
                         Affordable and scalable, MaapLo fits all business sizes. Pay for what you need, and grow
                         seamlessly
                         with tools to manage more clients and orders without extra cost.
@@ -633,7 +663,8 @@
                     <h1 class="font-lato font-semibold text-[18px] leading-[100%] tracking-[0%] text-[#167893]">
                         5. Enhances customer experience
                     </h1>
-                    <p class="mt-3 font-lato font-normal text-[15px] leading-[152%] tracking-[0%] mt-2 max-w-[435px] text-black">
+                    <p
+                        class="mt-3 font-lato font-normal text-[15px] leading-[152%] tracking-[0%] mt-2 max-w-[435px] text-black">
                         MaapLo helps you deliver smooth, personalized service with organized records, accurate
                         tracking, and
                         clear communication — boosting client satisfaction and loyalty.
@@ -871,7 +902,8 @@
     {{-- section 8 --}}
     <div class="bg-[#FAFFFF] px-5 lg:px-20 py-10 lg:py-16">
         <div>
-            <h1 class="font-[400] text-[25px] lg:text-[40px] leading-[100%] tracking-[0%] text-center font-[Convergence] text-black">
+            <h1
+                class="font-[400] text-[25px] lg:text-[40px] leading-[100%] tracking-[0%] text-center font-[Convergence] text-black">
                 Who it’s For
             </h1>
             <p
@@ -1496,7 +1528,8 @@
 
                 <!-- Right: Contact Form -->
                 <div class="mx-auto relative z-10">
-                    <h1 class="text-2xl md:text-3xl font-semibold mb-4 text-center md:text-left text-black">Let’s Connect</h1>
+                    <h1 class="text-2xl md:text-3xl font-semibold mb-4 text-center md:text-left text-black">Let’s Connect
+                    </h1>
 
                     <p class="text-gray-600 mb-6">
                         Every great journey starts with a conversation. Whether you're curious, ready to collaborate, or
@@ -1543,4 +1576,33 @@
 
 
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let isYearly = false;
+
+            window.setActiveButton = function(buttonId) {
+                // Highlight active button
+                document.getElementById('btn1').classList.remove('bg-primary', 'text-white');
+                document.getElementById('btn2').classList.remove('bg-primary', 'text-white');
+                document.getElementById(buttonId).classList.add('bg-primary', 'text-white');
+
+                // Determine if it's yearly mode
+                isYearly = (buttonId === 'btn2');
+
+                // Update all plan prices
+                document.querySelectorAll('.plan-price').forEach(function(el) {
+                    const monthly = parseFloat(el.getAttribute('data-monthly'));
+
+                    if (!isNaN(monthly)) {
+                        if (isYearly) {
+                            const yearlyPrice = monthly * 12 * 0.8; // 20% discount
+                            el.textContent = '$' + yearlyPrice.toFixed(2);
+                        } else {
+                            el.textContent = '$' + monthly.toFixed(2);
+                        }
+                    }
+                });
+            };
+        });
+    </script>
 @endsection
