@@ -40,30 +40,31 @@ const hasAttemptedSubmit = ref(false);
 const gstRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
 
 const createOrganization = () => {
-
-    form.clearErrors(); // Clear old errors
+    form.clearErrors(); // Clear previous errors
     const gst = form.gst_number?.toUpperCase() || '';
+
+    // Validate GST
     if (gst && (!gstRegex.test(gst) || gst.length !== 15)) {
         form.errors.gst_number = 'GST Number must be exactly 15 characters and valid format like 12XXXXX1234X1X2';
         return;
     }
-    // First click: show warning if neither logo nor request
+
+    // FIRST click — prompt user if no logo and no request
     if (!form.organization_logo && !form.logo_request && !hasAttemptedSubmit.value) {
         showLogoError.value = true;
         hasAttemptedSubmit.value = true;
+        toast.info('Please upload a logo or request a logo to proceed.');
         return;
     }
 
-    // Second click (user confirmed or ignored): proceed with default false if no logo or request
-    form.logo_request = !!form.logo_request;
+    // SECOND click — allow form submission
+    loading.value = true;
 
     form.post(route('organization.store'), {
         forceFormData: true,
-        onStart: () => {
-            loading.value = true;  // Start loading before the request
-        },
         onSuccess: () => {
             toast.success("Organization created successfully!");
+            hasAttemptedSubmit.value = false;  // Reset for next form
             loading.value = false;
         },
         onError: () => {
@@ -72,6 +73,7 @@ const createOrganization = () => {
         }
     });
 };
+
 
 </script>
 
