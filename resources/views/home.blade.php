@@ -541,7 +541,8 @@
 
             {{-- dasktop view --}}
             {{-- card  --}}
-            <div class="hidden lg:flex flex-row lg:justify-center lg:items-center gap-5 mt-20">
+            <div class="hidden lg:grid grid-cols-3 gap-8 mt-20 px-10">
+
                 @foreach ($subscriptionPlans as $plan)
                     <div
                         class="w-[320px] lg:w-[350px] lg:h-[600px] border-t-[12px] border-primary rounded-[10px] bg-white shadow-[0px_4px_8.7px_0px_#16789340]">
