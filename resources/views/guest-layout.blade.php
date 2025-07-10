@@ -87,7 +87,7 @@
 </nav>
 
 {{-- Page Content --}}
-<main class="mx-auto">
+<main class="mx-auto bg-white">
 	@yield('content')
 </main>
 
