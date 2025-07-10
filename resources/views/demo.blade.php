@@ -4,11 +4,11 @@
 @section('content')
     {{-- Section 1 --}}
     <div class="mx-auto px-4 lg:py-12 text-center max-w-6xl">
-        <h1 class="font-lato font-bold text-[28px] lg:text-[48px] leading-[100%] tracking-[0%]">
+        <h1 class="font-lato font-bold text-[28px] lg:text-[48px] leading-[100%] tracking-[0%] text-black">
             Lorem Ipsum Dolor
         </h1>
 
-        <p class="mt-6 font-lato font-semibold text-[15px] tracking-[0%] text-center w-[900px] max-w-full mx-auto">
+        <p class="mt-6 font-lato font-semibold text-[15px] tracking-[0%] text-center w-[900px] max-w-full mx-auto text-black">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
             magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
             consequat.
@@ -24,7 +24,7 @@
             <!-- Text -->
             <div class="md:w-1/3 text-right ">
                 <h2 class="text-xl font-bold mb-2 text-primary md:pr-10">Step 01</h2>
-                <h2 class="text-2xl font-bold mb-2 md:pr-10">Create Customer</h2>
+                <h2 class="text-2xl font-bold mb-2 md:pr-10 text-black">Create Customer</h2>
                 <p class="text-md text-gray-700 md:pr-10">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
                 </p>
@@ -71,7 +71,7 @@
             <!-- Text -->
             <div class="md:w-1/2 text-left">
                 <h2 class="text-xl font-bold mb-2 text-primary md:pl-10">Step 02</h2>
-                <h2 class="text-2xl font-bold mb-2 md:pl-10">Create Order</h2>
+                <h2 class="text-2xl font-bold mb-2 md:pl-10 text-black">Create Order</h2>
                 <p class="text-md text-gray-700 w-[360px] md:pl-10">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
                 </p>
@@ -86,7 +86,7 @@
             <!-- Text -->
             <div class="md:w-1/3 text-right ">
                 <h2 class="text-xl font-bold mb-2 text-primary md:pr-10">Step 03</h2>
-                <h2 class="text-2xl font-bold mb-2 md:pr-10">Show Order</h2>
+                <h2 class="text-2xl font-bold mb-2 md:pr-10 text-black">Show Order</h2>
                 <p class="text-md text-gray-700 md:pr-10">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
                 </p>
@@ -129,7 +129,7 @@
             <!-- Text -->
             <div class="md:w-1/2 text-left md:pl-10">
                 <h2 class="text-xl font-bold mb-2 text-primary">Step 04</h2>
-                <h2 class="text-2xl font-bold mb-2">Dashboard</h2>
+                <h2 class="text-2xl font-bold mb-2 text-black">Dashboard</h2>
                 <p class="text-md text-gray-700 w-[360px]">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
                 </p>
@@ -213,12 +213,12 @@
 
     {{-- section 3 --}}
     <div>
-        <h1 class="font-lato text-md lg:w-[700px] px-4 lg:mx-auto text-center"> Lorem ipsum dolor sit amet, consectetur
+        <h1 class="font-lato text-md lg:w-[700px] px-4 lg:mx-auto text-center text-black"> Lorem ipsum dolor sit amet, consectetur
             adipiscing
             elit, sed do eiusmod tempor incididunt ut labore et dolore
             magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
             labore et dolore magna aliqua.</h1>
-        <div class="mx-10 my-10 bg-[#D9D9D9] h-[500px] flex items-center justify-center rounded-lg shadow">
+        <div class="mx-10 mt-10 bg-[#D9D9D9] h-[500px] flex items-center justify-center rounded-lg shadow">
 
         </div>
 
