@@ -130,9 +130,9 @@ const updateUser = () => {
                 <!-- Section: Organization Info -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Input type="textarea" v-model="form.address" label="Address" :error="props.errors.address"
-                        required="true" />
+                        required="true" placeholder="Enter Address"/>
                     <Input type="textarea" v-model="form.organization_name" label="Organization Name"
-                        :error="props.errors.organization_name" required="true" />
+                        :error="props.errors.organization_name" required="true" placeholder="Enter Organization Name"/>
                     <!-- Enhanced Subscription Plan Dropdown -->
                     <div>
                         <label for="subscription_plan" class="block text-sm font-medium text-gray-700 mb-1">
