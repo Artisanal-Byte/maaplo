@@ -130,7 +130,7 @@ class DesignDetailsController extends Controller
                 $bodyPartId = $validated['body_part_id'];
                 BodyPartValue::updateOrCreate(
                     ['id' => $bodyPartId],
-                    ['body_part' => $validated['value']] // Update the body part name if needed
+                    // ['body_part' => $validated['value']] // Update the body part name if needed
                 );
             } else {
                 $newBodyPart = trim($validated['new_body_part']);
