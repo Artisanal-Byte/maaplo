@@ -496,7 +496,7 @@
                                         {{ ucfirst($plan->plan_title) }} Plan
                                     </h1>
                                 </div>
-                                <div>
+                                <div class="text-black" >
                                     <x-icon name="icon-down" id="iconDown{{ $index }}" />
                                 </div>
                             </div>
@@ -605,7 +605,6 @@
             MaapLo is a smart, budget-friendly app made for tailors — streamlining tasks with offline access and
             client-focused tools. Tailoring made simple.
         </p>
-
 
         <div class="flex flex-col lg:flex-row justify-between mt-10 overflow-hidden">
             <div class="flex flex-col gap-10 lg:max-w-[45%] items-center lg:items-start text-center lg:text-left">

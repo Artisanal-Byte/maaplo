@@ -10,20 +10,20 @@ function setActiveButton(id) {
     activeBtn.classList.remove('text-black', 'bg-transparent');
     activeBtn.classList.add('bg-primary', 'text-white');
 }
-function toggleDropdown(id) {
-    const dropdown = document.getElementById(`dropdownContent${id}`);
-    const iconUp = document.getElementById(`iconUp${id}`);
-    const iconDown = document.getElementById(`iconDown${id}`);
+// function toggleDropdown(index) {
+//     const dropdown = document.getElementById(`dropdownContent${index}`);
+//     const iconUp = document.getElementById(`iconUp${index}`);
+//     const iconDown = document.getElementById(`iconDown${index}`);
 
-    const isVisible = dropdown.style.display === "block";
-    dropdown.style.display = isVisible ? "none" : "block";
-    iconUp.style.display = isVisible ? "none" : "inline-block";
-    iconDown.style.display = isVisible ? "inline-block" : "none";
-}
+//     const isVisible = dropdown.style.display === "block";
+//     dropdown.style.display = isVisible ? "none" : "block";
+//     iconUp.style.display = isVisible ? "none" : "inline-block";
+//     iconDown.style.display = isVisible ? "inline-block" : "none";
+// }
 
-window.onload = function () {
-    toggleDropdown(1);
-};
+// window.onload = function () {
+//     toggleDropdown(1);
+// };
 document.addEventListener("DOMContentLoaded", function () {
     // Feature Slider
     let featureIndex = 1;
