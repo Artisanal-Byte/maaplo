@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, router } from '@inertiajs/vue3';
+import { Head, router,Link } from '@inertiajs/vue3';
 import { defineProps } from 'vue';
 import { Icon } from '@iconify/vue';
 const props = defineProps({
@@ -23,6 +23,11 @@ function viewOrder(orderId) {
                     <Icon icon="material-symbols:order-approve" class="text-primary" width="28" height="28" />
                     Closed Orders
                 </h1>
+                  <Link :href="route('orders.index')"
+                    class="flex items-center gap-1 hover:text-black text-gray-600">
+                <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
+                <span class="text-md font-medium">Back</span>
+                </Link>
             </div>
             <div v-if="closedOrders.length" class="space-y-6">
                 <div v-for="order in closedOrders" :key="order.id"
