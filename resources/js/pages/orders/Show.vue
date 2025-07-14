@@ -162,7 +162,7 @@ const designDetailMap = computed(() => {
                             <div><span class="font-semibold">🧾 Material Cost:</span> ₹ {{ item?.material_cost }}</div>
                             <div><span class="font-semibold">🧵 Stitching Cost:</span> ₹ {{ item?.stiching_cost }}</div>
                             <div><span class="font-semibold">✂ Altering Cost:</span> ₹ {{ item?.altering_cost ?? '00.0'
-                            }}
+                                }}
                             </div>
                             <div><span class="font-semibold">💰 Item Cost:</span> ₹ {{ item?.item_cost }}</div>
                             <div><span class="font-semibold">🧪 Trial Date:</span> {{ item?.trial_dates }}
@@ -198,7 +198,8 @@ const designDetailMap = computed(() => {
                                     </div>
 
                                     <!-- Right: SVG image -->
-                                    <div v-if="designDetailMap[designDetailId]?.image" class="w-18 h-18 flex-shrink-0 mr-4"
+                                    <div v-if="designDetailMap[designDetailId]?.image"
+                                        class="w-18 h-18 flex-shrink-0 mr-4"
                                         v-html="designDetailMap[designDetailId].image"></div>
                                 </div>
                             </div>
@@ -236,19 +237,47 @@ const designDetailMap = computed(() => {
                                 <!-- Right: Other Images -->
                                 <div class="flex-1">
                                     <h5 class="font-semibold text-sm mb-2">Other Images (Cloth & Pattern)</h5>
-                                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                                        <template
-                                            v-for="field in ['cloth_img1', 'cloth_img2', 'Pattern_img1', 'Pattern_img2']"
-                                            :key="field">
-                                            <div v-if="item[field]"
-                                                class="w-full aspect-square overflow-hidden rounded-md border shadow cursor-pointer"
-                                                @click="openImageModal(`/${item[field]}`)">
-                                                <img :src="`/${item[field]}`" :alt="field"
-                                                    class="object-cover w-full h-full" />
-                                                <p class="text-xs mt-1 text-center break-all">{{ field }}</p>
+
+                                    <div class="flex flex-col md:flex-row gap-8">
+                                        <!-- Cloth Images Column -->
+                                        <div class="flex-1">
+                                            <h6 class="font-semibold text-xs mb-2 text-green-700">👗 Cloth Images</h6>
+                                            <div v-if="item.cloth_img1 || item.cloth_img2"
+                                                class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                                <template v-for="field in ['cloth_img1', 'cloth_img2']" :key="field">
+                                                    <div v-if="item[field]"
+                                                        class="w-full aspect-square overflow-hidden rounded-md border shadow cursor-pointer"
+                                                        @click="openImageModal(`/${item[field]}`)">
+                                                        <img :src="`/${item[field]}`" :alt="field"
+                                                            class="object-cover w-full h-full" />
+                                                        <p class="text-xs mt-1 text-center break-all">{{ field }}</p>
+                                                    </div>
+                                                </template>
                                             </div>
-                                        </template>
+                                            <div v-else class="text-gray-400 text-xs">No cloth images available.</div>
+                                        </div>
+
+                                        <!-- Pattern Images Column -->
+                                        <div class="flex-1">
+                                            <h6 class="font-semibold text-xs mb-2 text-purple-700">🧵 Pattern Images
+                                            </h6>
+                                            <div v-if="item.Pattern_img1 || item.Pattern_img2"
+                                                class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                                <template v-for="field in ['Pattern_img1', 'Pattern_img2']"
+                                                    :key="field">
+                                                    <div v-if="item[field]"
+                                                        class="w-full aspect-square overflow-hidden rounded-md border shadow cursor-pointer"
+                                                        @click="openImageModal(`/${item[field]}`)">
+                                                        <img :src="`/${item[field]}`" :alt="field"
+                                                            class="object-cover w-full h-full" />
+                                                        <p class="text-xs mt-1 text-center break-all">{{ field }}</p>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                            <div v-else class="text-gray-400 text-xs">No pattern images available.</div>
+                                        </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
