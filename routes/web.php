@@ -64,6 +64,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/suggestion/create', fn() => Inertia::render('suggestion/Create'))->name('suggestion.create');
     Route::post('/suggestion', [FeatureRequestAndSuggestionController::class, 'storeSuggestion'])->name('suggestion.store');
+    Route::post('/organization/no-organization', [OrganizationController::class, 'setNoOrganization']);
 
     // Charts and Exports
     Route::get('/dashboard/chart-data', [DashboardController::class, 'getChartData'])->name('dashboard.chart-data');
@@ -72,7 +73,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // ✅ Admin-Only Routes
 Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
-    Route::post('/organization/no-organization', [OrganizationController::class, 'setNoOrganization']);
     Route::resource('subscription-plans', SubscriptionPlanController::class);
 
     Route::get('admin', fn() => Inertia::render('admin/Index'));
