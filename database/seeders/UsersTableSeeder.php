@@ -18,7 +18,7 @@ class UsersTableSeeder extends Seeder
     {
         DB::table('users')->delete();
 
-        $users = ['sahil', 'riya', 'brijesh', 'richa', 'bhavil'];
+        $users = ['sahil', 'riya', 'brijesh', 'richa', 'bhaviljain'];
 
         $data = [];
 
