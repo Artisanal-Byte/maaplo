@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps,watch, onMounted  } from 'vue';
+import { ref, defineProps, watch, onMounted } from 'vue';
 import { Icon } from '@iconify/vue';
 import { Link } from '@inertiajs/vue3';
 import { useOrderFormStore } from '@/stores/orderFormStore';
@@ -40,7 +40,7 @@ watch(() => formStore.customer_id, (newVal) => {
             <button @click="toggleDropdown"
                 class="flex cursor-pointer items-center justify-between gap-2 py-2 bg-white rounded-md focus:outline-none">
                 <span class="font-lato font-medium text-base leading-4 tracking-normal">{{ selectedCustomer
-                    }}</span>
+                }}</span>
                 <Icon :icon="showDropdown ? 'icon-park-outline:up' : 'icon-park-outline:down'" width="20" height="20" />
             </button>
             <p class="text-red-600 text-sm">{{ error }}</p>
@@ -56,10 +56,12 @@ watch(() => formStore.customer_id, (newVal) => {
                                 <div>
                                     <h1 class="text-gray-800 font-medium text-[18px]">{{ customer.name }}</h1>
                                 </div>
-                                <div>
-                                    <img :src="asset(customer.photos[0].image_url)" alt="Customer Image"
-                                        class="w-8 h-8 rounded-full ml-4" />
-                                </div>
+                                <img v-if="customer.photos?.[0]?.image_url" :src="asset(customer.photos[0].image_url)"
+                                    alt="Customer Image" class="w-8 h-8 rounded-full ml-4" />
+                                <span v-else
+                                    class="w-8 h-8 rounded-full ml-4 bg-gray-300 flex items-center justify-center text-xs text-white">
+                                    N/A
+                                </span>
                             </div>
 
                         </div>
