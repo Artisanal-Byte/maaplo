@@ -16,7 +16,10 @@ class OrganizationController extends Controller
     public function index()
     {
         $organization = auth()->user()->organization;
-        return Inertia::render('organization/Index', ['organizations' => [$organization]]);
+
+        $organizations = $organization ? [$organization] : []; // Avoid sending [null]
+
+        return Inertia::render('organization/Index', compact('organizations'));
     }
 
     public function create()
