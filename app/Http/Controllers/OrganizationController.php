@@ -15,8 +15,8 @@ class OrganizationController extends Controller
 {
     public function index()
     {
-        $organizations = Organization::all();
-        return Inertia::render('organization/Index', compact('organizations'));
+        $organization = auth()->user()->organization;
+        return Inertia::render('organization/Index', ['organizations' => [$organization]]);
     }
 
     public function create()
@@ -92,7 +92,7 @@ class OrganizationController extends Controller
             'gst_number' => 'nullable|string|max:15',
             'address' => 'required|string',
         ]);
-// dd($data);
+        // dd($data);
         try {
             DB::beginTransaction();
 

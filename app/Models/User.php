@@ -92,4 +92,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(SubscriptionPlan::class, 'subscription_plan_id');
     }
+
+    public function organizations()
+    {
+        return $this->belongsToMany(Organization::class);
+    }
 }
