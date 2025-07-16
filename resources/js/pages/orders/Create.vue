@@ -9,9 +9,9 @@ import Button from '@/components/Button.vue';
 import Notes from '@/components/Items/Notes.vue';
 import Input from '@/components/InputWithLabel.vue';
 import { useOrderFormStore } from '@/stores/orderFormStore';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import Loader from '@/components/Loader.vue';
-const props = defineProps(["users", "customers", "itemTypes", "errors","allDesignDetails"])
+const props = defineProps(["users", "customers", "itemTypes", "errors", "allDesignDetails"])
 
 const showModal = ref(false);
 const disabled = ref(false);
@@ -149,10 +149,18 @@ const formatDate = (dateStr) => {
                         <Icon icon="lsicon:order-edit-filled" width="30" height="30" />
                         New Order
                     </h1>
+
                 </div>
-                <div class="self-center">
+                <div class="flex items-center gap-4 self-center">
+                    <div class="text-gray-600">
+                        <Link :href="route('orders.index')" class="flex items-center gap-1 hover:text-black">
+                        <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
+                        <span class="text-[16px] font-medium">Back</span>
+                        </Link>
+                    </div>
                     <Button :disabled="disabled" @click="create">Create Order</Button>
                 </div>
+
             </div>
 
             <div class="flex flex-col mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
@@ -248,7 +256,7 @@ const formatDate = (dateStr) => {
                             <h2><span class="font-semibold">Advance Paid:</span> ₹ {{ form.advance_paid || 0 }}</h2>
                             <h2><span class="font-semibold text-red-600 underline">Balance Due:</span> ₹ {{
                                 (form.total_amount || 0) - (form.advance_paid || 0)
-                            }}</h2>
+                                }}</h2>
                         </div>
 
                         <!-- Delete Confirmation Modal -->
