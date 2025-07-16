@@ -16,7 +16,7 @@ class SubscriptionPlansTableSeeder extends Seeder
     {
         DB::table('subscription_plans')->insert([
             [
-                'id' => 1,
+                // 'id' => 1,
                 'plan_title' => 'free',
                 'plan_description' => 'Basic features suitable for individuals and small teams.',
                 'plan_price' => 00,
