@@ -110,6 +110,18 @@ function toggleDropdownDelivery() {
 
                 </div>
                 <div class="flex gap-4 text-gray-600 relative z-20">
+                    <div class="relative group">
+                        <Link :href="route('orders.create')">
+                        <Icon icon="mingcute:add-line" width="32" height="32" class="mt-1 cursor-pointer" />
+                        </Link>
+                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
+                    bg-gray-800 text-white text-xs px-3 py-1 rounded-md
+                    opacity-0 group-hover:opacity-100 transition duration-200
+                    whitespace-nowrap pointer-events-none shadow-lg">
+                            Create Order
+                        </div>
+                    </div>
+
                     <!-- Reset Tooltip -->
                     <div class="relative group">
                         <Link :href="route('orders.index')">
