@@ -14,14 +14,14 @@ class DesignDetailsTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
 
         \DB::table('design_details')->delete();
-        
+
         \DB::table('design_details')->insert(array (
-            0 => 
+            0 =>
             array (
-                'id' => 1,
+                // 'id' => 1,
                 'body_section' => 'Upper',
                 'gender' => 'm',
                 'body_part_id' => 1,
@@ -47,9 +47,9 @@ xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAA
                 'updated_at' => '2025-06-12 10:09:04',
                 'deleted_at' => NULL,
             ),
-            1 => 
+            1 =>
             array (
-                'id' => 2,
+                // 'id' => 2,
                 'body_section' => 'Upper',
                 'gender' => 'f',
                 'body_part_id' => 2,
@@ -61,9 +61,9 @@ xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAA
                 'updated_at' => '2025-07-16 06:02:37',
                 'deleted_at' => NULL,
             ),
-            2 => 
+            2 =>
             array (
-                'id' => 3,
+                // 'id' => 3,
                 'body_section' => 'Upper',
                 'gender' => 'f',
                 'body_part_id' => 2,
@@ -82,9 +82,9 @@ fill: #010101;
                 'updated_at' => '2025-07-16 06:03:44',
                 'deleted_at' => NULL,
             ),
-            3 => 
+            3 =>
             array (
-                'id' => 4,
+                // 'id' => 4,
                 'body_section' => 'Upper',
                 'gender' => 'f',
                 'body_part_id' => 1,
@@ -110,9 +110,9 @@ fill: #fefefe;
                 'updated_at' => '2025-07-16 06:05:38',
                 'deleted_at' => NULL,
             ),
-            4 => 
+            4 =>
             array (
-                'id' => 5,
+                // 'id' => 5,
                 'body_section' => 'Upper',
                 'gender' => 'f',
                 'body_part_id' => 2,
@@ -131,9 +131,9 @@ fill: #020202;
                 'updated_at' => '2025-07-16 06:06:34',
                 'deleted_at' => NULL,
             ),
-            5 => 
+            5 =>
             array (
-                'id' => 6,
+                // 'id' => 6,
                 'body_section' => 'Upper',
                 'gender' => 'f',
                 'body_part_id' => 1,
@@ -152,9 +152,9 @@ fill: #020202;
                 'updated_at' => '2025-07-16 06:07:56',
                 'deleted_at' => NULL,
             ),
-            6 => 
+            6 =>
             array (
-                'id' => 7,
+                // 'id' => 7,
                 'body_section' => 'Upper',
                 'gender' => 'f',
                 'body_part_id' => 1,
@@ -174,7 +174,7 @@ fill: #020202;
                 'deleted_at' => NULL,
             ),
         ));
-        
-        
+
+
     }
 }

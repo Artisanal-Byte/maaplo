@@ -21,8 +21,13 @@ class BodyPartValueTableSeeder extends Seeder
         \DB::table('body_part_value')->insert(array (
             0 =>
             array (
-                // 'id' => 1,
                 'body_part' => 'Front Neck',
+                'created_at' => '2025-06-12 10:09:04',
+                'updated_at' => '2025-06-12 10:09:04',
+                'deleted_at' => NULL,
+            ),
+            array (
+                'body_part' => 'back part',
                 'created_at' => '2025-06-12 10:09:04',
                 'updated_at' => '2025-06-12 10:09:04',
                 'deleted_at' => NULL,
