@@ -14,14 +14,14 @@ class CustomersTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
 
         \DB::table('customers')->delete();
-        
+
         \DB::table('customers')->insert(array (
-            0 => 
+            0 =>
             array (
-                'id' => 1,
+                // 'id' => 1,
                 'user_id' => 1,
                 'name' => 'testcustomer1',
                 'gender' => 'm',
@@ -36,9 +36,9 @@ class CustomersTableSeeder extends Seeder
                 'updated_at' => '2025-07-16 06:13:21',
                 'deleted_at' => NULL,
             ),
-            1 => 
+            1 =>
             array (
-                'id' => 2,
+                // 'id' => 2,
                 'user_id' => 1,
                 'name' => 'testcustomer2',
                 'gender' => 'f',
@@ -53,9 +53,9 @@ class CustomersTableSeeder extends Seeder
                 'updated_at' => '2025-07-16 06:12:59',
                 'deleted_at' => NULL,
             ),
-            2 => 
+            2 =>
             array (
-                'id' => 3,
+                // 'id' => 3,
                 'user_id' => 1,
                 'name' => 'testcustomer3',
                 'gender' => 'm',
@@ -71,7 +71,7 @@ class CustomersTableSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
         ));
-        
-        
+
+
     }
 }
