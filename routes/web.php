@@ -88,7 +88,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // ✅ Admin-Only Routes
 Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::resource('subscription-plans', SubscriptionPlanController::class);
-
+    Route::resource('user', UsersController::class);
     Route::get('admin', fn() => Inertia::render('admin/Index'));
     Route::get('user-create', fn() => Inertia::render('admin/UserCreate'));
     Route::post('/admin/users/{id}/toggle-status', [UsersController::class, 'toggleStatus'])->name('admin.toggleStatus');
