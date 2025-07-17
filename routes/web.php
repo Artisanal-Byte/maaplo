@@ -37,9 +37,9 @@ Route::get('/login-defaults', function () {
     }
 
     return response()->json([
-        'auto_fill' => config('app.auto_fill_login'),
-        'email' => config('app.auto_fill_email'),
-        'password' => config('app.auto_fill_password'),
+        'auto_fill' => true,
+        'email' => 'demo@example.com',
+        'password' => 'test@123',
     ]);
 });
 
