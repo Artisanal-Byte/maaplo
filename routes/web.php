@@ -33,14 +33,14 @@ Route::get('/demo', function () {
 // Autofill login defaults only for allowed domains
 Route::get('/login-defaults', function () {
     if (env("APP_ENV") === "production") {
-        return response()->json([
-            'auto_fill' => true,
-            'email' => config('app.auto_fill_email'),
-            'password' => config('app.auto_fill_password'),
-        ]);
+        return response()->json(['auto_fill' => false]);
     }
 
-    return response()->json(['auto_fill' => false]);
+    return response()->json([
+        'auto_fill' => config('app.auto_fill_login'),
+        'email' => config('app.auto_fill_email'),
+        'password' => config('app.auto_fill_password'),
+    ]);
 });
 
 
