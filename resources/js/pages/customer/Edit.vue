@@ -281,8 +281,7 @@ const closeImageModal = () => {
                 </div>
                 <!-- Customer Images -->
                 <div>
-                    <h2 class="block font-medium leading-[16px] tracking-[0] mb-5 mt-8 ">Photos <span
-                            class="text-red-500">*</span></h2>
+                    <h2 class="block font-medium leading-[16px] tracking-[0] mb-5 mt-8 ">Photos</h2>
                     <div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-8">
                         <!-- Face Image -->
                         <div class="bg-white shadow-md rounded-lg p-4 border border-gray-200">

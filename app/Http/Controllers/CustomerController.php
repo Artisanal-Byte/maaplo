@@ -30,6 +30,7 @@ class CustomerController extends Controller
             : $customerCount >= 5;
         $customers = Auth::user()->customers()
             ->with(['photos' => fn($q) => $q->where('label', 'Faceimage'), 'orders'])
+            ->orderBy('name', 'asc')
             ->get()
             ->map(function ($c) {
                 // Correct definitions
