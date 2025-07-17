@@ -68,7 +68,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('customers', CustomerController::class);
     Route::resource('items', TemplateController::class);
-    Route::resource('user', UsersController::class);
     Route::resource('organization', OrganizationController::class);
     Route::resource('design-details', DesignDetailsController::class);
 
