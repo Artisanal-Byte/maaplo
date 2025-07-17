@@ -123,4 +123,8 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'auto_fill_login' => env('AUTO_FILL_LOGIN', false),
+    'auto_fill_email' => env('AUTO_FILL_EMAIL', ''),
+    'auto_fill_password' => env('AUTO_FILL_PASSWORD', ''),
+
 ];
