@@ -30,9 +30,10 @@ Route::get('/demo', function () {
     return view('demo');
 })->name('demo');
 
-// 🔐 Login data autofill  for staging
+// Autofill login defaults only for allowed domains
 Route::get('/login-defaults', function () {
-    $allowedHosts = ['maaplo2.0.test', 'staging.maaplo.com']; // 👈 Replace with your actual live domain
+    $allowedHosts = ['maaplo2.0.test', 'staging.maaplo.com']; // ✅ Use hostnames, not full URLs
+
     if (!in_array(request()->getHost(), $allowedHosts)) {
         return response()->json(['auto_fill' => false]);
     }

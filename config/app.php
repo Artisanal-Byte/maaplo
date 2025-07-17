@@ -127,5 +127,4 @@ return [
     'auto_fill_email' => env('AUTO_FILL_EMAIL', ''),
     'auto_fill_password' => env('AUTO_FILL_PASSWORD', ''),
 
-
 ];
