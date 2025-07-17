@@ -7,7 +7,7 @@ import GuestLayout from '@/layouts/GuestLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import { Icon } from '@iconify/vue';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 defineProps<{
     status?: string;
@@ -28,6 +28,24 @@ const submit = () => {
         onFinish: () => form.reset('password'),
     });
 };
+
+async function fetchAutoFill() {
+    try {
+        const res = await fetch('/login-defaults')
+        const data = await res.json()
+
+        if (data.auto_fill) {
+            form.email = data.email
+            form.password = data.password
+        }
+    } catch (error) {
+        console.error('Autofill failed:', error)
+    }
+}
+
+onMounted(() => {
+    fetchAutoFill()
+})
 </script>
 
 <!-- <template>
@@ -97,7 +115,7 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-    
+
         <div
             class="relative max-w-7xl bg-[#FBFBFB] flex items-center justify-center px-4 py-8 lg:px-8 lg:py-12 mx-auto w-full max-h-7xl mt-0 lg:mt-0">
             <!-- Container for form and black background side-by-side -->
@@ -134,15 +152,18 @@ const submit = () => {
                                             <!-- Password Input -->
                                             <Input :type="showPassword ? 'text' : 'password'" id="password" required
                                                 :tabindex="3" autocomplete="current-password" v-model="form.password"
-                                                placeholder="Password" class="border border-black h-12 bg-white text-black" />
+                                                placeholder="Password"
+                                                class="border border-black h-12 bg-white text-black" />
                                             <InputError :message="form.errors.password" />
 
                                             <!-- Toggle Icon -->
                                             <span
                                                 class="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
                                                 @click="togglePassword">
-                                                <Icon v-if="showPassword" icon="mdi:hide" width="20" height="20" class="text-gray-500" />
-                                                <Icon v-else icon="zondicons:view-show" width="20" height="20" class="text-gray-500" />
+                                                <Icon v-if="showPassword" icon="mdi:hide" width="20" height="20"
+                                                    class="text-gray-500" />
+                                                <Icon v-else icon="zondicons:view-show" width="20" height="20"
+                                                    class="text-gray-500" />
                                             </span>
                                         </div>
 
@@ -163,7 +184,8 @@ const submit = () => {
                                 </div> -->
 
                                     <!-- Submit button -->
-                                    <Button type="submit" class="w-full bg-[#263238] text-white hover:bg-[#263238] rounded-md"
+                                    <Button type="submit"
+                                        class="w-full bg-[#263238] text-white hover:bg-[#263238] rounded-md"
                                         :tabindex="4" :disabled="form.processing">
                                         <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
                                         Log in
@@ -176,7 +198,7 @@ const submit = () => {
                                     <div class="flex-grow border-t border-gray-400"></div>
                                 </div>
 
-                                <a  :href="route('auth.google')"
+                                <a :href="route('auth.google')"
                                     class="w-full bg-transparent rounded-md text-black border border-gray-300 hover:bg-gray-100 flex items-center justify-center gap-2 py-5">
                                     <img src="/images/google-icon.svg" alt="Google Icon" class="w-4 h-4" />
                                     Log in with Google

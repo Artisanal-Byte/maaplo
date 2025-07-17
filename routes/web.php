@@ -30,6 +30,20 @@ Route::get('/demo', function () {
     return view('demo');
 })->name('demo');
 
+// 🔐 Login data autofill  for staging
+Route::get('/login-defaults', function () {
+    $allowedHosts = ['maaplo2.0.test', 'staging.maaplo.com']; // 👈 Replace with your actual live domain
+    if (!in_array(request()->getHost(), $allowedHosts)) {
+        return response()->json(['auto_fill' => false]);
+    }
+
+    return response()->json([
+        'auto_fill' => config('app.auto_fill_login'),
+        'email' => config('app.auto_fill_email'),
+        'password' => config('app.auto_fill_password'),
+    ]);
+});
+
 // Dashboard
 Route::get('dashboard', DashboardController::class)
     ->middleware(['auth', 'verified'])
