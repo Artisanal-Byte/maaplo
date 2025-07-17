@@ -32,18 +32,17 @@ Route::get('/demo', function () {
 
 // Autofill login defaults only for allowed domains
 Route::get('/login-defaults', function () {
-    $allowedHosts = ['maaplo2.0.test', 'staging.maaplo.com']; // ✅ Use hostnames, not full URLs
-
-    if (!in_array(request()->getHost(), $allowedHosts)) {
-        return response()->json(['auto_fill' => false]);
+    if (env("APP_ENV") === "production") {
+        return response()->json([
+            'auto_fill' => true,
+            'email' => config('app.auto_fill_email'),
+            'password' => config('app.auto_fill_password'),
+        ]);
     }
 
-    return response()->json([
-        'auto_fill' => config('app.auto_fill_login'),
-        'email' => config('app.auto_fill_email'),
-        'password' => config('app.auto_fill_password'),
-    ]);
+    return response()->json(['auto_fill' => false]);
 });
+
 
 // Dashboard
 Route::get('dashboard', DashboardController::class)
