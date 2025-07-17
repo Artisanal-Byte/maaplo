@@ -26,24 +26,23 @@ class SocialiteController extends Controller
     {
         try {
             $googleUser = Socialite::driver('google')->user();
+
+            // Check if user exists
             $user = User::where('google_id', $googleUser->id)->first();
 
+            // If user doesn't exist, create a new one
             if (!$user) {
-                Auth::login($user);
-            } else {
-                $user =  User::create([
+                $user = User::create([
                     'name' => $googleUser->name,
                     'email' => $googleUser->email,
-                    'password' => Hash::make('Brijesh@123'),
+                    'password' => Hash::make('abc@123'), // optional or use Str::random()
                     'google_id' => $googleUser->id
                 ]);
-                Auth::login($user);
-
-                // if ($userData) {
-                //     Auth::login($userData);
-                //     return redirect()->route('dashboard');
-                // }
             }
+
+            // Now login the user (whether found or created)
+            Auth::login($user);
+
             return redirect()->route('dashboard');
         } catch (\Exception $exception) {
             dd($exception->getMessage());
