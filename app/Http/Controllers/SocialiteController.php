@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\PasswordHelper;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,11 +32,20 @@ class SocialiteController extends Controller
             $user = User::where('google_id', $googleUser->id)->first();
 
             // If user doesn't exist, create a new one
-            if (!$user) {
+            if ($user) {
+                // If user exists but doesn't have google_id, update it
+                if (!$user->google_id) {
+                    $user->google_id = $googleUser->id;
+                    $user->save();
+                }
+            } else {
+                // Create new user if no user exists with that email
+                $randomPassword = PasswordHelper::generatePassword();
+
                 $user = User::create([
                     'name' => $googleUser->name,
                     'email' => $googleUser->email,
-                    'password' => Hash::make('abc@123'), // optional or use Str::random()
+                    'password' => Hash::make($randomPassword),
                     'google_id' => $googleUser->id
                 ]);
             }

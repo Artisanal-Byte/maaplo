@@ -38,7 +38,8 @@
         "files": [
             "app/Helpers/ImageHelper.php",
             "app/Helpers/UniqueOrderNumber.php",
-            "app/Helpers/DesignDetailHelper.php"
+            "app/Helpers/DesignDetailHelper.php",
+            "app/Helpers/PasswordHelper.php"
         ]
     },
     "autoload-dev": {

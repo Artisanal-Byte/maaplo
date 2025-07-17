@@ -30,6 +30,7 @@ class User extends Authenticatable
         'status',
         'avatar',
         'hash_organization',
+        'google_id',
     ];
 
     /**
