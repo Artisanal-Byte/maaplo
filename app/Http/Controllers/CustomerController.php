@@ -106,8 +106,8 @@ class CustomerController extends Controller
             'measurements' => 'nullable|array',
             'dob' => 'nullable|date',
             'notes' => 'nullable|array',
-            'half_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'full_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'half_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'full_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
         try {
             DB::beginTransaction();
