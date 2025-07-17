@@ -11,6 +11,7 @@
         transform: rotateY(360deg);
     }
 </style>
+<link rel="icon" href="{{ asset('images/faviconmaaplo.png') }}" type="image/png" />
 <script src="{{ asset('js/custom.js') }}" defer></script>
 <script>
     function toggleDropdown(id) {
@@ -496,7 +497,7 @@
                                         {{ ucfirst($plan->plan_title) }} Plan
                                     </h1>
                                 </div>
-                                <div class="text-black" >
+                                <div class="text-black">
                                     <x-icon name="icon-down" id="iconDown{{ $index }}" />
                                 </div>
                             </div>
