@@ -27,22 +27,24 @@ class SocialiteController extends Controller
         try {
             $googleUser = Socialite::driver('google')->user();
             $user = User::where('google_id', $googleUser->id)->first();
+
             if (!$user) {
                 Auth::login($user);
-                return redirect()->route('dashboard');
             } else {
-                $userData =  User::create([
+                $user =  User::create([
                     'name' => $googleUser->name,
                     'email' => $googleUser->email,
                     'password' => Hash::make('Brijesh@123'),
                     'google_id' => $googleUser->id
                 ]);
+                Auth::login($user);
 
-                if ($userData) {
-                    Auth::login($userData);
-                    return redirect()->route('dashboard');
-                }
+                // if ($userData) {
+                //     Auth::login($userData);
+                //     return redirect()->route('dashboard');
+                // }
             }
+            return redirect()->route('dashboard');
         } catch (\Exception $exception) {
             dd($exception->getMessage());
         }
