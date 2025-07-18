@@ -14,7 +14,7 @@ const errorTypes = [
     'Functionality Issue',
     'App Crash / Freezing',
     'Slow Performance / Loading Time',
-    'UI/UX Issue',
+    'ui/ux Issue',
     'Security Issue',
     'Upload/Download Issue',
     'Calculation/Logic Error',

@@ -21,10 +21,13 @@ class ErrorReport extends Model
 
     public function setErrorTypeAttribute($value)
     {
-        // Optional: if you want to map only some strings, use a map like in the controller.
-        // Otherwise, just convert spaces/slashes to underscore & lowercase:
         $snake = Str::snake(str_replace('/', '_', $value));
         $this->attributes['error_type'] = $snake;
+    }
+
+    public function getErrorTypeAttribute($value)
+    {
+        return str_replace('_', ' ', ucwords($value, '_'));
     }
 
     public function user()
