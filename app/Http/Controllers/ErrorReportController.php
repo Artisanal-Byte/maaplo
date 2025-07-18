@@ -44,7 +44,7 @@ class ErrorReportController extends Controller
 
                 $data['screenshot_path'] = \App\Helpers\ImageHelper::storeUserScreenshot($image, $username, $userId);
             }
-
+            $data['user_id'] = auth()->id() ?? null;
             ErrorReport::create($data);
 
             DB::commit();
@@ -60,7 +60,8 @@ class ErrorReportController extends Controller
 
     public function index()
     {
-        $reports = ErrorReport::latest()->get();
+        $reports = ErrorReport::with('user')->latest()->get();
+        //  dd($reports);
         return Inertia::render('reporterror/Index', ['reports' => $reports]);
     }
 }

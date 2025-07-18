@@ -16,6 +16,7 @@ class ErrorReport extends Model
         'url',
         'error_type',
         'other_error_type',
+        'user_id',
     ];
 
     public function setErrorTypeAttribute($value)
@@ -24,5 +25,10 @@ class ErrorReport extends Model
         // Otherwise, just convert spaces/slashes to underscore & lowercase:
         $snake = Str::snake(str_replace('/', '_', $value));
         $this->attributes['error_type'] = $snake;
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

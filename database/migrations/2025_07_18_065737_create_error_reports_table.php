@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('error_reports', function (Blueprint $table) {
             $table->id();
-             $table->text('description');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
+            $table->text('description');
             $table->string('screenshot_path')->nullable();
             $table->string('url')->nullable();
             $table->string('error_type');
