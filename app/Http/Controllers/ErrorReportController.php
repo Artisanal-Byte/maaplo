@@ -31,8 +31,15 @@ class ErrorReportController extends Controller
 
             if ($request->hasFile('screenshot')) {
                 $image = $request->file('screenshot');
+                $user = auth()->user();
 
-                $username = auth()->user()->username ?? 'guest';  // Adjust if username is elsewhere
+                $username = 'guest';
+                if ($user) {
+                    $username = $user->username
+                        ?? $user->name
+                        ?? (isset($user->email) ? explode('@', $user->email)[0] : 'guest');
+                }
+
                 $userId = auth()->id() ?? 0;
 
                 $data['screenshot_path'] = \App\Helpers\ImageHelper::storeUserScreenshot($image, $username, $userId);

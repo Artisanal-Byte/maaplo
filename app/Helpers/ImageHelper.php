@@ -183,6 +183,7 @@ class ImageHelper
     {
         try {
             $usernameFormatted = strtolower(str_replace(' ', '_', $username));
+            // dd($usernameFormatted);
             $folderPath = "user_name_{$usernameFormatted}_id_{$userId}/user_report_screenshort";
             $directory = storage_path("app/public/{$folderPath}/");
 
