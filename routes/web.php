@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DesignDetailsController;
+use App\Http\Controllers\ErrorReportController;
 use App\Http\Controllers\FeatureRequestAndSuggestionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ItemTemplateController;
@@ -54,7 +55,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/orders/closed', [DashboardController::class, 'closedOrdersPage'])->name('orders.closed');
     Route::get('/orders/view-closed', [DashboardController::class, 'viewClosedOrders'])->name('orders.viewClosed');
     Route::post('/orders/close', [DashboardController::class, 'close'])->name('orders.close');
-
+    Route::get('/reporterror/create', [ErrorReportController::class, 'create'])->name('reporterror.create');
+    Route::post('/reporterror', [ErrorReportController::class, 'store'])->name('reporterror.store');
     // Order routes
     Route::resource('orders', OrderController::class)->only(
         'index',
@@ -91,7 +93,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('admin', fn() => Inertia::render('admin/Index'));
     Route::get('user-create', fn() => Inertia::render('admin/UserCreate'));
     Route::post('/admin/users/{id}/toggle-status', [UsersController::class, 'toggleStatus'])->name('admin.toggleStatus');
-
+    Route::get('/reporterror', [ErrorReportController::class, 'index'])->name('reporterror.index');
     Route::get('/feature-request', [FeatureRequestAndSuggestionController::class, 'indexFeatureRequest'])->name('feature-request.index');
     Route::get('/suggestion', [FeatureRequestAndSuggestionController::class, 'indexSuggestion'])->name('suggestion.index');
 });
