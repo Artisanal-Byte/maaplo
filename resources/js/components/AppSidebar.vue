@@ -155,7 +155,7 @@ const visible = ref(false);
                                 </div>
 
                                 <div class="flex flex-row py-2 mt-2 rounded hover:bg-gray-100 p-2">
-                                    <Link href="#" class="block text-gray-700 hover:text-black">
+                                    <Link :href="route('reporterror.create')" class="block text-gray-700 hover:text-black">
                                     Report Error
                                     </Link>
                                 </div>
