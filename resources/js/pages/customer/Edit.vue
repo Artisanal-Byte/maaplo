@@ -281,15 +281,16 @@ const closeImageModal = () => {
                 </div>
                 <!-- Customer Images -->
                 <div>
-                    <h2 class="block font-medium leading-[16px] tracking-[0] mb-5 mt-8 ">Photos <span
-                            class="text-red-500">*</span></h2>
+                    <h2 class="block font-medium leading-[16px] tracking-[0] mb-5 mt-8 ">Photos</h2>
                     <div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-8">
                         <!-- Face Image -->
                         <div class="bg-white shadow-md rounded-lg p-4 border border-gray-200">
                             <h2 class="text-lg font-semibold text-gray-800 mb-3">Face Image</h2>
                             <div @click="openImageModal(faceImageUrl)"
                                 class="w-full h-64 bg-gray-50 flex items-center justify-center rounded-md overflow-hidden border">
-                                <img :src="faceImageUrl" alt="Face Image" class="object-scale-down h-64 w-[500px]" />
+                                <img :src="(faceImageUrl && !faceImageUrl.includes('undefined')) ? faceImageUrl : '/images/by_default_user.png'"
+                                    alt="Face Image" class="object-scale-down h-64 w-[500px]" />
+
                             </div>
                             <label class="mt-4 block">
                                 <span class="text-sm text-gray-600">Upload new image</span>
@@ -303,8 +304,10 @@ const closeImageModal = () => {
                             <h2 class="text-lg font-semibold text-gray-800 mb-3">Full Image</h2>
                             <div @click="openImageModal(fullBodyImageUrl)"
                                 class="w-full h-64 bg-gray-50 flex items-center justify-center rounded-md overflow-hidden border">
-                                <img :src="fullBodyImageUrl" alt="Full Body Image"
-                                    class="object-scale-down h-[250px]  w-[500px]" />
+                                <!-- <pre>{{ fullBodyImageUrl }}</pre> -->
+                                <img :src="(fullBodyImageUrl && !fullBodyImageUrl.includes('undefined')) ? fullBodyImageUrl : '/images/by_default_user.png'"
+                                    alt="Full Body Image" class="object-scale-down h-[250px]  w-[500px]" />
+
                             </div>
                             <label class="mt-4 block">
                                 <span class="text-sm text-gray-600">Upload new image</span>

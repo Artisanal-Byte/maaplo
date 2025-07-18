@@ -197,8 +197,7 @@ const onPhoneInput = (event: Event) => {
 
                 <!-- Upload Section -->
                 <div>
-                    <h2 class="block font-medium leading-[16px] tracking-[0] mb-5 mt-3 ">Photos <span
-                            class="text-red-500">*</span></h2>
+                    <h2 class="block font-medium leading-[16px] tracking-[0] mb-5 mt-3 ">Photos</h2>
                     <div class="flex flex-row justify-center item-center gap-6">
 
                         <!-- Half Image Upload -->
