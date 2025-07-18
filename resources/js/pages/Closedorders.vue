@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, router, usePage } from '@inertiajs/vue3';
+import { Head, router, usePage,Link } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 
 const page = usePage();
@@ -65,9 +65,14 @@ function viewOrder(orderId) {
         <div class="max-w-7xl mx-auto py-10 px-4">
             <div class="flex items-center justify-between mb-6">
                 <h1 class="text-3xl font-bold text-primary flex items-center gap-2">
-                    <Icon icon="mdi:truck-delivery-outline" class="text-primary" width="28" height="28" />
+                    <Icon icon="material-symbols:order-approve" class="text-primary" width="28" height="28" />
                     Delivered Orders
                 </h1>
+                  <Link :href="route('dashboard')"
+                    class="flex items-center gap-1 hover:text-black text-gray-600">
+                <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
+                <span class="text-md font-medium">Back</span>
+                </Link>
             </div>
 
             <div class="overflow-x-auto bg-white shadow-lg rounded-xl border border-gray-200">

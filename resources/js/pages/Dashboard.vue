@@ -206,10 +206,10 @@ async function fetchChartData() {
                         Quick Links
                     </h1>
                 </div>
-                <div class="flex flex-col lg:flex-row gap-10">
+                <div class="flex flex-col lg:flex-row gap-10 w-full">
                     <!-- create customer -->
                     <div
-                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
+                        class="relative group bg-teal-50 shadow overflow-hidden w-full h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
                             <Link :href="route('customers.create')" class="flex flex-col items-center gap-2">
                             <div class="bg-primary p-3 rounded-full">
@@ -224,7 +224,7 @@ async function fetchChartData() {
 
                     <!-- create order -->
                     <div
-                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
+                        class="relative group bg-teal-50 shadow overflow-hidden w-full h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
                             <Link :href="route('orders.create')" class="flex flex-col items-center gap-2">
                             <div class="bg-primary p-3 rounded-full">
@@ -239,7 +239,7 @@ async function fetchChartData() {
 
                     <!-- close order -->
                     <div
-                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
+                        class="relative group bg-teal-50 shadow overflow-hidden w-full h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
                             <Link :href="route('orders.closed')" class="flex flex-col items-center gap-2">
                             <div class="bg-primary p-3 rounded-full">
@@ -265,7 +265,7 @@ async function fetchChartData() {
                 <div class="flex flex-col lg:flex-row gap-10">
                     <!-- customer list -->
                     <div
-                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
+                        class="relative group bg-teal-50 shadow overflow-hidden w-full h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
                             <Link :href="route('customers.index')" class="flex flex-col items-center gap-2">
                             <div class="bg-primary p-3 rounded-full">
@@ -280,7 +280,7 @@ async function fetchChartData() {
 
                     <!-- order list -->
                     <div
-                        class="relative group bg-white shadow overflow-hidden lg:w-[300px] h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
+                        class="relative group bg-teal-50 shadow overflow-hidden w-full h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
                             <Link :href="route('orders.index')" class="flex flex-col items-center gap-2">
                             <div class="bg-primary p-3 rounded-full">

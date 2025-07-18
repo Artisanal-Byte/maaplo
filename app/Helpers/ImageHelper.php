@@ -177,4 +177,47 @@ class ImageHelper
             dd($e->getMessage());
         }
     }
+
+
+    public static function storeUserScreenshot(UploadedFile $image, string $username, int $userId): string
+    {
+        try {
+            $usernameFormatted = strtolower(str_replace(' ', '_', $username));
+            // dd($usernameFormatted);
+            $folderPath = "user_name_{$usernameFormatted}_id_{$userId}/user_report_screenshort";
+            $directory = storage_path("app/public/{$folderPath}/");
+
+            if (!file_exists($directory)) {
+                mkdir($directory, 0755, true);
+            }
+
+            // Get all existing screenshots to find the last number
+            $files = glob($directory . 'screenshort*_*.webp');
+
+            // Extract the numbers from filenames
+            $numbers = [];
+            foreach ($files as $file) {
+                if (preg_match('/screenshort(\d+)_\d+\.webp$/', basename($file), $matches)) {
+                    $numbers[] = (int) $matches[1];
+                }
+            }
+
+            $nextNumber = $numbers ? max($numbers) + 1 : 1;
+
+            $timestamp = time();
+            $fileName = "screenshort{$nextNumber}_{$timestamp}.webp";
+
+            $storagePath = $directory . $fileName;
+
+            $manager = new ImageManager(config('image.driver'));
+            $image = $manager->read($image);
+            $image = $image->scaleDown(width: 2000, height: 2000);
+            $encoded = $image->toWebp(60);
+            $encoded->save($storagePath);
+
+            return "storage/{$folderPath}/{$fileName}";
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+    }
 }
