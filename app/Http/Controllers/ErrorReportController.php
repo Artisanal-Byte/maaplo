@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Devrabiul\ToastMagic\Facades\ToastMagic;
+use App\Helpers\ImageHelper;
 
 class ErrorReportController extends Controller
 {
@@ -17,7 +18,6 @@ class ErrorReportController extends Controller
 
     public function store(Request $request)
     {
-
         $data = $request->validate([
             'description' => 'required|string',
             'screenshot' => 'nullable|image|max:2048',
@@ -25,11 +25,17 @@ class ErrorReportController extends Controller
             'error_type' => 'required|string',
             'other_error_type' => 'required_if:error_type,Others|string|nullable',
         ]);
+
         try {
             DB::beginTransaction();
 
             if ($request->hasFile('screenshot')) {
-                $data['screenshot_path'] = $request->file('screenshot')->store('screenshots', 'public');
+                $image = $request->file('screenshot');
+
+                $username = auth()->user()->username ?? 'guest';  // Adjust if username is elsewhere
+                $userId = auth()->id() ?? 0;
+
+                $data['screenshot_path'] = \App\Helpers\ImageHelper::storeUserScreenshot($image, $username, $userId);
             }
 
             ErrorReport::create($data);
@@ -43,6 +49,7 @@ class ErrorReportController extends Controller
             return redirect()->back()->withInput()->with('error', 'Creation failed: ' . $e->getMessage());
         }
     }
+
 
     public function index()
     {
