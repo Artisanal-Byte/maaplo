@@ -14,14 +14,13 @@ class CustomersTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
 
         \DB::table('customers')->delete();
-        
+        \DB::statement("ALTER SEQUENCE customers_id_seq RESTART WITH 1;");
         \DB::table('customers')->insert(array (
-            0 => 
+            0 =>
             array (
-                'id' => 1,
                 'user_id' => 1,
                 'name' => 'john doe',
                 'gender' => 'm',
@@ -36,9 +35,8 @@ class CustomersTableSeeder extends Seeder
                 'updated_at' => '2025-07-18 04:12:56',
                 'deleted_at' => NULL,
             ),
-            1 => 
+            1 =>
             array (
-                'id' => 2,
                 'user_id' => 1,
                 'name' => 'jane smith',
                 'gender' => 'm',
@@ -53,9 +51,8 @@ class CustomersTableSeeder extends Seeder
                 'updated_at' => '2025-07-18 04:14:00',
                 'deleted_at' => NULL,
             ),
-            2 => 
+            2 =>
             array (
-                'id' => 3,
                 'user_id' => 1,
                 'name' => 'chris parker',
                 'gender' => 'o',
@@ -71,7 +68,7 @@ class CustomersTableSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
         ));
-        
-        
+
+
     }
 }
