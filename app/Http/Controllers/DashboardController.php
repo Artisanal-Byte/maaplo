@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\Customer;
+use App\Models\OrderItem;
+use App\Models\UserCustomer;
 use Inertia\Inertia;
 use Devrabiul\ToastMagic\Facades\ToastMagic;
 
@@ -247,5 +249,38 @@ class DashboardController extends Controller
         return response($csvContent)
             ->header('Content-Type', 'text/csv')
             ->header('Content-Disposition', 'attachment; filename="orders_export.csv"');
+    }
+
+    public function seed(Request $request)
+    {
+        $request->validate([
+            'customers' => 'required|integer|min:1',
+            'orders' => 'required|integer|min:1',
+            'order_items' => 'required|integer|min:1',
+        ]);
+
+        $user = auth()->user();
+
+        $customers = Customer::factory()->count($request->customers)->create();
+
+        $customers->each(function ($customer) use ($user, $request) {
+            UserCustomer::create([
+                'user_id' => $user->id,
+                'customer_id' => $customer->id,
+            ]);
+
+            $orders = Order::factory()->count($request->orders)->create([
+                'user_id' => $user->id,
+                'customer_id' => $customer->id,
+            ]);
+
+            $orders->each(function ($order) use ($request) {
+                OrderItem::factory()->count($request->order_items)->create([
+                    'order_id' => $order->id,
+                ]);
+            });
+        });
+
+        return redirect()->back()->with('success', 'Factory data seeded.');
     }
 }
