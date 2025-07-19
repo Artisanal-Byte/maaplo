@@ -27,7 +27,7 @@ class BodyPartValueTableSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
             array (
-                'body_part' => 'back part',
+                'body_part' => 'back Neck',
                 'created_at' => '2025-06-12 10:09:04',
                 'updated_at' => '2025-06-12 10:09:04',
                 'deleted_at' => NULL,

@@ -21,7 +21,7 @@ class CustomersTableSeeder extends Seeder
         \DB::table('customers')->insert(array (
             0 =>
             array (
-                'user_id' => 1,
+                // 'user_id' => 1,
                 'name' => 'john doe',
                 'gender' => 'm',
                 'country_code' => '+91',
