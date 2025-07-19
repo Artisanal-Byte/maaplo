@@ -20,7 +20,7 @@ class OrderFactory extends Factory
         return [
             'user_id' => User::factory(),
             'customer_id' => Customer::inRandomOrder()->first()->id,
-            'order_number' => $this->faker->unique()->numerify('ORD###'),
+            'order_number' => $this->faker->unique()->numberBetween(100000, 999999),
             'status' => $this->faker->randomElement([
                 'created',
                 'in_process',
