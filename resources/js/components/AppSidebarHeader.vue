@@ -33,7 +33,7 @@ function navigateToPage() {
 }
 const showFactoryModal = ref(false);
 const factoryForm = ref({
-    customers: 3,
+    customers: 0,
     orders: 2,
     order_items: 3,
 });
