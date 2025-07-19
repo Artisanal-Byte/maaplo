@@ -87,7 +87,7 @@ const submitForm = () => {
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex justify-between items-center">
                 <h1
-                    class="flex items-center gap-2 lg:gap-4 text-[24px] leading-[16px] font-bold text-gray-800 font-[Convergence] text-primary tracking-[0]">
+                    class="flex items-center gap-2 lg:gap-4 text-[20px] lg:text-[27px] leading-[16px] font-bold text-gray-800 font-[Convergence] text-primary tracking-[0]">
                     <Icon icon="ooui:template-add-ltr" width="28" height="28" />
                     Add New Template
                 </h1>

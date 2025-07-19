@@ -96,8 +96,8 @@ const onPhoneInput = (event: Event) => {
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex justify-between items-center">
                 <h1
-                    class="flex items-center gap-2 lg:gap-4 text-[24px] leading-[16px] font-bold text-gray-800 font-[Convergence] text-primary tracking-[0]">
-                    <Icon icon="mdi:account-plus" width="28" height="28" />
+                    class="flex items-center gap-2 lg:gap-4 text-[20px] lg:text-[27px] leading-[16px] font-bold text-gray-800 font-[Convergence] text-primary tracking-[0]">
+                    <Icon icon="mdi:account-plus" width="32" height="32" />
                     New Customer
                 </h1>
 
