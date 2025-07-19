@@ -94,14 +94,14 @@ function toggleDropdownDelivery() {
     <AppLayout>
         <div class="lg:mx-auto max-w-7xl py-8 px-4">
             <!-- Title And Icon -->
-            <div class="flex flex-row justify-between">
+            <div class="flex flex-row justify-between mt-5">
                 <div>
-                    <h1 class="text-[24px] mt-3 leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
+                    <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                         Orders
                     </h1>
                 </div>
                 <!-- View Closed Orders Button -->
-                <div class="mt-6">
+                <div class="">
                     <Link :href="route('orders.viewClosed')"
                         class="inline-flex items-center px-4 py-2 bg-primary text-white text-sm font-semibold rounded-md shadow">
                     <Icon icon="ic:round-visibility" class="mr-2" width="20" height="20" />
@@ -112,7 +112,7 @@ function toggleDropdownDelivery() {
                 <div class="flex gap-4 text-gray-600 relative z-20">
                     <div class="relative group">
                         <Link :href="route('orders.create')">
-                        <Icon icon="mingcute:add-line" width="32" height="32" class="mt-1 cursor-pointer" />
+                        <Icon icon="mingcute:add-line" width="32" height="32" class=" cursor-pointer" />
                         </Link>
                         <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
                     bg-gray-800 text-white text-xs px-3 py-1 rounded-md
@@ -125,7 +125,7 @@ function toggleDropdownDelivery() {
                     <!-- Reset Tooltip -->
                     <div class="relative group">
                         <Link :href="route('orders.index')">
-                        <Icon icon="ic:outline-refresh" width="32" height="32" class="mt-1 cursor-pointer" />
+                        <Icon icon="ic:outline-refresh" width="32" height="32" class="cursor-pointer" />
                         </Link>
                         <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
                     bg-gray-800 text-white text-xs px-3 py-1 rounded-md
