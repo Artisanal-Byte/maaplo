@@ -9,13 +9,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'customers';
 
     // Define the fillable fields for mass assignment
     protected $fillable = [
-        'user_id',
+        // 'user_id',
         'name',
         'gender',
         'email',
@@ -91,8 +91,7 @@ class Customer extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'users_customers')
-            ->withTimestamps();
+        return $this->belongsToMany(User::class, 'users_customers', 'customer_id', 'user_id');
     }
 
 

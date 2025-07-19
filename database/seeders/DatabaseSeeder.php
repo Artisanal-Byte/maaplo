@@ -2,40 +2,46 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Customer;
+use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
         $this->call([
             SubscriptionPlansTableSeeder::class,
-        ]);
-//        User::factory()->create([
-//            'name' => 'Test User',
-//            'email' => 'test@gmail.com',
-//            'password' => Hash::make('user@123')
-//        ]);
-
-        $this->call([
             MeasurementSeeder::class,
+            UsersTableSeeder::class,
+            BodyPartValueTableSeeder::class,
+            TemplatesTableSeeder::class,
+            TemplatesMeasurementsTableSeeder::class,
+            DesignDetailsTableSeeder::class,
         ]);
-        $this->call(UsersTableSeeder::class);
-        $this->call(BodyPartValueTableSeeder::class);
-        $this->call(DesignDetailsTableSeeder::class);
-        $this->call(TemplatesTableSeeder::class);
-        $this->call(CustomersTableSeeder::class);
-        $this->call(DesignDetailsTableSeeder::class);
-        $this->call(UsersCustomersTableSeeder::class);
-        $this->call(TemplatesMeasurementsTableSeeder::class);
-        $this->call(OrdersTableSeeder::class);
-        $this->call(OrderItemsTableSeeder::class);
+
+        // \App\Models\DesignDetail::factory()->count(5)->create();
+
+        $customers = Customer::factory()->count(4)->create();
+
+        // Link each customer to user_id = 1 in users_customers table
+        $customers->each(function ($customer) {
+            \App\Models\UserCustomer::factory()->create([
+                'customer_id' => $customer->id,
+                // 'user_id' => 1,
+            ]);
+        });
+        Order::factory()
+            ->count(5)
+            ->create([
+                'user_id' => 1,   // yahan fix user_id 1 set kar diya
+            ])
+            ->each(function ($order) {
+                OrderItem::factory()->count(3)->create([
+                    'order_id' => $order->id,
+                    // order items me bhi user_id 1
+                ]);
+            });
     }
 }

@@ -22,7 +22,8 @@ class CustomerController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $customerCount = Customer::where('user_id', $user->id)->count();
+        $customerCount = $user->customers()->count();
+
         $plan = $user->subscriptionPlan;
 
         $customerLimitExceeded = $plan
@@ -66,7 +67,7 @@ class CustomerController extends Controller
     public function create()
     {
         $user = auth()->user();
-        $customerCount = Customer::where('user_id', $user->id)->count();
+        $customerCount = $user->customers()->count();
         $customerLimitExceeded = $user->subscription_plan === 'free' && $customerCount >= 5;
 
         $user_id = auth()->id();
@@ -118,7 +119,7 @@ class CustomerController extends Controller
             $addressJson = json_encode(['value' => $address]);
             // First, create the customer to get the customer ID
             $customer = Customer::create([
-                'user_id' => $user_id,
+                // 'user_id' => $user_id,
                 'name' => $validated['name'],
                 'gender' => $validated['gender'],
                 'country_code' => $validated['country_code'],

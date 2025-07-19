@@ -16,7 +16,7 @@ const emit = defineEmits(['hideOrShow']);
     <div class="mx-auto max-w-7xl w-full">
         <!-- Search Icon -->
         <div>
-            <Icon icon="material-symbols:search" width="32" height="32" class="mt-1 cursor-pointer "
+            <Icon icon="material-symbols:search" width="32" height="32" class="cursor-pointer "
                 @click="props.showable.showSearch = !props.showable.showSearch" />
         </div>
         <!-- @click="emit('hideOrShow', 'search')" -->

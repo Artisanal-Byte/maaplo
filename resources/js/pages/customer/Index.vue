@@ -66,9 +66,9 @@ const filteredCustomers = computed(() => {
 
         <!-- Main Content -->
         <div class="lg:mx-auto max-w-7xl py-8 px-4">
-            <div class="flex flex-row justify-between mb-6">
+            <div class="flex flex-row justify-between my-6">
                 <div>
-                    <h1 class="text-[24px] mt-3 leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
+                    <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                         Customer
                     </h1>
                     <p class="text-sm text-gray-700 text-right mt-2">
@@ -81,7 +81,7 @@ const filteredCustomers = computed(() => {
                     </div>
                     <div>
                         <!-- Use conditional rendering to prevent navigation -->
-                        <div class="relative group mt-1">
+                        <div class="relative group">
                             <component :is="props.customer_limit_exceeded ? 'a' : Link"
                                 :href="!props.customer_limit_exceeded ? route('customers.create') : undefined"
                                 @click.prevent="handleCreateClick" class="cursor-pointer">

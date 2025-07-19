@@ -67,7 +67,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         'update',
         'destroy'
     );
-
+    Route::post('/factory-seed', [DashboardController::class, 'seed'])->name('factory.seed')->middleware('auth');
     Route::resource('customers', CustomerController::class);
     Route::resource('items', TemplateController::class);
     Route::resource('organization', OrganizationController::class);

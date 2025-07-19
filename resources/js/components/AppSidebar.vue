@@ -40,13 +40,13 @@ const visible = ref(false);
         <aside v-if="visible" id="sbar" class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-40 flex flex-col"
             role="region">
             <!-- Header -->
-            <div class="flex items-center justify-between px-7 py-5 border-b">
+            <div class="flex items-center justify-between px-7 py-3 border-b">
                 <div class="flex items-center gap-2">
                     <Logo :user="user" />
                     <!-- <span class="font-inter font-medium text-[30px] leading-[16px] tracking-[0]">Logo</span> -->
                 </div>
                 <button @click="visible = false" class="p-1 rounded-md hover:bg-gray-200">
-                    <Icon icon="material-symbols:close" width="24" height="24" />
+                    <Icon icon="material-symbols:close" class="text-black" width="24" height="24" />
                 </button>
             </div>
 
