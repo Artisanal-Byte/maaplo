@@ -31,7 +31,25 @@ function navigateToPage() {
             break;
     }
 }
+const showFactoryModal = ref(false);
+const factoryForm = ref({
+    customers: 3,
+    orders: 2,
+    order_items: 3,
+});
 
+function openFactoryModal() {
+    showFactoryModal.value = true;
+}
+function closeFactoryModal() {
+    showFactoryModal.value = false;
+}
+
+function submitFactoryData() {
+    router.post(route('factory.seed'), factoryForm.value, {
+        onFinish: () => closeFactoryModal(),
+    });
+}
 </script>
 
 <template>
@@ -43,7 +61,7 @@ function navigateToPage() {
                 <Breadcrumbs :breadcrumbs="breadcrumbs" />
             </template>
         </div>
-        <!-- <div class="flex flex-row"> -->
+        <div class="flex flex-row">
             <!-- Action Dropdown -->
             <!-- <div class="relative inline-block text-left mt-3 lg:mt-0">
                 <select v-model="selectedAction" @change="navigateToPage"
@@ -54,7 +72,7 @@ function navigateToPage() {
                     <option value="feature-request">🚀 Feature Request</option>
                 </select>
 
-             
+
                 <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
@@ -62,6 +80,12 @@ function navigateToPage() {
                     </svg>
                 </div>
             </div> -->
+            <div v-if="user?.email === 'demo@example.com'" class="p-4">
+                <button class="w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded"
+                    @click="openFactoryModal">
+                    Create Factory Data
+                </button>
+            </div>
 
             <div class="flex justify-center items-center my-3 lg:mx-10 mx-0">
                 <Link :href="route('profile.show')">
@@ -71,7 +95,38 @@ function navigateToPage() {
                 </Link>
             </div>
 
-        <!-- </div> -->
+        </div>
+        <!-- Modal -->
+        <transition name="fade">
+            <div v-if="showFactoryModal"
+                class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
+                <div class="bg-white rounded-lg shadow-lg p-6 w-[400px]">
+                    <h2 class="text-lg font-semibold mb-4">Seed Factory Data</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block font-medium mb-1">Customers</label>
+                            <input type="number" v-model="factoryForm.customers"
+                                class="w-full border border-gray-300 rounded px-3 py-2" />
+                        </div>
+                        <div>
+                            <label class="block font-medium mb-1">Orders per Customer</label>
+                            <input type="number" v-model="factoryForm.orders"
+                                class="w-full border border-gray-300 rounded px-3 py-2" />
+                        </div>
+                        <div>
+                            <label class="block font-medium mb-1">Order Items per Order</label>
+                            <input type="number" v-model="factoryForm.order_items"
+                                class="w-full border border-gray-300 rounded px-3 py-2" />
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end gap-3">
+                        <button @click="closeFactoryModal" class="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+                        <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                            @click="submitFactoryData">Create</button>
+                    </div>
+                </div>
+            </div>
+        </transition>
 
     </header>
 </template>
