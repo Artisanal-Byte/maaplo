@@ -36,14 +36,14 @@ function navigateToPage() {
 
 <template>
     <header
-        class="h-[64px] shrink-0 items-center justify-between gap-2  border-sidebar-border/70 px-3 lg:px-6 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 md:px-4">
+        class="h-[64px] shrink-0 items-center justify-center gap-2 border-sidebar-border/70 px-3 lg:px-6 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 md:px-4">
         <div class="flex items-center gap-2">
             <!-- <SidebarTrigger class="-ml-1" /> -->
             <template v-if="breadcrumbs.length > 0">
                 <Breadcrumbs :breadcrumbs="breadcrumbs" />
             </template>
         </div>
-        <div class="flex flex-row lg:items-center lg:gap-4 gap-5 ">
+        <!-- <div class="flex flex-row"> -->
             <!-- Action Dropdown -->
             <!-- <div class="relative inline-block text-left mt-3 lg:mt-0">
                 <select v-model="selectedAction" @change="navigateToPage"
@@ -63,15 +63,15 @@ function navigateToPage() {
                 </div>
             </div> -->
 
-            <div class="mt-3 lg:mx-10 mx-0">
+            <div class="flex justify-center items-center my-3 lg:mx-10 mx-0">
                 <Link :href="route('profile.show')">
-                <!-- <img src="/images/man_avatar.avif" alt="Profile Image" height="45px" width="45px"/> -->
                 <div class="w-[45px] h-[45px] rounded-full overflow-hidden border border-gray-300 shadow-sm">
                     <img :src="avatarUrl" alt="Profile Image" class="w-full h-full object-cover" />
                 </div>
                 </Link>
             </div>
-        </div>
+
+        <!-- </div> -->
 
     </header>
 </template>
