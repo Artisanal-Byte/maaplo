@@ -31,7 +31,7 @@ function viewOrder(orderId) {
             </div>
             <div v-if="closedOrders.length" class="space-y-6">
                 <div v-for="order in closedOrders" :key="order.id"
-                    class="w-full bg-white shadow-md rounded-lg border-l-4 border-green-500 p-6 hover:shadow-lg transition-shadow">
+                    class="w-full bg-white shadow-md rounded-lg border-2 border-green-500 p-6 hover:shadow-lg transition-shadow">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-semibold text-primary">Order Number #{{ order.order_number }}</h2>
 
