@@ -17,6 +17,7 @@ class MeasurementSeeder extends Seeder
             [
                 // 'id' => 1,
                 'slug' => 'length',
+                'body_part'=>'upper',
                 'measurements_logo' => <<<SVG
 <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -42,6 +43,7 @@ SVG,
             [
                 // 'id' => 2,
                 'slug' => 'front_neck',
+                'body_part'=>'upper',
                 'measurements_logo' => <<<SVG
 <svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -67,6 +69,7 @@ SVG,
             [
                 // 'id' => 3,
                 'slug' => 'sleeve_circle',
+                'body_part'=>'upper',
                 'measurements_logo' => <<<SVG
 <svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -92,6 +95,7 @@ SVG,
             [
                 // 'id' => 4,
                 'slug' => 'sleeve_length',
+                'body_part'=>'upper',
                 'measurements_logo' => <<<SVG
 <svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -117,6 +121,7 @@ SVG,
             [
                 // 'id' => 5,
                 'slug' => 'seat',
+                'body_part'=>'lower',
                 'measurements_logo' => <<<SVG
 <svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -142,6 +147,7 @@ SVG,
             [
                 // 'id' => 6,
                 'slug' => 'arms',
+                'body_part'=>'upper',
                 'measurements_logo' => <<<SVG
 <svg width="21" height="21" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -167,6 +173,7 @@ SVG,
             [
                 // 'id' => 7,
                 'slug' => 'waist',
+                'body_part'=>'lower',
                 'measurements_logo' => <<<SVG
 <svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -192,6 +199,7 @@ SVG,
             [
                 // 'id' => 8,
                 'slug' => 'chest',
+                'body_part'=>'upper',
                 'measurements_logo' => <<<SVG
 <svg width="22" height="22" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -217,6 +225,7 @@ SVG,
             [
                 // 'id' => 9,
                 'slug' => 'shoulder',
+                'body_part'=>'upper',
                 'measurements_logo' => <<<SVG
 <svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -242,6 +251,7 @@ SVG,
             [
                 // 'id' => 10,
                 'slug' => 'back_neck',
+                'body_part'=>'upper',
                 'measurements_logo' => <<<SVG
 <svg width="22" height="22" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink">
