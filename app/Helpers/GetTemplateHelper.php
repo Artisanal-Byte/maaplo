@@ -26,7 +26,7 @@ class GetTemplateHelper
             ->get();
 
         // Fetch all measurements
-        $allMeasurements = Measurement::select('id', 'slug', 'measurements_logo')->get();
+        $allMeasurements = Measurement::select('id', 'slug', 'measurements_logo','body_part')->get();
 
         return [
             'publicTemplates' => $publicTemplates,
