@@ -325,8 +325,9 @@ const removeFullBodyImage = () => {
                                 </label>
 
                                 <button @click="removeFaceImage" type="button"
-                                    class="text-red-600 text-sm underline hover:text-red-800 whitespace-nowrap mt-6">
-                                    Remove Image
+                                    class="flex items-center gap-1 text-red-600 text-sm underline hover:text-red-800 whitespace-nowrap mt-6">
+                                    <Icon icon="mdi:trash-can-outline" width="18" height="18" />
+                                    <span>Remove Image</span>
                                 </button>
                             </div>
 
@@ -350,9 +351,10 @@ const removeFullBodyImage = () => {
                                         class="block w-full text-sm text-gray-500 mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
                                 </label>
 
-                                <button @click="removeFullBodyImage" type="button"
-                                    class="text-red-600 text-sm underline hover:text-red-800 whitespace-nowrap mt-6">
-                                    Remove Image
+                                 <button @click="removeFullBodyImage" type="button"
+                                    class="flex items-center gap-1 text-red-600 text-sm underline hover:text-red-800 whitespace-nowrap mt-6">
+                                    <Icon icon="mdi:trash-can-outline" width="18" height="18" />
+                                    <span>Remove Image</span>
                                 </button>
                             </div>
 
