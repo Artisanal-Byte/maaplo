@@ -33,16 +33,22 @@ function navigateToPage() {
 }
 const showFactoryModal = ref(false);
 const factoryForm = ref({
-    customers: 0,
+    customers: null, // optional — if null or 0, use all existing
     orders: 2,
     order_items: 3,
 });
+
 
 function openFactoryModal() {
     showFactoryModal.value = true;
 }
 function closeFactoryModal() {
     showFactoryModal.value = false;
+    factoryForm.value = {
+        customers: null,
+        orders: 2,
+        order_items: 3,
+    };
 }
 
 function submitFactoryData() {
@@ -104,8 +110,9 @@ function submitFactoryData() {
                     <h2 class="text-lg font-semibold mb-4">Seed Factory Data</h2>
                     <div class="space-y-4">
                         <div>
-                            <label class="block font-medium mb-1">Customers</label>
-                            <input type="number" v-model="factoryForm.customers"
+                            <label class="block font-medium mb-1">New Customers (optional)</label>
+                            <input type="number" min="0" v-model="factoryForm.customers"
+                                placeholder="Leave empty or 0 to use existing customers"
                                 class="w-full border border-gray-300 rounded px-3 py-2" />
                         </div>
                         <div>
