@@ -13,6 +13,7 @@ const toast = new ToastMagic();
 const { props: pageProps } = usePage();
 const measurements = pageProps.measurements || [];
 const designDetailsGrouped = pageProps.designDetailsGrouped || [];
+console.log('measurements', measurements);
 
 const loading = ref(false);
 const form = useForm({
@@ -78,6 +79,24 @@ const submitForm = () => {
         },
     });
 };
+
+const filteredDesignDetails = computed(() => {
+    if (!form.gender || !form.body_part) return [];
+
+    return designDetailsGrouped.filter(group => {
+        // Normalize values for matching
+        const genderMatch = group.gender?.includes(form.gender);
+        const bodySectionMatch = group.body_section?.some(section => section.toLowerCase() === form.body_part.toLowerCase());
+
+        return genderMatch && bodySectionMatch;
+    });
+});
+
+const filteredMeasurements = computed(() => {
+    if (!form.body_part) return [];
+    return measurements.filter(m => m.body_part?.toLowerCase() === form.body_part.toLowerCase());
+});
+
 </script>
 
 <template>
@@ -170,8 +189,15 @@ const submitForm = () => {
 
                 <!-- Measurements -->
                 <h1 class="text-md font-semibold mb-2 mt-4">Measurement Ask :</h1>
-                <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 items-center gap-x-16 gap-y-4">
-                    <label v-for="measurement in measurements" :key="measurement.id"
+
+                <!-- Show message if Body Part not selected -->
+                <div v-if="!form.body_part" class="text-gray-600 italic mb-2">
+                    Please select <strong>Body Part</strong> to view measurements.
+                </div>
+
+                <!-- Show measurements only if Body Part is selected -->
+                <div v-else class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 items-center gap-x-16 gap-y-4">
+                    <label v-for="measurement in filteredMeasurements" :key="measurement.id"
                         class="flex items-center gap-3 cursor-pointer rounded w-full">
                         <div v-if="measurement.measurements_logo" class="shrink-0"
                             v-html="measurement.measurements_logo"></div>
@@ -182,10 +208,14 @@ const submitForm = () => {
                         </div>
                     </label>
                 </div>
-                <div v-if="form.errors.required_measurements" class="text-red-600 text-sm">{{
-                    form.errors.required_measurements }}
-                </div>
 
+                <!-- Error display -->
+                <div v-if="form.errors.required_measurements" class="text-red-600 text-sm">
+                    {{ form.errors.required_measurements }}
+                </div>
+                <div v-if="form.errors.required_measurements" class="text-red-600 text-sm">
+                    {{ form.errors.required_measurements }}
+                </div>
 
                 <!-- Template Logo -->
                 <div>
@@ -217,8 +247,15 @@ const submitForm = () => {
                 <!-- Design Details -->
                 <div class="mt-2">
                     <h2 class="text-md font-semibold mb-4">Design Details Ask:</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div v-for="(group, index) in designDetailsGrouped" :key="index"
+
+                    <!-- Message if Gender or Body Part not selected -->
+                    <div v-if="!form.gender || !form.body_part" class="text-gray-600 italic mb-2">
+                        Please select <strong>Gender</strong> and <strong>Body Part</strong> to view design details.
+                    </div>
+
+                    <!-- Show design details if both selected -->
+                    <div v-else class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div v-for="(group, index) in filteredDesignDetails" :key="index"
                             class="flex items-center justify-between bg-gray-50 p-2 rounded-md">
                             <span class="font-normal text-[16px] tracking-normal font-lato">
                                 {{ group.body_part }}
@@ -244,7 +281,6 @@ const submitForm = () => {
                         {{ form.errors.design_details }}
                     </div>
                 </div>
-
 
                 <Button @click="submitForm" color="primary" padding="md" rounded="full" textSize="sm"
                     class="lg:mt-5 mt-3">

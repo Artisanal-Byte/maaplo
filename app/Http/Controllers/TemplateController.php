@@ -40,16 +40,18 @@ class TemplateController extends Controller
         $data = GetTemplateHelper::getTemplateData();
 
         $groupedDesignDetails = DesignDetail::with('bodyPartValue')
-            ->get(['id', 'body_part_id', 'value', 'gender'])
+            ->get(['id', 'body_part_id', 'value', 'gender', 'body_section'])
             ->groupBy('body_part_id')
             ->map(function ($group) {
+
                 return [
                     'body_part' => optional($group->first()->bodyPartValue)->body_part,
                     'design_detail_ids' => $group->pluck('id'),
+                    'gender' => $group->pluck('gender'),
+                    'body_section' => $group->pluck('body_section'),
                 ];
             })
             ->values();
-
         return Inertia::render('items/Create', [
             'publicTemplates' => $data['publicTemplates'],
             'privateTemplates' => $data['privateTemplates'],
@@ -63,7 +65,6 @@ class TemplateController extends Controller
      */
     public function store(Request $request)
     {
-
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:m,f,o',
@@ -72,24 +73,26 @@ class TemplateController extends Controller
             'required_measurements' => 'required|array',
             'design_details' => 'required|array',
         ]);
-        // dd($validated);
-        $designDetailsGrouped = DesignDetail::with('bodyPartValue')
-            ->get(['id', 'body_part_id', 'value', 'gender'])
-            ->groupBy('body_part_id')
-            ->values();
 
         $groupedDesignDetails = DesignDetail::with('bodyPartValue')
-            ->get(['id', 'body_part_id', 'value', 'gender'])
+            ->get(['id', 'body_part_id', 'value', 'gender', 'body_section'])
             ->groupBy('body_part_id');
-
+        // dd($groupedDesignDetails->toArray());
         $selectedGroupedDetails = collect($validated['design_details'])
             ->filter(fn($val) => $val === true)
             ->keys()
-            ->mapWithKeys(function ($index) use ($groupedDesignDetails) {
+            ->mapWithKeys(function ($index) use ($groupedDesignDetails, $validated) {
                 $group = $groupedDesignDetails->values()[$index] ?? collect();
-                $bodyPartLabelRaw = optional($group->first()->bodyPartValue)->body_part ?? 'bodypartvalue';
-                $bodyPartLabel = Str::snake($bodyPartLabelRaw);
-                $ids = $group->pluck('id')->toArray();
+
+                $filteredGroup = $group->filter(function ($detail) use ($validated) {
+                    return $detail->gender === $validated['gender']
+                        && strtolower($detail->body_section) === strtolower($validated['body_part']);
+                });
+
+                $bodyPartLabelRaw = optional($filteredGroup->first()?->bodyPartValue)->body_part ?? 'bodypartvalue';
+                $bodyPartLabel = Str::snake($bodyPartLabelRaw); // e.g., "front_neck"
+                $ids = $filteredGroup->pluck('id')->toArray();
+
                 return [$bodyPartLabel => $ids];
             })
             ->toArray();
@@ -104,7 +107,6 @@ class TemplateController extends Controller
                 'body_part' => $validated['body_part'],
                 'svg_logo' => $validated['svg_logo'],
                 'design_details' => json_encode($selectedGroupedDetails, JSON_UNESCAPED_SLASHES),
-
 
             ]);
             $measurementIds = Measurement::whereIn('slug', $validated['required_measurements'])->pluck('id');
