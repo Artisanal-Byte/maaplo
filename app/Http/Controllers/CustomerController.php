@@ -237,10 +237,12 @@ class CustomerController extends Controller
             'notes' => 'nullable|array',
             'half_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'full_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'remove_half_image' => 'nullable|boolean',
+            'remove_full_image' => 'nullable|boolean',
         ]);
 
         try {
-            // Update the base customer fields
+            // Update base customer fields
             $customer->update([
                 'name' => $validated['name'],
                 'email' => $validated['email'] ?? null,
@@ -250,29 +252,57 @@ class CustomerController extends Controller
                 'country_code' => $validated['country_code'],
                 'phone' => $validated['phone'],
                 'notes' => json_encode($validated['notes']),
-                'address' => json_encode(['value' => $validated['address']]), // keep consistent format
+                'address' => json_encode(['value' => $validated['address']]),
             ]);
 
-            // Handle images
-            $user = auth()->user();
-            $username = preg_replace('/\s+/', '_', strtolower($user->name));
-            $customerName = preg_replace('/\s+/', '_', strtolower($validated['name']));
-
-            if ($request->hasFile('half_image')) {
-                // Delete previous half image
+            // Handle image deletions first
+            if ($request->boolean('remove_half_image')) {
                 $oldHalfImage = CustomerPhoto::where('customer_id', $customer->id)
                     ->where('label', 'Faceimage')
                     ->first();
 
                 if ($oldHalfImage) {
                     $relativePath = Str::after($oldHalfImage->image_url, 'storage/');
+                    if (Storage::disk('public')->exists($relativePath)) {
+                        Storage::disk('public')->delete($relativePath);
+                    }
+                    $oldHalfImage->delete();
+                }
+            }
 
+            if ($request->boolean('remove_full_image')) {
+                $oldFullImage = CustomerPhoto::where('customer_id', $customer->id)
+                    ->where('label', 'Fullbody')
+                    ->first();
+
+                if ($oldFullImage) {
+                    $relativePath = Str::after($oldFullImage->image_url, 'storage/');
+                    if (Storage::disk('public')->exists($relativePath)) {
+                        Storage::disk('public')->delete($relativePath);
+                    }
+                    $oldFullImage->delete();
+                }
+            }
+
+            // Handle image uploads
+            $user = auth()->user();
+            $username = preg_replace('/\s+/', '_', strtolower($user->name));
+            $customerName = preg_replace('/\s+/', '_', strtolower($validated['name']));
+
+            if ($request->hasFile('half_image')) {
+                // Delete previous face image if exists
+                $oldHalfImage = CustomerPhoto::where('customer_id', $customer->id)
+                    ->where('label', 'Faceimage')
+                    ->first();
+
+                if ($oldHalfImage) {
+                    $relativePath = Str::after($oldHalfImage->image_url, 'storage/');
                     if (Storage::disk('public')->exists($relativePath)) {
                         Storage::disk('public')->delete($relativePath);
                     }
                 }
 
-                // Store new image
+                // Store new face image
                 $halfImagePath = ImageHelper::imageProccess(
                     $request->file('half_image'),
                     $customer->id,
@@ -289,21 +319,19 @@ class CustomerController extends Controller
             }
 
             if ($request->hasFile('full_image')) {
-                // Delete previous full image
+                // Delete previous full image if exists
                 $oldFullImage = CustomerPhoto::where('customer_id', $customer->id)
                     ->where('label', 'Fullbody')
                     ->first();
 
-
                 if ($oldFullImage) {
                     $relativePath = Str::after($oldFullImage->image_url, 'storage/');
-
                     if (Storage::disk('public')->exists($relativePath)) {
                         Storage::disk('public')->delete($relativePath);
                     }
                 }
 
-                // Store new image
+                // Store new full image
                 $fullImagePath = ImageHelper::imageProccess(
                     $request->file('full_image'),
                     $customer->id,
@@ -322,10 +350,10 @@ class CustomerController extends Controller
             return redirect()->route('customers.index')->with('success', 'Customer updated successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
-            dd('Customer update failed: ' . $e->getMessage());
             return redirect()->back()->withInput()->with('error', 'There was an error updating the customer: ' . $e->getMessage());
         }
     }
+
 
     // Remove the specified customer from storage
     public function destroy($id)

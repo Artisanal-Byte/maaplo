@@ -7,7 +7,7 @@ import { useOrderFormStore } from '@/stores/orderFormStore';
 const props = defineProps(["order", "currentEditIndex"]);
 
 let formStore = useOrderFormStore()
-const showDropdownWorkType = ref(false);
+const showDropdownWorkType = ref(true);
 
 function toggleDropdownWorkType() {
     showDropdownWorkType.value = !showDropdownWorkType.value;
@@ -152,13 +152,13 @@ watch(
 
             <!-- Conditional inputs -->
             <div v-if="currentItem.work_type === 'New from Material'" class="mt-4 ml-2 flex flex-col gap-3">
-                <Input v-model="currentItem.material_code" type="text" label="Material Code" :required="true"
+                <Input v-model="currentItem.material_code" type="text" label="Material Code"
                     placeholder="Enter material code" />
-                <Input v-model="currentItem.material_cost" type="number" label="Material Cost" :required="true"
+                <Input v-model="currentItem.material_cost" type="number" label="Total Material Cost" :required="true"
                     placeholder="Enter material cost" />
-                <Input v-model="currentItem.material_type" type="text" label="Material Type" :required="true"
+                <Input v-model="currentItem.material_type" type="text" label="Material Type"
                     placeholder="Enter material type" />
-                <Input v-model="currentItem.stiching_cost" type="number" label="Stitching Cost" :required="true"
+                <Input v-model="currentItem.stiching_cost" type="number" label="Total Stitching Cost" :required="true"
                     placeholder="Enter stitching cost" />
                 <h1>Total Cost: {{ currentItem.item_cost }}</h1>
             </div>
