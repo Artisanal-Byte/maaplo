@@ -34,6 +34,9 @@ const props = defineProps<{
 
 }>();
 const countries = props.countries;
+const removeHalfImage = ref(false);
+const removeFullImage = ref(false);
+
 const parseToAsk = (): Record<string, string> | null => {
     if (!props.toAsk) return null;
 
@@ -48,7 +51,6 @@ const parseToAsk = (): Record<string, string> | null => {
         return null;
     }
 };
-
 
 const form = useForm({
     name: props.customer.name,
@@ -75,15 +77,21 @@ const fullBodyImagePreview = ref<string | null>(null);
 
 // Computed URLs for displaying current or preview images
 const faceImageUrl = computed(() => {
+    if (removeHalfImage.value) return null; // hide image when remove is triggered
     return faceImagePreview.value
         ? faceImagePreview.value
-        : `/storage/${props.customer.face_image?.replace(/^storage\//, '')}`;
+        : props.customer.face_image
+            ? `/storage/${props.customer.face_image.replace(/^storage\//, '')}`
+            : null;
 });
 
 const fullBodyImageUrl = computed(() => {
+    if (removeFullImage.value) return null;
     return fullBodyImagePreview.value
         ? fullBodyImagePreview.value
-        : `/storage/${props.customer.full_body_image?.replace(/^storage\//, '')}`;
+        : props.customer.full_body_image
+            ? `/storage/${props.customer.full_body_image.replace(/^storage\//, '')}`
+            : null;
 });
 
 const handleFaceImageChange = (event: Event) => {
@@ -125,6 +133,8 @@ const updateCustomer = () => {
             ...data,
             notes: cleanedNotes.length > 0 ? cleanedNotes : null,
             _method: 'put',
+            remove_half_image: removeHalfImage.value,
+            remove_full_image: removeFullImage.value,
         };
     }).post(route('customers.update', props.customer.id), {
         onSuccess: () => {
@@ -152,7 +162,8 @@ const phoneError = computed(() => {
 const showImageModal = ref(false);
 const currentImageUrl = ref('');
 
-const openImageModal = (url: string) => {
+const openImageModal = (url: string | null) => {
+    if (!url || url.includes('undefined') || url.includes('null')) return;
     currentImageUrl.value = url;
     showImageModal.value = true;
 };
@@ -160,6 +171,20 @@ const openImageModal = (url: string) => {
 const closeImageModal = () => {
     showImageModal.value = false;
 };
+
+const removeFaceImage = () => {
+    form.half_image = null;
+    faceImagePreview.value = null;
+    removeHalfImage.value = true;
+};
+
+
+const removeFullBodyImage = () => {
+    form.full_image = null;
+    fullBodyImagePreview.value = null;
+    removeFullImage.value = true;
+};
+
 
 </script>
 
@@ -292,11 +317,20 @@ const closeImageModal = () => {
                                     alt="Face Image" class="object-scale-down h-64 w-[500px]" />
 
                             </div>
-                            <label class="mt-4 block">
-                                <span class="text-sm text-gray-600">Upload new image</span>
-                                <input type="file" @change="handleFaceImageChange"
-                                    class="block w-full text-sm text-gray-500 mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
-                            </label>
+                            <div class="mt-4 flex items-center gap-4">
+                                <label class="block w-full">
+                                    <span class="text-sm text-gray-600">Upload new image</span>
+                                    <input type="file" @change="handleFaceImageChange"
+                                        class="block w-full text-sm text-gray-500 mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
+                                </label>
+
+                                <button @click="removeFaceImage" type="button"
+                                    class="text-red-600 text-sm underline hover:text-red-800 whitespace-nowrap mt-6">
+                                    Remove Image
+                                </button>
+                            </div>
+
+
                         </div>
 
                         <!-- Full Body Image -->
@@ -309,11 +343,19 @@ const closeImageModal = () => {
                                     alt="Full Body Image" class="object-scale-down h-[250px]  w-[500px]" />
 
                             </div>
-                            <label class="mt-4 block">
-                                <span class="text-sm text-gray-600">Upload new image</span>
-                                <input type="file" @change="handleFullBodyImageChange"
-                                    class="block w-full text-sm text-gray-500 mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
-                            </label>
+                            <div class="mt-4 flex items-center gap-4">
+                                <label class="block w-full">
+                                    <span class="text-sm text-gray-600">Upload new image</span>
+                                    <input type="file" @change="handleFullBodyImageChange"
+                                        class="block w-full text-sm text-gray-500 mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
+                                </label>
+
+                                <button @click="removeFullBodyImage" type="button"
+                                    class="text-red-600 text-sm underline hover:text-red-800 whitespace-nowrap mt-6">
+                                    Remove Image
+                                </button>
+                            </div>
+
                         </div>
                     </div>
                 </div>
