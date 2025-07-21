@@ -102,25 +102,23 @@ function focusSearchInput() {
     <AppLayout>
         <div class="lg:mx-auto max-w-7xl py-8 px-4">
             <!-- Title And Icon -->
-            <div class="flex flex-row justify-between mt-5">
-                <div>
-                    <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
+            <div class="flex justify-between mt-5 gap-4 lg:flex-nowrap">
+                <div class="flex justify-center">
+                    <h1 class="text-2xl font-bold text-gray-800 leading-tight font-[Convergence]">
                         Orders
                     </h1>
                 </div>
-                <!-- View Closed Orders Button -->
                 <div class="">
                     <Link :href="route('orders.viewClosed')"
                         class="inline-flex items-center px-4 py-2 bg-primary text-white text-sm font-semibold rounded-md shadow">
                     <Icon icon="ic:round-visibility" class="mr-2" width="20" height="20" />
                     View Closed Orders
                     </Link>
-
                 </div>
                 <div class="flex gap-4 text-gray-600 relative z-20">
-                    <div class="relative group">
+                    <div class="relative group mt-1">
                         <Link :href="route('orders.create')">
-                        <Icon icon="mingcute:add-line" width="32" height="32" class=" cursor-pointer" />
+                        <Icon icon="mingcute:add-line" width="28" height="28" class=" cursor-pointer" />
                         </Link>
                         <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
                     bg-gray-800 text-white text-xs px-3 py-1 rounded-md
@@ -131,9 +129,9 @@ function focusSearchInput() {
                     </div>
 
                     <!-- Reset Tooltip -->
-                    <div class="relative group">
+                    <div class="relative group mt-1">
                         <Link :href="route('orders.index')">
-                        <Icon icon="ic:outline-refresh" width="32" height="32" class="cursor-pointer" />
+                        <Icon icon="ic:outline-refresh" width="30" height="30" class="cursor-pointer" />
                         </Link>
                         <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
                     bg-gray-800 text-white text-xs px-3 py-1 rounded-md
@@ -144,7 +142,7 @@ function focusSearchInput() {
                     </div>
 
                     <!-- Search Tooltip -->
-                    <div class="relative group">
+                    <div class="relative group mt-1">
                         <SearchList :showable="showable" @focusSearch="focusSearchInput" />
                         <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
                     bg-gray-800 text-white text-xs px-3 py-1 rounded-md
@@ -165,14 +163,13 @@ function focusSearchInput() {
                         </div>
                     </div>
                 </div>
-
-
             </div>
             <!-- Search and filter section -->
             <div>
                 <!-- search input -->
                 <div class="mt-4 mb-10">
-                    <input ref="searchInputRef" v-debounce:400ms="myFn" v-if="showable.showSearch" type="text" placeholder="Search..."
+                    <input ref="searchInputRef" v-debounce:400ms="myFn" v-if="showable.showSearch" type="text"
+                        placeholder="Search..."
                         class="w-full lg:max-w-7xl border border-gray-300 rounded-full px-4 py-3 text-sm shadow-[0px_0px_4.3px_0px_#16789333] focus:outline-none focus:ring focus:border-gray-400 transition-all" />
                 </div>
 
