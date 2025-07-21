@@ -45,7 +45,7 @@ const filteredOrders = computed(() => {
 
     return ordersArray.filter(order => {
         const orderNumber = order.order_number || '';
-        const customerName = order.customer?.name || ''; // ✅ safe access
+        const customerName = order.customer?.name || '';
 
         const matchesSearch = !searchTerm.value ||
             orderNumber.toLowerCase().includes(search) ||
@@ -95,6 +95,30 @@ function focusSearchInput() {
         searchInputRef.value?.focus();
     });
 }
+
+const getBgColor = (deliveryDateStr) => {
+    const [day, month, year] = deliveryDateStr.split('-');
+    const deliveryDate = new Date(`${year}-${month}-${day}`);
+    const today = new Date();
+    const diffDays = Math.ceil((deliveryDate - today) / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) return '#FFEAEA';           // Overdue
+    if (diffDays <= 7) return '#FFFCE6';          // Within 7 Days
+    if (diffDays <= 15) return '#EAF5FF';         // 7–15 Days
+    return '#E0F2F1';                              // 15+ Days (primary-like fallback)
+};
+
+const getBorderColor = (deliveryDateStr) => {
+    const [day, month, year] = deliveryDateStr.split('-');
+    const deliveryDate = new Date(`${year}-${month}-${day}`);
+    const today = new Date();
+    const diffDays = Math.ceil((deliveryDate - today) / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) return '#FF0000';           // Overdue
+    if (diffDays <= 7) return '#837200';          // Within 7 Days
+    if (diffDays <= 15) return '#005FAF';         // 7–15 Days
+    return '#167893';                              // 15+ Days (primary fallback)
+};
 </script>
 <template>
 
@@ -102,23 +126,25 @@ function focusSearchInput() {
     <AppLayout>
         <div class="lg:mx-auto max-w-7xl py-8 px-4">
             <!-- Title And Icon -->
-            <div class="flex justify-between mt-5 gap-4 lg:flex-nowrap">
-                <div class="flex justify-center">
-                    <h1 class="text-2xl font-bold text-gray-800 leading-tight font-[Convergence]">
+            <div class="flex flex-row justify-between mt-5">
+                <div>
+                    <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
                         Orders
                     </h1>
                 </div>
+                <!-- View Closed Orders Button -->
                 <div class="">
                     <Link :href="route('orders.viewClosed')"
                         class="inline-flex items-center px-4 py-2 bg-primary text-white text-sm font-semibold rounded-md shadow">
                     <Icon icon="ic:round-visibility" class="mr-2" width="20" height="20" />
                     View Closed Orders
                     </Link>
+
                 </div>
                 <div class="flex gap-4 text-gray-600 relative z-20">
-                    <div class="relative group mt-1">
+                    <div class="relative group">
                         <Link :href="route('orders.create')">
-                        <Icon icon="mingcute:add-line" width="28" height="28" class=" cursor-pointer" />
+                        <Icon icon="mingcute:add-line" width="32" height="32" class=" cursor-pointer" />
                         </Link>
                         <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
                     bg-gray-800 text-white text-xs px-3 py-1 rounded-md
@@ -129,9 +155,9 @@ function focusSearchInput() {
                     </div>
 
                     <!-- Reset Tooltip -->
-                    <div class="relative group mt-1">
+                    <div class="relative group">
                         <Link :href="route('orders.index')">
-                        <Icon icon="ic:outline-refresh" width="30" height="30" class="cursor-pointer" />
+                        <Icon icon="ic:outline-refresh" width="32" height="32" class="cursor-pointer" />
                         </Link>
                         <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
                     bg-gray-800 text-white text-xs px-3 py-1 rounded-md
@@ -142,7 +168,7 @@ function focusSearchInput() {
                     </div>
 
                     <!-- Search Tooltip -->
-                    <div class="relative group mt-1">
+                    <div class="relative group">
                         <SearchList :showable="showable" @focusSearch="focusSearchInput" />
                         <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
                     bg-gray-800 text-white text-xs px-3 py-1 rounded-md
@@ -163,6 +189,8 @@ function focusSearchInput() {
                         </div>
                     </div>
                 </div>
+
+
             </div>
             <!-- Search and filter section -->
             <div>
@@ -282,9 +310,12 @@ function focusSearchInput() {
             <div class="px-4 mt-10 py-6 gap-[10px] rounded-[10px] shadow-[0px_0px_8.6px_0px_#005FAF40]">
                 <!-- Orders list -->
                 <div class="space-y-4">
-                    <OrderList v-if="filteredOrders.length > 0" v-for="(order, index) in filteredOrders" :key="order.id"
+                    <!-- <OrderList v-if="filteredOrders.length > 0" v-for="(order, index) in filteredOrders" :key="order.id"
                         :bgColor="bgColor[index % bgColor.length]"
-                        :borderColor="borderColor[index % borderColor.length]" :order="order" />
+                        :borderColor="borderColor[index % borderColor.length]" :order="order" /> -->
+                    <OrderList v-if="filteredOrders.length > 0" v-for="(order, index) in filteredOrders" :key="order.id"
+                        :bgColor="getBgColor(order.delivery_date)" :borderColor="getBorderColor(order.delivery_date)"
+                        :order="order" />
                     <span v-else>No Orders</span>
                 </div>
             </div>
