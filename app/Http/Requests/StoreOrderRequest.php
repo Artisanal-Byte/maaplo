@@ -24,8 +24,8 @@ class StoreOrderRequest extends FormRequest
             // Apply rules only if work_type is 'New from Material'
             if (isset($item['work_type']) && $item['work_type'] === 'New from Material') {
                 $validator->addRules([
-                    "order_items.$index.material_type" => ['required', 'string', 'max:256'],
-                    "order_items.$index.material_code" => ['required', 'string', 'max:256'],
+                    "order_items.$index.material_type" => ['nullable', 'string', 'max:256'],
+                    "order_items.$index.material_code" => ['nullable', 'string', 'max:256'],
                 ]);
             }
         }
