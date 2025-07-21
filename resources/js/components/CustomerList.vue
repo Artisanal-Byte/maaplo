@@ -91,10 +91,10 @@ const deleteCustomer = (customerId: number) => {
                     Total Payment : <span class="text-primary">₹ {{ props.customer.total_payment || '0.00' }}</span>
                 </h1>
                 <h1 class="font-[Lato] font-medium text-[18px] text-black mt-2">
-                    Advance Payment : <span class="text-green-600">₹ +{{ props.customer.advance_payment || '0.00' }}</span>
+                    Advance Payment : <span class="text-green-600">₹ {{ props.customer.advance_payment || '0.00' }}</span>
                 </h1>
                 <h1 class="font-[Lato] font-medium text-[18px] text-black mt-2">
-                    Payment Due : <span class="text-red-600">₹  -{{ props.customer.payment_due || '0.00' }}</span>
+                    Payment Due : <span class="text-red-600">₹  {{ props.customer.payment_due || '0.00' }}</span>
                 </h1>
             </div>
 

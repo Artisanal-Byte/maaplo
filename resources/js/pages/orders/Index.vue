@@ -6,7 +6,7 @@ import SearchList from '@/components/SearchIcon.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Icon } from '@iconify/vue';
 import { Head, Link } from '@inertiajs/vue3';
-import { defineProps, computed, reactive, ref, watch } from 'vue';
+import { defineProps, computed, reactive, ref, watch, nextTick } from 'vue';
 
 const props = defineProps(['orders'])
 
@@ -87,6 +87,14 @@ function toggleDropdown() {
 function toggleDropdownDelivery() {
     showDropdownDelivery.value = !showDropdownDelivery.value;
 }
+
+const searchInputRef = ref(null);
+
+function focusSearchInput() {
+    nextTick(() => {
+        searchInputRef.value?.focus();
+    });
+}
 </script>
 <template>
 
@@ -137,7 +145,7 @@ function toggleDropdownDelivery() {
 
                     <!-- Search Tooltip -->
                     <div class="relative group">
-                        <SearchList :showable="showable" @hideOrShow="hideOrShow('search')" />
+                        <SearchList :showable="showable" @focusSearch="focusSearchInput" />
                         <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
                     bg-gray-800 text-white text-xs px-3 py-1 rounded-md
                     opacity-0 group-hover:opacity-100 transition duration-200
@@ -164,7 +172,7 @@ function toggleDropdownDelivery() {
             <div>
                 <!-- search input -->
                 <div class="mt-4 mb-10">
-                    <input v-debounce:400ms="myFn" v-if="showable.showSearch" type="text" placeholder="Search..."
+                    <input ref="searchInputRef" v-debounce:400ms="myFn" v-if="showable.showSearch" type="text" placeholder="Search..."
                         class="w-full lg:max-w-7xl border border-gray-300 rounded-full px-4 py-3 text-sm shadow-[0px_0px_4.3px_0px_#16789333] focus:outline-none focus:ring focus:border-gray-400 transition-all" />
                 </div>
 
