@@ -6,7 +6,7 @@ import SearchList from '@/components/SearchIcon.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Icon } from '@iconify/vue';
 import { Head, Link, router } from '@inertiajs/vue3';
-import { reactive, ref, computed } from 'vue';
+import { reactive, ref, computed, nextTick } from 'vue';
 const showable = reactive({
     showSearch: false
 });
@@ -55,6 +55,15 @@ const filteredCustomers = computed(() => {
         customer.phone?.toLowerCase().includes(searchTerm.value.toLowerCase())
     );
 });
+
+const searchInputRef = ref<HTMLInputElement | null>(null);
+
+function focusSearchInput() {
+    // Slight delay ensures input is rendered before focus
+    nextTick(() => {
+        searchInputRef.value?.focus();
+    });
+}
 </script>
 <template>
 
@@ -77,7 +86,8 @@ const filteredCustomers = computed(() => {
                 </div>
                 <div class="flex gap-4 text-gray-600">
                     <div>
-                        <SearchList :showable="showable" />
+                        <SearchList :showable="showable" @focusSearch="focusSearchInput" />
+
                     </div>
                     <div>
                         <!-- Use conditional rendering to prevent navigation -->
@@ -99,7 +109,7 @@ const filteredCustomers = computed(() => {
             </div>
             <!-- search input -->
             <div class="mb-10" v-if="showable.showSearch">
-                <input type="text" v-debounce:400ms="myFn" placeholder="Search..."
+                <input ref="searchInputRef" type="text" v-debounce:400ms="myFn" placeholder="Search..."
                     class="w-full lg:max-w-7xl border border-gray-300 rounded-full px-4 py-3 text-sm shadow-[0px_0px_4.3px_0px_#16789333] focus:outline-none focus:ring focus:border-gray-400 transition-all" />
             </div>
             <div>
