@@ -156,7 +156,7 @@ watch(
                     placeholder="Enter material code" />
                 <Input v-model="currentItem.material_cost" type="number" label="Total Material Cost" :required="true"
                     placeholder="Enter material cost" />
-                <Input v-model="currentItem.material_type" type="text" label="Material Type" :required="true"
+                <Input v-model="currentItem.material_type" type="text" label="Material Type"
                     placeholder="Enter material type" />
                 <Input v-model="currentItem.stiching_cost" type="number" label="Total Stitching Cost" :required="true"
                     placeholder="Enter stitching cost" />
