@@ -143,9 +143,9 @@ const formatDate = (dateStr) => {
             <!-- Use the Loader Component -->
             <Loader v-if="form.isLoading" />
             <div class="flex flex-row justify-between">
-                <div>
+                <div class="flex items-center gap-4 self-center">
                     <h1
-                        class="flex items-center gap-2 lg:gap-4 text-[24px] leading-[16px] font-bold text-gray-800 font-[Convergence] text-primary tracking-[0]">
+                        class="flex items-center gap-2 lg:gap-4 text-[20px] lg:text-[27px] leading-[16px] font-bold text-gray-800 font-[Convergence] text-primary tracking-[0]">
                         <Icon icon="lsicon:order-edit-filled" width="30" height="30" />
                         New Order
                     </h1>
