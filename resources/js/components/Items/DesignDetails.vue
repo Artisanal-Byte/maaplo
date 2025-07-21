@@ -57,18 +57,17 @@ function selectDesign(designId, bodyPart) {
                         </div>
 
                         <!-- Body Part Design Options -->
-                        <div  v-show="designToggles[t.body_part]">
+                        <div v-show="designToggles[t.body_part]">
                             <div class="flex flex-row flex-wrap gap-4 ml-10 py-3">
                                 <div v-for="(V, index) in t.value" :key="V.id" @click="selectDesign(V.id, t.body_part)"
                                     :class="[
-                                        'cursor-pointer rounded-md p-2 border',
+                                        'cursor-pointer rounded-md p-3 border w-[80px] flex flex-col items-center text-center',
                                         formStore.order_items_template.design_detail[t.body_part] === V.id
                                             ? 'border-primary bg-[#DEECF0]'
                                             : 'border-gray-300'
                                     ]">
                                     <div v-html="V.img" class="w-[50px] h-[50px]"></div>
-                                    <!-- <SvgIcon :name="V.name" /> -->
-                                    <h1 class="font-medium mt-2 text-[12px] text-center">{{ V.label }}</h1>
+                                    <h1 class="font-medium mt-2 text-[12px] text-center break-words leading-tight">{{ V.label }}</h1>
                                 </div>
                             </div>
                         </div>

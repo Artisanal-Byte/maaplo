@@ -146,10 +146,6 @@
             designDetails.value = grouped;
         };
 
-
-
-
-
         const previewImage = (file) => {
             if (!file || typeof file !== 'object') {
                 return null;
@@ -276,7 +272,7 @@
                     class="fixed z-[999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full lg:max-w-6xl max-w-[calc(100%-2.5rem)] bg-[#DEEFF4] shadow-lg rounded-[10px] overflow-hidden">
                     <!-- Close Button -->
                     <div class=" px-4 lg:px-6 py-6 overflow-y-auto max-h-[80vh]">
-                        <div class="flex justify-between">
+                        <div class="flex justify-between sticky">
                             <div>
                                 <h1 class="font-medium text-primary text-2xl mb-5">Add Items</h1>
                             </div>
@@ -287,6 +283,17 @@
                                 </Button>
                             </div>
                         </div>
+                        <!-- <div class="flex justify-between sticky top-0 z-10 bg-white">
+                            <div>
+                                <h1 class="font-medium text-primary text-2xl mb-5">Add Items</h1>
+                            </div>
+                            <div class="">
+                                <Button @click="$emit('close')" color="gray" padding="sm" rounded="full" textSize="xl">
+                                    &times;
+                                </Button>
+                            </div>
+                        </div> -->
+
                         <!-- Scrollable Content -->
                         <div class=" max-h-[75vh] pr-2 space-y-5">
                             <!-- done -->
