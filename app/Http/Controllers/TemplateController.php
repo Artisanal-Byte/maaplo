@@ -77,7 +77,6 @@ class TemplateController extends Controller
         $groupedDesignDetails = DesignDetail::with('bodyPartValue')
             ->get(['id', 'body_part_id', 'value', 'gender', 'body_section'])
             ->groupBy('body_part_id');
-        // dd($groupedDesignDetails->toArray());
         $selectedGroupedDetails = collect($validated['design_details'])
             ->filter(fn($val) => $val === true)
             ->keys()
@@ -96,7 +95,6 @@ class TemplateController extends Controller
                 return [$bodyPartLabel => $ids];
             })
             ->toArray();
-
 
         try {
             DB::beginTransaction();
