@@ -254,17 +254,23 @@ class DashboardController extends Controller
     public function seed(Request $request)
     {
         $request->validate([
-            'customers' => 'required|integer|min:1',
+            'customers' => 'nullable|integer|min:0',
             'orders' => 'required|integer|min:1',
             'order_items' => 'required|integer|min:1',
         ]);
 
         $user = auth()->user();
 
-        $customers = Customer::factory()->count($request->customers)->create();
+        // Case 1: Create new customers if provided
+        if (!empty($request->customers) && $request->customers > 0) {
+            $customers = Customer::factory()->count($request->customers)->create();
+        } else {
+            // Case 2: Use all existing customers
+            $customers = Customer::all();
+        }
 
-        $customers->each(function ($customer) use ($user, $request) {
-            UserCustomer::create([
+        foreach ($customers as $customer) {
+            UserCustomer::firstOrCreate([
                 'user_id' => $user->id,
                 'customer_id' => $customer->id,
             ]);
@@ -274,13 +280,13 @@ class DashboardController extends Controller
                 'customer_id' => $customer->id,
             ]);
 
-            $orders->each(function ($order) use ($request) {
+            foreach ($orders as $order) {
                 OrderItem::factory()->count($request->order_items)->create([
                     'order_id' => $order->id,
                 ]);
-            });
-        });
+            }
+        }
 
-        return redirect()->back()->with('success', 'Factory data seeded.');
+        return redirect()->back()->with('success', 'Factory data seeded successfully.');
     }
 }
