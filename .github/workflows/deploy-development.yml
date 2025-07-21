@@ -194,7 +194,7 @@ jobs:
             sudo php artisan queue:restart
             sudo php artisan optimize
             sudo php artisan storage:link
-            sudo composer install --optimize-autoloader --no-dev
+            sudo composer install --optimize-autoloader
 
   run-after-hooks:
     name: "${{ matrix.server.name }}: After hook"
