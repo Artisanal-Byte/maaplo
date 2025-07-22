@@ -32,6 +32,55 @@ class BodyPartValueTableSeeder extends Seeder
                 'updated_at' => '2025-06-12 10:09:04',
                 'deleted_at' => NULL,
             ),
+            array (
+                'body_part' => 'fornt bottom',
+                'created_at' => '2025-06-12 10:09:04',
+                'updated_at' => '2025-06-12 10:09:04',
+                'deleted_at' => NULL,
+            ),
+            array (
+                'body_part' => 'back bottom',
+                'created_at' => '2025-06-12 10:09:04',
+                'updated_at' => '2025-06-12 10:09:04',
+                'deleted_at' => NULL,
+            ),
+            array (
+                'body_part' => 'bottom length',
+                'created_at' => '2025-06-12 10:09:04',
+                'updated_at' => '2025-06-12 10:09:04',
+                'deleted_at' => NULL,
+            ),
+             array (
+                'body_part' => 'ankle height',
+                'created_at' => '2025-06-12 10:09:04',
+                'updated_at' => '2025-06-12 10:09:04',
+                'deleted_at' => NULL,
+            ),
+            array (
+                'body_part' => 'slive type',
+                'created_at' => '2025-06-12 10:09:04',
+                'updated_at' => '2025-06-12 10:09:04',
+                'deleted_at' => NULL,
+            ),
+            array (
+                'body_part' => 'waist',
+                'created_at' => '2025-06-12 10:09:04',
+                'updated_at' => '2025-06-12 10:09:04',
+                'deleted_at' => NULL,
+            ),
+            array (
+                'body_part' => 'pocket style',
+                'created_at' => '2025-06-12 10:09:04',
+                'updated_at' => '2025-06-12 10:09:04',
+                'deleted_at' => NULL,
+            ),
+
+            array (
+                'body_part' => 'fit',
+                'created_at' => '2025-06-12 10:09:04',
+                'updated_at' => '2025-06-12 10:09:04',
+                'deleted_at' => NULL,
+            ),
         ));
 
 

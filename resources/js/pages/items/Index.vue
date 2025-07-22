@@ -5,15 +5,18 @@ import { ref } from 'vue';
 import { router, Link, Head } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
+import Pagination from '@/components/Pagination.vue'; // <-- Import Pagination
+import Loader from '@/components/Loader.vue';
 
 defineProps({
-    items: Array,
+    items: Object,  // Now it expects paginated data (Object)
     authUser: Object
 });
+
 const toast = new ToastMagic();
 const showDeletePopup = ref(false);
 const itemToDelete = ref(null);
-
+const isLoading = ref(false);
 const confirmDelete = (item) => {
     itemToDelete.value = item;
     showDeletePopup.value = true;
@@ -36,9 +39,21 @@ const proceedDelete = () => {
         }
     });
 };
+
+function handlePaginationClick(url) {
+    isLoading.value = true;  // Show loader before making request
+
+    // Visit the next page via Inertia router
+    router.visit(url, {
+        onFinish: () => {
+            isLoading.value = false;  // Hide loader once the page is loaded
+        }
+    });
+}
 </script>
 
 <template>
+
     <Head title="Template's" />
     <AppLayout>
         <div class="max-w-7xl mx-auto py-8 px-4">
@@ -56,11 +71,12 @@ const proceedDelete = () => {
                     </Link>
                 </div>
             </div>
-
+            <!-- Loader Display -->
+            <Loader v-if="isLoading" />
             <!-- Mobile View: Card Layout -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:hidden">
-                <ItemTemplateList v-for="item in items" :key="item.id" :item="item" :authUser="authUser" view="card"
-                    @delete="confirmDelete" />
+                <ItemTemplateList v-for="item in items.data" :key="item.id" :item="item" :authUser="authUser"
+                    view="card" @delete="confirmDelete" />
             </div>
 
             <!-- Desktop View: Table Layout -->
@@ -75,7 +91,7 @@ const proceedDelete = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in items" :key="item.id" class="hover:bg-gray-100 transition">
+                        <tr v-for="item in items.data" :key="item.id" class="hover:bg-gray-100 transition">
                             <td class="p-2 border border-gray-300 text-center">{{ item.name }}</td>
                             <td class="p-2 border border-gray-300 text-center">{{ item.gender }}</td>
                             <td class="p-2 border border-gray-300 text-center">{{ item.body_part }}</td>
@@ -110,6 +126,9 @@ const proceedDelete = () => {
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pagination Component -->
+            <Pagination :links="items.links" :onPageClick="handlePaginationClick" />
 
             <!-- Delete Confirmation Modal -->
             <div v-if="showDeletePopup"
