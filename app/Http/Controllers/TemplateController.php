@@ -73,7 +73,6 @@ class TemplateController extends Controller
             'required_measurements' => 'required|array',
             'design_details' => 'required|array',
         ]);
-
         $groupedDesignDetails = DesignDetail::with('bodyPartValue')
             ->get(['id', 'body_part_id', 'value', 'gender', 'body_section'])
             ->groupBy('body_part_id');
@@ -132,7 +131,7 @@ class TemplateController extends Controller
         $item = Template::findOrFail($id);
         // dd($item->toArray());
         $measurements = [
-            'all' => Measurement::all(['id', 'slug', 'measurements_logo']),
+            'all' => Measurement::all(['id', 'slug', 'measurements_logo', 'body_part']),
             'selected' => $item->measurements()->pluck('slug')->toArray(),
         ];
         // Fetch template data using the helper
@@ -144,8 +143,16 @@ class TemplateController extends Controller
             'privateTemplates' => $templateData['privateTemplates'],
             'allMeasurements' => $templateData['allMeasurements'],
             'designDetails' => DesignDetail::with('bodyPartValue')
-                ->get(['id', 'body_part_id', 'value', 'gender'])
-                ->unique('body_part_id')
+                ->get(['id', 'body_part_id', 'value', 'gender', 'body_section'])
+                ->groupBy('body_part_id')
+                ->map(function ($group) {
+                    return [
+                        'body_part' => optional($group->first()->bodyPartValue)->body_part,
+                        'design_detail_ids' => $group->pluck('id'),
+                        'gender' => $group->pluck('gender'),
+                        'body_section' => $group->pluck('body_section'),
+                    ];
+                })
                 ->values(),
         ]);
     }
@@ -156,35 +163,35 @@ class TemplateController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'gender' => 'required|in:m,f',
+            'gender' => 'required|in:m,f,o',
             'body_part' => 'required|in:upper,lower',
-            'svg_logo' => 'nullable|string|regex:/<svg.*<\/svg>/',
+            'svg_logo' => 'nullable|string',
             'required_measurements' => 'required|array',
             'design_details' => 'required|array',
         ]);
 
-        // Get all design details grouped by body_part_id
         $groupedDesignDetails = DesignDetail::with('bodyPartValue')
-            ->get(['id', 'body_part_id', 'value', 'gender'])
+            ->get(['id', 'body_part_id', 'value', 'gender', 'body_section'])
             ->groupBy('body_part_id');
 
-        $selectedDesignDetailIds = collect($validated['design_details'])->map(fn($id) => (int)$id)->all();
+        $selectedGroupedDetails = collect($validated['design_details'])
+            ->filter(fn($val) => $val === true)
+            ->keys()
+            ->mapWithKeys(function ($index) use ($groupedDesignDetails, $validated) {
+                $group = $groupedDesignDetails->values()[$index] ?? collect();
 
-        $selectedGroupedDetails = [];
+                $filteredGroup = $group->filter(function ($detail) use ($validated) {
+                    return $detail->gender === $validated['gender']
+                        && strtolower($detail->body_section) === strtolower($validated['body_part']);
+                });
 
-        foreach ($groupedDesignDetails as $bodyPartId => $group) {
-            // Only include body parts where at least one design detail is selected
-            if ($group->pluck('id')->intersect($selectedDesignDetailIds)->isEmpty()) {
-                continue;
-            }
+                $bodyPartLabelRaw = optional($filteredGroup->first()?->bodyPartValue)->body_part ?? 'bodypartvalue';
+                $bodyPartLabel = Str::snake($bodyPartLabelRaw);
+                $ids = $filteredGroup->pluck('id')->toArray();
 
-            $bodyPartLabelRaw = optional($group->first()->bodyPartValue)->body_part ?? 'bodypartvalue';
-            $bodyPartLabel = Str::snake($bodyPartLabelRaw);
-
-            // Include all design detail IDs from the group (like store method)
-            $selectedGroupedDetails[$bodyPartLabel] = $group->pluck('id')->toArray();
-        }
-
+                return [$bodyPartLabel => $ids];
+            })
+            ->toArray();
 
         try {
             DB::beginTransaction();
@@ -206,9 +213,11 @@ class TemplateController extends Controller
             return redirect()->route('items.index')->with('success', 'Item updated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors($validated->errors())->withInput();
+            return back()->withInput()->with('error', 'Update failed: ' . $e->getMessage());
         }
     }
+
+
 
 
     /**

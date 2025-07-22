@@ -13,7 +13,6 @@ const toast = new ToastMagic();
 const { props: pageProps } = usePage();
 const measurements = pageProps.measurements || [];
 const designDetailsGrouped = pageProps.designDetailsGrouped || [];
-console.log('measurements', measurements);
 
 const loading = ref(false);
 const form = useForm({
