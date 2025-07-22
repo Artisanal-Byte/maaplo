@@ -25,7 +25,7 @@ class TemplateController extends Controller
         $items = Template::where('user_id', $authUser->id)
             ->orWhereNull('user_id')
             ->latest()
-            ->get();
+            ->paginate(10);
         return Inertia::render('items/Index', [
             'items' => $items,
             'authUser' => $authUser,

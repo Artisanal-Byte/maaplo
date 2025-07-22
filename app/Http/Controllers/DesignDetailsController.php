@@ -19,9 +19,9 @@ class DesignDetailsController extends Controller
      */
     public function index()
     {
-        $designDetails = DesignDetail::with('bodyPartValue') // Load related body part
+        $designDetails = DesignDetail::with('bodyPartValue')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(10);
 
         return Inertia::render('designdetail/Index', [
             'designDetails' => $designDetails,

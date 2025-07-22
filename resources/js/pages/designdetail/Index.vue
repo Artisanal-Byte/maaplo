@@ -1,15 +1,20 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
-import { ref } from 'vue';
+import { ref,reactive } from 'vue';
 import { router, Link, Head } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
 import DesignDetailsList from '@/components/DesignDetailsList.vue';
+import Loader from '@/components/Loader.vue';
+import Pagination from '@/components/Pagination.vue';
 
 const props = defineProps({
-    designDetails: Array,
+    designDetails: Object,
 });
 
+const form = reactive({
+  isLoading: false,
+});
 const showModal = ref(false);
 const selectedDetail = ref(null);
 
@@ -28,6 +33,15 @@ function confirmDelete() {
 
     router.delete(route('design-details.destroy', selectedDetail.value.id));
     showModal.value = false;
+}
+
+function handlePaginationClick(url) {
+    form.isLoading = true;
+    router.visit(url, {
+        onFinish: () => {
+            form.isLoading = false;
+        },
+    });
 }
 </script>
 
@@ -49,10 +63,10 @@ function confirmDelete() {
                     </Link>
                 </div>
             </div>
-
+            <Loader v-if="form.isLoading" />
             <!-- Mobile View: Card Layout -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:hidden">
-                <DesignDetailsList v-for="detail in designDetails" :key="detail.id" :item="detail"
+                <DesignDetailsList v-for="detail in designDetails.data" :key="detail.id" :item="detail"
                     :authUser="$page.props.auth.user" view="card" @delete="openConfirmationModal" />
 
             </div>
@@ -70,7 +84,7 @@ function confirmDelete() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="detail in designDetails" :key="detail.id" class="hover:bg-gray-100 transition">
+                        <tr v-for="detail in designDetails.data" :key="detail.id" class="hover:bg-gray-100 transition">
                             <td class="p-2 border text-center">{{ detail.body_section }}</td>
                             <td class="p-2 border text-center capitalize">
                                 {{ detail.gender === 'm' ? 'Male' : detail.gender === 'f' ? 'Female' : 'Other' }}
@@ -100,6 +114,8 @@ function confirmDelete() {
                     </tbody>
                 </table>
             </div>
+            <!-- Use Pagination component -->
+            <Pagination :links="designDetails.links" :onPageClick="handlePaginationClick" />
 
             <!-- Delete Confirmation Modal -->
             <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
