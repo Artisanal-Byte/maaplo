@@ -6,7 +6,7 @@ import Input from '@/components/InputWithLabel.vue';
 import Button from '@/components/Button.vue';
 import SearchSelect from '@/components/SearchSelect.vue';
 import Loader from '@/components/Loader.vue';
-import {  ref } from 'vue';
+import { ref, computed, watch } from 'vue';
 const toast = new ToastMagic();
 
 const props = defineProps({
@@ -18,7 +18,6 @@ const props = defineProps({
     measurements: Object
 });
 const loading = ref(false);
-
 const form = useForm({
     name: props.item.name,
     svg_logo: props.item.svg_logo,
@@ -29,9 +28,11 @@ const form = useForm({
     errors: props.errors,
     _method: 'put',
 });
-
-props.designDetails.forEach(detail => {
-    form.design_details[detail.id] = props.item.design_details?.includes(detail.id) ?? false;
+props.designDetails.forEach((group, index) => {
+    const bodyPartLabel = group.body_part ? group.body_part.toLowerCase().replace(/\s+/g, '_') : '';
+    const savedIds = props.item.design_details?.[bodyPartLabel] || [];
+    const matchFound = group.design_detail_ids.some(id => savedIds.includes(id));
+    form.design_details[index] = matchFound;
 });
 
 const updateTemplate = () => {
@@ -46,15 +47,15 @@ const updateTemplate = () => {
     const dataToSend = {
         ...form.data(),
         required_measurements: form.required_measurements,
-        design_details: trueDesignDetailIds,
+        design_details: form.design_details,
     };
-   form.transform(data => {
-    loading.value = true;
-    return {
-        ...dataToSend,
-        _method: 'put',
-    };
-}).post(route('items.update', props.item.id), {
+    form.transform(data => {
+        loading.value = true;
+        return {
+            ...dataToSend,
+            _method: 'put',
+        };
+    }).post(route('items.update', props.item.id), {
         onSuccess: () => {
             toast.success('Template updated successfully!');
             setTimeout(() => router.visit(route('items.index')), 1000);
@@ -95,7 +96,44 @@ const isValidPathData = (str) => {
     if (typeof str !== 'string') return false;
     return /^[Mm]/.test(str.trim());
 };
+const filteredMeasurements = computed(() => {
+    return props.measurements.all.filter(m => m.body_part === form.body_part);
+});
 
+// Watch body_part changes to reset required_measurements to only those valid for that part
+watch(() => form.body_part, (newBodyPart) => {
+    // Filter required_measurements to keep only measurements for new body part
+    const validSlugs = props.measurements.all
+        .filter(m => m.body_part === newBodyPart)
+        .map(m => m.slug);
+
+    form.required_measurements = form.required_measurements.filter(slug => validSlugs.includes(slug));
+});
+const filteredDesignDetails = computed(() => {
+    if (!form.gender || !form.body_part) return [];
+    return props.designDetails.filter(group => {
+        // Normalize values for matching
+        const genderMatch = group.gender?.includes(form.gender);
+        const bodySectionMatch = group.body_section?.some(section => section.toLowerCase() === form.body_part.toLowerCase());
+
+        return genderMatch && bodySectionMatch;
+    });
+});
+
+// Optional: if you want to reset or update design_details selections when gender or body_part changes, watch them:
+watch([() => form.gender, () => form.body_part], () => {
+    // Filter keys of design_details to only those currently visible
+    const validDetailIds = filteredDesignDetails.value
+        .filter(d => d?.id !== undefined && d?.id !== null)
+        .map(d => d.id.toString());
+
+    // Remove keys from form.design_details that are no longer valid
+    for (const key in form.design_details) {
+        if (!validDetailIds.includes(key)) {
+            form.design_details[key] = false;
+        }
+    }
+});
 </script>
 
 <template>
@@ -116,7 +154,7 @@ const isValidPathData = (str) => {
                     </Link>
                 </div>
             </div>
-              <!-- Use the Loader Component -->
+            <!-- Use the Loader Component -->
             <Loader v-if="loading" :message="'Updating Template...'" />
             <div class="flex flex-col mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -187,10 +225,10 @@ const isValidPathData = (str) => {
 
 
                 <!-- Required Measurements -->
-                <h1 class="text-md font-semibold mb-2 mt-4">Measurement Ask:</h1>
+                <h1 class="text-md font-semibold mb-2 mt-4">Measurement Ask <span class="text-red-500">*</span></h1>
 
                 <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 items-center gap-x-16 gap-y-4">
-                    <label v-for="measurement in props.measurements.all" :key="measurement.id || measurement.slug"
+                    <label v-for="measurement in filteredMeasurements" :key="measurement.id || measurement.slug"
                         class="flex items-center gap-3 cursor-pointer rounded w-full">
                         <!-- SVG icon -->
                         <div v-if="measurement.measurements_logo" class="shrink-0"
@@ -234,34 +272,40 @@ const isValidPathData = (str) => {
 
                 <!-- Design Details -->
                 <div class="mt-2">
-                    <h2 class="text-md font-semibold mb-4">Design Details Ask :</h2>
+                    <h2 class="text-md font-semibold mb-4">Design Details Ask <span class="text-red-500">*</span></h2>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div v-for="detail in props.designDetails" :key="detail.id"
+                    <!-- Message if Gender or Body Part not selected -->
+                    <div v-if="!form.gender || !form.body_part" class="text-gray-600 italic mb-2">
+                        Please select <strong>Gender</strong> and <strong>Body Part</strong> to view design details.
+                    </div>
+
+                    <!-- Show design details if both selected -->
+                    <div v-else class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div v-for="(group, index) in filteredDesignDetails" :key="index"
                             class="flex items-center justify-between bg-gray-50 p-2 rounded-md">
                             <span class="font-normal text-[16px] tracking-normal font-lato">
-                                {{ detail.body_part_value?.body_part || detail.body_part }}
+                                {{ group.body_part }}
                             </span>
-
                             <div class="flex rounded overflow-hidden text-sm">
                                 <button :class="[
                                     'px-4 py-1 focus:outline-none transition',
-                                    form.design_details[detail.id] === true ? 'bg-primary text-white' : 'bg-gray-200 text-black'
-                                ]" @click="form.design_details[detail.id] = true">
+                                    form.design_details[index] ? 'bg-primary text-white' : 'bg-gray-200 text-black'
+                                ]" @click="form.design_details[index] = true">
                                     Yes
                                 </button>
                                 <button :class="[
                                     'px-4 py-1 focus:outline-none transition',
-                                    form.design_details[detail.id] === false ? 'bg-primary text-white' : 'bg-gray-200 text-black'
-                                ]" @click="form.design_details[detail.id] = false">
+                                    form.design_details[index] === false ? 'bg-primary text-white' : 'bg-gray-200 text-black'
+                                ]" @click="form.design_details[index] = false">
                                     No
                                 </button>
                             </div>
                         </div>
-
                     </div>
-                </div>
-                <div v-if="form.errors.design_details" class="text-red-600 text-sm">{{ form.errors.design_details }}
+
+                    <div v-if="form.errors.design_details" class="text-red-600 text-sm mt-2">
+                        {{ form.errors.design_details }}
+                    </div>
                 </div>
 
                 <!-- Submit Button -->

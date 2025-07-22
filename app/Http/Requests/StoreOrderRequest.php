@@ -16,6 +16,13 @@ class StoreOrderRequest extends FormRequest
         return \Illuminate\Support\Facades\Auth::check();
     }
 
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'user_id' => auth()->id(),
+        ]);
+    }
+
     public function withValidator($validator)
     {
         $orderItems = $this->input('order_items', []);
