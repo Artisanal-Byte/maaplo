@@ -238,7 +238,7 @@ watch([() => form.gender, () => form.body_part], () => {
                         <div class="flex justify-between items-center lg:w-full w-80">
                             <span class="text-[16px]">{{ formatSlug(measurement.slug) }}</span>
                             <input type="checkbox" :id="measurement.slug" :value="measurement.slug"
-                                v-model="form.required_measurements" class="form-checkbox w-4 h-4" />
+                                v-model="form.required_measurements" class="form-checkbox w-4 h-4 accent-[#167893]" />
                         </div>
                     </label>
                 </div>
