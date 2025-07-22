@@ -18,11 +18,6 @@ const props = defineProps({
     measurements: Object
 });
 const loading = ref(false);
-console.log('designDetails', props.designDetails);
-console.log('measurements', props.measurements);
-
-
-
 const form = useForm({
     name: props.item.name,
     svg_logo: props.item.svg_logo,
@@ -33,9 +28,11 @@ const form = useForm({
     errors: props.errors,
     _method: 'put',
 });
-console.log('All designDetails:', props.designDetails);
-props.designDetails.forEach(detail => {
-    form.design_details[detail.id] = props.item.design_details?.includes(detail.id) ?? false;
+props.designDetails.forEach((group, index) => {
+    const bodyPartLabel = group.body_part ? group.body_part.toLowerCase().replace(/\s+/g, '_') : '';
+    const savedIds = props.item.design_details?.[bodyPartLabel] || [];
+    const matchFound = group.design_detail_ids.some(id => savedIds.includes(id));
+    form.design_details[index] = matchFound;
 });
 
 const updateTemplate = () => {
@@ -122,8 +119,6 @@ const filteredDesignDetails = computed(() => {
         return genderMatch && bodySectionMatch;
     });
 });
-
-
 
 // Optional: if you want to reset or update design_details selections when gender or body_part changes, watch them:
 watch([() => form.gender, () => form.body_part], () => {
@@ -230,7 +225,7 @@ watch([() => form.gender, () => form.body_part], () => {
 
 
                 <!-- Required Measurements -->
-                <h1 class="text-md font-semibold mb-2 mt-4">Measurement Ask:</h1>
+                <h1 class="text-md font-semibold mb-2 mt-4">Measurement Ask <span class="text-red-500">*</span></h1>
 
                 <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 items-center gap-x-16 gap-y-4">
                     <label v-for="measurement in filteredMeasurements" :key="measurement.id || measurement.slug"
@@ -249,7 +244,7 @@ watch([() => form.gender, () => form.body_part], () => {
                 </div>
                 <div v-if="form.errors.required_measurements" class="text-red-600 text-sm mt-1">{{
                     form.errors.required_measurements
-                    }}</div>
+                }}</div>
 
                 <!-- SVG Logo -->
                 <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
@@ -277,7 +272,7 @@ watch([() => form.gender, () => form.body_part], () => {
 
                 <!-- Design Details -->
                 <div class="mt-2">
-                    <h2 class="text-md font-semibold mb-4">Design Details Ask:</h2>
+                    <h2 class="text-md font-semibold mb-4">Design Details Ask <span class="text-red-500">*</span></h2>
 
                     <!-- Message if Gender or Body Part not selected -->
                     <div v-if="!form.gender || !form.body_part" class="text-gray-600 italic mb-2">
