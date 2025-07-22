@@ -187,7 +187,7 @@ const filteredMeasurements = computed(() => {
                 </div>
 
                 <!-- Measurements -->
-                <h1 class="text-md font-semibold mb-2 mt-4">Measurement Ask :</h1>
+                <h1 class="text-md font-semibold mb-2 mt-4">Measurement Ask <span class="text-red-500">*</span></h1>
 
                 <!-- Show message if Body Part not selected -->
                 <div v-if="!form.body_part" class="text-gray-600 italic mb-2">
@@ -209,9 +209,6 @@ const filteredMeasurements = computed(() => {
                 </div>
 
                 <!-- Error display -->
-                <div v-if="form.errors.required_measurements" class="text-red-600 text-sm">
-                    {{ form.errors.required_measurements }}
-                </div>
                 <div v-if="form.errors.required_measurements" class="text-red-600 text-sm">
                     {{ form.errors.required_measurements }}
                 </div>
@@ -245,7 +242,7 @@ const filteredMeasurements = computed(() => {
 
                 <!-- Design Details -->
                 <div class="mt-2">
-                    <h2 class="text-md font-semibold mb-4">Design Details Ask:</h2>
+                    <h2 class="text-md font-semibold mb-4">Design Details Ask <span class="text-red-500">*</span></h2>
 
                     <!-- Message if Gender or Body Part not selected -->
                     <div v-if="!form.gender || !form.body_part" class="text-gray-600 italic mb-2">
