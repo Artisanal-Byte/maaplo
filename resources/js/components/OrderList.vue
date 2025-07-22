@@ -52,7 +52,7 @@ function confirmDelete() {
             <div>
                 <h1
                     class="font-[Lato] font-medium text-[15px] lg:text-[18px] leading-[16px] tracking-[0] text-secondary p-2">
-                    # Order No.{{ order.order_number }}</h1>
+                     Order: #{{ order.order_number }}</h1>
             </div>
             <div>
                 <h1
