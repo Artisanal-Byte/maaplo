@@ -11,6 +11,12 @@ use App\Helpers\ImageHelper;
 
 class ErrorReportController extends Controller
 {
+    public function index()
+    {
+        $reports = ErrorReport::with('user')->latest()->paginate(10);
+        return Inertia::render('reporterror/Index', ['reports' => $reports]);
+    }
+
     public function create()
     {
         return Inertia::render('reporterror/Create');
@@ -55,13 +61,5 @@ class ErrorReportController extends Controller
             DB::rollBack();
             return redirect()->back()->withInput()->with('error', 'Creation failed: ' . $e->getMessage());
         }
-    }
-
-
-    public function index()
-    {
-        $reports = ErrorReport::with('user')->latest()->get();
-        //  dd($reports);
-        return Inertia::render('reporterror/Index', ['reports' => $reports]);
     }
 }
