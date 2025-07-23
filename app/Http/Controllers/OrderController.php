@@ -31,7 +31,7 @@ class OrderController extends Controller
         $orders = null;
 
         if ($user) {
-            $orders = $user->load('orders.customer');
+            $orders = $user->orders()->with('customer')->paginate(10);
             return Inertia::render('orders/Index', ["orders" => $orders]);
         }
         //-- if User Not Found
@@ -188,7 +188,7 @@ class OrderController extends Controller
             'order' => $order,
             'designDetails' => $designDetailsData,
             'source' => $source,
-           'allDesignDetails'=> $allDesignDetails,
+            'allDesignDetails' => $allDesignDetails,
         ]);
     }
 
