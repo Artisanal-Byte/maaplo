@@ -63,7 +63,6 @@
                 const deliveryDate = new Date(`${year}-${month}-${day}`);
                 const today = new Date();
                 const diffDays = Math.ceil((deliveryDate - today) / (1000 * 60 * 60 * 24));
-                console.log('order.delivery_date', order.delivery_date, diffDays);
 
                 if (selectedDelivery.value === 'Within 7 Days') {
                     return diffDays >= 0 && diffDays <= 7;
@@ -125,6 +124,20 @@
         if (diffDays <= 15) return '#005FAF';         // 7–15 Days
         return '#167893';                              // 15+ Days (primary fallback)
     };
+
+    watch([searchTerm, selectedStatus, selectedDelivery], ([search, status, delivery]) => {
+        router.get(route('orders.index'), {
+            search: search || undefined,
+            status: status || undefined,
+            delivery: delivery || undefined,
+        }, {
+            preserveState: true,
+            preserveScroll: true,
+            onStart: () => isLoading.value = true,
+            onFinish: () => isLoading.value = false,
+        });
+    });
+
     function handlePaginationClick(url) {
         isLoading.value = true;
         router.visit(url, {
@@ -331,10 +344,13 @@
                         <!-- <OrderList v-if="filteredOrders.length > 0" v-for="(order, index) in filteredOrders" :key="order.id"
                             :bgColor="bgColor[index % bgColor.length]"
                             :borderColor="borderColor[index % borderColor.length]" :order="order" /> -->
-                        <OrderList v-if="filteredOrders.length > 0" v-for="(order, index) in filteredOrders"
-                            :key="order.id" :bgColor="getBgColor(order.delivery_date)"
-                            :borderColor="getBorderColor(order.delivery_date)" :order="order" />
+                        <div v-if="filteredOrders.length > 0">
+                            <OrderList v-for="order in filteredOrders" :key="order.id"
+                                :bgColor="getBgColor(order.delivery_date)"
+                                :borderColor="getBorderColor(order.delivery_date)" :order="order"/>
+                        </div>
                         <span v-else>No Orders</span>
+
                     </div>
                 </div>
                 <!-- Loader for pagination or page switching -->

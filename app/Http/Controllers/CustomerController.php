@@ -43,7 +43,7 @@ class CustomerController extends Controller
             });
         }
 
-        $paginatedCustomers = $query->paginate(1)->withQueryString(); // Keep query in pagination links
+        $paginatedCustomers = $query->paginate(10)->withQueryString(); // Keep query in pagination links
 
         $paginatedCustomers->getCollection()->transform(function ($c) {
             $total_payment = $c->orders->sum('total_amount');
