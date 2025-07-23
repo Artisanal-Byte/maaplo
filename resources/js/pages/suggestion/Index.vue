@@ -3,12 +3,30 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, usePage, router } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import { Icon } from '@iconify/vue';
+import Pagination from '@/components/Pagination.vue';
+import Loader from '@/components/Loader.vue';
 const page = usePage();
-const suggestions = computed(() => page.props.suggestions || []);
-const expanded = ref({});
+const suggestionsData = computed(() => page.props.suggestions?.data || []);
+const paginationLinks = computed(() => page.props.suggestions?.links || []);
 
+const expanded = ref({});
+const isLoading = ref(false);
 function toggleExpand(id) {
     expanded.value[id] = !expanded.value[id];
+}
+
+
+function handlePaginationClick(url) {
+    if (!url) return;
+    isLoading.value = true;
+
+    router.visit(url, {
+        preserveState: true,
+        preserveScroll: true,
+        onFinish: () => {
+            isLoading.value = false;
+        }
+    });
 }
 </script>
 
@@ -30,12 +48,12 @@ function toggleExpand(id) {
                 </button>
             </div>
 
-            <div v-if="suggestions.length === 0" class="text-gray-500">
+            <div v-if="suggestionsData.length === 0" class="text-gray-500">
                 No suggestions found.
             </div>
 
             <div v-else class="space-y-4">
-                <div v-for="suggestion in suggestions" :key="suggestion.id" class="p-4 border rounded shadow-sm">
+                <div v-for="suggestion in suggestionsData" :key="suggestion.id" class="p-4 border rounded shadow-sm">
                     <p class="mt-2 text-sm text-indigo-600 font-medium select-none">
                         Submitted by: {{ suggestion.user.name }}
                     </p>
@@ -64,6 +82,11 @@ function toggleExpand(id) {
                         </template>
                     </p>
                 </div>
+                <!-- Loader during navigation -->
+                <Loader v-if="isLoading" />
+
+                <!-- Pagination -->
+                <Pagination :links="paginationLinks" :onPageClick="handlePaginationClick" />
             </div>
         </div>
     </AppLayout>

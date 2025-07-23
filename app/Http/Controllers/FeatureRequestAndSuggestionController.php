@@ -16,19 +16,19 @@ class FeatureRequestAndSuggestionController extends Controller
         $suggestions = FeatureRequestAndSuggestion::with('user')
             ->whereNotNull('suggestion_title')
             ->latest()
-            ->get()
-            ->map(function ($suggestion) {
-                return [
-                    'id' => $suggestion->id,
-                    'suggestion_title' => $suggestion->suggestion_title,
-                    'suggestion_description' => $suggestion->suggestion_description,
-                    'user' => [
-                        'id' => $suggestion->user->id,
-                        'name' => $suggestion->user->name,
-                    ],
-                    'created_at' => $suggestion->created_at,
-                ];
-            });
+            ->paginate(10);
+        $suggestions->getCollection()->transform(function ($suggestion) {
+            return [
+                'id' => $suggestion->id,
+                'suggestion_title' => $suggestion->suggestion_title,
+                'suggestion_description' => $suggestion->suggestion_description,
+                'user' => [
+                    'id' => $suggestion->user->id,
+                    'name' => $suggestion->user->name,
+                ],
+                'created_at' => $suggestion->created_at,
+            ];
+        });
 
         return inertia('suggestion/Index', [
             'suggestions' => $suggestions,
