@@ -12,7 +12,7 @@ class SubscriptionPlanController extends Controller
 {
     public function index()
     {
-        $subscriptionPlans = SubscriptionPlan::paginate(1);
+        $subscriptionPlans = SubscriptionPlan::paginate(10);
         return Inertia::render('subscriptionplan/Index', [
             'subscriptionPlans' => $subscriptionPlans,
         ]);
