@@ -8,6 +8,7 @@ use App\Helpers\OrderData;
 use App\Helpers\UniqueOrderNumber; // Ensure this class exists in the specified namespace or create it if missing
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Models\Customer;
 use App\Models\DesignDetail;
 use App\Models\Template;
 use App\Models\Order;
@@ -421,5 +422,16 @@ class OrderController extends Controller
         } catch (Exception $exception) {
             return redirect()->back()->withErrors($exception->getMessage());
         }
+    }
+
+    public function fetchCustomers()
+    {
+        // You can add auth() or user-specific filters if needed
+        $customers = Customer::with(['photos'])->latest()->get();
+
+        return response()->json([
+            'status' => true,
+            'customers' => $customers
+        ]);
     }
 }
