@@ -99,7 +99,7 @@ const deleteCustomer = (customerId: number) => {
             </div>
 
             <!-- Right Section: Image -->
-            <div class="w-[150px] h-[100px] bg-[#E4F7FF] rounded-md overflow-hidden flex items-center justify-center">
+            <div class="w-[100px] h-[100px] bg-[#E4F7FF] rounded-md overflow-hidden flex items-center justify-center">
                 <img v-if="props.customer.face_image" :src="props.customer.face_image" alt="Customer Image"
                     class="w-full h-full object-fill" />
                 <img v-else src="/images/by_default_user.png" alt="Default Image" class="w-94 h-full object-fill" />

@@ -271,8 +271,8 @@
                 <div
                     class="fixed z-[999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full lg:max-w-6xl max-w-[calc(100%-2.5rem)] bg-[#DEEFF4] shadow-lg rounded-[10px] overflow-hidden">
                     <!-- Close Button -->
-                    <div class=" px-4 lg:px-6 py-6 overflow-y-auto max-h-[80vh]">
-                        <div class="flex justify-between sticky">
+                    <div class="overflow-y-auto max-h-[80vh]">
+                        <!-- <div class="flex justify-between sticky">
                             <div>
                                 <h1 class="font-medium text-primary text-2xl mb-5">Add Items</h1>
                             </div>
@@ -282,20 +282,19 @@
                                     &times;
                                 </Button>
                             </div>
-                        </div>
-                        <!-- <div class="flex justify-between sticky top-0 z-10 bg-white">
-                            <div>
-                                <h1 class="font-medium text-primary text-2xl mb-5">Add Items</h1>
-                            </div>
-                            <div class="">
-                                <Button @click="$emit('close')" color="gray" padding="sm" rounded="full" textSize="xl">
-                                    &times;
-                                </Button>
-                            </div>
                         </div> -->
-
+                        <div class="flex justify-end sticky h-5 top-0 z-10">
+                            <button @click="$emit('close')" class="transition duration-200 font-medium focus:outline-none text-gray-800 pt-3 px-3 rounded-full text-3xl">
+                                &times;
+                            </button>
+                        </div>
+                        <div class="px-4 lg:px-6">
+                            <div>
+                                <h1 class="font-medium text-primary text-2xl">Add Items</h1>
+                            </div>
+                        </div>
                         <!-- Scrollable Content -->
-                        <div class=" max-h-[75vh] pr-2 space-y-5">
+                        <div class=" max-h-[75vh] pr-2 space-y-5 px-4 lg:px-6 py-4 ">
                             <!-- done -->
                             <WorkType :errors="workTypeError" :order="order" :currentEditIndex="currentEditIndex" />
                             <ItemType :errors="errors" :itemTypes="itemTypes" @setItemId="setItemId"

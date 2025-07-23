@@ -19,28 +19,65 @@ use Illuminate\Support\Str;
 class CustomerController extends Controller
 {
     // Display a listing of the customers
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
-        $customerCount = $user->customers()->count();
-// dd($customerCount);
+        $search = $request->input('search');
         $plan = $user->subscriptionPlan;
 
+        $customerCount = $user->customers()->count();
         $customerLimitExceeded = $plan
             ? $customerCount >= $plan->user_limit
             : $customerCount >= 5;
-        $customers = Auth::user()->customers()
+
+        $query = $user->customers()
             ->with(['photos' => fn($q) => $q->where('label', 'Faceimage'), 'orders'])
-            ->orderBy('name', 'asc')
-            ->paginate(10);
+            ->orderBy('name', 'asc');
+
+        // ✅ Apply search filter here
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%");
+            });
+        }
+
+        $paginatedCustomers = $query->paginate(10)->withQueryString(); // Keep query in pagination links
+
+        $paginatedCustomers->getCollection()->transform(function ($c) {
+            $total_payment = $c->orders->sum('total_amount');
+            $advance_payment = $c->orders->sum('advance_paid');
+            $payment_due = $total_payment - $advance_payment;
+
+            return [
+                'id' => $c->id,
+                'name' => $c->name,
+                'email' => $c->email,
+                'country_code' => $c->country_code,
+                'phone' => $c->phone,
+                'gender' => $c->gender,
+                'dob' => $c->dob,
+                'active_orders' => $c->active_orders ?? null,
+                'total_payment' => number_format($total_payment, 2),
+                'advance_payment' => number_format($advance_payment, 2),
+                'payment_due' => number_format($payment_due, 2),
+                'face_image' => optional($c->photos->first())->image_url
+                    ? asset($c->photos->first()->image_url)
+                    : null,
+            ];
+        });
 
         return Inertia::render('customer/Index', [
-            'customers' => $customers,
+            'customers' => $paginatedCustomers,
             'customer_limit_exceeded' => $customerLimitExceeded,
             'plan_title' => $plan ? $plan->plan_title : 'Free',
             'plan_limit' => $plan ? $plan->user_limit : 5,
+            'search' => $search,
         ]);
     }
+
+
 
     // Show the form for creating a new customer
     public function create()
