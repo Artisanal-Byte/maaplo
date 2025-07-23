@@ -42,8 +42,8 @@ class FeatureRequestAndSuggestionController extends Controller
         $featureRequests = FeatureRequestAndSuggestion::with('user')
             ->whereNotNull('feature_name')
             ->latest()
-            ->get()
-            ->map(function ($feature) {
+            ->paginate(1)
+            ->through(function ($feature) {
                 return [
                     'id' => $feature->id,
                     'feature_name' => $feature->feature_name,
@@ -52,17 +52,16 @@ class FeatureRequestAndSuggestionController extends Controller
                     'user' => [
                         'id' => $feature->user->id,
                         'name' => $feature->user->name,
+                        'phone' => $feature->user->phone,
                     ],
                     'created_at' => $feature->created_at,
                 ];
             });
 
-        return inertia('featureRequest/Index', [
+        return inertia('featurerequest/Index', [
             'featureRequests' => $featureRequests,
         ]);
     }
-
-
 
     public function storeFeatureRequest(Request $request)
     {
