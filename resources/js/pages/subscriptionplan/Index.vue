@@ -1,17 +1,25 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, Link, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
+import { ref,computed  } from 'vue';
 import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
+import Loader from '@/components/Loader.vue';
+import { PaginationNext } from 'reka-ui';
+import Pagination from '@/components/Pagination.vue';
 
 const props = defineProps({
-    subscriptionPlans: Array,
+    subscriptionPlans: Object,
 });
 
 const toast = new ToastMagic();
 const showDeletePopup = ref(false);
 const planToDelete = ref(null);
+const isLoading = ref(false);
+
+// Pagination helpers
+const subscriptionPlans = computed(() => props.subscriptionPlans.data);  // Access the actual subscription plans data
+const paginationLinks = computed(() => props.subscriptionPlans.links);  // Pagination links for navigation
 
 const confirmDelete = (plan) => {
     planToDelete.value = plan;
@@ -34,9 +42,24 @@ const proceedDelete = () => {
         }
     });
 };
+
+// Handle page change in pagination
+const handlePaginationClick = (url) => {
+    if (url) {
+        isLoading.value = true;
+        router.visit(url, {
+            preserveState: true,
+            onFinish: () => {
+                isLoading.value = false;
+            }
+        });
+    }
+};
+
 </script>
 
 <template>
+
     <Head title="Subscription Plans" />
     <AppLayout>
         <div class="max-w-7xl mx-auto py-8 px-4">
@@ -47,11 +70,11 @@ const proceedDelete = () => {
                     Subscription Plans
                 </h1>
                 <Link :href="route('subscription-plans.create')" class="relative group">
-                    <Icon icon="material-symbols:add-rounded" width="30" height="30" />
-                    <div
-                        class="absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none z-10">
-                        Create Plan
-                    </div>
+                <Icon icon="material-symbols:add-rounded" width="30" height="30" />
+                <div
+                    class="absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none z-10">
+                    Create Plan
+                </div>
                 </Link>
             </div>
 
@@ -67,7 +90,7 @@ const proceedDelete = () => {
                     </div>
                     <div class="flex gap-4 mt-4">
                         <Link :href="route('subscription-plans.edit', plan.id)" class="text-blue-600 hover:underline">
-                            Edit
+                        Edit
                         </Link>
                         <button @click="confirmDelete(plan)" class="text-red-600 hover:underline">Delete</button>
                     </div>
@@ -99,11 +122,11 @@ const proceedDelete = () => {
                             <td class="p-3 border text-center">
                                 <div class="flex justify-center gap-4">
                                     <Link :href="route('subscription-plans.edit', plan.id)" class="relative group">
-                                        <Icon icon="ri:edit-fill" class="text-primary" width="20" height="20" />
-                                        <div
-                                            class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 z-10">
-                                            Edit
-                                        </div>
+                                    <Icon icon="ri:edit-fill" class="text-primary" width="20" height="20" />
+                                    <div
+                                        class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 z-10">
+                                        Edit
+                                    </div>
                                     </Link>
                                     <button @click="confirmDelete(plan)" class="relative group">
                                         <Icon icon="mdi:delete" class="text-red-600" width="20" height="20" />
@@ -119,8 +142,14 @@ const proceedDelete = () => {
                 </table>
             </div>
 
+            <!-- Loader -->
+            <Loader v-if="isLoading" class="mt-4" />
+
+            <Pagination :links="paginationLinks" :onPageClick="handlePaginationClick" class="mt-6" />
+
             <!-- Delete Modal -->
-            <div v-if="showDeletePopup" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div v-if="showDeletePopup"
+                class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                 <div class="bg-white p-6 rounded shadow-lg w-11/12 max-w-md">
                     <h2 class="text-xl font-bold mb-3">Confirm Deletion</h2>
                     <p class="text-gray-700 mb-4">
