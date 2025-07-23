@@ -25,6 +25,7 @@ class FeatureRequestAndSuggestionController extends Controller
                 'user' => [
                     'id' => $suggestion->user->id,
                     'name' => $suggestion->user->name,
+                    'phone' => $suggestion->user->phone,
                 ],
                 'created_at' => $suggestion->created_at,
             ];

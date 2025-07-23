@@ -55,7 +55,10 @@ function handlePaginationClick(url) {
             <div v-else class="space-y-4">
                 <div v-for="suggestion in suggestionsData" :key="suggestion.id" class="p-4 border rounded shadow-sm">
                     <p class="mt-2 text-sm text-indigo-600 font-medium select-none">
-                        Submitted by: {{ suggestion.user.name }}
+                        Submitted by: <span class="text-black">{{ suggestion.user.name }}</span>
+                    </p>
+                    <p class="mt-2 text-sm text-indigo-600 font-medium select-none">
+                        {{ suggestion.user.name }} Contact number: <span class="text-black">{{ suggestion.user.phone ||'N/A' }}</span>
                     </p>
                     <h2 class="text-lg font-semibold">{{ suggestion.suggestion_title }}</h2>
 
