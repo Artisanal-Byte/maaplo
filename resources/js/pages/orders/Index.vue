@@ -128,7 +128,7 @@ const getBorderColor = (deliveryDateStr) => {
             <!-- Title And Icon -->
             <div class="flex flex-row justify-between mt-5">
                 <div>
-                    <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence]">
+                    <h1 class="text-[24px] leading-[16px] font-bold tracking-[0] text-gray-800 font-[Convergence] mt-2">
                         Orders
                     </h1>
                 </div>
@@ -144,7 +144,7 @@ const getBorderColor = (deliveryDateStr) => {
                 <div class="flex gap-4 text-gray-600 relative z-20">
                     <div class="relative group">
                         <Link :href="route('orders.create')">
-                        <Icon icon="mingcute:add-line" width="32" height="32" class=" cursor-pointer" />
+                        <Icon icon="mingcute:add-line" width="32" height="32" class=" cursor-pointer mt-1" />
                         </Link>
                         <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
                     bg-gray-800 text-white text-xs px-3 py-1 rounded-md
@@ -157,7 +157,7 @@ const getBorderColor = (deliveryDateStr) => {
                     <!-- Reset Tooltip -->
                     <div class="relative group">
                         <Link :href="route('orders.index')">
-                        <Icon icon="ic:outline-refresh" width="32" height="32" class="cursor-pointer" />
+                        <Icon icon="ic:outline-refresh" width="32" height="32" class="cursor-pointer mt-1" />
                         </Link>
                         <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
                     bg-gray-800 text-white text-xs px-3 py-1 rounded-md
@@ -169,7 +169,7 @@ const getBorderColor = (deliveryDateStr) => {
 
                     <!-- Search Tooltip -->
                     <div class="relative group">
-                        <SearchList :showable="showable" @focusSearch="focusSearchInput" />
+                        <SearchList :showable="showable" @focusSearch="focusSearchInput" class="mt-1" />
                         <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
                     bg-gray-800 text-white text-xs px-3 py-1 rounded-md
                     opacity-0 group-hover:opacity-100 transition duration-200
@@ -180,7 +180,7 @@ const getBorderColor = (deliveryDateStr) => {
 
                     <!-- Filter Tooltip -->
                     <div class="relative group">
-                        <FilterList :showable="showable" @hideOrShow="hideOrShow" />
+                        <FilterList :showable="showable" @hideOrShow="hideOrShow" class="mt-1" />
                         <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
                     bg-gray-800 text-white text-xs px-3 py-1 rounded-md
                     opacity-0 group-hover:opacity-100 transition duration-200
