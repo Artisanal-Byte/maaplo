@@ -30,7 +30,7 @@ class OrderController extends Controller
         $user = Auth::user();
         if (!$user) abort(404);
 
-        $query = $user->orders()->with('customer');
+        $query = $user->orders()->with('customer')->orderBy('delivery_date', 'asc');
 
         // Search filter
         if ($search = $request->query('search')) {
