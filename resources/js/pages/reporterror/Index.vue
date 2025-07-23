@@ -1,12 +1,20 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue'
-import { Head, Link } from '@inertiajs/vue3'
+import { Head, Link, router, usePage } from '@inertiajs/vue3'
 import { Icon } from '@iconify/vue'
-import { ref } from 'vue'
-defineProps({ reports: Array })
+import { ref, computed } from 'vue'
+import Loader from '@/components/Loader.vue'
+import Pagination from '@/components/Pagination.vue'
+
+defineProps({ reports: Object })
 
 const showModal = ref(false)
 const selectedReport = ref(null)
+const page = usePage();
+const reportsData = computed(() => page.props.reports?.data || []);
+const paginationLinks = computed(() => page.props.reports?.links || []);
+const isLoading = ref(false);
+
 
 function openModal(report) {
     selectedReport.value = report
@@ -16,6 +24,20 @@ function openModal(report) {
 function closeModal() {
     showModal.value = false
     selectedReport.value = null
+}
+
+
+function handlePaginationClick(url) {
+    if (!url) return;
+    isLoading.value = true;
+
+    router.visit(url, {
+        preserveScroll: true,
+        preserveState: true,
+        onFinish: () => {
+            isLoading.value = false;
+        }
+    });
 }
 </script>
 
@@ -47,7 +69,7 @@ function closeModal() {
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <tr v-for="report in reports" :key="report.id" @click="openModal(report)"
+                        <tr v-for="report in reportsData" :key="report.id" @click="openModal(report)"
                             class="hover:bg-gray-100 cursor-pointer transition-colors duration-150">
                             <td class="px-5 py-3 text-sm font-medium text-gray-800">
                                 {{ report.user?.username || report.user?.name || (report.user?.email ?
@@ -57,12 +79,16 @@ function closeModal() {
                             <td class="px-5 py-3 text-sm text-gray-500">
                                 <div>{{ new Date(report.created_at).toLocaleDateString() }}</div>
                                 <div class="text-xs text-gray-400">{{ new Date(report.created_at).toLocaleTimeString([],
-                                    { hour: '2-digit', minute:'2-digit'}) }}</div>
+                                    { hour: '2-digit', minute: '2-digit' }) }}</div>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+
+            <Loader v-if="isLoading" class="mt-4" />
+
+            <Pagination :links="paginationLinks" :onPageClick="handlePaginationClick" class="mt-6" />
 
             <!-- Modal -->
             <transition name="fade">
@@ -94,8 +120,10 @@ function closeModal() {
                                 <p class="text-gray-700">
                                     <span>{{ new Date(selectedReport.created_at).toLocaleDateString() }}</span><br />
                                     <span class="text-sm text-gray-500">{{ new
-                                        Date(selectedReport.created_at).toLocaleTimeString([], {hour: '2-digit',
-                                        minute:'2-digit'}) }}</span>
+                                        Date(selectedReport.created_at).toLocaleTimeString([], {
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        }) }}</span>
                                 </p>
                             </div>
 
