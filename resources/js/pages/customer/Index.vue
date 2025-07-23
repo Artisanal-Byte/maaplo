@@ -2,6 +2,8 @@
 
 import CustomerLimitPopup from '@/components/CustomerLimitPopup.vue';
 import CustomerList from '@/components/CustomerList.vue';
+import Loader from '@/components/Loader.vue';
+import Pagination from '@/components/Pagination.vue';
 import SearchList from '@/components/SearchIcon.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Icon } from '@iconify/vue';
@@ -11,26 +13,34 @@ const showable = reactive({
     showSearch: false
 });
 const searchTerm = ref('');
-
+const form = reactive({
+    isLoading: false,
+});
 const props = defineProps<{
-    customers: Array<{
-        id: number,
-        name: string,
-        email: string,
-        country_code: string,
-        phone: string,
-        address: string,
-        gender: string,
-        active_orders?: number,
-        total_payment?: string;
-        advance_payment?: string;
-        payment_due?: string;
-        subscription_plan?: string,
-    }>,
+    customers: {
+        data: Array<{
+            id: number,
+            name: string,
+            email: string,
+            country_code: string,
+            phone: string,
+            address: string,
+            gender: string,
+            active_orders?: number,
+            total_payment?: string;
+            advance_payment?: string;
+            payment_due?: string;
+            subscription_plan?: string,
+        }>,
+        links: Array<any>,
+        meta?: any
+    },
     customer_limit_exceeded: boolean,
     plan_title: string,
     plan_limit: number,
 }>();
+
+
 const showLimitModal = ref(false);
 
 function handleCreateClick(event: Event) {
@@ -42,19 +52,21 @@ function handleCreateClick(event: Event) {
 
 function myFn(val: string) {
     searchTerm.value = val
-    // console.log('Searching  brj:', val)
 }
 const filteredCustomers = computed(() => {
+    const allCustomers = props.customers.data;
+
     if (!searchTerm.value) {
-        return props.customers;
+        return allCustomers;
     }
 
-    return props.customers.filter((customer) =>
+    return allCustomers.filter((customer) =>
         customer.name.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
         customer.email?.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
         customer.phone?.toLowerCase().includes(searchTerm.value.toLowerCase())
     );
 });
+
 
 const searchInputRef = ref<HTMLInputElement | null>(null);
 
@@ -62,6 +74,14 @@ function focusSearchInput() {
     // Slight delay ensures input is rendered before focus
     nextTick(() => {
         searchInputRef.value?.focus();
+    });
+}
+function handlePaginationClick(url: string) {
+    form.isLoading = true;
+    router.visit(url, {
+        onFinish: () => {
+            form.isLoading = false;
+        }
     });
 }
 </script>
@@ -81,7 +101,7 @@ function focusSearchInput() {
                         Customer
                     </h1>
                     <p class="text-sm text-gray-700 text-right mt-2">
-                        Your Customers: {{ props.customers.length }}
+                        Your Customers: {{ props.customers.data.length }}
                     </p>
                 </div>
                 <div class="flex gap-4 text-gray-600">
@@ -112,8 +132,11 @@ function focusSearchInput() {
                 <input ref="searchInputRef" type="text" v-debounce:400ms="myFn" placeholder="Search..."
                     class="w-full lg:max-w-7xl border border-gray-300 rounded-full px-4 py-3 text-sm shadow-[0px_0px_4.3px_0px_#16789333] focus:outline-none focus:ring focus:border-gray-400 transition-all" />
             </div>
+
+            <!-- Loader while loading customers -->
+            <Loader v-if="form.isLoading" />
+
             <div>
-                <pre>{{ props.customers.country_code }}</pre>
 
                 <div v-if="filteredCustomers.length">
                     <CustomerList v-for="customer in filteredCustomers" :key="customer.id" :customer="customer" />
@@ -121,6 +144,9 @@ function focusSearchInput() {
                 <div v-else class="text-center text-gray-500 py-10">
                     No customers available.
                 </div>
+
+                <!-- Pagination Component -->
+                <Pagination :links="props.customers.links" :onPageClick="handlePaginationClick" />
             </div>
 
         </div>
