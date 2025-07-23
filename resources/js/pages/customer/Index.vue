@@ -12,7 +12,7 @@ import { reactive, ref, computed, nextTick } from 'vue';
 const showable = reactive({
     showSearch: false
 });
-const searchTerm = ref('');
+
 const form = reactive({
     isLoading: false,
 });
@@ -38,8 +38,10 @@ const props = defineProps<{
     customer_limit_exceeded: boolean,
     plan_title: string,
     plan_limit: number,
+    search?: string,
 }>();
 
+const searchTerm = ref(props.search ?? '');
 
 const showLimitModal = ref(false);
 
@@ -49,22 +51,26 @@ function handleCreateClick(event: Event) {
         showLimitModal.value = true;
     }
 }
-
 function myFn(val: string) {
-    searchTerm.value = val
+    searchTerm.value = val;
+    form.isLoading = true;
+
+    router.get(route('customers.index'), {
+        search: val,
+    }, {
+        preserveState: true,
+        preserveScroll: true,
+        onFinish: () => {
+            form.isLoading = false;
+        }
+    });
 }
+
+
+
 const filteredCustomers = computed(() => {
-    const allCustomers = props.customers.data;
-
-    if (!searchTerm.value) {
-        return allCustomers;
-    }
-
-    return allCustomers.filter((customer) =>
-        customer.name.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-        customer.email?.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-        customer.phone?.toLowerCase().includes(searchTerm.value.toLowerCase())
-    );
+    // 🔥 REMOVE this filtering logic
+    return props.customers.data;
 });
 
 
@@ -78,12 +84,18 @@ function focusSearchInput() {
 }
 function handlePaginationClick(url: string) {
     form.isLoading = true;
-    router.visit(url, {
+
+    router.get(url, {}, {
+        preserveScroll: true,
+        preserveState: true,
         onFinish: () => {
             form.isLoading = false;
         }
     });
 }
+
+
+
 </script>
 <template>
 
@@ -139,7 +151,8 @@ function handlePaginationClick(url: string) {
             <div>
 
                 <div v-if="filteredCustomers.length">
-                    <CustomerList v-for="customer in filteredCustomers" :key="customer.id" :customer="customer" />
+                    <!-- <CustomerList v-for="customer in filteredCustomers" :key="customer.id" :customer="customer" /> -->
+                    <CustomerList v-for="customer in props.customers.data" :key="customer.id" :customer="customer" />
                 </div>
                 <div v-else class="text-center text-gray-500 py-10">
                     No customers available.

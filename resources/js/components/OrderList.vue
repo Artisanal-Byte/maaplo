@@ -43,7 +43,7 @@ function confirmDelete() {
 </script>
 <template>
 
-    <div class=" gap-[10px] rounded-[10px] px-[10px] py-[17px]" :style="{
+    <div class=" gap-[10px] rounded-[10px] px-[10px] py-[17px] mt-[6px]" :style="{
         backgroundColor: bgColor,
         border: `1px solid ${borderColor}`,
 

@@ -25,18 +25,49 @@ class OrderController extends Controller
     /**
      * Display a listing of the Orders And Related Data.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        $orders = null;
+        if (!$user) abort(404);
 
-        if ($user) {
-            $orders = $user->load('orders.customer');
-            return Inertia::render('orders/Index', ["orders" => $orders]);
+        $query = $user->orders()->with('customer');
+
+        // Search filter
+        if ($search = $request->query('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('order_number', 'like', "%{$search}%")
+                    ->orWhereHas('customer', function ($q2) use ($search) {
+                        $q2->where('name', 'like', "%{$search}%");
+                    });
+            });
         }
-        //-- if User Not Found
-        abort(404);
+
+        // Status filter
+        if ($status = $request->query('status')) {
+            $query->where('status', $status);
+        }
+
+        // Delivery filter
+        if ($delivery = $request->query('delivery')) {
+            $query->where(function ($q) use ($delivery) {
+                $today = now();
+                if ($delivery === 'Within 7 Days') {
+                    $q->whereBetween('delivery_date', [$today->format('Y-m-d'), $today->copy()->addDays(7)->format('Y-m-d')]);
+                } elseif ($delivery === '7-15 Days') {
+                    $q->whereBetween('delivery_date', [$today->copy()->addDays(8)->format('Y-m-d'), $today->copy()->addDays(15)->format('Y-m-d')]);
+                } elseif ($delivery === 'Overdue') {
+                    $q->whereDate('delivery_date', '<', $today->format('Y-m-d'));
+                } elseif ($delivery === 'One Month') {
+                    $q->whereBetween('delivery_date', [$today->copy()->addDays(16)->format('Y-m-d'), $today->copy()->addDays(30)->format('Y-m-d')]);
+                }
+            });
+        }
+
+        $orders = $query->paginate(10)->withQueryString();
+
+        return Inertia::render('orders/Index', ["orders" => $orders]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -188,7 +219,7 @@ class OrderController extends Controller
             'order' => $order,
             'designDetails' => $designDetailsData,
             'source' => $source,
-           'allDesignDetails'=> $allDesignDetails,
+            'allDesignDetails' => $allDesignDetails,
         ]);
     }
 
