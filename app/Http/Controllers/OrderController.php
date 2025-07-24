@@ -31,7 +31,10 @@ class OrderController extends Controller
         $user = Auth::user();
         if (!$user) abort(404);
 
-        $query = $user->orders()->with('customer')->orderBy('delivery_date', 'asc');
+        $query = $user->orders()
+            ->with('customer')
+            ->where('status', '!=', 'closed') // Exclude closed orders
+            ->orderBy('delivery_date', 'asc');
 
         // Search filter
         if ($search = $request->query('search')) {
@@ -43,9 +46,9 @@ class OrderController extends Controller
             });
         }
 
-        // Status filter
+        // Status filter (override the default filter if manually set)
         if ($status = $request->query('status')) {
-            $query->where('status', $status);
+            $query->where('status', $status); // If 'closed' is passed as a filter, it'll show closed orders
         }
 
         // Delivery filter
@@ -68,6 +71,7 @@ class OrderController extends Controller
 
         return Inertia::render('orders/Index', ["orders" => $orders]);
     }
+
 
 
     /**

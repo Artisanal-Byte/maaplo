@@ -16,10 +16,11 @@ const props = defineProps({
     }
 
 });
-
+const showCloseModal = ref(false);
 // Modal control
 const showDeleteModal = ref(false);
 const selectedOrderId = ref(null);
+const selectedOrder = ref(null);
 
 const formatStatus = (status) => {
     if (!status) return '';
@@ -40,6 +41,27 @@ function confirmDelete() {
         }
     });
 }
+
+function openCloseModal(id) {
+    selectedOrder.value = props.order;
+    selectedOrderId.value = id;
+    showCloseModal.value = true;
+}
+
+function confirmClose() {
+    router.post(route('orders.close'), {
+        order_id: selectedOrder.value.id
+    }, {
+        onSuccess: () => {
+            showCloseModal.value = false;
+            selectedOrderId.value = null;
+        },
+        onError: (errors) => {
+            console.error(errors);
+        }
+    });
+}
+
 </script>
 <template>
 
@@ -52,7 +74,7 @@ function confirmDelete() {
             <div>
                 <h1
                     class="font-[Lato] font-medium text-[15px] lg:text-[18px] leading-[16px] tracking-[0] text-secondary p-2">
-                     Order: #{{ order.order_number }}</h1>
+                    Order: #{{ order.order_number }}</h1>
             </div>
             <div>
                 <h1
@@ -79,16 +101,55 @@ function confirmDelete() {
                 Status: {{ formatStatus(order?.status) }}
             </p>
         </div>
-        <div class="flex justify-end gap-3">
+
+        <div class="flex justify-end items-center gap-3 mt-4">
+            <!-- Close Order -->
+            <button @click="openCloseModal(order)"
+                class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition">
+                Close Order
+            </button>
+            <!-- View Order -->
             <Link :href="route('orders.show', props.order.id)">
             <Icon icon="teenyicons:eye-solid" width="18" height="18" class="text-primary" />
             </Link>
+
+            <!-- Edit Order -->
             <Link :href="route('orders.edit', props.order.id)">
             <Icon icon="ri:edit-fill" width="18" height="18" class="text-primary" />
             </Link>
+
+            <!-- Delete Order -->
             <button @click="openDeleteModal(order.id)">
                 <Icon icon="ic:baseline-delete" width="18" height="18" class="text-[#E73939]" />
             </button>
+
+
+        </div>
+
+        <!-- Close Order Modal -->
+        <div v-if="showCloseModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 mx-4">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Confirm Close</h2>
+
+                <p class="text-sm font-medium text-primary px-4 py-2 rounded-md mb-4 flex items-center gap-2">
+                    Payment received for this order?
+                </p>
+
+                <p class="text-gray-600 mb-6">
+                    Are you sure you want to close <strong>Order #{{ selectedOrder?.order_number }}</strong>?
+                </p>
+
+                <div class="flex justify-end gap-3">
+                    <button @click="showCloseModal = false"
+                        class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md transition">
+                        No
+                    </button>
+                    <button @click="confirmClose"
+                        class="px-4 py-2 bg-primary text-white hover:bg-primary-dark rounded-md transition">
+                        Yes
+                    </button>
+                </div>
+            </div>
         </div>
 
     </div>
