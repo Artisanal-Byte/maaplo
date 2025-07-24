@@ -16,7 +16,7 @@
 
         const fileInputGallery = ref(null)
         const fileInputCamera = ref(null)
-        const props = defineProps(['showModal', 'order', 'form', 'orderItems', 'currentEditIndex', 'itemTypes', 'allDesignDetails', 'itemIndex', 'errorMessage', 'errors']);
+        const props = defineProps(['showModal', 'order', 'form', 'orderItems', 'currentEditIndex', 'itemTypes', 'allDesignDetails', 'itemIndex', 'errorMessage', 'errors', 'measurements']);
 
         let formStore = useOrderFormStore()
 
@@ -55,14 +55,28 @@
         }
 
         const setItemId = (option) => {
-            if (!option?.id) {
-                console.warn("ItemType option has no ID");
-                return;
-            }
+            if (!option?.id) return;
 
             formStore.order_items_template.template_id = option.id;
+
+            // Set the asked measurements list
             measurements.value = option.measurements || [];
+
+            // ✅ Create a lookup from customerMeasurements (passed as `props.measurements`)
+            const customerValues = Object.fromEntries(
+                (props.measurements || []).map(m => [m.slug, m.value])
+            );
+
+            // ✅ Fill in measurements with matching values
+            const filledMeasurements = {};
+            for (const m of measurements.value) {
+                filledMeasurements[m.slug] = customerValues[m.slug] ?? null;
+            }
+
+            // ✅ Set in the form store template
+            formStore.order_items_template.measurements = filledMeasurements;
         };
+
 
         // Trigger function for each input
         function triggerUpload(type, index) {
@@ -284,7 +298,8 @@
                             </div>
                         </div> -->
                         <div class="flex justify-end sticky h-5 top-0 z-10">
-                            <button @click="$emit('close')" class="transition duration-200 font-medium focus:outline-none text-gray-800 pt-3 px-3 rounded-full text-3xl">
+                            <button @click="$emit('close')"
+                                class="transition duration-200 font-medium focus:outline-none text-gray-800 pt-3 px-3 rounded-full text-3xl">
                                 &times;
                             </button>
                         </div>

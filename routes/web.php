@@ -80,8 +80,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/suggestion/create', fn() => Inertia::render('suggestion/Create'))->name('suggestion.create');
     Route::post('/suggestion', [FeatureRequestAndSuggestionController::class, 'storeSuggestion'])->name('suggestion.store');
     Route::post('/organization/no-organization', [OrganizationController::class, 'setNoOrganization']);
-    // routes/web.php
+    // route fetch customer data
     Route::get('/orders/customers/fetch', [OrderController::class, 'fetchCustomers'])->name('orders.fetchCustomers');
+    Route::get('/orders/customers/{customer}/measurements', [OrderController::class, 'getCustomerMeasurements']);
+
+
+
     // Charts and Exports
     Route::get('/dashboard/chart-data', [DashboardController::class, 'getChartData'])->name('dashboard.chart-data');
     Route::get('/export-orders-csv', [DashboardController::class, 'exportOrdersToCSV']);

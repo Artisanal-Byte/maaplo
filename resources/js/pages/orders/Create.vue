@@ -19,7 +19,7 @@ const toast = new ToastMagic();
 const showDeletePopup = ref(false);
 let form = useOrderFormStore();
 form.advance_paid = form.advance_paid ?? 0;
-let customerMeasurements = ref({})
+let customerMeasurements = ref([]);
 const itemToDelete = ref(null);
 let deleteOrEditOrderIndex = ref()
 let totalAmmount = ref(null)
@@ -112,6 +112,25 @@ const formatDate = (dateStr) => {
     const [year, month, day] = dateStr.split('-');
     return `${day}-${month}-${year}`;
 };
+
+import axios from 'axios';
+
+watch(() => form.customer_id, async (newCustomerId) => {
+    if (!newCustomerId) {
+        customerMeasurements.value = [];
+        return;
+    }
+
+    try {
+        const response = await axios.get(`/orders/customers/${newCustomerId}/measurements`);
+        console.log('API returned measurements:', response.data.measurements);
+        customerMeasurements.value = response.data.measurements || [];
+    } catch (error) {
+        console.error("Failed to load measurements:", error);
+        customerMeasurements.value = [];
+    }
+});
+
 </script>
 
 <template>
@@ -204,7 +223,7 @@ const formatDate = (dateStr) => {
                         <!-- Modal Content -->
                         <ItemModel :errors="form.errors?.order_items" :showModal="showModal" @close="closeModel"
                             :form="form.order_items" :itemTypes="itemTypes" :allDesignDetails="allDesignDetails"
-                            :measurements="customerMeasurements ?? []" />
+                            :measurements="Array.isArray(customerMeasurements) ? customerMeasurements : Object.entries(customerMeasurements).map(([slug, value]) => ({ slug, value }))" />
                         <p class="text-red-600 text-sm">
                             {{ errors?.order_items }}
                         </p>

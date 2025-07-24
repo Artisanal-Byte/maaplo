@@ -19,8 +19,8 @@ class UpdateOrderRequest extends FormRequest
         foreach ($orderItems as $index => $item) {
             if (isset($item['work_type']) && $item['work_type'] === 'New from Material') {
                 $validator->addRules([
-                    "order_items.$index.material_type" => ['required', 'string', 'max:256'],
-                    "order_items.$index.material_code" => ['required', 'string', 'max:256'],
+                    "order_items.$index.material_type" => ['nullable', 'string', 'max:256'],
+                    "order_items.$index.material_code" => ['nullable', 'string', 'max:256'],
                 ]);
             }
         }
