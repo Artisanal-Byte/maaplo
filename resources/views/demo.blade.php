@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 @section('content')
     {{-- Section 1 --}}
-    <div class="mx-auto px-4 lg:py-12 text-center max-w-6xl">
+    <div class="mx-auto px-4 lg:py-12 pt-5 text-center max-w-6xl">
         <h1 class="font-lato font-bold text-[28px] lg:text-[48px] leading-[100%] tracking-[0%] text-black">
             Lorem Ipsum Dolor
         </h1>
