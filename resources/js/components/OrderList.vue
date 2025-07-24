@@ -21,6 +21,8 @@ const showCloseModal = ref(false);
 const showDeleteModal = ref(false);
 const selectedOrderId = ref(null);
 const selectedOrder = ref(null);
+const toast = new ToastMagic();
+const loading = ref(false);
 
 const formatStatus = (status) => {
     if (!status) return '';
@@ -53,10 +55,13 @@ function confirmClose() {
         order_id: selectedOrder.value.id
     }, {
         onSuccess: () => {
+
             showCloseModal.value = false;
             selectedOrderId.value = null;
+            toast.success('Order closed successfully!');  // Show ToastMagic toast here
         },
         onError: (errors) => {
+            toast.error('Failed to close order.');
             console.error(errors);
         }
     });

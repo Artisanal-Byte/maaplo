@@ -84,9 +84,7 @@ class DashboardController extends Controller
             'status' => 'closed',
         ]);
 
-        ToastMagic::success('Order closed successfully!');
-
-        return back(); // 👈 redirects to the previous page automatically
+        return back()->with('success', 'Order closed successfully!');
     }
 
 
