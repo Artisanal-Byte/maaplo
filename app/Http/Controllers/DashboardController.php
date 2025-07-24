@@ -48,7 +48,7 @@ class DashboardController extends Controller
                 });
             })
             ->orderByDesc('delivery_date')
-            ->paginate(2)
+            ->paginate(10)
             ->withQueryString(); // 👈 Keeps the `search` query param when paginating
 
         return Inertia::render('Closedorders', [
