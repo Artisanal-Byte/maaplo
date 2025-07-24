@@ -1,19 +1,88 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, reactive, nextTick } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, router, usePage,Link } from '@inertiajs/vue3';
+import { Head, router, usePage, Link } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
+import Pagination from '@/components/Pagination.vue';
+import Loader from '@/components/Loader.vue';
+import SearchList from '@/components/SearchIcon.vue';
 
 const page = usePage();
 const toast = new ToastMagic();
 
 const props = defineProps({
-    deliveredOrders: Array
+    deliveredOrders: Object,
+    search: String,
 });
 
 const showModal = ref(false);
 const selectedOrder = ref(null);
+
+// Make deliveredOrders reactive and update on every fetch
 const deliveredOrders = ref(props.deliveredOrders);
+
+// Controls search input visibility
+const showable = reactive({ showSearch: false });
+
+const searchTerm = ref(props.search ?? '');
+
+const form = reactive({ isLoading: false });
+
+// Fetch orders, with optional pagination url and search term
+function fetchOrders(url = null, search = '') {
+    form.isLoading = true;
+
+    if (url) {
+        // Append current search to pagination url
+        const urlObj = new URL(url, window.location.origin);
+        if (search) urlObj.searchParams.set('search', search);
+
+        router.get(urlObj.pathname + urlObj.search, {}, {
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: (page) => {
+                deliveredOrders.value = page.props.deliveredOrders;
+            },
+            onFinish: () => {
+                form.isLoading = false;
+            },
+        });
+    } else {
+        // Fetch first page or filtered by search term
+        const query = {};
+        if (search) query.search = search;
+
+        router.get(route('orders.closed'), query, {
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: (page) => {
+                deliveredOrders.value = page.props.deliveredOrders;
+            },
+            onFinish: () => {
+                form.isLoading = false;
+            },
+        });
+    }
+}
+
+// Called when search input changes
+function onSearchInput(val) {
+    searchTerm.value = val;
+    fetchOrders(null, val);
+}
+
+// Handle pagination click
+function handlePaginationClick(url) {
+    if (!url) return;
+    fetchOrders(url, searchTerm.value);
+}
+
+const searchInputRef = ref(null);
+function focusSearchInput() {
+    nextTick(() => {
+        searchInputRef.value?.focus();
+    });
+}
 
 onMounted(() => {
     if (page.props.flash?.success) {
@@ -41,17 +110,16 @@ function closeOrder() {
         order_id: selectedOrder.value.id
     }, {
         onSuccess: () => {
-            deliveredOrders.value = deliveredOrders.value.filter(
-                order => order.id !== selectedOrder.value.id
-            );
             toast.success('Order closed successfully');
             closeModal();
+            router.visit(route('orders.closed'));  // force redirect / reload of page
         },
         onError: () => {
             toast.error('Failed to close order');
         }
     });
 }
+
 
 function viewOrder(orderId) {
     router.visit(route('orders.show', orderId) + '?source=closed');
@@ -68,14 +136,25 @@ function viewOrder(orderId) {
                     <Icon icon="material-symbols:order-approve" class="text-primary" width="28" height="28" />
                     Delivered Orders
                 </h1>
-                  <Link :href="route('dashboard')"
-                    class="flex items-center gap-1 hover:text-black text-gray-600">
+                <Link :href="route('dashboard')" class="flex items-center gap-1 hover:text-black text-gray-600">
                 <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
                 <span class="text-md font-medium">Back</span>
                 </Link>
             </div>
+            <!-- Search -->
+            <div class="flex justify-between mb-4">
+                <SearchList :showable="showable" @focusSearch="focusSearchInput" />
+            </div>
+            <div v-if="showable.showSearch" class="mb-6">
+                <input ref="searchInputRef" type="text" v-model="searchTerm" @input="() => onSearchInput(searchTerm)"
+                    placeholder="Search by Order Number or Customer"
+                    class="w-full lg:max-w-7xl border border-gray-300 rounded-full px-4 py-3 text-sm shadow-sm focus:outline-none focus:ring focus:border-gray-400 transition" />
+            </div>
 
-            <div class="overflow-x-auto bg-white shadow-lg rounded-xl border border-gray-200">
+            <!-- Loader -->
+            <Loader v-if="form.isLoading" />
+            <div v-if="deliveredOrders && deliveredOrders.data && deliveredOrders.data.length"
+                class="overflow-x-auto bg-white shadow-lg rounded-xl border border-gray-200">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -99,18 +178,23 @@ function viewOrder(orderId) {
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
-                        <tr v-if="deliveredOrders.length === 0">
+                        <tr v-if="deliveredOrders && deliveredOrders.data && deliveredOrders.data.length === 0">
+
                             <td colspan="7" class="text-center text-gray-500 py-6">
                                 No delivered orders found.
                             </td>
                         </tr>
-                        <tr v-else v-for="order in deliveredOrders" :key="order.id"
+                        <tr v-else v-for="order in deliveredOrders.data" :key="order.id"
                             class="hover:bg-blue-50 transition duration-200 ease-in-out">
-                            <td class="px-6 py-4 font-medium text-center text-gray-800 whitespace-nowrap">#{{ order.order_number }}
+                            <td class="px-6 py-4 font-medium text-center text-gray-800 whitespace-nowrap">#{{
+                                order.order_number }}
                             </td>
-                            <td class="px-6 py-4 text-center text-gray-700 whitespace-nowrap">₹{{ order.total_amount }}</td>
-                            <td class="px-6 py-4 text-center text-gray-700 whitespace-nowrap">{{ order.delivery_date }}</td>
-                            <td class="px-6 py-4 text-center text-gray-700 whitespace-nowrap">{{ order.customer?.name ?? 'N/A' }}
+                            <td class="px-6 py-4 text-center text-gray-700 whitespace-nowrap">₹{{ order.total_amount }}
+                            </td>
+                            <td class="px-6 py-4 text-center text-gray-700 whitespace-nowrap">{{ order.delivery_date }}
+                            </td>
+                            <td class="px-6 py-4 text-center text-gray-700 whitespace-nowrap">{{ order.customer?.name ??
+                                'N/A' }}
                             </td>
 
                             <td class="px-6 py-4 text-center whitespace-nowrap">
@@ -139,14 +223,18 @@ function viewOrder(orderId) {
                     </tbody>
                 </table>
             </div>
+            <!-- Pagination -->
+            <div class="mt-8">
+                <Pagination v-if="deliveredOrders && deliveredOrders.links" :links="deliveredOrders.links"
+                    :onPageClick="handlePaginationClick" />
+            </div>
         </div>
 
         <!-- Modal -->
         <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
             <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 mx-4">
                 <h2 class="text-xl font-semibold text-gray-800 mb-4">Confirm Close</h2>
-                <p
-                    class="text-sm font-medium text-primary px-4 py-2 rounded-md mb-4 flex items-center gap-2">
+                <p class="text-sm font-medium text-primary px-4 py-2 rounded-md mb-4 flex items-center gap-2">
                     Payment received for this order ?
                 </p>
                 <p class="text-gray-600 mb-6">

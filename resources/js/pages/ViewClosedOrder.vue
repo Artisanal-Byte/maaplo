@@ -83,7 +83,8 @@ function viewOrder(orderId) {
             <!-- ⏳ Loader -->
             <Loader v-if="form.isLoading" />
 
-            <div v-if="closedOrders.data.length" class="space-y-6">
+            <div v-if="closedOrders && closedOrders.data && closedOrders.data.length" class="space-y-6">
+
                 <div v-for="order in closedOrders.data" :key="order.id"
                     class="w-full bg-white shadow-md rounded-lg border-2 border-green-500 p-6 hover:shadow-lg transition-shadow">
                     <div class="flex justify-between items-center mb-4">
@@ -126,7 +127,8 @@ function viewOrder(orderId) {
 
             <!-- 📄 Pagination -->
             <div class="mt-8">
-                <Pagination :links="closedOrders.links" :onPageClick="handlePaginationClick" />
+                <Pagination :links="closedOrders?.links ?? []" :onPageClick="handlePaginationClick" />
+
             </div>
         </div>
     </AppLayout>

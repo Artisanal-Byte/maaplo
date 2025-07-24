@@ -33,36 +33,47 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function closedOrdersPage()
+    public function closedOrdersPage(Request $request)
     {
+        $search = $request->input('search');
+
         $deliveredOrders = Order::with(['customer'])
             ->where('status', 'delivered')
-            ->get();
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($subQuery) use ($search) {
+                    $subQuery->where('order_number', 'like', "%{$search}%")
+                        ->orWhereHas('customer', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
+                        });
+                });
+            })
+            ->orderByDesc('delivery_date')
+            ->paginate(2)
+            ->withQueryString(); // 👈 Keeps the `search` query param when paginating
 
         return Inertia::render('Closedorders', [
-            'deliveredOrders' => $deliveredOrders
+            'deliveredOrders' => $deliveredOrders,
+            'search' => $search,
         ]);
     }
     public function viewClosedOrders(Request $request)
     {
-        $search = $request->input('search');
+        $query = Order::with('customer')->where('status', 'closed');
 
-        $closedOrdersQuery = Order::with('customer')
-            ->where('status', 'closed');
-
-        if ($search) {
-            $closedOrdersQuery->where(function ($query) use ($search) {
-                $query->where('order_number', 'like', "%{$search}%")
-                    ->orWhereHas('customer', function ($q) use ($search) {
-                        $q->where('name', 'like', "%{$search}%");
+        if ($search = $request->input('search')) {
+            // Example: search by order number or customer's name/email/phone
+            $query->where(function ($q) use ($search) {
+                $q->where('order_number', 'like', "%{$search}%")
+                    ->orWhereHas('customer', function ($q2) use ($search) {
+                        $q2->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%")
+                            ->orWhere('phone', 'like', "%{$search}%");
                     });
             });
         }
 
-
-        $closedOrders = $closedOrdersQuery
-            ->orderByDesc('id')
-            ->paginate(10)
+        $closedOrders = $query->paginate(10)
+            ->appends(['search' => $search])
             ->through(function ($order) {
                 return [
                     'id' => $order->id,
@@ -88,20 +99,21 @@ class DashboardController extends Controller
         ]);
     }
 
+
+
     public function close(Request $request)
     {
+        // dd($request->toArray());
         $request->validate([
             'order_id' => 'required|exists:orders,id',
         ]);
-
-        $order = Order::findOrFail($request->order_id);
+        $order = Order::find($request->order_id);
         $order->update([
             'status' => 'closed',
         ]);
-
-        return back()->with('success', 'Order closed successfully!');
+        ToastMagic::success('Order closed successfully!');
+        return redirect()->route('orders.closed');
     }
-
 
     public function getChartData(Request $request)
     {
