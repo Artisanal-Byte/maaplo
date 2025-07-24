@@ -86,8 +86,9 @@ async function fetchChartData() {
             </div>
 
             <div class="flex gap-2 ml-auto mt-3 sm:mt-0">
-                <Link :href="route('organization.create')" class="px-3 py-1.5 text-sm font-medium bg-primary text-white rounded-md transition">
-                    Create Organization
+                <Link :href="route('organization.create')"
+                    class="px-3 py-1.5 text-sm font-medium bg-primary text-white rounded-md transition">
+                Create Organization
                 </Link>
                 <button @click="noOrganization"
                     class="px-3 py-1.5 text-sm font-medium bg-yellow-500 hover:bg-yellow-600 text-white rounded-md transition">
@@ -242,6 +243,19 @@ async function fetchChartData() {
                         class="relative group bg-teal-50 shadow overflow-hidden w-full h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
                         <div class="flex flex-col items-center gap-2">
                             <Link :href="route('orders.closed')" class="flex flex-col items-center gap-2">
+                            <div class="bg-primary p-3 rounded-full">
+                                <Icon icon="material-symbols:order-approve" width="32" height="32" class="text-white" />
+                            </div>
+                            <div class="relative z-10 text-primary font-[Lato] font-medium text-[24px] tracking-[0]">
+                                Deliver Orders
+                            </div>
+                            </Link>
+                        </div>
+                    </div>
+                    <div
+                        class="relative group bg-teal-50 shadow overflow-hidden w-full h-[150px] rounded-md flex items-center justify-center border-t-4 border-primary">
+                        <div class="flex flex-col items-center gap-2">
+                            <Link :href="route('orders.viewClosed')" class="flex flex-col items-center gap-2">
                             <div class="bg-primary p-3 rounded-full">
                                 <Icon icon="lsicon:order-done-filled" width="32" height="32" class="text-white" />
                             </div>

@@ -33,22 +33,48 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function closedOrdersPage()
+    public function closedOrdersPage(Request $request)
     {
+        $search = $request->input('search');
+
         $deliveredOrders = Order::with(['customer'])
             ->where('status', 'delivered')
-            ->get();
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($subQuery) use ($search) {
+                    $subQuery->where('order_number', 'like', "%{$search}%")
+                        ->orWhereHas('customer', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
+                        });
+                });
+            })
+            ->orderByDesc('delivery_date')
+            ->paginate(2)
+            ->withQueryString(); // 👈 Keeps the `search` query param when paginating
 
         return Inertia::render('Closedorders', [
-            'deliveredOrders' => $deliveredOrders
+            'deliveredOrders' => $deliveredOrders,
+            'search' => $search,
         ]);
     }
-    public function viewClosedOrders()
+    public function viewClosedOrders(Request $request)
     {
-        $closedOrders = Order::with('customer')
-            ->where('status', 'closed')
-            ->get()
-            ->map(function ($order) {
+        $query = Order::with('customer')->where('status', 'closed');
+
+        if ($search = $request->input('search')) {
+            // Example: search by order number or customer's name/email/phone
+            $query->where(function ($q) use ($search) {
+                $q->where('order_number', 'like', "%{$search}%")
+                    ->orWhereHas('customer', function ($q2) use ($search) {
+                        $q2->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%")
+                            ->orWhere('phone', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        $closedOrders = $query->paginate(10)
+            ->appends(['search' => $search])
+            ->through(function ($order) {
                 return [
                     'id' => $order->id,
                     'order_number' => $order->order_number,
@@ -56,7 +82,6 @@ class DashboardController extends Controller
                     'total_amount' => $order->total_amount,
                     'advance_paid' => $order->advance_paid,
                     'delivery_date' => $order->delivery_date,
-                    // customer nested info
                     'customer' => [
                         'name' => optional($order->customer)->name,
                         'email' => optional($order->customer)->email,
@@ -70,8 +95,11 @@ class DashboardController extends Controller
 
         return Inertia::render('ViewClosedOrder', [
             'closedOrders' => $closedOrders,
+            'search' => $search,
         ]);
     }
+
+
 
     public function close(Request $request)
     {

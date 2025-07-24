@@ -464,7 +464,7 @@
                 <div
                     class="mt-10 lg:w-[600px] h-[58px] rounded-[72px] gap-[10px] p-[5px] bg-white shadow-[0_0_6.4px_#16789340] flex items-center justify-center">
                     <button id="btn1" onclick="setActiveButton('btn1')"
-                        class="bg-primary text-white px-3 lg:px-6 py-3 rounded-full transition-all w-full">
+                        class="bg-primary text-black px-3 lg:px-6 py-3 rounded-full transition-all w-full">
                         Monthly
                     </button>
                     <button id="btn2" onclick="setActiveButton('btn2')"
@@ -518,7 +518,7 @@
                                     <ul
                                         class="text-left text-[15px] leading-[152%] font-lato border-y border-primary divide-y divide-[#167893] marker:text-primary">
                                         @foreach ((array) $plan->features as $feature)
-                                            <li class="py-3 flex items-center gap-4">
+                                            <li class="py-3 flex items-center gap-4 text-black">
                                                 <i class="fa fa-check bg-primary text-white p-2 rounded-full"></i>
                                                 {{ $feature }}
                                             </li>
@@ -606,15 +606,14 @@
             MaapLo is a smart, budget-friendly app made for tailors — streamlining tasks with offline access and
             client-focused tools. Tailoring made simple.
         </p>
-
         <div class="flex flex-col lg:flex-row justify-between mt-10 overflow-hidden">
-            <div class="flex flex-col gap-10 lg:max-w-[45%] items-center lg:items-start text-center lg:text-left">
+            <!-- Left Column -->
+            <div class="flex flex-col gap-10 items-center justify-center lg:items-start text-center lg:text-left w-full lg:w-[30%]">
                 <div>
-                    <h1 class="lg:mt-5 font-lato text-[18px] font-semibold leading-[100%] tracking-[0%] text-primary">
+                    <h1 class="lg:mt-5 font-lato text-[18px] font-semibold leading-[100%] text-primary">
                         1. Smart Design for Your Craft
                     </h1>
-                    <p
-                        class="mt-4 font-lato font-normal text-[15px] w-[480px] leading-[152%] tracking-[0%] mt-2 text-black">
+                    <p class="mt-4 font-lato font-normal text-[15px] leading-[152%] text-black">
                         MaapLo is built to meet the unique needs of your profession. From accurate measurements to
                         order and
                         preference management, every feature simplifies your workflow. Stay organized and focused
@@ -622,12 +621,11 @@
                         platform that works like you do.
                     </p>
                 </div>
-                <div class="lg:mt-10 mt-0">
-                    <h1 class="font-lato font-semibold text-[18px] leading-[100%] tracking-[0%] text-[#167893]">
+                <div>
+                    <h1 class="font-lato font-semibold text-[18px] leading-[100%] text-[#167893]">
                         2. Saves Time, Improves Accuracy
                     </h1>
-                    <p
-                        class="mt-4 w-[350px] font-lato font-normal text-[15px] leading-[152%] tracking-[0%] mt-2 max-w-[435px] text-black">
+                    <p class="mt-4 font-lato font-normal text-[15px] leading-[152%] text-black">
                         By automating measurement tracking, order management, and invoicing, MaapLo reduces errors
                         and
                         speeds up processes—helping you deliver quality and grow your business effortlessly.
@@ -635,44 +633,43 @@
                 </div>
             </div>
 
-            <div>
+            <!-- Center Icon -->
+            <div class="flex items-center w-full lg:w-[30%]">
                 <x-icon name="section6" />
             </div>
 
-            <div class="flex flex-col gap-7 lg:max-w-[45%] items-center lg:items-start text-center lg:text-left">
+            <!-- Right Column -->
+            <div class="flex flex-col gap-7 items-center justify-center lg:items-start text-center lg:text-left w-full lg:w-[30%]">
                 <div>
-                    <h1 class=" mt-5 font-lato font-semibold text-[18px] leading-[100%] tracking-[0%] text-[#167893]">
+                    <h1 class="mt-5 font-lato font-semibold text-[18px] leading-[100%] text-[#167893]">
                         3. Stay Connected, Anywhere
                     </h1>
-                    <p class="mt-3 font-lato font-normal text-[15px] leading-[152%] tracking-[0%] mt-2 text-black">
+                    <p class="mt-3 font-lato font-normal text-[15px] leading-[152%] text-black">
                         MaapLo keeps you connected in-store, studio, or on the go. Work online or offline—update
                         measurements and orders. Data syncs automatically for flexibility.
                     </p>
                 </div>
                 <div>
-                    <h1 class="font-lato font-semibold text-[18px] leading-[100%] tracking-[0%] text-[#167893]">
+                    <h1 class="font-lato font-semibold text-[18px] leading-[100%] text-[#167893]">
                         4. Budget-Friendly and Scalable
                     </h1>
-                    <p
-                        class="mt-3 font-lato font-normal text-[15px] leading-[152%] tracking-[0%] mt-2 max-w-[435px] text-black">
+                    <p class="mt-3 font-lato font-normal text-[15px] leading-[152%] text-black">
                         Affordable and scalable, MaapLo fits all business sizes. Pay for what you need, and grow
-                        seamlessly
-                        with tools to manage more clients and orders without extra cost.
+                        seamlessly with tools to manage more clients and orders without extra cost.
                     </p>
                 </div>
-                <div class="lg:-ml-20">
-                    <h1 class="font-lato font-semibold text-[18px] leading-[100%] tracking-[0%] text-[#167893]">
-                        5. Enhances customer experience
+                <div>
+                    <h1 class="font-lato font-semibold text-[18px] leading-[100%] text-[#167893]">
+                        5. Enhances Customer Experience
                     </h1>
-                    <p
-                        class="mt-3 font-lato font-normal text-[15px] leading-[152%] tracking-[0%] mt-2 max-w-[435px] text-black">
+                    <p class="mt-3 font-lato font-normal text-[15px] leading-[152%] text-black">
                         MaapLo helps you deliver smooth, personalized service with organized records, accurate
-                        tracking, and
-                        clear communication — boosting client satisfaction and loyalty.
+                        tracking, and clear communication — boosting client satisfaction and loyalty.
                     </p>
                 </div>
             </div>
         </div>
+
     </div>
 
     {{-- section 7 --}}
