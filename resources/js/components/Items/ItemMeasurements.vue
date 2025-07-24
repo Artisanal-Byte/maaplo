@@ -30,7 +30,11 @@ watch([() => props.askedMeasurements, () => props.currentEditIndex], ([newMeasur
             console.error('Error parsing measurements JSON', e);
         }
     } else if (newMeasurements?.length) {
-        formStore.order_items_template.measurements = Object.fromEntries(newMeasurements.map(item => [item.slug, null]));
+        // formStore.order_items_template.measurements = Object.fromEntries(newMeasurements.map(item => [item.slug, null]));
+        const currentValues = formStore.order_items_template.measurements || {};
+        formStore.order_items_template.measurements = Object.fromEntries(
+            newMeasurements.map(item => [item.slug, currentValues[item.slug] ?? null])
+        );
     }
 }, { immediate: true });
 </script>

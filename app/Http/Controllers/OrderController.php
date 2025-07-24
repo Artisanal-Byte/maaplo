@@ -434,4 +434,23 @@ class OrderController extends Controller
             'customers' => $customers
         ]);
     }
+
+    public function getCustomerMeasurements($customerId)
+    {
+        try {
+            $customer = Customer::findOrFail($customerId);
+
+            // Use accessor that automatically casts JSON to array
+            $measurements = $customer->base_measurements ?? [];
+
+            return response()->json([
+                'measurements' => $measurements
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['error' => 'Customer not found'], 404);
+        } catch (\Exception $e) {
+            \Log::error('Failed to fetch customer measurements: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to load measurements'], 500);
+        }
+    }
 }

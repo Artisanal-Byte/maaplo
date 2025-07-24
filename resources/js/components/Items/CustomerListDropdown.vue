@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps, watch } from 'vue';
+import { ref, defineProps, watch,onMounted } from 'vue';
 import { Icon } from '@iconify/vue';
 import { Link } from '@inertiajs/vue3';
 import axios from 'axios';
@@ -50,6 +50,27 @@ watch(() => formStore.customer_id, (newVal) => {
         selectedCustomer.value = found.name;
     }
 });
+
+onMounted(async () => {
+    if (formStore.customer_id && customers.value.length === 0) {
+        loadingCustomers.value = true;
+        try {
+            const response = await axios.get('/orders/customers/fetch');
+            customers.value = response.data.customers;
+
+            // Set the selectedCustomer display name
+            const found = customers.value.find(c => c.id === formStore.customer_id);
+            if (found) {
+                selectedCustomer.value = found.name;
+            }
+        } catch (error) {
+            console.error("Error loading customers:", error);
+        } finally {
+            loadingCustomers.value = false;
+        }
+    }
+});
+
 </script>
 
 <template>

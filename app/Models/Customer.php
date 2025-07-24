@@ -29,6 +29,10 @@ class Customer extends Model
 
     protected $with = ['photos'];
     protected $appends = ['base_measurements'];
+
+    // protected $casts = [
+    //     'base_measurements' => 'array',
+    // ];
     // Accessor for 'address'
     protected function address(): Attribute
     {
@@ -116,5 +120,10 @@ class Customer extends Model
             $customer->photos()->withTrashed()->restore();
             $customer->orders()->withTrashed()->restore();
         });
+    }
+
+    public function measurements()
+    {
+        return $this->hasMany(Measurement::class); // or whatever your model is
     }
 }
