@@ -43,12 +43,27 @@ class DashboardController extends Controller
             'deliveredOrders' => $deliveredOrders
         ]);
     }
-    public function viewClosedOrders()
+    public function viewClosedOrders(Request $request)
     {
-        $closedOrders = Order::with('customer')
-            ->where('status', 'closed')
-            ->get()
-            ->map(function ($order) {
+        $search = $request->input('search');
+
+        $closedOrdersQuery = Order::with('customer')
+            ->where('status', 'closed');
+
+        if ($search) {
+            $closedOrdersQuery->where(function ($query) use ($search) {
+                $query->where('order_number', 'like', "%{$search}%")
+                    ->orWhereHas('customer', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+
+        $closedOrders = $closedOrdersQuery
+            ->orderByDesc('id')
+            ->paginate(10)
+            ->through(function ($order) {
                 return [
                     'id' => $order->id,
                     'order_number' => $order->order_number,
@@ -56,7 +71,6 @@ class DashboardController extends Controller
                     'total_amount' => $order->total_amount,
                     'advance_paid' => $order->advance_paid,
                     'delivery_date' => $order->delivery_date,
-                    // customer nested info
                     'customer' => [
                         'name' => optional($order->customer)->name,
                         'email' => optional($order->customer)->email,
@@ -70,6 +84,7 @@ class DashboardController extends Controller
 
         return Inertia::render('ViewClosedOrder', [
             'closedOrders' => $closedOrders,
+            'search' => $search,
         ]);
     }
 

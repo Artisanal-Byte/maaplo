@@ -1,11 +1,54 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, router,Link } from '@inertiajs/vue3';
-import { defineProps } from 'vue';
+import { Head, router, Link } from '@inertiajs/vue3';
+import { defineProps, ref, reactive, computed, nextTick } from 'vue';
+import Pagination from '@/components/Pagination.vue';
+import Loader from '@/components/Loader.vue';
+import SearchList from '@/components/SearchIcon.vue';
 import { Icon } from '@iconify/vue';
 const props = defineProps({
-    closedOrders: Array,
+    closedOrders: Object,
+    search: String,
 });
+
+const showable = reactive({
+    showSearch: false,
+});
+const searchTerm = ref(props.search ?? '');
+const form = reactive({ isLoading: false });
+
+function myFn(val) {
+    searchTerm.value = val;
+    form.isLoading = true;
+    router.get(route('orders.viewClosed'), {
+        search: val
+    }, {
+        preserveScroll: true,
+        preserveState: true,
+        onFinish: () => {
+            form.isLoading = false;
+        }
+    });
+}
+
+
+function handlePaginationClick(url) {
+    form.isLoading = true;
+    router.get(url, {}, {
+        preserveScroll: true,
+        preserveState: true,
+        onFinish: () => {
+            form.isLoading = false;
+        }
+    });
+}
+
+const searchInputRef = ref(null);
+function focusSearchInput() {
+    nextTick(() => {
+        searchInputRef.value?.focus();
+    });
+}
 
 function viewOrder(orderId) {
     router.visit(route('orders.show', orderId) + '?source=fullclosed');
@@ -23,14 +66,25 @@ function viewOrder(orderId) {
                     <Icon icon="material-symbols:order-approve" class="text-primary" width="28" height="28" />
                     Closed Orders
                 </h1>
-                  <Link :href="route('orders.index')"
-                    class="flex items-center gap-1 hover:text-black text-gray-600">
+                <Link :href="route('orders.index')" class="flex items-center gap-1 hover:text-black text-gray-600">
                 <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
                 <span class="text-md font-medium">Back</span>
                 </Link>
             </div>
-            <div v-if="closedOrders.length" class="space-y-6">
-                <div v-for="order in closedOrders" :key="order.id"
+            <!-- 🔍 Search -->
+            <div class="flex justify-between mb-4">
+                <SearchList :showable="showable" @focusSearch="focusSearchInput" />
+            </div>
+            <div class="mb-6" v-if="showable.showSearch">
+                <input ref="searchInputRef" type="text" v-debounce:400ms="myFn" placeholder="Search..."
+                    class="w-full lg:max-w-7xl border border-gray-300 rounded-full px-4 py-3 text-sm shadow-[0px_0px_4.3px_0px_#16789333] focus:outline-none focus:ring focus:border-gray-400 transition-all" />
+            </div>
+
+            <!-- ⏳ Loader -->
+            <Loader v-if="form.isLoading" />
+
+            <div v-if="closedOrders.data.length" class="space-y-6">
+                <div v-for="order in closedOrders.data" :key="order.id"
                     class="w-full bg-white shadow-md rounded-lg border-2 border-green-500 p-6 hover:shadow-lg transition-shadow">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-semibold text-primary">Order Number #{{ order.order_number }}</h2>
@@ -68,6 +122,11 @@ function viewOrder(orderId) {
             <div v-else class="text-center text-gray-400 py-16">
                 <p class="text-5xl mb-4">📦</p>
                 <p class="text-lg font-medium">No closed orders found</p>
+            </div>
+
+            <!-- 📄 Pagination -->
+            <div class="mt-8">
+                <Pagination :links="closedOrders.links" :onPageClick="handlePaginationClick" />
             </div>
         </div>
     </AppLayout>
