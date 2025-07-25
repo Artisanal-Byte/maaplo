@@ -6,67 +6,63 @@ on:
       - development
 
 jobs:
-  deploy:
+  create-deployment-artifacts:
     runs-on: ubuntu-latest
+    outputs:
+      deployment-matrix: ${{ steps.export-deployment-matrix.outputs.deployment-matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure PHP 8.3
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: 8.3
+          extensions: mbstring, ctype, fileinfo, openssl, PDO, bcmath, json, tokenizer, xml, sqlite3
+      - name: Composer install
+        run: composer install --no-interaction --prefer-dist
+      - name: Compile CSS and Javascript
+        run: |
+          sudo npm install
+          sudo npm run build
+      - name: Create deployment artifact
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: tar -czf "${GITHUB_SHA}.tar.gz" --exclude=*.git --exclude=node_modules --exclude=tests *
+      - name: Store artifact for distribution
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-build
+          path: ${{ github.sha }}.tar.gz
+      - name: Export deployment matrix
+        id: export-deployment-matrix
+        run: |
+          JSON="$(cat ./development-server-config.json)"
+          JSON="${JSON//'%'/'%25'}"
+          JSON="${JSON//$'\n'/'%0A'}"
+          JSON="${JSON//$'\r'/'%0D'}"
+          echo "::set-output name=deployment-matrix::$JSON"
 
+  prepare-release-on-servers:
+    needs: create-deployment-artifacts
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         server: ${{ fromJson(needs.create-deployment-artifacts.outputs.deployment-matrix) }}
-    needs: create-deployment-artifacts
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
+      - uses: actions/download-artifact@v4
         with:
-          php-version: 8.3
-
-      - name: Cache Composer packages
-        uses: actions/cache@v3
-        with:
-          path: vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Install PHP dependencies
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Cache Node modules
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
-
-      - name: Install Node dependencies
-        run: npm ci
-
-      - name: Build assets
-        run: npm run build
-
-      - name: Create archive
-        run: |
-          mkdir -p artifacts
-          tar -czf artifacts/${{ github.sha }}.tar.gz --exclude=*.git --exclude=node_modules --exclude=tests *
+          name: app-build
 
       - name: Upload via rsync
         uses: burnett01/rsync-deployments@7.0.2
         with:
           switches: -avzr --delete
-          legacy_allow_rsa_hostkeys: "true"           # Optional if your server requires RSA
-          path: ${{ github.sha }}.tar.gz              # Local archive to push
+          path: ${{ github.sha }}.tar.gz
           remote_host: ${{ matrix.server.ip }}
           remote_user: ${{ matrix.server.username }}
           remote_port: ${{ matrix.server.port }}
           remote_path: ${{ matrix.server.path }}/artifacts
           remote_key: ${{ secrets.SERVER_SSH }}
+          legacy_allow_rsa_hostkeys: "true"
 
       - name: Extract archive and create directories
         uses: appleboy/ssh-action@master
@@ -81,26 +77,24 @@ jobs:
           script: |
             sudo mkdir -p "${{ matrix.server.path }}/releases/${GITHUB_SHA}"
             sudo chown -R ubuntu:www-data ${{ matrix.server.path }}/releases
-
             sudo tar xzf ${{ matrix.server.path }}/artifacts/${GITHUB_SHA}.tar.gz \
               -C "${{ matrix.server.path }}/releases/${GITHUB_SHA}"
-
             sudo mkdir -p ${{ matrix.server.path }}/storage/{app,public,framework,logs}
             sudo mkdir -p ${{ matrix.server.path }}/storage/framework/{cache,sessions,testing,views}
             sudo mkdir -p ${{ matrix.server.path }}/storage/database
             sudo touch ${{ matrix.server.path }}/storage/database/database.sqlite
-
             sudo chmod -R 0777 ${{ matrix.server.path }}/storage
             sudo chown -R ubuntu:www-data ${{ matrix.server.path }}/storage
             sudo chown -R ubuntu:www-data ${{ matrix.server.path }}/bootstrap/cache
             sudo chmod -R 775 ${{ matrix.server.path }}/bootstrap/cache
 
-      - name: Delete Artifacts
-        uses: geekyeggo/delete-artifact@v5
-        with:
-          name: app-build
-          failOnError: false
-
+  run-before-hooks:
+    needs: prepare-release-on-servers
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        server: ${{ fromJson(needs.create-deployment-artifacts.outputs.deployment-matrix) }}
+    steps:
       - name: Run before hooks
         uses: appleboy/ssh-action@master
         env:
@@ -118,6 +112,13 @@ jobs:
           script: |
             ${{ matrix.server.beforeHooks }}
 
+  activate-release:
+    needs: run-before-hooks
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        server: ${{ fromJson(needs.create-deployment-artifacts.outputs.deployment-matrix) }}
+    steps:
       - name: Activate release
         uses: appleboy/ssh-action@master
         env:
@@ -142,7 +143,6 @@ jobs:
             sudo service php8.3-fpm reload
             sudo chown -R ubuntu:www-data $ACTIVE_RELEASE_PATH
             cd ${ACTIVE_RELEASE_PATH}
-
             sudo php artisan cache:clear
             sudo php artisan auth:clear-resets
             sudo php artisan view:cache
@@ -151,6 +151,13 @@ jobs:
             sudo php artisan storage:link
             sudo composer install --optimize-autoloader
 
+  run-after-hooks:
+    needs: activate-release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        server: ${{ fromJson(needs.create-deployment-artifacts.outputs.deployment-matrix) }}
+    steps:
       - name: Run after hooks
         uses: appleboy/ssh-action@master
         env:
@@ -166,7 +173,6 @@ jobs:
           port: ${{ matrix.server.port }}
           envs: GITHUB_SHA,RELEASE_PATH,ACTIVE_RELEASE_PATH,STORAGE_PATH,BASE_PATH
           script: |
-            export PATH=$PATH:/usr/local/bin:/home/ubuntu/.nvm/versions/node/…
             cd ${{ matrix.server.path }}/releases/${{ github.sha }}
             npm install puppeteer
             sudo chown -R ubuntu:www-data node_modules package-lock.json
@@ -176,6 +182,13 @@ jobs:
             sudo chmod -R 2775 "${{ matrix.server.path }}/releases/${GITHUB_SHA}/storage"
             ${{ matrix.server.afterHooks }}
 
+  clean-up:
+    needs: run-after-hooks
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        server: ${{ fromJson(needs.create-deployment-artifacts.outputs.deployment-matrix) }}
+    steps:
       - name: Clean up
         uses: appleboy/ssh-action@master
         env:
