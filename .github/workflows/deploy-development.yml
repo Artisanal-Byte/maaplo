@@ -182,7 +182,7 @@ jobs:
             sudo chown -R ubuntu:www-data ${{ matrix.server.path }}/storage
             sudo chmod -R 755 ${{ matrix.server.path }}/storage
             sudo chown -R ubuntu:www-data "${{ matrix.server.path }}/releases/${GITHUB_SHA}/storage"
-            sudo chmod -R `2775 "${{ matrix.server.path }}/releases/${GITHUB_SHA}/storage"`
+            sudo chmod -R 2775 "${{ matrix.server.path }}/releases/${GITHUB_SHA}/storage"
             ${{ matrix.server.afterHooks }}
 
   clean-up:
