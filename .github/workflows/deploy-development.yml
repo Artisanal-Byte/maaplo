@@ -52,20 +52,15 @@ jobs:
         with:
           name: app-build
 
-      - name: Upload via rsync
-        uses: burnett01/rsync-deployments@7.0.2
-        with:
-          switches: |
-            -avzr --delete
-            --chown=ubuntu:www-data
-            --chmod=Dg=rwx,Fg=rwx
-          path: ${{ github.sha }}.tar.gz
-          remote_host: ${{ matrix.server.ip }}
-          remote_user: ${{ matrix.server.username }}
-          remote_port: ${{ matrix.server.port }}
-          remote_path: ${{ matrix.server.path }}/artifacts
-          remote_key: ${{ secrets.SERVER_SSH }}
-          legacy_allow_rsa_hostkeys: "true"
+      - name: Upload via rsync CLI
+        run: |
+          rsync -avz --delete \
+            --chown=ubuntu:www-data \
+            --chmod=Dg=rwx,Fg=rwx \
+            "${{ github.sha }}.tar.gz" \
+            "${{ matrix.server.username }}@${{ matrix.server.ip }}:${{ matrix.server.path }}/artifacts/"
+        env:
+          SSH_AUTH_SOCK: ${{ env.SSH_AUTH_SOCK }}
 
       - name: Extract archive and create directories
         uses: appleboy/ssh-action@master
