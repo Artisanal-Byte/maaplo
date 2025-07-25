@@ -19,18 +19,31 @@ class TemplateController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $authUser = Auth::user();
-        $items = Template::where('user_id', $authUser->id)
-            ->orWhereNull('user_id')
-            ->latest()
-            ->paginate(10);
+
+        $query = Template::query()
+            ->where(function ($q) use ($authUser) {
+                $q->where('user_id', $authUser->id)
+                    ->orWhereNull('user_id');
+            });
+
+        $search = $request->input('search', '');
+
+        if ($search !== '') {
+            $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%']);
+        }
+
+        $items = $query->latest()->paginate(10)->withQueryString();
+
         return Inertia::render('items/Index', [
             'items' => $items,
             'authUser' => $authUser,
+            'search' => $request->search ?? '',
         ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
