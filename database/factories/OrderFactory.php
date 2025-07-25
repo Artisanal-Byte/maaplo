@@ -38,6 +38,7 @@ class OrderFactory extends Factory
             'delivery_date' => $this->faker->dateTimeBetween('now', '+1 month'),
             'close_date' => $this->faker->optional()->dateTimeBetween('+1 month', '+2 months'),
             'notes' => ['note1' => $this->faker->sentence()],
+            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
 
