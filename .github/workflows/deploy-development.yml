@@ -7,7 +7,7 @@ on:
 
 jobs:
   prepare-artifacts:
-    name: Prepare deployment artifacts
+    name: Prepare Deployment Artifacts
     runs-on: ubuntu-latest
     outputs:
       deployment-matrix: ${{ steps.export-deployment-matrix.outputs.deployment-matrix }}
@@ -20,6 +20,7 @@ jobs:
         with:
           path: vendor
           key: composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: composer-
 
       - name: Set up PHP 8.3
         uses: shivammathur/setup-php@v2
@@ -31,26 +32,30 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 
-      - name: Cache node modules
+      - name: Cache Node modules
         uses: actions/cache@v3
         with:
           path: node_modules
           key: node-${{ hashFiles('package-lock.json') }}
+          restore-keys: node-
 
-      - name: Install Node.js and build assets
+      - name: Set up Node.js 20.x
         uses: actions/setup-node@v3
         with:
           node-version: 20
           cache: 'npm'
 
-      - run: npm ci
-      - run: npm run build
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Build frontend assets
+        run: npm run build
 
       - name: Create deployment artifact
         run: tar --exclude=.git --exclude=node_modules --exclude=tests -czf "${{ github.sha }}.tar.gz" .
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
+      - name: Upload deployment artifact
+        uses: actions/upload-artifact@v4
         with:
           name: app-build
           path: ${{ github.sha }}.tar.gz
@@ -61,7 +66,8 @@ jobs:
           JSON=$(cat ./development-server-config.json)
           echo "::set-output name=deployment-matrix::${JSON}"
 
-  deploy-to-servers:
+  deploy:
+    name: Deploy to Servers
     needs: prepare-artifacts
     runs-on: ubuntu-latest
     strategy:
@@ -70,7 +76,7 @@ jobs:
 
     steps:
       - name: Download deployment artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: app-build
 
@@ -79,13 +85,13 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SERVER_SSH }}
 
-      - name: Rsync deployment artifact
+      - name: Rsync deployment artifact to server
         run: |
-          rsync -avz --progress -e "ssh -p ${{ matrix.server.port }}" \
+          rsync -avz -e "ssh -p ${{ matrix.server.port }}" \
             "${{ github.sha }}.tar.gz" \
             "${{ matrix.server.username }}@${{ matrix.server.ip }}:${{ matrix.server.path }}/artifacts/"
 
-      - name: Deploy on server
+      - name: Deploy on remote server
         uses: appleboy/ssh-action@v0.1.9
         with:
           host: ${{ matrix.server.ip }}
@@ -94,32 +100,34 @@ jobs:
           port: ${{ matrix.server.port }}
           script: |
             RELEASE_DIR="${{ matrix.server.path }}/releases/${GITHUB_SHA}"
-            ARTIFACT="${{ matrix.server.path }}/artifacts/${GITHUB_SHA}.tar.gz"
+            ARTIFACT_PATH="${{ matrix.server.path }}/artifacts/${GITHUB_SHA}.tar.gz"
             STORAGE_DIR="${{ matrix.server.path }}/storage"
             CURRENT_LINK="${{ matrix.server.path }}/current"
 
             mkdir -p "$RELEASE_DIR"
-            tar -xzf "$ARTIFACT" -C "$RELEASE_DIR"
+            tar -xzf "$ARTIFACT_PATH" -C "$RELEASE_DIR"
 
-            # Create storage directories if missing and set correct ownership
+            # Prepare storage directories and permissions
             mkdir -p "$STORAGE_DIR"/{app,public,framework/{cache,sessions,views},logs,database}
             touch "$STORAGE_DIR/database/database.sqlite"
             chown -R ubuntu:www-data "$STORAGE_DIR"
             chmod -R 775 "$STORAGE_DIR"
 
-            # Set permissions and ownership on release
+            # Set permissions for release
             chown -R ubuntu:www-data "$RELEASE_DIR"
             chmod -R 755 "$RELEASE_DIR"
 
-            # Link storage and environment
+            # Symlink storage and .env
             ln -sfn "$STORAGE_DIR" "$RELEASE_DIR/storage"
             ln -sfn "${{ matrix.server.path }}/.env" "$RELEASE_DIR/.env"
+
+            # Update current symlink
             ln -sfn "$RELEASE_DIR" "$CURRENT_LINK"
 
-            # Reload PHP-FPM
+            # Reload PHP-FPM to pick up changes
             sudo systemctl reload php8.3-fpm
 
-            # Laravel optimizations
+            # Laravel optimization commands
             cd "$CURRENT_LINK"
             php artisan cache:clear
             php artisan config:cache
@@ -127,7 +135,7 @@ jobs:
             php artisan view:cache
             php artisan queue:restart
 
-      - name: Clean old releases and artifacts
+      - name: Clean up old releases and artifacts
         uses: appleboy/ssh-action@v0.1.9
         with:
           host: ${{ matrix.server.ip }}
@@ -138,6 +146,6 @@ jobs:
             RELEASES_DIR="${{ matrix.server.path }}/releases"
             ARTIFACTS_DIR="${{ matrix.server.path }}/artifacts"
 
-            # Keep last 3 releases and delete the rest
+            # Keep only last 3 releases
             cd "$RELEASES_DIR" && ls -1dt */ | tail -n +4 | xargs -r rm -rf
             cd "$ARTIFACTS_DIR" && ls -1t | tail -n +4 | xargs -r rm -f
