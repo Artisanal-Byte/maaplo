@@ -52,7 +52,7 @@ jobs:
           tar -czf artifacts/${{ github.sha }}.tar.gz --exclude=node_modules --exclude=vendor --exclude=tests .
 
       - name: Upload via rsync
-        uses: burnett01/rsync-deployments@v2.0.0
+        uses: burnett01/rsync-deployments@7.0.2
         with:
           switches: -avz --progress -e "ssh -p ${{ matrix.server.port }}"
           path: ${{ github.sha }}.tar.gz
