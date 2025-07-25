@@ -164,7 +164,7 @@ export const useOrderFormStore = defineStore('orderForm', {
             this.user_id = order.user_id;
             this.customer_id = order.customer_id;
             this.status = order.status && [
-                "created", "in_process", "processed", "delivered", "completed", "cancelled", "trial_done", "in_alteration", "ready_for_delivery"
+                "created", "in_process", "processed", "delivered", "cancelled", "trial_done", "in_alteration", "ready_for_delivery"
             ].includes(order.status.toLowerCase())
                 ? order.status.toLowerCase()
                 : 'created';

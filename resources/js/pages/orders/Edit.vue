@@ -213,7 +213,6 @@ const onItemAdded = (itemData) => {
                             <option value="in_alteration">✂️ In Alteration</option>
                             <option value="ready_for_delivery">📬 Ready for Delivery</option>
                             <option value="delivered">🚚 Delivered</option>
-                            <option value="completed">✅ Completed</option>
                             <option value="cancelled">❌ Cancelled</option>
                         </select>
                         <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400">
