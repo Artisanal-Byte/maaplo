@@ -51,15 +51,15 @@ jobs:
           mkdir -p artifacts
           tar -czf artifacts/${{ github.sha }}.tar.gz --exclude=node_modules --exclude=vendor --exclude=tests .
 
-      - name: Upload archive via rsync
+      - name: Upload via rsync
         uses: burnett01/rsync-deployments@v2.0.0
         with:
-          switches: -avz --progress
-          path: artifacts/${{ github.sha }}.tar.gz
-          remote_path: /var/www/maaplo/artifacts
-          remote_host: ${{ secrets.HOST }}
-          remote_user: ${{ secrets.USERNAME }}
-          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          switches: -avz --progress -e "ssh -p ${{ matrix.server.port }}"
+          path: ${{ github.sha }}.tar.gz
+          remote_path: ${{ matrix.server.path }}/artifacts
+          remote_host: ${{ matrix.server.ip }}
+          remote_user: ${{ matrix.server.username }}
+          remote_key: ${{ secrets.SERVER_SSH }}
 
       - name: SSH and deploy on server
         uses: appleboy/ssh-action@master
