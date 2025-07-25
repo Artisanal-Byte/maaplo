@@ -54,12 +54,15 @@ jobs:
       - name: Upload via rsync
         uses: burnett01/rsync-deployments@7.0.2
         with:
-          switches: -avz --progress -e "ssh -p ${{ matrix.server.port }}"
-          path: ${{ github.sha }}.tar.gz
-          remote_path: ${{ matrix.server.path }}/artifacts
+          switches: -avz --progress
           remote_host: ${{ matrix.server.ip }}
           remote_user: ${{ matrix.server.username }}
+          remote_port: ${{ matrix.server.port }}
+          path: ${{ github.sha }}.tar.gz
+          remote_path: ${{ matrix.server.path }}/artifacts
           remote_key: ${{ secrets.SERVER_SSH }}
+          legacy_allow_rsa_hostkeys: "true"
+
 
       - name: SSH and deploy on server
         uses: appleboy/ssh-action@master
