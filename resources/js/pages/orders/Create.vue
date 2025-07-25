@@ -123,7 +123,6 @@ watch(() => form.customer_id, async (newCustomerId) => {
 
     try {
         const response = await axios.get(`/orders/customers/${newCustomerId}/measurements`);
-        console.log('API returned measurements:', response.data.measurements);
         customerMeasurements.value = response.data.measurements || [];
     } catch (error) {
         console.error("Failed to load measurements:", error);

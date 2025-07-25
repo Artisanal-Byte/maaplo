@@ -1,16 +1,16 @@
 <script setup>
-import { ref, defineProps, watch,onMounted } from 'vue';
+import { ref, defineProps, watch, onMounted } from 'vue';
 import { Icon } from '@iconify/vue';
 import { Link } from '@inertiajs/vue3';
 import axios from 'axios';
 import { useOrderFormStore } from '@/stores/orderFormStore';
 
-const props = defineProps(["error"]);
+const props = defineProps(["error", "customers"]);
 
 const formStore = useOrderFormStore();
 const selectedCustomer = ref('Select Customer');
 const showDropdown = ref(false);
-const customers = ref([]);
+const customers = ref(props.customers || []);
 const loadingCustomers = ref(false);
 
 // Convert image path for display
@@ -22,7 +22,8 @@ function asset(path) {
 async function toggleDropdown() {
     showDropdown.value = !showDropdown.value;
 
-    if (showDropdown.value && customers.value.length === 0) {
+    if (showDropdown.value && customers.value.length === 0 && props.customers.length === 0) {
+
         loadingCustomers.value = true;
         try {
             const response = await axios.get('/orders/customers/fetch');
