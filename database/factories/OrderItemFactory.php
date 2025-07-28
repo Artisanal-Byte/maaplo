@@ -15,13 +15,18 @@ class OrderItemFactory extends Factory
 
     public function definition(): array
     {
+        $frontNeckOptions = [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 14, 15];
+        $backNeckOptions = [6, 13, 16, 17, 18];
         return [
             'order_id' => null,
             'template_id' => Template::inRandomOrder()->first()->id,
             // 'item_template_id' => null, // ✅ REMOVE THIS LINE
             // 'name' => $this->faker->word(),
             'measurements' => json_encode([]),
-            'design_detail' => json_encode([]),
+            'design_detail' => json_encode([
+                'Front Neck' => $this->faker->randomElement($frontNeckOptions),
+                'Back Neck' => $this->faker->randomElement($backNeckOptions),
+            ]),
             'colors' => $this->faker->colorName(),
             'material_type' => $this->faker->word(),
             'trial_dates' => $this->faker->date(),

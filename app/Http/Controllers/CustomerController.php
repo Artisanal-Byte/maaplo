@@ -74,6 +74,7 @@ class CustomerController extends Controller
             'plan_title' => $plan ? $plan->plan_title : 'Free',
             'plan_limit' => $plan ? $plan->user_limit : 5,
             'search' => $search,
+            'customerCount' => $customerCount,
         ]);
     }
 
