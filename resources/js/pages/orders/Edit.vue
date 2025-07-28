@@ -9,11 +9,11 @@ import Button from '@/components/Button.vue';
 import Notes from '@/components/Items/Notes.vue';
 import Input from '@/components/InputWithLabel.vue';
 import { useOrderFormStore } from '@/stores/orderFormStore';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { nextTick } from 'vue';
 import Loader from '@/components/Loader.vue';
 
-const props = defineProps(["users", "customers", "itemTypes", "errors", "order", "orderItems","allDesignDetails"]);
+const props = defineProps(["users", "customers", "itemTypes", "errors", "order", "orderItems", "allDesignDetails"]);
 
 const showModal = ref(false);
 const showDeletePopup = ref(false);
@@ -48,6 +48,19 @@ onMounted(() => {
     }
     ready.value = true;
 });
+
+function resetOrderItemTemplate() {
+    // your reset logic here
+    console.log('Resetting template...')
+    // maybe reset some state or store
+}
+function handleBackClick() {
+    resetOrderItemTemplate()
+    form.resetOrderData();
+    form.resetOrderItemTemplate();
+    // now navigate to the route
+    router.visit(route('orders.index'))
+}
 
 
 watch(() => form.order_items, (items) => {
@@ -224,7 +237,7 @@ const onItemAdded = (itemData) => {
 
                 <!-- Back Button (Right) -->
                 <div class="mt-8 sm:mt-6">
-                    <Link :href="route('orders.index')"
+                    <Link @click.prevent="handleBackClick"
                         class="flex items-center gap-1 text-gray-600 hover:text-black transition">
                     <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
                     <span class="text-[16px] font-medium">Back</span>
@@ -253,7 +266,8 @@ const onItemAdded = (itemData) => {
                     <ItemModel :errors="errors" :showModal="showModal" @close="closeModel"
                         :form="form.order_items_template" :itemTypes="itemTypes" :measurements="[]"
                         :orderItems="orderItems" :currentEditIndex="currentEditIndex" :order="order"
-                        @item-updated="recalculateTotal" @item-added="onItemAdded" :allDesignDetails="allDesignDetails"/>
+                        @item-updated="recalculateTotal" @item-added="onItemAdded"
+                        :allDesignDetails="allDesignDetails" />
 
                     <div class="mt-6 overflow-x-auto rounded-lg shadow-lg">
                         <table class="min-w-full border-collapse bg-white text-sm text-left text-gray-700">
@@ -279,7 +293,8 @@ const onItemAdded = (itemData) => {
                                     <td class="px-4 py-2 border-b border-gray-200">
                                         ₹ {{ item.item_cost?.toLocaleString('en-IN', {
                                             minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2 }) || '0.00' }}
+                                            maximumFractionDigits: 2
+                                        }) || '0.00' }}
                                     </td>
                                     <td class="px-4 py-2 border-b border-gray-200">
                                         <div class="flex text-center">
