@@ -1,78 +1,80 @@
 <script setup>
-import { ref, defineProps, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, defineProps } from 'vue';
+import { useOrderFormStore } from '@/stores/orderFormStore';
 import { Icon } from '@iconify/vue';
 import { Link } from '@inertiajs/vue3';
-import axios from 'axios';
-import { useOrderFormStore } from '@/stores/orderFormStore';
 
-const props = defineProps(["error", "customers"]);
+const props = defineProps({
+    customers: {
+        type: Array,
+        default: () => [],
+    },
+});
 
 const formStore = useOrderFormStore();
-const selectedCustomer = ref('Select Customer');
 const showDropdown = ref(false);
-const customers = ref(props.customers || []);
+const customers = ref([...props.customers]); // ✅ Use props directly
 const loadingCustomers = ref(false);
+const selectedCustomer = ref('Select Customer');
 
-// Convert image path for display
+// 🔁 Converts image paths
 function asset(path) {
     return '/' + path;
 }
 
-// Toggle dropdown and load customers on first open
+// ✅ Sets the selected name
+function setSelectedCustomerFromStore() {
+    if (!formStore.customer_id || customers.value.length === 0) return;
+
+    const match = customers.value.find(c => c.id === formStore.customer_id);
+    if (match) {
+        selectedCustomer.value = match.name;
+    }
+}
+
+// 🔃 Dropdown toggle with conditional fetch (if needed)
 async function toggleDropdown() {
     showDropdown.value = !showDropdown.value;
 
-    if (showDropdown.value && customers.value.length === 0 && props.customers.length === 0) {
-
-        loadingCustomers.value = true;
-        try {
-            const response = await axios.get('/orders/customers/fetch');
-            customers.value = response.data.customers;
-        } catch (error) {
-            console.error("Error loading customers:", error);
-        } finally {
-            loadingCustomers.value = false;
-        }
+    // only fetch if no customers yet
+    if (showDropdown.value && customers.value.length === 0) {
+        await fetchCustomers();
     }
 }
 
-// Select customer from dropdown
+// 🔁 Fetch customers if needed
+async function fetchCustomers() {
+    loadingCustomers.value = true;
+    try {
+        const response = await axios.get('/orders/customers/fetch');
+        customers.value = response.data.status ? response.data.customers : [];
+        setSelectedCustomerFromStore(); // ✅ Reset name after fetching
+    } catch (error) {
+        console.error('Failed to fetch customers:', error);
+        customers.value = [];
+    } finally {
+        loadingCustomers.value = false;
+    }
+}
+
+// ✅ When selecting an option
 function selectOption(customer) {
     selectedCustomer.value = customer.name;
-    formStore.user_id = customer.user_id;
     formStore.customer_id = customer.id;
+    formStore.user_id = customer.user_id;
     showDropdown.value = false;
 }
 
-// Watch for changes in selected customer and update display
-watch(() => formStore.customer_id, (newVal) => {
-    const found = customers.value.find(c => c.id === newVal);
-    if (found) {
-        selectedCustomer.value = found.name;
-    }
+// 🧠 Watch for external changes to customer_id
+watch(() => formStore.customer_id, setSelectedCustomerFromStore);
+
+// 🚀 On mount, if editing, prefill name
+onMounted(() => {
+    setSelectedCustomerFromStore(); // ✅ Works immediately with preloaded props
 });
-
-onMounted(async () => {
-    if (formStore.customer_id && customers.value.length === 0) {
-        loadingCustomers.value = true;
-        try {
-            const response = await axios.get('/orders/customers/fetch');
-            customers.value = response.data.customers;
-
-            // Set the selectedCustomer display name
-            const found = customers.value.find(c => c.id === formStore.customer_id);
-            if (found) {
-                selectedCustomer.value = found.name;
-            }
-        } catch (error) {
-            console.error("Error loading customers:", error);
-        } finally {
-            loadingCustomers.value = false;
-        }
-    }
-});
-
 </script>
+
+
 
 <template>
     <div class="w-full border-b border-primary flex justify-between items-center relative">
@@ -85,7 +87,6 @@ onMounted(async () => {
                 </span>
                 <Icon :icon="showDropdown ? 'icon-park-outline:up' : 'icon-park-outline:down'" width="20" height="20" />
             </button>
-            <p class="text-red-600 text-sm">{{ error }}</p>
 
             <!-- Dropdown Menu -->
             <div v-if="showDropdown"
