@@ -31,6 +31,7 @@ const props = defineProps<{
             advance_payment?: string;
             payment_due?: string;
             subscription_plan?: string,
+
         }>,
         links: Array<any>,
         meta?: any
@@ -39,6 +40,7 @@ const props = defineProps<{
     plan_title: string,
     plan_limit: number,
     search?: string,
+    customerCount?: number,
 }>();
 
 const searchTerm = ref(props.search ?? '');
@@ -113,7 +115,7 @@ function handlePaginationClick(url: string) {
                         Customer
                     </h1>
                     <p class="text-sm text-gray-700 text-right mt-2">
-                        Your Customers: {{ props.customers.data.length }}
+                        Your Customers: {{ props.customerCount }}
                     </p>
                 </div>
                 <div class="flex gap-4 text-gray-600">
