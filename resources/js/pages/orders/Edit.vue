@@ -9,7 +9,7 @@ import Button from '@/components/Button.vue';
 import Notes from '@/components/Items/Notes.vue';
 import Input from '@/components/InputWithLabel.vue';
 import { useOrderFormStore } from '@/stores/orderFormStore';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { nextTick } from 'vue';
 import Loader from '@/components/Loader.vue';
 
@@ -48,19 +48,6 @@ onMounted(() => {
     }
     ready.value = true;
 });
-
-function resetOrderItemTemplate() {
-    // your reset logic here
-    console.log('Resetting template...')
-    // maybe reset some state or store
-}
-function handleBackClick() {
-    resetOrderItemTemplate()
-    form.resetOrderData();
-    form.resetOrderItemTemplate();
-    // now navigate to the route
-    router.visit(route('orders.index'))
-}
 
 
 watch(() => form.order_items, (items) => {
@@ -237,7 +224,7 @@ const onItemAdded = (itemData) => {
 
                 <!-- Back Button (Right) -->
                 <div class="mt-8 sm:mt-6">
-                    <Link @click.prevent="handleBackClick"
+                    <Link :href="route('orders.index')"
                         class="flex items-center gap-1 text-gray-600 hover:text-black transition">
                     <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
                     <span class="text-[16px] font-medium">Back</span>
