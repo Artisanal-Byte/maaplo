@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Icon } from '@iconify/vue';
 import DateIcon from '@/components/DateIcon.vue';
 import CustomerListDropdown from '@/components/Items/CustomerListDropdown.vue';
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 import ItemModel from '@/components/Items/ItemModel.vue';
 import Button from '@/components/Button.vue';
 import Notes from '@/components/Items/Notes.vue';
@@ -48,6 +48,12 @@ const create = () => {
             loading.value = false;
         });
 };
+
+onMounted(() => {
+    // Always reset when the create page is mounted
+    form.resetOrderData();
+    form.resetOrderItemTemplate();
+});
 
 
 //total amount of order
@@ -274,7 +280,7 @@ watch(() => form.customer_id, async (newCustomerId) => {
                             <h2><span class="font-semibold">Advance Paid:</span> ₹ {{ form.advance_paid || 0 }}</h2>
                             <h2><span class="font-semibold text-red-600 underline">Balance Due:</span> ₹ {{
                                 (form.total_amount || 0) - (form.advance_paid || 0)
-                                }}</h2>
+                            }}</h2>
                         </div>
 
                         <!-- Delete Confirmation Modal -->
