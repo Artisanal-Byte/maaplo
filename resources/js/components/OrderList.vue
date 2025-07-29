@@ -37,6 +37,12 @@ function openDeleteModal(id) {
 }
 function confirmDelete() {
     router.delete(route('orders.destroy', selectedOrderId.value), {
+        onSuccess: () => {
+            toast.success('Order deleted successfully!');
+        },
+        onError: () => {
+            toast.error('Failed to delete the order.');
+        },
         onFinish: () => {
             showDeleteModal.value = false;
             selectedOrderId.value = null;

@@ -112,7 +112,7 @@ class DashboardController extends Controller
             'status' => 'closed',
         ]);
         ToastMagic::success('Order closed successfully!');
-        return redirect()->route('orders.closed');
+        return redirect()->route('orders.index');
     }
 
     public function getChartData(Request $request)
