@@ -2,7 +2,7 @@
 import { ref, defineProps, computed, watch } from 'vue';
 import { Icon } from '@iconify/vue';
 
-const props = defineProps(["itemTypes", "currentEditIndex"]);
+const props = defineProps(["itemTypes", "currentEditTemplateId"]);
 
 const emits = defineEmits(['setItemId', 'setSelectDesignDetails']);
 
@@ -41,30 +41,25 @@ const showClearIcon = computed(() => searchQuery.value.length > 0);
 
 // Pre-fill the itemType if editing
 watch(
-    () => props.currentEditIndex,
-    (newIndex) => {
-        if (
-            newIndex !== null &&
-            newIndex !== undefined &&
-            props.itemTypes &&
-            props.itemTypes.length > newIndex
-        ) {
-            const selectedItem = props.itemTypes[newIndex];
+    () => props.currentEditTemplateId,
+    (templateId) => {
+        if (templateId && props.itemTypes?.length) {
+            const selectedItem = props.itemTypes.find(t => t.id === templateId);
 
-            if (selectedItem && selectedItem.id) {
+            if (selectedItem) {
                 modelValue.value = selectedItem.name;
                 searchQuery.value = selectedItem.name;
 
-                // ✅ Emit correctly
                 emits('setItemId', selectedItem);
                 emits('setSelectDesignDetails', selectedItem.id);
             } else {
-                console.warn('Selected item is invalid or missing ID', selectedItem);
+                console.warn('Template ID not found in itemTypes:', templateId);
             }
         }
     },
     { immediate: true }
 );
+
 
 // Handle option selection from dropdown
 const selectOption = (option) => {
