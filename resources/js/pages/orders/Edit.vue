@@ -98,13 +98,20 @@ const proceedDelete = () => {
 };
 const currentEditIndex = ref(null);
 const editOrderItem = (index) => {
-    form.setOrderItemData(index);
-    form.order_items_template.mode = 'edit';
+    const item = form.order_items[index];
 
-    // Save this index to ref to pass down
+    form.setOrderItemData(index);
+
+    // Slight delay to make sure reactivity is honored
+    nextTick(() => {
+        form.order_items_template.is_urgent = !!item.is_urgent;
+    });
+
+    form.order_items_template.mode = 'edit';
     currentEditIndex.value = index;
     showModal.value = true;
 };
+
 
 const update = () => {
     if (form.advance_paid > totalAmmount.value) {
