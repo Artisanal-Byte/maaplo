@@ -42,7 +42,11 @@ class OrderItemFactory extends Factory
             'stiching_cost' => $this->faker->randomFloat(2, 0, 50),
             'altering_cost' => $this->faker->randomFloat(2, 0, 50),
             'delivery_date' => $this->faker->date(),
-            'work_type' => $this->faker->word(),
+            'work_type' => $this->faker->randomElement([
+                'New from Material',
+                'Only Stitching',
+                'Only Altering',
+            ]),
             'cloth_img1' => null,
             'cloth_img2' => null,
             'Pattern_img1' => null,
