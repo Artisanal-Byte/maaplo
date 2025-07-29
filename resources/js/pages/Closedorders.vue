@@ -158,8 +158,9 @@ function viewOrder(orderId) {
 
             <!-- Loader -->
             <Loader v-if="form.isLoading" />
+            <!-- dashboard view -->
             <div v-if="deliveredOrders && deliveredOrders.data && deliveredOrders.data.length"
-                class="overflow-x-auto bg-white shadow-lg rounded-xl border border-gray-200">
+                class="overflow-x-auto bg-white shadow-lg rounded-xl border border-gray-200  hidden lg:block">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -228,10 +229,46 @@ function viewOrder(orderId) {
                     </tbody>
                 </table>
             </div>
-            <!-- No Data or Empty State -->
-            <!-- <div v-else-if="!form.isLoading && (!deliveredOrders || !deliveredOrders.data)">
-                <div class="text-center text-gray-500 py-6">No delivered orders found.</div>
-            </div> -->
+
+            <!-- Mobile View -->
+            <div v-if="deliveredOrders && deliveredOrders.data && deliveredOrders.data.length"
+                class="lg:hidden space-y-4 mt-6">
+                <div v-for="order in deliveredOrders.data" :key="order.id"
+                    class="bg-white shadow-md rounded-lg border border-primary p-4">
+                    <div class="mb-2 flex">
+                        <p class="text-lg text-gray-500">Order Number : </p>
+                        <p class="font-semibold text-gray-800"> #{{ order.order_number }}</p>
+                    </div>
+
+                    <div class="mb-2 flex">
+                        <p class="text-lg text-gray-500">Amount :</p>
+                        <p class="text-gray-700">₹{{ order.total_amount }}</p>
+                    </div>
+
+                    <div class="mb-2 flex">
+                        <p class="text-lg text-gray-500">Delivery Date : </p>
+                        <p class="text-gray-700">{{ order.delivery_date }}</p>
+                    </div>
+
+                    <div class="mb-4 flex">
+                        <p class="text-lg text-gray-500">Customer : </p>
+                        <p class="text-gray-700">{{ order.customer?.name ?? 'N/A' }}</p>
+                    </div>
+
+                    <div class="flex justify-between items-center">
+                        <button @click="viewOrder(order.id)"
+                            class="flex items-center gap-1 text-primary text-sm font-medium">
+                            <Icon icon="ic:round-visibility" class="text-primary" width="18" height="18" />
+                            View
+                        </button>
+                        <button @click="openCloseOrderModal(order)"
+                            class="bg-primary text-white px-3 py-1.5 rounded-md text-sm font-medium shadow-sm">
+                            Close Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Pagination -->
             <div class="mt-8">
                 <Pagination v-if="deliveredOrders && deliveredOrders.links" :links="deliveredOrders.links"
