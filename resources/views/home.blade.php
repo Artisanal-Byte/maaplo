@@ -11,7 +11,7 @@
         transform: rotateY(360deg);
     }
 </style>
-<link rel="icon" href="{{ asset('images/faviconmaaplo.png') }}" type="image/png" />
+<link rel="icon" href="{{ asset('images/favicon.png') }}" type="image/png" />
 <script src="{{ asset('js/custom.js') }}" defer></script>
 <script>
     function toggleDropdown(id) {
@@ -608,7 +608,8 @@
         </p>
         <div class="flex flex-col lg:flex-row justify-between mt-10 overflow-hidden">
             <!-- Left Column -->
-            <div class="flex flex-col gap-10 items-center justify-center lg:items-start text-center lg:text-left w-full lg:w-[30%]">
+            <div
+                class="flex flex-col gap-10 items-center justify-center lg:items-start text-center lg:text-left w-full lg:w-[30%]">
                 <div>
                     <h1 class="lg:mt-5 font-lato text-[18px] font-semibold leading-[100%] text-primary">
                         1. Smart Design for Your Craft
@@ -639,7 +640,8 @@
             </div>
 
             <!-- Right Column -->
-            <div class="flex flex-col gap-7 items-center justify-center lg:items-start text-center lg:text-left w-full lg:w-[30%]">
+            <div
+                class="flex flex-col gap-7 items-center justify-center lg:items-start text-center lg:text-left w-full lg:w-[30%]">
                 <div>
                     <h1 class="mt-5 font-lato font-semibold text-[18px] leading-[100%] text-[#167893]">
                         3. Stay Connected, Anywhere
