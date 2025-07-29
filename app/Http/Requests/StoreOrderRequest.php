@@ -64,7 +64,7 @@ class StoreOrderRequest extends FormRequest
             'order_items.*.measurements' => ['required'],
             'order_items.*.design_detail' => ['required', 'array'],
             'order_items.*.colors' => ['required', 'string', 'max:256'],
-            'order_items.*.notes' => ['required', 'array'],
+            'order_items.*.notes' => ['nullable', 'array'],
             'order_items.*.delivery_date' => ['required', 'date'],
             'order_items.*.trial_dates' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:delivery_date'],
             'order_items.*.work_type' => ['required', 'string', 'in:New from Material,Only Stitching,Only Altering'],
