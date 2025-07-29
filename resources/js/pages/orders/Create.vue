@@ -49,12 +49,6 @@ const create = () => {
         });
 };
 
-onMounted(() => {
-    // Always reset when the create page is mounted
-    form.resetOrderData();
-    form.resetOrderItemTemplate();
-});
-
 
 //total amount of order
 watch(form.order_items, (items) => {
@@ -280,7 +274,7 @@ watch(() => form.customer_id, async (newCustomerId) => {
                             <h2><span class="font-semibold">Advance Paid:</span> ₹ {{ form.advance_paid || 0 }}</h2>
                             <h2><span class="font-semibold text-red-600 underline">Balance Due:</span> ₹ {{
                                 (form.total_amount || 0) - (form.advance_paid || 0)
-                            }}</h2>
+                                }}</h2>
                         </div>
 
                         <!-- Delete Confirmation Modal -->

@@ -12,6 +12,7 @@ import { useOrderFormStore } from '@/stores/orderFormStore';
 import { Head, Link } from '@inertiajs/vue3';
 import { nextTick } from 'vue';
 import Loader from '@/components/Loader.vue';
+import { router } from '@inertiajs/vue3';
 
 const props = defineProps(["users", "customers", "itemTypes", "errors", "order", "orderItems", "allDesignDetails"]);
 
@@ -48,6 +49,13 @@ onMounted(() => {
     }
     ready.value = true;
 });
+
+function handleBackClick() {
+    //   resetOrderItemTemplate();
+    form.resetOrderData();
+    form.resetOrderItemTemplate();
+    router.visit(route('orders.index')); // Redirect
+}
 
 
 watch(() => form.order_items, (items) => {
@@ -224,7 +232,7 @@ const onItemAdded = (itemData) => {
 
                 <!-- Back Button (Right) -->
                 <div class="mt-8 sm:mt-6">
-                    <Link :href="route('orders.index')"
+                    <Link href="#" @click.prevent="handleBackClick"
                         class="flex items-center gap-1 text-gray-600 hover:text-black transition">
                     <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
                     <span class="text-[16px] font-medium">Back</span>

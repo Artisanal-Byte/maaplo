@@ -313,7 +313,8 @@
                             <!-- done -->
                             <WorkType :errors="workTypeError" :order="order" :currentEditIndex="currentEditIndex" />
                             <ItemType :errors="errors" :itemTypes="itemTypes" @setItemId="setItemId"
-                                @setSelectDesignDetails="setSelectDesignDetails" :currentEditIndex="currentEditIndex" />
+                                @setSelectDesignDetails="setSelectDesignDetails"
+                                :currentEditTemplateId="formStore.order_items_template.template_id" />
                             <ItemMeasurements :askedMeasurements="measurements" :order="order"
                                 :currentEditIndex="currentEditIndex" :errors="errors" />
                             <DesignDetails :designDetails="designDetails" v-model="formStore.design_detail"

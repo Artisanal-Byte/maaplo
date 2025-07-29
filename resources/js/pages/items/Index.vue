@@ -110,23 +110,27 @@ function focusSearchInput() {
         <div class="max-w-7xl mx-auto py-8 px-4">
             <!-- Header Section -->
             <div class="flex flex-row justify-between mb-6">
-                <h1 class="text-2xl font-bold text-primary">Template's</h1>
+                <div>
+                    <h1 class="text-2xl font-bold text-primary">Template's</h1>
+                </div>
+                <div class="flex items-center gap-4">
 
-                <div class="flex gap-4 text-gray-600 items-center">
-                    <Link :href="route('items.create')" class="relative group">
-                    <Icon icon="material-symbols:add-rounded" width="30" height="30" />
-                    <div
-                        class="absolute top-full mt-1 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition bg-gray-800 text-white text-xs rounded py-1 px-2 pointer-events-none z-10">
-                        Create Template
+                    <!-- Search -->
+                    <div class="flex justify-between">
+                        <SearchList :showable="showable" @focusSearch="focusSearchInput" />
                     </div>
-                    </Link>
+                    <div class="flex gap-4 text-gray-600 items-center">
+                        <Link :href="route('items.create')" class="relative group">
+                        <Icon icon="material-symbols:add-rounded" width="30" height="30" />
+                        <div
+                            class="absolute top-full mt-1 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition bg-gray-800 text-white text-xs rounded py-1 px-2 pointer-events-none z-10">
+                            Create Template
+                        </div>
+                        </Link>
+                    </div>
                 </div>
             </div>
 
-            <!-- Search -->
-            <div class="flex justify-between mb-4">
-                <SearchList :showable="showable" @focusSearch="focusSearchInput" />
-            </div>
             <div v-if="showable.showSearch" class="mb-6">
                 <input ref="searchInputRef" type="text" :value="searchTerm" @input="onSearchInput($event.target.value)"
                     placeholder="Search by Template Name"

@@ -132,19 +132,24 @@ function viewOrder(orderId) {
     <AppLayout>
         <div class="max-w-7xl mx-auto py-10 px-4">
             <div class="flex items-center justify-between mb-6">
-                <h1 class="text-3xl font-bold text-primary flex items-center gap-2">
-                    <Icon icon="material-symbols:order-approve" class="text-primary" width="28" height="28" />
-                    Delivered Orders
-                </h1>
-                <Link :href="route('dashboard')" class="flex items-center gap-1 hover:text-black text-gray-600">
-                <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
-                <span class="text-md font-medium">Back</span>
-                </Link>
+                <div>
+                    <h1 class="text-3xl font-bold text-primary flex items-center gap-2">
+                        <Icon icon="material-symbols:order-approve" class="text-primary" width="28" height="28" />
+                        Delivered Orders
+                    </h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <!-- <div class="flex justify-between mb-4"> -->
+                    <SearchList :showable="showable" @focusSearch="focusSearchInput" />
+                    <!-- </div> -->
+                    <Link :href="route('dashboard')" class="flex items-center gap-1 hover:text-black text-gray-600">
+                    <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
+                    <span class="text-md font-medium">Back</span>
+                    </Link>
+                </div>
             </div>
             <!-- Search -->
-            <div class="flex justify-between mb-4">
-                <SearchList :showable="showable" @focusSearch="focusSearchInput" />
-            </div>
+
             <div v-if="showable.showSearch" class="mb-6">
                 <input ref="searchInputRef" type="text" v-model="searchTerm" @input="() => onSearchInput(searchTerm)"
                     placeholder="Search by Order Number or Customer"
@@ -223,6 +228,10 @@ function viewOrder(orderId) {
                     </tbody>
                 </table>
             </div>
+            <!-- No Data or Empty State -->
+            <!-- <div v-else-if="!form.isLoading && (!deliveredOrders || !deliveredOrders.data)">
+                <div class="text-center text-gray-500 py-6">No delivered orders found.</div>
+            </div> -->
             <!-- Pagination -->
             <div class="mt-8">
                 <Pagination v-if="deliveredOrders && deliveredOrders.links" :links="deliveredOrders.links"
