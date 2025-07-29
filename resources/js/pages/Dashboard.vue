@@ -247,7 +247,7 @@ async function fetchChartData() {
                                 <Icon icon="material-symbols:order-approve" width="32" height="32" class="text-white" />
                             </div>
                             <div class="relative z-10 text-primary font-[Lato] font-medium text-[24px] tracking-[0]">
-                                Deliver Orders
+                                Deliver Orders 
                             </div>
                             </Link>
                         </div>

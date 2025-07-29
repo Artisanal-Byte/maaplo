@@ -62,19 +62,24 @@ function viewOrder(orderId) {
         <div class="max-w-7xl mx-auto px-4 py-10">
 
             <div class="flex items-center justify-between mb-6">
-                <h1 class="text-3xl font-bold text-primary flex items-center gap-2">
-                    <Icon icon="material-symbols:order-approve" class="text-primary" width="28" height="28" />
-                    Closed Orders
-                </h1>
-                <Link :href="route('orders.index')" class="flex items-center gap-1 hover:text-black text-gray-600">
-                <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
-                <span class="text-md font-medium">Back</span>
-                </Link>
+                <div>
+                    <h1 class="text-3xl font-bold text-primary flex items-center gap-2">
+                        <Icon icon="material-symbols:order-approve" class="text-primary" width="28" height="28" />
+                        Closed Orders
+                    </h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <!-- 🔍 Search -->
+                    <!-- <div class="flex justify-between mb-4"> -->
+                        <SearchList :showable="showable" @focusSearch="focusSearchInput" />
+                    <!-- </div> -->
+                    <Link :href="route('orders.index')" class="flex items-center gap-1 hover:text-black text-gray-600">
+                    <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
+                    <span class="text-md font-medium">Back</span>
+                    </Link>
+                </div>
             </div>
-            <!-- 🔍 Search -->
-            <div class="flex justify-between mb-4">
-                <SearchList :showable="showable" @focusSearch="focusSearchInput" />
-            </div>
+
             <div class="mb-6" v-if="showable.showSearch">
                 <input ref="searchInputRef" type="text" v-debounce:400ms="myFn" placeholder="Search..."
                     class="w-full lg:max-w-7xl border border-gray-300 rounded-full px-4 py-3 text-sm shadow-[0px_0px_4.3px_0px_#16789333] focus:outline-none focus:ring focus:border-gray-400 transition-all" />
