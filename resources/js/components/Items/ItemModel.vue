@@ -16,8 +16,23 @@
 
         const fileInputGallery = ref(null)
         const fileInputCamera = ref(null)
-        const props = defineProps(['showModal', 'order', 'form', 'orderItems', 'currentEditIndex', 'itemTypes', 'allDesignDetails', 'itemIndex', 'errorMessage', 'errors', 'measurements']);
-
+        // const props = defineProps(['showModal', 'order', 'form', 'orderItems', 'currentEditIndex', 'itemTypes', 'allDesignDetails', 'itemIndex', 'errorMessage', 'errors', 'measurements']);
+        const props = defineProps({
+            showModal: Boolean,
+            order: Object,
+            form: Object,
+            orderItems: Array,
+            currentEditIndex: {
+                type: Number,
+                default: -1,   // <-- default value to avoid undefined
+            },
+            itemTypes: Array,
+            allDesignDetails: Array,
+            itemIndex: Number,
+            errorMessage: String,
+            errors: Object,
+            measurements: Array,
+        });
         let formStore = useOrderFormStore()
 
         const emit = defineEmits(['close', 'item-updated']);
@@ -324,7 +339,7 @@
                                 <!-- <pre>
                                     {{ errors }}
                                 </pre> -->
-                                <Colors :errors="colorError" :currentEditIndex="currentEditIndex" />
+                                <Colors :errors="colorError" :currentEditIndex="currentEditIndex ?? -1" />
                                 <Notes v-model:notes="formStore.order_items_template.notes" class="mt-5" />
                             </div>
 
