@@ -33,12 +33,18 @@ class DashboardController extends Controller
         ]);
     }
 
+
+    //this function is used to show the deleverd orders in closed orders page
     public function closedOrdersPage(Request $request)
     {
+        $user = auth()->user();
         $search = $request->input('search');
 
         $deliveredOrders = Order::with(['customer'])
             ->where('status', 'delivered')
+            ->whereHas('customer', function ($q) use ($user) {
+                $q->where('user_id', $user->id); // Filter orders by user
+            })
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($subQuery) use ($search) {
                     $subQuery->where('order_number', 'like', "%{$search}%")
@@ -56,9 +62,16 @@ class DashboardController extends Controller
             'search' => $search,
         ]);
     }
+
+    //this function is used to closed orders
     public function viewClosedOrders(Request $request)
     {
-        $query = Order::with('customer')->where('status', 'closed');
+        $user = auth()->user();
+        $query = Order::with('customer')
+            ->where('status', 'closed')
+            ->whereHas('customer', function ($q) use ($user) {
+                $q->where('user_id', $user->id); // Only this user's orders
+            });
 
         if ($search = $request->input('search')) {
             // Example: search by order number or customer's name/email/phone
