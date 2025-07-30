@@ -40,6 +40,7 @@ const proceedDelete = () => {
         onSuccess: () => {
             toast.success('Item deleted successfully!');
             showDeletePopup.value = false;
+            fetchItems();
         },
         onError: () => {
             toast.error('Failed to delete item.');
