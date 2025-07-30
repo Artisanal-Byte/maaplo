@@ -5,7 +5,7 @@ import { ref, reactive, nextTick } from 'vue';
 import { router, Link, Head, usePage } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 import Button from '@/components/Button.vue';
-import Pagination from '@/components/Pagination.vue'; // <-- Import Pagination
+import Pagination from '@/components/Pagination.vue';
 import Loader from '@/components/Loader.vue';
 import SearchList from '@/components/SearchIcon.vue';
 import { debounce } from 'lodash';
@@ -24,7 +24,6 @@ const isLoading = ref(false);
 const items = ref(props.items);
 const searchTerm = ref(props.search ?? '');
 const showable = reactive({ showSearch: false });
-
 
 const confirmDelete = (item) => {
     itemToDelete.value = item;
@@ -52,17 +51,17 @@ const proceedDelete = () => {
 const debouncedSearch = debounce((val) => {
     searchTerm.value = val;
     fetchItems(null, val);
-}, 300); // 300ms delay
+}, 300);
 
 function onSearchInput(val) {
     debouncedSearch(val);
 }
+
 function handlePaginationClick(url) {
     if (!url) return;
     fetchItems(url, searchTerm.value);
 }
 
-// Fetch items with optional URL and search term
 function fetchItems(url = null, search = '') {
     isLoading.value = true;
 
@@ -93,8 +92,6 @@ function fetchItems(url = null, search = '') {
     }
 }
 
-
-
 const searchInputRef = ref(null);
 function focusSearchInput() {
     nextTick(() => {
@@ -114,8 +111,6 @@ function focusSearchInput() {
                     <h1 class="text-2xl font-bold text-primary">Template's</h1>
                 </div>
                 <div class="flex items-center gap-4">
-
-                    <!-- Search -->
                     <div class="flex justify-between">
                         <SearchList :showable="showable" @focusSearch="focusSearchInput" />
                     </div>
@@ -131,71 +126,80 @@ function focusSearchInput() {
                 </div>
             </div>
 
+            <!-- Search Input -->
             <div v-if="showable.showSearch" class="mb-6">
                 <input ref="searchInputRef" type="text" :value="searchTerm" @input="onSearchInput($event.target.value)"
                     placeholder="Search by Template Name"
                     class="w-full border border-gray-300 rounded-full px-4 py-2 text-sm shadow-sm focus:outline-none focus:ring focus:border-gray-400 transition" />
-
             </div>
 
-
-            <!-- Loader Display -->
+            <!-- Loader -->
             <Loader v-if="isLoading" />
-            <!-- Mobile View: Card Layout -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:hidden">
-                <ItemTemplateList v-for="item in items.data" :key="item.id" :item="item" :authUser="authUser"
-                    view="card" @delete="confirmDelete" />
-            </div>
 
-            <!-- Desktop View: Table Layout -->
-            <div class="hidden md:block mt-6">
-                <table class="min-w-full border border-gray-300">
-                    <thead class="bg-primary text-white">
-                        <tr>
-                            <th class="p-2 border border-gray-300 text-center">Item</th>
-                            <th class="p-2 border border-gray-300 text-center">Gender</th>
-                            <th class="p-2 border border-gray-300 text-center">Body Part</th>
-                            <th class="p-2 border border-gray-300 text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="item in items.data" :key="item.id" class="hover:bg-gray-100 transition">
-                            <td class="p-2 border border-gray-300 text-center">{{ item.name }}</td>
-                            <td class="p-2 border border-gray-300 text-center">{{ item.gender }}</td>
-                            <td class="p-2 border border-gray-300 text-center">{{ item.body_part }}</td>
-                            <td class="p-2 border border-gray-300 text-center">
-                                <div v-if="item.user_id === authUser.id" class="flex justify-center gap-4">
-                                    <!-- Edit Button with Tooltip -->
-                                    <div class="relative group">
-                                        <Link :href="route('items.edit', item.id)">
-                                        <Icon icon="ri:edit-fill" class="text-primary" width="20" height="20" />
-                                        </Link>
-                                        <span
-                                            class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none z-10">
-                                            Edit
-                                        </span>
+            <!-- Main Display -->
+            <template v-else>
+                <!-- No Data Found -->
+                <div v-if="items.data.length === 0" class="text-center text-gray-400 py-16">
+                    <p class="text-5xl mb-4">📦</p>
+                    <p class="text-lg font-medium">No data found</p>
+                </div>
+
+                <!-- Mobile View -->
+                <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:hidden">
+                    <ItemTemplateList v-for="item in items.data" :key="item.id" :item="item" :authUser="authUser"
+                        view="card" @delete="confirmDelete" />
+                </div>
+
+                <!-- Desktop View -->
+                <div v-if="items.data.length > 0" class="hidden md:block mt-6">
+                    <table class="min-w-full border border-gray-300">
+                        <thead class="bg-primary text-white">
+                            <tr>
+                                <th class="p-2 border border-gray-300 text-center">Item</th>
+                                <th class="p-2 border border-gray-300 text-center">Gender</th>
+                                <th class="p-2 border border-gray-300 text-center">Body Part</th>
+                                <th class="p-2 border border-gray-300 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in items.data" :key="item.id" class="hover:bg-gray-100 transition">
+                                <td class="p-2 border border-gray-300 text-center">{{ item.name }}</td>
+                                <td class="p-2 border border-gray-300 text-center">{{ item.gender }}</td>
+                                <td class="p-2 border border-gray-300 text-center">{{ item.body_part }}</td>
+                                <td class="p-2 border border-gray-300 text-center">
+                                    <div v-if="item.user_id === authUser.id" class="flex justify-center gap-4">
+                                        <!-- Edit -->
+                                        <div class="relative group">
+                                            <Link :href="route('items.edit', item.id)">
+                                            <Icon icon="ri:edit-fill" class="text-primary" width="20" height="20" />
+                                            </Link>
+                                            <span
+                                                class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none z-10">
+                                                Edit
+                                            </span>
+                                        </div>
+
+                                        <!-- Delete -->
+                                        <div class="relative group">
+                                            <button @click="confirmDelete(item)">
+                                                <Icon icon="ic:baseline-delete" class="text-[#E73939]" width="20"
+                                                    height="20" />
+                                            </button>
+                                            <span
+                                                class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none z-10">
+                                                Delete
+                                            </span>
+                                        </div>
                                     </div>
+                                    <div v-else class="text-gray-500">🔒 Not Editable</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
 
-                                    <!-- Delete Button with Tooltip -->
-                                    <div class="relative group">
-                                        <button @click="confirmDelete(item)">
-                                            <Icon icon="ic:baseline-delete" class="text-[#E73939]" width="20"
-                                                height="20" />
-                                        </button>
-                                        <span
-                                            class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none z-10">
-                                            Delete
-                                        </span>
-                                    </div>
-                                </div>
-                                <div v-else class="text-gray-500">🔒 Not Editable</div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Pagination Component -->
+            <!-- Pagination -->
             <Pagination :links="items.links" :onPageClick="handlePaginationClick" />
 
             <!-- Delete Confirmation Modal -->
