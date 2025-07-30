@@ -39,12 +39,13 @@ class OrderController extends Controller
         // Search filter
         if ($search = $request->query('search')) {
             $query->where(function ($q) use ($search) {
-                $q->where('order_number', 'like', "%{$search}%")
+                $q->whereRaw('RIGHT(order_number, 3) LIKE ?', ["%{$search}%"])
                     ->orWhereHas('customer', function ($q2) use ($search) {
-                        $q2->where('name', 'like', "%{$search}%");
+                        $q2->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%']);
                     });
             });
         }
+
 
         // Status filter (override the default filter if manually set)
         if ($status = $request->query('status')) {
