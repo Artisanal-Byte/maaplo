@@ -42,7 +42,7 @@ class FeatureRequestAndSuggestionController extends Controller
         $featureRequests = FeatureRequestAndSuggestion::with('user')
             ->whereNotNull('feature_name')
             ->latest()
-            ->paginate(1)
+            ->paginate(10)
             ->through(function ($feature) {
                 return [
                     'id' => $feature->id,
