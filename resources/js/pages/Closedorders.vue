@@ -229,7 +229,10 @@ function viewOrder(orderId) {
                     </tbody>
                 </table>
             </div>
-
+            <div v-else class="text-center text-gray-400 py-16">
+                <p class="text-5xl mb-4">📦</p>
+                <p class="text-lg font-medium">No Delivered Orders found</p>
+            </div>
             <!-- Mobile View -->
             <div v-if="deliveredOrders && deliveredOrders.data && deliveredOrders.data.length"
                 class="lg:hidden space-y-4 mt-6">
