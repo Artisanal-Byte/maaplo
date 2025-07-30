@@ -37,11 +37,12 @@ class CustomerController extends Controller
         // ✅ Apply search filter here
         if ($search) {
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
+                $q->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%'])
                     ->orWhere('email', 'like', "%{$search}%")
                     ->orWhere('phone', 'like', "%{$search}%");
             });
         }
+
 
         $paginatedCustomers = $query->paginate(10)->withQueryString(); // Keep query in pagination links
 
