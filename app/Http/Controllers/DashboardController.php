@@ -47,15 +47,22 @@ class DashboardController extends Controller
             })
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($subQuery) use ($search) {
-                    $subQuery->where('order_number', 'like', "%{$search}%")
+                    $subQuery
+                        // Match end of order number
+                        ->whereRaw('RIGHT(order_number, ?) = ?', [strlen($search), $search])
+
+                        // Optional: also match anywhere (remove this if not needed)
+                        ->orWhere('order_number', 'like', "%{$search}%")
+
+                        // Case-insensitive name search
                         ->orWhereHas('customer', function ($q) use ($search) {
-                            $q->where('name', 'like', "%{$search}%");
+                            $q->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%']);
                         });
                 });
             })
             ->orderByDesc('delivery_date')
             ->paginate(10)
-            ->withQueryString(); // 👈 Keeps the `search` query param when paginating
+            ->withQueryString();
 
         return Inertia::render('Closedorders', [
             'deliveredOrders' => $deliveredOrders,
@@ -63,24 +70,29 @@ class DashboardController extends Controller
         ]);
     }
 
+
     //this function is used to closed orders
     public function viewClosedOrders(Request $request)
     {
         $user = auth()->user();
+        $search = $request->input('search');
         $query = Order::with('customer')
             ->where('status', 'closed')
             ->whereHas('customer', function ($q) use ($user) {
                 $q->where('user_id', $user->id); // Only this user's orders
             });
 
-        if ($search = $request->input('search')) {
-            // Example: search by order number or customer's name/email/phone
+        if ($search) {
             $query->where(function ($q) use ($search) {
-                $q->where('order_number', 'like', "%{$search}%")
+                // Match end of order number
+                $q->whereRaw('RIGHT(order_number, ?) = ?', [strlen($search), $search])
+
+                    // Match anywhere in order_number (optional: keep if desired)
+                    ->orWhere('order_number', 'like', "%{$search}%")
+
+                    // Case-insensitive name search
                     ->orWhereHas('customer', function ($q2) use ($search) {
-                        $q2->where('name', 'like', "%{$search}%")
-                            ->orWhere('email', 'like', "%{$search}%")
-                            ->orWhere('phone', 'like', "%{$search}%");
+                        $q2->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%']);
                     });
             });
         }
