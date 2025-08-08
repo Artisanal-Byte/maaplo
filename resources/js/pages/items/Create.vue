@@ -13,7 +13,7 @@ const toast = new ToastMagic();
 const { props: pageProps } = usePage();
 const measurements = pageProps.measurements || [];
 const designDetailsGrouped = pageProps.designDetailsGrouped || [];
-
+const user = pageProps.auth?.user;
 const loading = ref(false);
 const form = useForm({
     name: '',
@@ -122,7 +122,8 @@ const filteredMeasurements = computed(() => {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Select Base Template -->
                     <div>
-                        <label class="font-medium">Select Base Template</label>
+                        <label class="font-medium">Select Base Template <span
+                                class="text-gray-500">(optional)</span></label>
                         <SearchSelect class="mt-2" :public-templates="pageProps.publicTemplates"
                             :private-templates="pageProps.privateTemplates" @templateSelected="fillFormFromTemplate" />
                     </div>
@@ -214,13 +215,15 @@ const filteredMeasurements = computed(() => {
                 </div>
 
                 <!-- Template Logo -->
-                <div>
-                    <Input class="mt-4" v-model="form.svg_logo" label="Template Logo"
-                        placeholder="Only Paste SVG path here" margin="md" width="full" fonttype="normal"
-                        textSize="base" rounded="md" :error="form.errors.svg_logo" />
+                <div v-if="user?.role === 'admin'">
+                    <div>
+                        <Input class="mt-4" v-model="form.svg_logo" label="Template Logo"
+                            placeholder="Only Paste SVG path here" margin="md" width="full" fonttype="normal"
+                            textSize="base" rounded="md" :error="form.errors.svg_logo" />
+                    </div>
                 </div>
                 <!-- SVG Preview -->
-                <div
+                <div v-if="user?.role === 'admin'"
                     class="mt-2 border border-gray-300 rounded-lg p-6 bg-gray-50 flex justify-center items-center min-h-[120px]">
                     <label class="sr-only">SVG Preview</label>
 
