@@ -117,7 +117,11 @@ const designDetailMap = computed(() => {
 
                         <div><span class="font-semibold">📅 Delivery Date:</span> {{ order?.delivery_date ?? '-' }}
                         </div>
-                        <div><span class="font-semibold">📦 Close Date:</span> {{ order?.close_date ?? '-' }}</div>
+                        <div><span class="font-semibold">📦 Close Date:</span> {{
+                            order?.close_date
+                                ? new Date(order.close_date).toLocaleDateString('en-GB')
+                                : '-'
+                        }}</div>
 
                     </div>
 
