@@ -17,10 +17,21 @@ class OrderFactory extends Factory
 
     public function definition(): array
     {
+        static $orderNumber = null;
+        if (is_null($orderNumber)) {
+            // Get max order_number, remove leading zeros, convert to int
+            $lastOrderNumber = Order::max('order_number');
+
+            if ($lastOrderNumber) {
+                $orderNumber = (int) ltrim($lastOrderNumber, '0') + 1;
+            } else {
+                $orderNumber = 1;
+            }
+        }
         return [
             'user_id' => User::factory(),
             'customer_id' => Customer::inRandomOrder()->first()->id,
-            'order_number' => $this->faker->unique()->numberBetween(100000, 999999),
+            'order_number' => str_pad($orderNumber++, 6, '0', STR_PAD_LEFT),
             'status' => $this->faker->randomElement([
                 'created',
                 'in_process',
