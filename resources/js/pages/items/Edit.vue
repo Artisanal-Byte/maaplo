@@ -244,13 +244,14 @@ watch([() => form.gender, () => form.body_part], () => {
                 </div>
                 <div v-if="form.errors.required_measurements" class="text-red-600 text-sm mt-1">{{
                     form.errors.required_measurements
-                }}</div>
+                    }}</div>
 
                 <!-- SVG Logo -->
-                <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
-                    width="full" fonttype="normal" textSize="base" rounded="md" :error="form.errors.svg_logo" />
-
-                <div
+                <div v-if="user?.role === 'admin'">
+                    <Input v-model="form.svg_logo" label="SVG Logo" placeholder="Paste SVG path here" margin="md"
+                        width="full" fonttype="normal" textSize="base" rounded="md" :error="form.errors.svg_logo" />
+                </div>
+                <div v-if="user?.role === 'admin'"
                     class="mt-6 border border-gray-300 rounded-lg p-6 bg-gray-50 flex justify-center items-center min-h-[120px]">
                     <label class="sr-only">SVG Preview</label>
 
