@@ -213,6 +213,7 @@ class OrderController extends Controller
      */
     public function show(Order $order, Request $request)
     {
+        // dd($order->toArray());
         $storeorderdata = $order->load('customer', 'orderItems')->toArray();
 
         $orderItems = $storeorderdata['order_items'];
