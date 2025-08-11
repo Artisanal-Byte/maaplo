@@ -222,13 +222,15 @@ const designDetailMap = computed(() => {
                         <div>
                             <h3 class="font-semibold text-yellow-800 mb-1 text-lg">📝 Item Notes</h3>
                             <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg text-sm">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                    <div v-for="(note, noteIndex) in item?.parsedNotes || []" :key="noteIndex">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2"
+                                    v-if="item?.parsedNotes && item.parsedNotes.length">
+                                    <div v-for="(note, noteIndex) in item.parsedNotes" :key="noteIndex">
                                         <div><strong class="text-gray-700">Label:</strong> {{ note.label || 'N/A' }}
                                         </div>
                                         <div><strong class="text-gray-700">Text:</strong> {{ note.text || 'N/A' }}</div>
                                     </div>
                                 </div>
+                                <div v-else class="text-gray-500 text-sm">No notes available.</div>
                             </div>
                         </div>
                         <!-- Reference Dress & Other Images -->
