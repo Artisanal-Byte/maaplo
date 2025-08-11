@@ -84,7 +84,6 @@ const proceedDelete = () => {
 
 const openItemModel = () => {
     form.order_items_template.mode = 'create'
-    form.resetOrderData();
     if (form.customer_id == null) {
         alert('Please Select a customer')
         return
