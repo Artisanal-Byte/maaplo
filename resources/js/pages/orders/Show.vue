@@ -55,6 +55,19 @@ const designDetailMap = computed(() => {
     return map;
 });
 
+function formatKey(key) {
+    if (!key) return 'N/A'
+    return key
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+}
+
+function capitalizeFirst(str) {
+    if (!str) return 'N/A'
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+}
+
 </script>
 
 <template>
@@ -152,7 +165,8 @@ const designDetailMap = computed(() => {
 
                         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm mb-6">
                             <div><span class="font-semibold">🎨 Colors :</span> {{ item?.colors }}</div>
-                            <div><span class="font-semibold">🧵 Material Type :</span> {{ item?.material_type ?? 'N/A'
+                            <div><span class="font-semibold">🧵 Material Type :</span> {{
+                                capitalizeFirst(item?.material_type) ?? 'N/A'
                             }}</div>
                             <div><span class="font-semibold">📄 Material Code :</span> {{ item?.material_code ?? 'N/A'
                                 }}
@@ -189,7 +203,7 @@ const designDetailMap = computed(() => {
                             <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-lg text-sm">
                                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-0 lg:gap-5">
                                     <div v-for="(value, key) in item?.parsedMeasurements" :key="key" class="mb-1">
-                                        <strong class="capitalize">{{ key ? key : 'N/A' }} :</strong> {{ value ? value :
+                                        <strong class="capitalize">{{ formatKey(key) }} :</strong> {{ value ? value :
                                             'N/A'
                                         }}
                                     </div>
@@ -222,13 +236,15 @@ const designDetailMap = computed(() => {
                         <div>
                             <h3 class="font-semibold text-yellow-800 mb-1 text-lg">📝 Item Notes</h3>
                             <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg text-sm">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                    <div v-for="(note, noteIndex) in item?.parsedNotes || []" :key="noteIndex">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2"
+                                    v-if="item?.parsedNotes && item.parsedNotes.length">
+                                    <div v-for="(note, noteIndex) in item.parsedNotes" :key="noteIndex">
                                         <div><strong class="text-gray-700">Label:</strong> {{ note.label || 'N/A' }}
                                         </div>
                                         <div><strong class="text-gray-700">Text:</strong> {{ note.text || 'N/A' }}</div>
                                     </div>
                                 </div>
+                                <div v-else class="text-gray-500 text-sm">No notes available.</div>
                             </div>
                         </div>
                         <!-- Reference Dress & Other Images -->
