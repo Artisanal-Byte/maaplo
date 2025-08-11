@@ -11,6 +11,8 @@ import Input from '@/components/InputWithLabel.vue';
 import { useOrderFormStore } from '@/stores/orderFormStore';
 import { Head, Link } from '@inertiajs/vue3';
 import Loader from '@/components/Loader.vue';
+import axios from 'axios';
+
 const props = defineProps(["users", "customers", "itemTypes", "errors", "allDesignDetails"])
 
 const showModal = ref(false);
@@ -113,8 +115,6 @@ const formatDate = (dateStr) => {
     return `${day}-${month}-${year}`;
 };
 
-import axios from 'axios';
-
 watch(() => form.customer_id, async (newCustomerId) => {
     if (!newCustomerId) {
         customerMeasurements.value = [];
@@ -171,7 +171,8 @@ watch(() => form.customer_id, async (newCustomerId) => {
                 </div>
                 <div class="flex items-center gap-4 self-center">
                     <div class="text-gray-600">
-                        <Link :href="route('orders.index')" class="flex items-center gap-1 hover:text-black">
+                        <Link :href="route('orders.index')" class="flex items-center gap-1 hover:text-black"
+                            @click="() => form.resetOrderData()">
                         <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
                         <span class="text-[16px] font-medium">Back</span>
                         </Link>
@@ -274,7 +275,7 @@ watch(() => form.customer_id, async (newCustomerId) => {
                             <h2><span class="font-semibold">Advance Paid:</span> ₹ {{ form.advance_paid || 0 }}</h2>
                             <h2><span class="font-semibold text-red-600 underline">Balance Due:</span> ₹ {{
                                 (form.total_amount || 0) - (form.advance_paid || 0)
-                                }}</h2>
+                            }}</h2>
                         </div>
 
                         <!-- Delete Confirmation Modal -->

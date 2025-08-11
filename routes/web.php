@@ -71,7 +71,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('customers', CustomerController::class);
     Route::resource('items', TemplateController::class);
     Route::resource('organization', OrganizationController::class);
-    Route::resource('design-details', DesignDetailsController::class);
 
     // Allow all users to submit feature/suggestion
     Route::get('/feature-request/create', fn() => Inertia::render('featurerequest/Create'))->name('feature-request.create');
@@ -101,6 +100,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('/reporterror', [ErrorReportController::class, 'index'])->name('reporterror.index');
     Route::get('/feature-request', [FeatureRequestAndSuggestionController::class, 'indexFeatureRequest'])->name('feature-request.index');
     Route::get('/suggestion', [FeatureRequestAndSuggestionController::class, 'indexSuggestion'])->name('suggestion.index');
+    Route::resource('design-details', DesignDetailsController::class);
 });
 
 require __DIR__ . '/settings.php';
