@@ -84,6 +84,7 @@ const proceedDelete = () => {
 
 const openItemModel = () => {
     form.order_items_template.mode = 'create'
+    form.resetOrderData();
     if (form.customer_id == null) {
         alert('Please Select a customer')
         return
@@ -171,7 +172,8 @@ watch(() => form.customer_id, async (newCustomerId) => {
                 </div>
                 <div class="flex items-center gap-4 self-center">
                     <div class="text-gray-600">
-                        <Link :href="route('orders.index')" class="flex items-center gap-1 hover:text-black">
+                        <Link :href="route('orders.index')" class="flex items-center gap-1 hover:text-black"
+                            @click="() => form.resetOrderData()">
                         <Icon icon="material-symbols:arrow-back-rounded" width="24" height="24" />
                         <span class="text-[16px] font-medium">Back</span>
                         </Link>
