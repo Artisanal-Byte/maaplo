@@ -11,6 +11,8 @@ import Input from '@/components/InputWithLabel.vue';
 import { useOrderFormStore } from '@/stores/orderFormStore';
 import { Head, Link } from '@inertiajs/vue3';
 import Loader from '@/components/Loader.vue';
+import axios from 'axios';
+
 const props = defineProps(["users", "customers", "itemTypes", "errors", "allDesignDetails"])
 
 const showModal = ref(false);
@@ -112,8 +114,6 @@ const formatDate = (dateStr) => {
     const [year, month, day] = dateStr.split('-');
     return `${day}-${month}-${year}`;
 };
-
-import axios from 'axios';
 
 watch(() => form.customer_id, async (newCustomerId) => {
     if (!newCustomerId) {
@@ -274,7 +274,7 @@ watch(() => form.customer_id, async (newCustomerId) => {
                             <h2><span class="font-semibold">Advance Paid:</span> ₹ {{ form.advance_paid || 0 }}</h2>
                             <h2><span class="font-semibold text-red-600 underline">Balance Due:</span> ₹ {{
                                 (form.total_amount || 0) - (form.advance_paid || 0)
-                                }}</h2>
+                            }}</h2>
                         </div>
 
                         <!-- Delete Confirmation Modal -->
