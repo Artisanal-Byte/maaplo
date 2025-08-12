@@ -21,7 +21,6 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
         $organization = $user->organization;
-        // dd($organization->toArray());
         $organizationName = optional($user->organization)->organization_name;
         $showOrganizationPopup = $user->hash_organization && is_null($organizationName);
         $totalOrders = \App\Models\Order::where('user_id', $user->id)->count();
@@ -32,7 +31,6 @@ class DashboardController extends Controller
             'totalOrders' => $totalOrders,
         ]);
     }
-
 
     //this function is used to show the deleverd orders in closed orders page
     public function closedOrdersPage(Request $request)
@@ -123,8 +121,6 @@ class DashboardController extends Controller
             'search' => $search,
         ]);
     }
-
-
 
     public function close(Request $request)
     {
