@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OrderItem extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'order_items';
 
@@ -26,7 +26,7 @@ class OrderItem extends Model
         'trial_dates',
         'price',
         'status',
-        'is_urgent',         // ✅ Add this
+        'is_urgent',
         'item_cost',
         'material_code',
         'material_cost',
@@ -51,19 +51,11 @@ class OrderItem extends Model
         'is_urgent' => 'boolean',
     ];
 
-    // Relationships
-
-    /**
-     * Get the order that owns the order item.
-     */
     public function order()
     {
         return $this->belongsTo(Order::class);
     }
 
-    /**
-     * Get the item template associated with the order item.
-     */
     public function Template()
     {
         return $this->belongsTo(Template::class);
@@ -78,11 +70,7 @@ class OrderItem extends Model
         return Carbon::parse($value)->format('d-m-Y');
     }
 
-    // Accessors & Mutators
 
-    /**
-     * Get the formatted status.
-     */
     protected function status(): Attribute
     {
         return Attribute::make(
