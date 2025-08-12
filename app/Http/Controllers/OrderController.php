@@ -46,7 +46,6 @@ class OrderController extends Controller
             });
         }
 
-
         // Status filter (override the default filter if manually set)
         if ($status = $request->query('status')) {
             $query->where('status', $status); // If 'closed' is passed as a filter, it'll show closed orders
@@ -73,11 +72,6 @@ class OrderController extends Controller
         return Inertia::render('orders/Index', ["orders" => $orders]);
     }
 
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
 
@@ -100,7 +94,6 @@ class OrderController extends Controller
         }
 
         $allDesignDetails = DesignDetail::with('bodyPartValue')->get();
-        // dd($itemTypes->toArray()); // For debugging purposes, remove in production
         return Inertia::render('orders/Create', [
             'customers' => $user->customers,
             'itemTypes' => $itemTypes,
@@ -108,12 +101,8 @@ class OrderController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreOrderRequest $storeOrderRequest)
     {
-        // dd($storeOrderRequest->toArray());
         try {
             $validatedOrderData = $storeOrderRequest->validated();
             $username = auth()->user()->name;
@@ -133,16 +122,12 @@ class OrderController extends Controller
             // Begin a database transaction
             DB::beginTransaction();
 
-            // Check if $orderData contains 'order_data' or just directly use the data
             if (isset($orderData['order_data'])) {
                 $orderData['order_data']['order_number'] = $validatedOrderData['order_number'];
-                // Create the order record
                 Order::create($orderData['order_data']);
             } else {
-                // Ensure 'order_number' is included in the $orderData array if not already set
                 $orderData['order_number'] = $validatedOrderData['order_number'];
 
-                // Create the order record
                 $Order = Order::create($orderData);
             }
 
@@ -168,7 +153,6 @@ class OrderController extends Controller
                     throw new Exception("Missing required field: delivery_date for one of the order items.");
                 }
 
-                // Temporarily store file references, remove them for DB
                 $fileUploads = [];
                 foreach (['refrence_dress', 'cloth_img1', 'cloth_img2', 'Pattern_img1', 'Pattern_img2'] as $field) {
                     if (isset($item[$field]) && $item[$field] instanceof UploadedFile) {
@@ -202,18 +186,14 @@ class OrderController extends Controller
             ToastMagic::success('Order created successfully!');
             return redirect()->route('orders.index')->with('success', 'Order created successfully.');
         } catch (Exception $exception) {
-            // dd($exception->getMessage()); // For debugging purposes
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => $exception->getMessage()]);
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(Order $order, Request $request)
     {
-        // dd($order->toArray());
         $storeorderdata = $order->load('customer', 'orderItems')->toArray();
 
         $orderItems = $storeorderdata['order_items'];
@@ -230,12 +210,9 @@ class OrderController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
     public function edit(Order $order)
     {
-        // dd($order->toArray());
         $user = Auth::user();
         $user->load('customers');
         $allDesignDetails = DesignDetail::with('bodyPartValue')->get();
@@ -243,7 +220,6 @@ class OrderController extends Controller
             ->orWhereNull('user_id')
             ->with('measurements')
             ->get();
-        // dd($itemTypes ->toArray());
         foreach ($itemTypes as $template) {
             $template->design_detail_values = [];
 
@@ -267,13 +243,10 @@ class OrderController extends Controller
             }
         }
 
-
         $orderItems = $order->orderItems->map(function ($item) {
             $ids = json_decode($item->design_detail, true) ?? [];
-            // dd($ids);
 
             $templateNames = Template::whereIn('id', $ids)->pluck('name')->toArray();
-            // dd($templateNames);
             return [
                 'id' => $item->id,
                 'template_id' => $item->template_id,
@@ -311,12 +284,10 @@ class OrderController extends Controller
 
     public function update(UpdateOrderRequest $request, Order $order)
     {
-        // dd($request->toArray());
         ini_set('max_execution_time', 60);
 
         try {
             $validatedData = $request->validated();
-            // dd($validatedData);
             $userId = Auth::user()->id;
             $username = Auth::user()->name;
             $customerId = $validatedData['customer_id'];
@@ -346,8 +317,6 @@ class OrderController extends Controller
                 // Normalize boolean
                 $item['is_urgent'] = filter_var($item['is_urgent'] ?? false, FILTER_VALIDATE_BOOLEAN);
 
-                // dd($item['is_urgent'] );
-                // JSON encode fields
                 foreach (['measurements', 'design_detail', 'notes'] as $field) {
                     if (isset($item[$field]) && is_array($item[$field])) {
                         $item[$field] = json_encode($item[$field]);
@@ -371,7 +340,7 @@ class OrderController extends Controller
                     $incomingItemIds[] = $orderItem->id;
                 }
 
-                // ✅ Delete old image and upload new image
+                // Delete old image and upload new image
                 foreach ($fileUploads as $field => $uploadedFile) {
                     // Delete old image if it exists
                     if (!empty($orderItem->$field) && file_exists(public_path($orderItem->$field))) {
@@ -394,7 +363,7 @@ class OrderController extends Controller
                 }
             }
 
-            // ✅ Delete removed order items
+            // Delete removed order items
             $itemsToDelete = array_diff($existingItemIds, $incomingItemIds);
             OrderItem::whereIn('id', $itemsToDelete)->each(function ($item) {
                 foreach (['refrence_dress', 'cloth_img1', 'cloth_img2', 'Pattern_img1', 'Pattern_img2'] as $field) {
@@ -415,12 +384,8 @@ class OrderController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Order $order)
     {
-        // dd($order);
         try {
             $order->delete();
             ToastMagic::success('Order Deleted successfully!');
