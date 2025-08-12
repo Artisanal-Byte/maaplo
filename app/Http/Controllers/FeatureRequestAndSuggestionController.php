@@ -36,7 +36,6 @@ class FeatureRequestAndSuggestionController extends Controller
         ]);
     }
 
-
     public function indexFeatureRequest()
     {
         $featureRequests = FeatureRequestAndSuggestion::with('user')
@@ -70,7 +69,6 @@ class FeatureRequestAndSuggestionController extends Controller
             'feature_description' => 'required|string',
             'feature_experience' => 'required|string',
         ]);
-        // dd($request->all());
         try {
             FeatureRequestAndSuggestion::create([
                 'user_id' => Auth::id(),
@@ -78,7 +76,6 @@ class FeatureRequestAndSuggestionController extends Controller
                 'feature_description' => $request->feature_description,
                 'feature_experience' => $request->feature_experience,
             ]);
-            // DB::commit();
             ToastMagic::success('Your Feature suggestion send successfully!');
             return redirect()->route('dashboard');
         } catch (\Exception $e) {

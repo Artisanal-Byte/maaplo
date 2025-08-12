@@ -73,7 +73,6 @@ class SubscriptionPlanController extends Controller
 
     public function edit(SubscriptionPlan $subscription_plan)
     {
-        // dd($subscription_plan->toArray());
         return Inertia::render('subscriptionplan/Edit', [
             'subscriptionPlan' => $subscription_plan,
         ]);

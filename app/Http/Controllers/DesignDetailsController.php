@@ -28,7 +28,6 @@ class DesignDetailsController extends Controller
         ]);
     }
 
-
     public function create()
     {
         $bodyParts = BodyPartValue::select('id', 'body_part')->orderBy('body_part')->get();

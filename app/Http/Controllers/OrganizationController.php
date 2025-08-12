@@ -29,10 +29,6 @@ class OrganizationController extends Controller
 
     public function store(Request $request)
     {
-        // dd([
-        //     'request' => $request->all(),
-        //     'user_id' => auth()->id(),
-        // ]);
         $data = $request->validate([
             'organization_name' => 'required|string',
             'organization_logo' => 'nullable|file|max:5120',
@@ -40,11 +36,9 @@ class OrganizationController extends Controller
             'address' => 'required|string',
             'logo_request' => 'nullable|boolean',
         ]);
-        // dd($data);
         try {
             DB::beginTransaction();
 
-            // Step 1: Create organization without logo
             $organization = Organization::create([
                 'organization_name' => $data['organization_name'],
                 'gst_number' => $data['gst_number'],
@@ -54,7 +48,6 @@ class OrganizationController extends Controller
                 'user_id' => auth()->id(),
             ]);
 
-            // Step 2: Handle logo upload
             if ($request->hasFile('organization_logo')) {
                 $file = $request->file('organization_logo');
                 $username = Str::slug($data['organization_name'] ?? 'organization');
@@ -65,7 +58,6 @@ class OrganizationController extends Controller
                 $organization->save();
             }
 
-            // Step 3: Assign organization_id to current user
             $user = auth()->user();
             $user->organization_id = $organization->id;
             $user->hash_organization = false;
@@ -82,26 +74,21 @@ class OrganizationController extends Controller
 
     public function edit(Organization $organization)
     {
-        // dd($organization);
         return Inertia::render('organization/Edit', compact('organization'));
     }
 
     public function update(Request $request, Organization $organization)
     {
-        // dd($request->all());
         $data = $request->validate([
             'organization_name' => 'required|string',
             'organization_logo' => 'nullable|file|max:5120',
             'gst_number' => 'nullable|string|max:15',
             'address' => 'required|string',
         ]);
-        // dd($data);
         try {
             DB::beginTransaction();
 
             if ($request->hasFile('organization_logo')) {
-                // dd($request->file('organization_logo'));
-                // Delete old organization logo
                 if ($organization->organization_logo) {
                     $orgRelativePath = Str::after($organization->organization_logo, 'storage/');
                     if (Storage::disk('public')->exists($orgRelativePath)) {

@@ -32,7 +32,7 @@ export default {
                     toolbar: {
                         show: true,
                         tools: {
-                            download: true,
+                            download: false,
                             selection: true,
                             zoom: true,
                             zoomin: true,

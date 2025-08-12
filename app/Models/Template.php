@@ -57,7 +57,6 @@ class Template extends Model
         );
     }
 
-    // Relationships
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
@@ -65,7 +64,6 @@ class Template extends Model
 
     protected static function booted()
     {
-        // When an ItemTemplate is soft-deleted
         static::deleting(function ($itemTemplate): void {
             if (!$itemTemplate->isForceDeleting()) {
             }

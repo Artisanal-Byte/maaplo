@@ -13,7 +13,6 @@ class Customer extends Model
 
     protected $table = 'customers';
 
-    // Define the fillable fields for mass assignment
     protected $fillable = [
         // 'user_id',
         'name',
@@ -30,10 +29,6 @@ class Customer extends Model
     protected $with = ['photos'];
     protected $appends = ['base_measurements'];
 
-    // protected $casts = [
-    //     'base_measurements' => 'array',
-    // ];
-    // Accessor for 'address'
     protected function address(): Attribute
     {
         return Attribute::make(
@@ -41,7 +36,6 @@ class Customer extends Model
         );
     }
 
-    // Accessor for 'notes'
     protected function notes(): Attribute
     {
         return Attribute::make(
@@ -69,7 +63,6 @@ class Customer extends Model
             }
         );
     }
-    // ✅ Correct accessor name and spelling
     protected function baseMeasurements(): Attribute
     {
         return Attribute::make(
@@ -77,7 +70,6 @@ class Customer extends Model
         );
     }
 
-    //    Relations
     public function photos()
     {
         return $this->hasMany(CustomerPhoto::class, 'customer_id', 'id');
@@ -98,8 +90,6 @@ class Customer extends Model
         return $this->belongsToMany(User::class, 'users_customers', 'customer_id', 'user_id');
     }
 
-
-    //for Soft delete customer related photos
     protected static function booted()
     {
         static::deleting(function ($customer) {
@@ -124,6 +114,6 @@ class Customer extends Model
 
     public function measurements()
     {
-        return $this->hasMany(Measurement::class); // or whatever your model is
+        return $this->hasMany(Measurement::class);
     }
 }
