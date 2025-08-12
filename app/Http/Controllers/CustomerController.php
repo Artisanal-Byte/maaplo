@@ -43,7 +43,6 @@ class CustomerController extends Controller
             });
         }
 
-
         $paginatedCustomers = $query->paginate(10)->withQueryString(); // Keep query in pagination links
 
         $paginatedCustomers->getCollection()->transform(function ($c) {
@@ -78,8 +77,6 @@ class CustomerController extends Controller
             'customerCount' => $customerCount,
         ]);
     }
-
-
 
     // Show the form for creating a new customer
     public function create()
@@ -371,7 +368,6 @@ class CustomerController extends Controller
             return redirect()->back()->withInput()->with('error', 'There was an error updating the customer: ' . $e->getMessage());
         }
     }
-
 
     // Remove the specified customer from storage
     public function destroy($id)
