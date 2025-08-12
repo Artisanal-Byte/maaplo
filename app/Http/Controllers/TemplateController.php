@@ -44,10 +44,6 @@ class TemplateController extends Controller
         ]);
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $data = GetTemplateHelper::getTemplateData();
@@ -142,7 +138,6 @@ class TemplateController extends Controller
     public function edit($id)
     {
         $item = Template::findOrFail($id);
-        // dd($item->toArray());
         $measurements = [
             'all' => Measurement::all(['id', 'slug', 'measurements_logo', 'body_part']),
             'selected' => $item->measurements()->pluck('slug')->toArray(),
@@ -169,9 +164,7 @@ class TemplateController extends Controller
                 ->values(),
         ]);
     }
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -229,9 +222,6 @@ class TemplateController extends Controller
             return back()->withInput()->with('error', 'Update failed: ' . $e->getMessage());
         }
     }
-
-
-
 
     /**
      * Remove the specified resource from storage.
