@@ -106,37 +106,44 @@ function capitalizeFirst(str) {
 
                 <!-- Order Info Section -->
                 <div>
-                    <h2 class="text-xl lg:text-3xl font-semibold text-primary flex items-center justify-center gap-2">
-                        📦 Information
-                    </h2>
-                    <button @click="showBill = true"
-                        class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                        🧾 Generate Bill
-                    </button>
+                    <div class="flex justify-between items-center">
+                    <div>
+                        <h2
+                            class="text-xl lg:text-3xl font-semibold text-primary items-center gap-2">
+                            Order Information
+                        </h2>
+                    </div>
+                    <div>
+                        <button @click="showBill = true"
+                            class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            🧾 Generate Bill
+                        </button>
+                    </div>
+                    </div>
                     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 mt-8 text-sm">
-                        <div><span class="font-semibold">👤 Customer Name:</span> {{ order?.customer?.name ?? 'N/A' }}
+                        <div><span class="font-semibold">Customer Name:</span> {{ order?.customer?.name ?? 'N/A' }}
                         </div>
-                        <div><span class="font-semibold">🧾 Order Number:</span> {{ order?.order_number ?? 'N/A' }}
+                        <div><span class="font-semibold">Order Number:</span> {{ order?.order_number ?? 'N/A' }}
                         </div>
                         <div>
-                            <span class="font-semibold">🔖 Status:</span>
+                            <span class="font-semibold">Status:</span>
                             <span
                                 class="inline-block bg-blue-100 text-primary px-3 py-1 rounded-full text-xs uppercase tracking-wide">{{
                                     order?.status }}</span>
                         </div>
-                        <div><span class="font-semibold">💰 Grand Total:</span> ₹ {{ order?.total_amount }} </div>
-                        <div><span class="font-semibold">💵 Advance Paid:</span> ₹ {{ order?.advance_paid ?? '00.00' }}
+                        <div><span class="font-semibold">Grand Total:</span> ₹ {{ order?.total_amount }} </div>
+                        <div><span class="font-semibold">Advance Paid:</span> ₹ {{ order?.advance_paid ?? '00.00' }}
                         </div>
-                        <div><span class="font-semibold text-red-600">💰 Pending Amount:</span>
+                        <div><span class="font-semibold text-red-600">Pending Amount:</span>
                             ₹ {{ pendingAmount.toLocaleString('en-IN',
                                 { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                         </div>
 
 
 
-                        <div><span class="font-semibold">📅 Delivery Date:</span> {{ order?.delivery_date ?? '-' }}
+                        <div><span class="font-semibold">Delivery Date:</span> {{ order?.delivery_date ?? '-' }}
                         </div>
-                        <div><span class="font-semibold">📦 Close Date:</span> {{
+                        <div><span class="font-semibold">Close Date:</span> {{
                             order?.close_date
                                 ? new Date(order.close_date).toLocaleDateString('en-GB')
                                 : '-'
@@ -162,7 +169,7 @@ function capitalizeFirst(str) {
                 <div>
                     <h2
                         class="text-xl lg:text-3xl font-semibold text-primary mb-7 flex items-center justify-center gap-2">
-                        🧵 Items
+                        Items
                     </h2>
 
                     <div v-for="(item, index) in parsedItemDetails" :key="item?.id"
@@ -170,36 +177,36 @@ function capitalizeFirst(str) {
                         <h3 class="text-2xl font-bold mb-4 text-primary text-center">Item {{ index + 1 }}</h3>
 
                         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm mb-6">
-                            <div><span class="font-semibold">🎨 Colors :</span> {{ item?.colors }}</div>
-                            <div><span class="font-semibold">🧵 Material Type :</span> {{
+                            <div><span class="font-semibold">Colors :</span> {{ item?.colors }}</div>
+                            <div><span class="font-semibold">Material Type :</span> {{
                                 capitalizeFirst(item?.material_type) ?? 'N/A'
                                 }}</div>
-                            <div><span class="font-semibold">📄 Material Code :</span> {{ item?.material_code ?? 'N/A'
+                            <div><span class="font-semibold">Material Code :</span> {{ item?.material_code ?? 'N/A'
                             }}
                             </div>
-                            <div><span class="font-semibold">🧶 Work Type :</span> {{ item?.work_type ?? 'N/A' }}</div>
+                            <div><span class="font-semibold">Work Type :</span> {{ item?.work_type ?? 'N/A' }}</div>
                             <div>
-                                <span class="font-semibold">⚡ Urgent:</span>
+                                <span class="font-semibold">Urgent:</span>
                                 <span class="inline-block bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs">{{
                                     item?.is_urgent === true ? 'True' : 'False' }}
                                 </span>
                             </div>
                             <div>
-                                <span class="font-semibold">📌 Status:</span>
+                                <span class="font-semibold">Status:</span>
                                 <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs">{{
                                     item?.status }}</span>
                             </div>
-                            <div><span class="font-semibold">🧾 Material Cost:</span> ₹ {{ item?.material_cost ??
+                            <div><span class="font-semibold">Material Cost:</span> ₹ {{ item?.material_cost ??
                                 '0.00' }}</div>
-                            <div><span class="font-semibold">🧵 Stitching Cost:</span> ₹ {{ item?.stiching_cost ??
+                            <div><span class="font-semibold">Stitching Cost:</span> ₹ {{ item?.stiching_cost ??
                                 '0.00' }}</div>
-                            <div><span class="font-semibold">✂ Altering Cost:</span> ₹ {{ item?.altering_cost ?? '00.0'
+                            <div><span class="font-semibold">Altering Cost:</span> ₹ {{ item?.altering_cost ?? '00.0'
                             }}
                             </div>
-                            <div><span class="font-semibold">💰 Item Cost:</span> ₹ {{ item?.item_cost }}</div>
-                            <div><span class="font-semibold">🧪 Trial Date:</span> {{ item?.trial_dates }}
+                            <div><span class="font-semibold">Item Cost:</span> ₹ {{ item?.item_cost }}</div>
+                            <div><span class="font-semibold">Trial Date:</span> {{ item?.trial_dates }}
                             </div>
-                            <div><span class="font-semibold">📦 Delivery Date:</span> {{ item?.delivery_date }}
+                            <div><span class="font-semibold">Delivery Date:</span> {{ item?.delivery_date }}
                             </div>
                         </div>
 
@@ -255,12 +262,12 @@ function capitalizeFirst(str) {
                         </div>
                         <!-- Reference Dress & Other Images -->
                         <div class="mt-6">
-                            <h4 class="font-semibold mb-4 text-lg">👗 Reference Dress & Other Images</h4>
+                            <h4 class="font-semibold mb-4 text-lg">Reference Dress & Other Images</h4>
                             <div class="flex flex-col md:flex-row gap-8">
 
                                 <!-- Left: Reference Dress -->
                                 <div class="flex-1">
-                                    <h5 class="font-semibold text-sm mb-2">👗 Reference Image</h5>
+                                    <h5 class="font-semibold text-sm mb-2">Reference Image</h5>
                                     <h6 class="font-semibold text-xs mb-2 text-green-700"> Reference Dress
                                     </h6>
                                     <div v-if="item.refrence_dress"
@@ -280,7 +287,7 @@ function capitalizeFirst(str) {
                                     <div class="flex flex-col md:flex-row gap-8">
                                         <!-- Cloth Images Column -->
                                         <div class="flex-1">
-                                            <h6 class="font-semibold text-xs mb-2 text-green-700">👗 Material Images
+                                            <h6 class="font-semibold text-xs mb-2 text-green-700">Material Images
                                             </h6>
                                             <div v-if="item.cloth_img1 || item.cloth_img2"
                                                 class="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -299,7 +306,7 @@ function capitalizeFirst(str) {
 
                                         <!-- Pattern Images Column -->
                                         <div class="flex-1">
-                                            <h6 class="font-semibold text-xs mb-2 text-purple-700">🧵 Pattern Images
+                                            <h6 class="font-semibold text-xs mb-2 text-purple-700">Pattern Images
                                             </h6>
                                             <div v-if="item.Pattern_img1 || item.Pattern_img2"
                                                 class="grid grid-cols-2 sm:grid-cols-3 gap-4">

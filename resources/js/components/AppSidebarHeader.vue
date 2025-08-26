@@ -86,7 +86,7 @@ function submitFactoryData() {
                     </svg>
                 </div>
             </div> -->
-            <div v-if="user?.email === 'demo@example.com'" class="p-4">
+            <div v-if="user?.email === 'demo@example.com'" class="lg:p-3 pt-4">
                 <button class="w-full px-4 py-2 bg-primary text-white rounded" @click="openFactoryModal">
                     Create Factory Data
                 </button>
