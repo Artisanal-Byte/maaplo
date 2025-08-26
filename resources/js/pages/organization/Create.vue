@@ -10,18 +10,38 @@ const toast = new ToastMagic();
 const logoPreview = ref(null);
 const showLogoError = ref(false);
 const loading = ref(false);
+const qrPreview = ref(null)
 const form = useForm({
     organization_name: '',
     organization_logo: null,
     gst_number: '',
     address: '',
+    account_holder_name: '',
+    account_number: '',
+    ifsc_code: '',
+    branch_name: '',
+    bank_name: '',
+    qr_payment_img: '',
+    state: 'Gujarat',
     logo_request: false,
+    errors: {}
 });
 
 const logoUrl = computed(() => {
     return logoPreview.value || null;
 });
 
+const qrUrl = computed(() => {
+    return qrPreview.value || null;
+});
+
+const handleQRChange = (event) => {
+    const file = event.target?.files?.[0];
+    if (file) {
+        form.qr_payment_img = file;
+        qrPreview.value = URL.createObjectURL(file);
+    }
+};
 const handleLogoChange = (event) => {
     const file = event.target?.files?.[0];
     if (file) {
@@ -40,7 +60,9 @@ const hasAttemptedSubmit = ref(false);
 const gstRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
 
 const createOrganization = () => {
-    form.clearErrors(); // Clear previous errors
+    form.clearErrors();
+    console.log("Form state:", form.state);
+
     const gst = form.gst_number?.toUpperCase() || '';
 
     // Validate GST
@@ -162,7 +184,113 @@ const createOrganization = () => {
                         </Button>
                     </div>
                 </div>
+                <!-- Bank Account Details -->
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Input v-model="form.account_holder_name" label="Account Holder Name"
+                        placeholder="Enter Account Holder Name" :error="form.errors.account_holder_name"
+                        required="true">
+                    <template #icon>
+                        <Icon icon="mdi:account" width="24" height="24" />
+                    </template>
+                    </Input>
+                    <Input v-model="form.account_number" label="Account Number" placeholder="Enter Account Number"
+                        :error="form.errors.account_number" required="true">
+                    <template #icon>
+                        <Icon icon="mdi:numeric" width="24" height="24" />
+                    </template>
+                    </Input>
+                </div>
 
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Input v-model="form.ifsc_code" label="IFSC Code" placeholder="Enter IFSC Code"
+                        :error="form.errors.ifsc_code" required="true">
+                    <template #icon>
+                        <Icon icon="mdi:code-braces" width="24" height="24" />
+                    </template>
+                    </Input>
+                    <Input v-model="form.branch_name" label="Branch Name" placeholder="Enter Branch Name"
+                        :error="form.errors.branch_name" required="true">
+                    <template #icon>
+                        <Icon icon="mdi:bank" width="24" height="24" />
+                    </template>
+                    </Input>
+                </div>
+
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Input v-model="form.bank_name" label="Bank Name" placeholder="Enter Bank Name"
+                        :error="form.errors.bank_name" required="true">
+                    <template #icon>
+                        <Icon icon="mdi:bank-outline" width="24" height="24" />
+                    </template>
+                    </Input>
+
+
+                    <div>
+                        <label class="font-medium block mb-1">
+                            State <span class="text-red-500">*</span>
+                        </label>
+                        <select v-model="form.state" class="form-input border border-primary w-full p-4 rounded-lg"
+                            :required="true">
+                            <option value="Andhra_Pradesh">Andhra Pradesh</option>
+                            <option value="Arunachal_Pradesh">Arunachal Pradesh</option>
+                            <option value="Assam">Assam</option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Chhattisgarh">Chhattisgarh</option>
+                            <option value="Goa">Goa</option>
+                            <option value="Gujarat" selected>Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Himachal_Pradesh">Himachal Pradesh</option>
+                            <option value="Jharkhand">Jharkhand</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="Madhya_Pradesh">Madhya Pradesh</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Manipur">Manipur</option>
+                            <option value="Meghalaya">Meghalaya</option>
+                            <option value="Mizoram">Mizoram</option>
+                            <option value="Nagaland">Nagaland</option>
+                            <option value="Odisha">Odisha</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Sikkim">Sikkim</option>
+                            <option value="Tamil_Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="Tripura">Tripura</option>
+                            <option value="Uttar_Pradesh">Uttar Pradesh</option>
+                            <option value="Uttarakhand">Uttarakhand</option>
+                            <option value="West_Bengal">West Bengal</option>
+                            <option value="Andaman_and_Nicobar_Islands">Andaman and Nicobar Islands</option>
+                            <option value="Chandigarh">Chandigarh</option>
+                            <option value="Dadra_and_Nagar_Haveli_and_Daman_and_Diu">Dadra and Nagar Haveli and Daman
+                                and Diu</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Jammu_and_Kashmir">Jammu and Kashmir</option>
+                            <option value="Ladakh">Ladakh</option>
+                            <option value="Lakshadweep">Lakshadweep</option>
+                            <option value="Puducherry">Puducherry</option>
+                        </select>
+                        <p v-if="form.errors?.state" class="text-red-600 text-sm mt-1">
+                            {{ form.errors.state }}
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- QR Payment Image -->
+                <div>
+                    <label class="block font-medium text-gray-700 mb-2 mt-5">QR Payment Image</label>
+                    <div class="mb-4">
+                        <div
+                            class="w-full h-64 bg-gray-100 border rounded flex items-center justify-center overflow-hidden">
+                            <img alt="QR Payment" class="object-contain h-full w-full" />
+                        </div>
+                    </div>
+                    <input type="file" @change="handleQRChange"
+                        class="block w-full text-sm text-gray-600 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                    <p v-if="form.errors.qr_payment_img" class="text-red-600 text-sm mt-1">
+                        {{ form.errors.qr_payment_img }}
+                    </p>
+                </div>
                 <!-- Submit Button -->
                 <div class="flex w-full mt-8">
                     <Button @click="createOrganization" :disabled="form.processing" :color="'primary'" :padding="'md'"

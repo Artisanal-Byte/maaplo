@@ -31,11 +31,19 @@ class OrganizationController extends Controller
     {
         $data = $request->validate([
             'organization_name' => 'required|string',
+            'account_holder_name' => 'required|string',
+            'account_number' => 'required|string',
+            'ifsc_code' => 'required|string',
+            'branch_name' => 'required|string',
+            'bank_name' => 'required|string',
+            'state' => 'required|string',
+            'qr_payment_img' => 'nullable|file|max:5120',
             'organization_logo' => 'nullable|file|max:5120',
             'gst_number' => 'nullable|string',
             'address' => 'required|string',
             'logo_request' => 'nullable|boolean',
         ]);
+        // dd($data);
         try {
             DB::beginTransaction();
 
@@ -43,6 +51,12 @@ class OrganizationController extends Controller
                 'organization_name' => $data['organization_name'],
                 'gst_number' => $data['gst_number'],
                 'address' => $data['address'],
+                'account_holder_name' => $data['account_holder_name'],
+                'account_number' => $data['account_number'],
+                'ifsc_code' => $data['ifsc_code'],
+                'branch_name' => $data['branch_name'],
+                'bank_name' => $data['bank_name'],
+                'state' => $data['state'],
                 'logo_request' => $data['logo_request'] ?? false,
                 'logo_created' => false,
                 'user_id' => auth()->id(),
@@ -55,6 +69,15 @@ class OrganizationController extends Controller
 
                 $orgLogoPath = ImageHelper::imageProccess($file, $organization->id, $username, $organization->id, $customerName, 'org_logo');
                 $organization->organization_logo = $orgLogoPath;
+                $organization->save();
+            }
+
+            if ($request->hasFile('qr_payment_img')) {
+                $file = $request->file('qr_payment_img');
+                $username = Str::slug($data['organization_name'] ?? 'organization');
+                $customerName = $username;
+                $qrPaymentPath = ImageHelper::imageProccess($file, $organization->id, $username, $organization->id, $customerName, 'qr_payment_img');
+                $organization->qr_payment_img = $qrPaymentPath;
                 $organization->save();
             }
 
@@ -84,6 +107,13 @@ class OrganizationController extends Controller
             'organization_logo' => 'nullable|file|max:5120',
             'gst_number' => 'nullable|string|max:15',
             'address' => 'required|string',
+            'account_holder_name' => 'nullable|string|max:255',
+            'account_number' => 'nullable|string|max:50',
+            'ifsc_code' => 'nullable|string|max:15',
+            'branch_name' => 'nullable|string|max:100',
+            'bank_name' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:100',
+            'qr_payment_img' => 'nullable|file|image|max:5120',
         ]);
         try {
             DB::beginTransaction();
@@ -104,6 +134,21 @@ class OrganizationController extends Controller
 
                 $orgLogoPath = ImageHelper::imageProccess($file, $userId, $username, $userId, $customerName, 'org_logo');
                 $data['organization_logo'] = $orgLogoPath;
+            }
+
+            // Handle QR payment image upload
+            if ($request->hasFile('qr_payment_img')) {
+                if ($organization->qr_payment_img) {
+                    $oldQrPath = Str::after($organization->qr_payment_img, 'storage/');
+                    if (Storage::disk('public')->exists($oldQrPath)) {
+                        Storage::disk('public')->delete($oldQrPath);
+                    }
+                }
+
+                $file = $request->file('qr_payment_img');
+                // You can reuse your ImageHelper or write logic to store the QR image:
+                $qrImagePath = $file->store('qr_payment_images', 'public'); // example path
+                $data['qr_payment_img'] = 'storage/' . $qrImagePath;
             }
 
             $organization->update($data);

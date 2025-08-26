@@ -26,11 +26,16 @@ class ImageHelper
         $userId,
         $customerName,
         $label = 'organization_logo',
+        $qr_payment_img = 'qr_payment_img',
         $type = 'user'
     ) {
         try {
             $timestamp = time();
-            $fileName = "{$label}_{$timestamp}.webp";
+
+            $fileLabel = ($label === 'qr_payment_img') ? $qr_payment_img : $label;
+
+            $fileName = "{$fileLabel}_{$timestamp}.webp";
+
 
             // Convert username and customer name to lowercase and replace spaces with underscores
             $usernameFormatted = strtolower(str_replace(' ', '_', $username));
