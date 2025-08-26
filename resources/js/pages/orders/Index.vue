@@ -337,7 +337,7 @@ function handlePaginationClick(url) {
             </div>
             <div class="px-4 mt-10 py-6 gap-[10px] rounded-[10px] shadow-[0px_0px_8.6px_0px_#005FAF40]">
                 <!-- Orders list -->
-                <div class="space-y-4">
+                <div class="space-y-6">
                     <!-- <OrderList v-if="filteredOrders.length > 0" v-for="(order, index) in filteredOrders" :key="order.id"
                         :bgColor="bgColor[index % bgColor.length]"
                         :borderColor="borderColor[index % borderColor.length]" :order="order" /> -->
