@@ -109,8 +109,7 @@ function capitalizeFirst(str) {
                     <h2 class="text-xl lg:text-3xl font-semibold text-primary flex items-center justify-center gap-2">
                         📦 Information
                     </h2>
-                    <button @click="showBill = true"
-                        class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                    <button @click="showBill = true" class="bg-primary text-white px-4 py-2 rounded-lg">
                         🧾 Generate Bill
                     </button>
                     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 mt-8 text-sm">
@@ -323,7 +322,7 @@ function capitalizeFirst(str) {
                         </div>
                     </div>
                 </div>
-                <InvoiceGenerator :order="order" :show="showBill" @close="showBill = false" />
+
                 <!-- Image Modal -->
                 <div v-if="showModal"
                     class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 transition-opacity duration-300">
@@ -337,5 +336,7 @@ function capitalizeFirst(str) {
                 </div>
             </section>
         </div>
+        <!-- Invoice Generate Modal -->
+        <InvoiceGenerator :order="order" :show="showBill" @close="showBill = false" />
     </AppLayout>
 </template>

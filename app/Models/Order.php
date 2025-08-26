@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'orders';
     protected $with = ['orderItems'];
@@ -78,5 +78,17 @@ class Order extends Model
         static::restoring(function ($order) {
             $order->orderItems()->withTrashed()->restore();
         });
+    }
+
+    public function organization()
+    {
+        return $this->hasOneThrough(
+            Organization::class,
+            User::class,
+            'id',      // local key on users
+            'user_id', // foreign key on organizations
+            'user_id', // foreign key on orders
+            'id'       // local key on users
+        );
     }
 }
