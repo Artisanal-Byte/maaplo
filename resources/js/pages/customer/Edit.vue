@@ -20,6 +20,7 @@ const props = defineProps<{
         country_code: string;
         phone: string;
         dob: string;
+        state: string;
         measurements: Record<string, string> | null;
         countries: Array<{ name: string; code: string }>
         address: string;
@@ -57,6 +58,7 @@ const form = useForm({
     email: props.customer.email,
     phone: props.customer.phone,
     address: props.customer.address,
+    state: props.customer.state,
     dob: props.customer.dob,
     country_code: props.customer.country_code,
     measurements: props.customer.measurements && Object.values(props.customer.measurements).some(v => v !== null)
@@ -265,14 +267,61 @@ const removeFullBodyImage = () => {
                         </template>
                         </Input>
                     </div>
-                </div>
 
-                <!-- Address -->
-                <div class="md:col-span-2 mt-3">
-                    <Input type="textarea" v-model="form.address" color="grayBorder" :required="true" label="Address"
-                        :error="errors.address"></Input>
-                </div>
 
+                    <!-- Address -->
+                    <div>
+                        <Input type="textarea" v-model="form.address" color="grayBorder" :required="true"
+                            label="Address" :error="errors.address"></Input>
+                    </div>
+
+                    <div>
+                        <label class="font-medium block mb-1">
+                            State <span class="text-red-500">*</span>
+                        </label>
+                        <select v-model="form.state" class="form-input border border-primary w-full p-4 rounded-lg"
+                            :required="true" :error="errors.state">
+                            <option value="Andhra_Pradesh">Andhra Pradesh</option>
+                            <option value="Arunachal_Pradesh">Arunachal Pradesh</option>
+                            <option value="Assam">Assam</option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Chhattisgarh">Chhattisgarh</option>
+                            <option value="Goa">Goa</option>
+                            <option value="Gujarat" selected>Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Himachal_Pradesh">Himachal Pradesh</option>
+                            <option value="Jharkhand">Jharkhand</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="Madhya_Pradesh">Madhya Pradesh</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Manipur">Manipur</option>
+                            <option value="Meghalaya">Meghalaya</option>
+                            <option value="Mizoram">Mizoram</option>
+                            <option value="Nagaland">Nagaland</option>
+                            <option value="Odisha">Odisha</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Sikkim">Sikkim</option>
+                            <option value="Tamil_Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="Tripura">Tripura</option>
+                            <option value="Uttar_Pradesh">Uttar Pradesh</option>
+                            <option value="Uttarakhand">Uttarakhand</option>
+                            <option value="West_Bengal">West Bengal</option>
+                            <option value="Andaman_and_Nicobar_Islands">Andaman and Nicobar Islands</option>
+                            <option value="Chandigarh">Chandigarh</option>
+                            <option value="Dadra_and_Nagar_Haveli_and_Daman_and_Diu">Dadra and Nagar Haveli and Daman
+                                and
+                                Diu</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Jammu_and_Kashmir">Jammu and Kashmir</option>
+                            <option value="Ladakh">Ladakh</option>
+                            <option value="Lakshadweep">Lakshadweep</option>
+                            <option value="Puducherry">Puducherry</option>
+                        </select>
+                    </div>
+                </div>
                 <!-- Gender -->
                 <div class="flex mb-5 mt-4">
                     <div class="mr-3">
@@ -351,7 +400,7 @@ const removeFullBodyImage = () => {
                                         class="block w-full text-sm text-gray-500 mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
                                 </label>
 
-                                 <button @click="removeFullBodyImage" type="button"
+                                <button @click="removeFullBodyImage" type="button"
                                     class="flex items-center gap-1 text-red-600 text-sm underline hover:text-red-800 whitespace-nowrap mt-6">
                                     <Icon icon="mdi:trash-can-outline" width="18" height="18" />
                                     <span>Remove Image</span>

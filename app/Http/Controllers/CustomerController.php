@@ -122,6 +122,7 @@ class CustomerController extends Controller
             'address' => 'required|string|max:255',
             'measurements' => 'nullable|array',
             'dob' => 'nullable|date',
+            'state' => 'required|string|max:255',
             'notes' => 'nullable|array',
             'half_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'full_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -142,6 +143,7 @@ class CustomerController extends Controller
                 'email' => $validated['email'],
                 'base_measurements' => json_encode($validated['measurements']),
                 'dob' => $validated['dob'],
+                'state' => $validated['state'],
                 'address' => $addressJson,
                 'notes' => json_encode($validated['notes']),
             ]);
@@ -250,6 +252,7 @@ class CustomerController extends Controller
             'measurements' => 'nullable|array',
             'address' => 'required|string',
             'notes' => 'nullable|array',
+            'state' => 'required|string|max:255',
             'half_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'full_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'remove_half_image' => 'nullable|boolean',
@@ -266,6 +269,7 @@ class CustomerController extends Controller
                 'base_measurements' => $validated['measurements'] ?? [],
                 'country_code' => $validated['country_code'],
                 'phone' => $validated['phone'],
+                'state' => $validated['state'],
                 'notes' => json_encode($validated['notes']),
                 'address' => json_encode(['value' => $validated['address']]),
             ]);
