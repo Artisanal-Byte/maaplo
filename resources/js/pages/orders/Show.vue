@@ -106,29 +106,20 @@ function capitalizeFirst(str) {
 
                 <!-- Order Info Section -->
                 <div>
-<<<<<<< HEAD
                     <div class="flex justify-between items-center">
-                    <div>
-                        <h2
-                            class="text-xl lg:text-3xl font-semibold text-primary items-center gap-2">
-                            Order Information
-                        </h2>
+                        <div>
+                            <h2 class="text-xl lg:text-3xl font-semibold text-primary items-center gap-2">
+                                Order Information
+                            </h2>
+                        </div>
+                        <div>
+                            <button @click="showBill = true"
+                                class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                🧾 Generate Bill
+                            </button>
+                        </div>
                     </div>
-                    <div>
-                        <button @click="showBill = true"
-                            class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                            🧾 Generate Bill
-                        </button>
-                    </div>
-                    </div>
-=======
-                    <h2 class="text-xl lg:text-3xl font-semibold text-primary flex items-center justify-center gap-2">
-                        📦 Information
-                    </h2>
-                    <button @click="showBill = true" class="bg-primary text-white px-4 py-2 rounded-lg">
-                        🧾 Generate Bill
-                    </button>
->>>>>>> sahil
+
                     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 mt-8 text-sm">
                         <div><span class="font-semibold">Customer Name:</span> {{ order?.customer?.name ?? 'N/A' }}
                         </div>
@@ -189,9 +180,9 @@ function capitalizeFirst(str) {
                             <div><span class="font-semibold">Colors :</span> {{ item?.colors }}</div>
                             <div><span class="font-semibold">Material Type :</span> {{
                                 capitalizeFirst(item?.material_type) ?? 'N/A'
-                                }}</div>
+                            }}</div>
                             <div><span class="font-semibold">Material Code :</span> {{ item?.material_code ?? 'N/A'
-                            }}
+                                }}
                             </div>
                             <div><span class="font-semibold">Work Type :</span> {{ item?.work_type ?? 'N/A' }}</div>
                             <div>
@@ -210,7 +201,7 @@ function capitalizeFirst(str) {
                             <div><span class="font-semibold">Stitching Cost:</span> ₹ {{ item?.stiching_cost ??
                                 '0.00' }}</div>
                             <div><span class="font-semibold">Altering Cost:</span> ₹ {{ item?.altering_cost ?? '00.0'
-                            }}
+                                }}
                             </div>
                             <div><span class="font-semibold">Item Cost:</span> ₹ {{ item?.item_cost }}</div>
                             <div><span class="font-semibold">Trial Date:</span> {{ item?.trial_dates }}
