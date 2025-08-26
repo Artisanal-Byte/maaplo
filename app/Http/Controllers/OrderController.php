@@ -203,7 +203,7 @@ class OrderController extends Controller
         $source = $request->query('source');
         $allDesignDetails = DesignDetail::with('bodyPartValue')->get();
         return Inertia::render('orders/Show', [
-            'order' => $order,
+            'order' => $order->load('customer', 'orderItems', 'organization'),
             'designDetails' => $designDetailsData,
             'source' => $source,
             'allDesignDetails' => $allDesignDetails,
