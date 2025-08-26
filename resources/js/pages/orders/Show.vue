@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import { Head, Link, usePage } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
 import { Icon } from '@iconify/vue';
+import InvoiceGenerator from '@/components/InvoiceGenerator.vue';
 const props = defineProps({
     order: Object,
     designDetails: Object,
@@ -27,9 +28,9 @@ const parsedItemDetails = computed(() => {
         parsedMeasurements: JSON.parse(item?.measurements || '{}'),
     })) || []
 })
-
 const showModal = ref(false)
 const selectedImage = ref(null)
+const showBill = ref(false)
 function openImageModal(imageUrl) {
     selectedImage.value = imageUrl
     showModal.value = true
@@ -67,6 +68,7 @@ function capitalizeFirst(str) {
     if (!str) return 'N/A'
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 }
+
 
 </script>
 
@@ -107,6 +109,10 @@ function capitalizeFirst(str) {
                     <h2 class="text-xl lg:text-3xl font-semibold text-primary flex items-center justify-center gap-2">
                         📦 Information
                     </h2>
+                    <button @click="showBill = true"
+                        class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        🧾 Generate Bill
+                    </button>
                     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 mt-8 text-sm">
                         <div><span class="font-semibold">👤 Customer Name:</span> {{ order?.customer?.name ?? 'N/A' }}
                         </div>
@@ -167,9 +173,9 @@ function capitalizeFirst(str) {
                             <div><span class="font-semibold">🎨 Colors :</span> {{ item?.colors }}</div>
                             <div><span class="font-semibold">🧵 Material Type :</span> {{
                                 capitalizeFirst(item?.material_type) ?? 'N/A'
-                            }}</div>
+                                }}</div>
                             <div><span class="font-semibold">📄 Material Code :</span> {{ item?.material_code ?? 'N/A'
-                                }}
+                            }}
                             </div>
                             <div><span class="font-semibold">🧶 Work Type :</span> {{ item?.work_type ?? 'N/A' }}</div>
                             <div>
@@ -188,7 +194,7 @@ function capitalizeFirst(str) {
                             <div><span class="font-semibold">🧵 Stitching Cost:</span> ₹ {{ item?.stiching_cost ??
                                 '0.00' }}</div>
                             <div><span class="font-semibold">✂ Altering Cost:</span> ₹ {{ item?.altering_cost ?? '00.0'
-                                }}
+                            }}
                             </div>
                             <div><span class="font-semibold">💰 Item Cost:</span> ₹ {{ item?.item_cost }}</div>
                             <div><span class="font-semibold">🧪 Trial Date:</span> {{ item?.trial_dates }}
@@ -317,6 +323,7 @@ function capitalizeFirst(str) {
                         </div>
                     </div>
                 </div>
+                <InvoiceGenerator :order="order" :show="showBill" @close="showBill = false" />
                 <!-- Image Modal -->
                 <div v-if="showModal"
                     class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 transition-opacity duration-300">
