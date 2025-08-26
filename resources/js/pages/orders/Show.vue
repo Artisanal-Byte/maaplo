@@ -114,7 +114,7 @@ function capitalizeFirst(str) {
                         </div>
                         <div>
                             <button @click="showBill = true"
-                                class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-cyan-700">
                                 🧾 Generate Bill
                             </button>
                         </div>

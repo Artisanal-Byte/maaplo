@@ -214,7 +214,7 @@ function confirmClose() {
             <div class="flex gap-3">
                 <!-- Close Order -->
                 <button @click="openCloseModal(order)"
-                    class="flex-1 bg-gray-300 text-black py-2 rounded-lg text-sm font-medium shadow-sm transition hover:bg-red-600">
+                    class="flex-1 bg-gray-300 text-black py-2 rounded-lg text-sm font-medium shadow-sm transition hover:bg-gray-200">
                     Close Order
                 </button>
                 <!-- Status -->
