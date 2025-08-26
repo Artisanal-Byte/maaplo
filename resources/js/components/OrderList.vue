@@ -196,7 +196,7 @@ function confirmClose() {
 
         <!-- Actions -->
         <div class="bg-primary px-4 py-3 mt-5">
-            <div class="flex justify-between items-center mb-3">
+            <div class="flex justify-between px-20 items-center mb-3">
                 <!-- View -->
                 <Link :href="route('orders.show', props.order.id)">
                 <Icon icon="teenyicons:eye-solid" width="20" height="20" class="text-white" />
@@ -214,12 +214,12 @@ function confirmClose() {
             <div class="flex gap-3">
                 <!-- Close Order -->
                 <button @click="openCloseModal(order)"
-                    class="flex-1 bg-red-500 text-white py-2 rounded-lg text-sm font-medium shadow-sm transition hover:bg-red-600">
+                    class="flex-1 bg-gray-300 text-black py-2 rounded-lg text-sm font-medium shadow-sm transition hover:bg-red-600">
                     Close Order
                 </button>
                 <!-- Status -->
                 <button
-                    class="flex-1 bg-green-500 text-white py-2 rounded-lg text-sm font-medium shadow-sm transition hover:bg-green-600">
+                    class="flex-1 bg-green-500 text-black py-2 rounded-lg text-sm font-medium shadow-sm transition hover:bg-green-600">
                     Status
                 </button>
             </div>
