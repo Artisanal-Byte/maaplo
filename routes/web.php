@@ -71,6 +71,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('customers', CustomerController::class);
     Route::resource('items', TemplateController::class);
     Route::resource('organization', OrganizationController::class);
+    Route::post('/orders/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 
     // Allow all users to submit feature/suggestion
     Route::get('/feature-request/create', fn() => Inertia::render('featurerequest/Create'))->name('feature-request.create');
