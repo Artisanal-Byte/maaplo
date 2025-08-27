@@ -53,7 +53,12 @@ Route::get('dashboard', DashboardController::class)
 // ✅ Routes for all authenticated users (admin + user)
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/orders/closed', [DashboardController::class, 'closedOrdersPage'])->name('orders.closed');
+    Route::get('/orders/close', [DashboardController::class, 'closeOrdersPage'])->name('orders.close');
+
     Route::get('/orders/view-closed', [DashboardController::class, 'viewClosedOrders'])->name('orders.viewClosed');
+    Route::get('/orders/view-close', [DashboardController::class, 'viewCloseOrders'])->name('orders.viewClose');
+    Route::post('/orders/deliverd', [DashboardController::class, 'deliverd'])->name('orders.deliverd');
+
     Route::post('/orders/close', [DashboardController::class, 'close'])->name('orders.close');
     Route::get('/reporterror/create', [ErrorReportController::class, 'create'])->name('reporterror.create');
     Route::post('/reporterror', [ErrorReportController::class, 'store'])->name('reporterror.store');
