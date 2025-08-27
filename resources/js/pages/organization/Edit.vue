@@ -152,21 +152,22 @@ const updateOrganization = () => {
                     </Input>
 
                     <Input v-model="form.account_holder_name" label="Account Holder Name"
-                        placeholder="Enter account holder name" :error="props.errors.account_holder_name">
+                        placeholder="Enter account holder name" :error="props.errors.account_holder_name"
+                        required="true">
                     <template #icon>
                         <Icon icon="mdi:account" width="24" height="24" />
                     </template>
                     </Input>
 
                     <Input v-model="form.account_number" label="Account Number" placeholder="Enter account number"
-                        :error="props.errors.account_number">
+                        :error="props.errors.account_number" required="true">
                     <template #icon>
                         <Icon icon="mdi:bank" width="24" height="24" />
                     </template>
                     </Input>
 
                     <Input v-model="form.ifsc_code" label="IFSC Code" placeholder="Enter IFSC code"
-                        :error="props.errors.ifsc_code">
+                        :error="props.errors.ifsc_code" required="true">
                     <template #icon>
                         <Icon icon="mdi:code-tags" width="24" height="24" />
                     </template>
