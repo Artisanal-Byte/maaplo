@@ -190,7 +190,7 @@ watch(() => form.customer_id, async (newCustomerId) => {
                 <CustomerListDropdown :customers="customers" :error="props.errors.customer_id" />
 
                 <!-- Delivery Date -->
-                <DateIcon :error="props.errors.delivery_date" />
+                <DateIcon today :error="props.errors.delivery_date" />
 
                 <!-- items -->
                 <div class="mt-2">
