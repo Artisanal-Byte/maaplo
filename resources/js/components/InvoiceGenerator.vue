@@ -96,7 +96,7 @@ async function downloadPDF() {
 
     doc.setFontSize(10);
     doc.text("Account Holder: " + (props.order?.organization?.account_holder_name || "-"), rightX, contentY + 6);
-    doc.text(`A/C No: ${props.order?.organization?.bank_account || "-"}`, rightX, contentY + 12);
+    doc.text(`A/C No: ${props.order?.organization?.account_number || "-"}`, rightX, contentY + 12);
     doc.text(`IFSC: ${props.order?.organization?.ifsc_code || "-"}`, rightX, contentY + 18);
     doc.text(`GSTIN: ${props.order?.organization?.gstin || "-"}`, rightX, contentY + 24);
     doc.text("Branch: " + (props.order?.organization?.branch_name || "-"), rightX, contentY + 30);
