@@ -7,7 +7,7 @@ import Pagination from '@/components/Pagination.vue';
 import SearchList from '@/components/SearchIcon.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Icon } from '@iconify/vue';
-import { Head, Link,router } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { defineProps, computed, reactive, ref, watch, nextTick } from 'vue';
 
 const props = defineProps({
@@ -161,13 +161,13 @@ function handlePaginationClick(url) {
                     </h1>
                 </div>
                 <!-- View Closed Orders Button -->
-                <div class="flex justify-center items-center">
+                <div class="sm:hidden block"></div>
+                <div class="hidden lg:flex justify-center items-center">
                     <Link :href="route('orders.viewClosed')"
                         class="inline-flex items-center px-4 py-2 bg-primary text-white text-sm font-semibold rounded-md shadow">
                     <Icon icon="ic:round-visibility" class="mr-2" width="20" height="20" />
                     View Closed Orders
                     </Link>
-
                 </div>
                 <div class="flex justify-end gap-4 text-gray-600 relative z-20">
                     <div class="relative group">
@@ -217,8 +217,14 @@ function handlePaginationClick(url) {
                         </div>
                     </div>
                 </div>
+            </div>
 
-
+            <div class="lg:hidden flex justify-center items-center mt-5">
+                <Link :href="route('orders.viewClosed')"
+                    class="inline-flex items-center px-4 py-2 bg-primary text-white text-sm font-semibold rounded-md shadow">
+                <Icon icon="ic:round-visibility" class="mr-2" width="20" height="20" />
+                View Closed Orders
+                </Link>
             </div>
             <!-- Search and filter section -->
             <div>

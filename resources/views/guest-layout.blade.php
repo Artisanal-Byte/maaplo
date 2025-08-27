@@ -58,7 +58,11 @@
                 </button>
                 <button
                     class="px-[15px] py-[8px] bg-black text-white hover:bg-gray-600 rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200 space-x-2">
-                    <a href="/login">Login</a> / <a href="/register">Register</a>
+                    <a href="/login">Login</a>
+                </button>
+                <button
+                    class="px-[15px] py-[8px] bg-black text-white hover:bg-gray-600 rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200 space-x-2">
+                    <a href="/register">Register</a>
                 </button>
             </div>
         </div>
@@ -78,7 +82,11 @@
                 </button>
                 <button
                     class="px-[15px] py-[8px] bg-black text-white hover:bg-gray-600 rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200 space-x-2">
-                    <a href="/login">Login</a> / <a href="/register">Register</a>
+                    <a href="/login">Login</a>
+                </button>
+                <button
+                    class="px-[15px] py-[8px] bg-black text-white hover:bg-gray-600 rounded-tl-[8px] rounded-tr-[8px] rounded-bl-[8px] rounded-br-[25px] hover:scale-105 transition-transform duration-200 space-x-2">
+                    <a href="/register">Register</a>
                 </button>
             </div>
         </div>
