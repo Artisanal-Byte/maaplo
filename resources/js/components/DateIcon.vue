@@ -1,14 +1,23 @@
+<!-- DateIcon.vue -->
+
 <script setup>
 import { computed, ref, defineEmits } from 'vue'
 import { Icon } from '@iconify/vue';
 import { useOrderFormStore } from '@/stores/orderFormStore';
 
-const props = defineProps(['error'])
-let emits = defineEmits(["setOrderData"])
+const props = defineProps({
+    error: String,
+    today: Boolean // Add this line to accept the prop
+})
+
+const emits = defineEmits(["setOrderData"])
 const selectedDate = useOrderFormStore()
 const dateInput = ref(null)
 
-
+// Convert today to YYYY-MM-DD format for input min attribute
+const minDate = computed(() => {
+    return props.today ? new Date().toISOString().split('T')[0] : null
+})
 
 function openCalendar() {
     if (dateInput.value?.showPicker) {
@@ -28,6 +37,7 @@ const formattedDate = computed(() => {
     })
 })
 </script>
+
 <template>
     <div class="mt-2 flex items-center gap-3">
         <label class="font-lato text-base font-medium leading-4 tracking-normal">
@@ -35,14 +45,12 @@ const formattedDate = computed(() => {
             <p class="text-red-600 text-sm">{{ error }}</p>
         </label>
 
-        <!-- Calendar icon acts as the “open picker” trigger -->
         <Icon icon="pixel:calender-solid" width="22" height="22"
             class="cursor-pointer text-gray-700 hover:text-gray-900" @click="openCalendar" />
 
-        <!-- Hidden native date input -->
-        <input ref="dateInput" type="date" v-model="selectedDate.delivery_date" @change="onDateChange" class="hidden" />
+        <input ref="dateInput" type="date" v-model="selectedDate.delivery_date" :min="minDate" @change="onDateChange"
+            class="hidden" />
 
-        <!-- Show the picked date -->
         <span v-if="selectedDate" class="ml-2 text-gray-800">
             {{ formattedDate }}
         </span>

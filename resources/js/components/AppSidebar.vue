@@ -154,11 +154,14 @@ const visible = ref(false);
                                     </Link>
                                 </div>
 
-                                <div class="flex flex-row py-2 mt-2 rounded hover:bg-gray-100 p-2">
-                                    <Link :href="route('reporterror.create')" class="block text-gray-700 hover:text-black">
-                                    Report Error
+                                <div class="mt-2 rounded hover:bg-gray-100">
+                                    <Link :href="route('reporterror.create')"
+                                        class="flex flex-row items-center gap-2 px-3 py-2 text-gray-700 hover:text-black">
+                                    <Icon icon="streamline-freehand:cloud-error-404" width="24" height="24" />
+                                    <span>Report Error</span>
                                     </Link>
                                 </div>
+
 
                                 <div class="flex flex-row py-2 mt-2 rounded hover:bg-gray-100 p-2">
                                     <Link :href="route('feature-request.create')"
@@ -175,7 +178,7 @@ const visible = ref(false);
                             <div class="flex items-center p-2 rounded">
                                 <Icon icon="file-icons:actionscript" width="20" height="20" />
                                 <span class="ml-2 font-inter font-medium text-[16px] leading-[16px] tracking-[0]">
-                                    Select Action
+                                    FeedBack
                                 </span>
                             </div>
                             <Icon :icon="showDropdownSelectAction ? 'icon-park-outline:up' : 'icon-park-outline:down'"

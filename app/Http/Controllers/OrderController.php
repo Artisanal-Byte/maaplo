@@ -203,7 +203,7 @@ class OrderController extends Controller
         $source = $request->query('source');
         $allDesignDetails = DesignDetail::with('bodyPartValue')->get();
         return Inertia::render('orders/Show', [
-            'order' => $order,
+            'order' => $order->load('customer', 'orderItems', 'organization'),
             'designDetails' => $designDetailsData,
             'source' => $source,
             'allDesignDetails' => $allDesignDetails,
@@ -422,6 +422,32 @@ class OrderController extends Controller
         } catch (\Exception $e) {
             \Log::error('Failed to fetch customer measurements: ' . $e->getMessage());
             return response()->json(['error' => 'Failed to load measurements'], 500);
+        }
+    }
+
+    public function updateStatus(Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|exists:orders,id',
+            'status' => 'required|string|in:created,in_process,processed,trial_done,in_alteration,ready_for_delivery,delivered,cancelled'
+        ]);
+
+        try {
+            $order = Order::findOrFail($request->order_id);
+            $oldStatus = $order->status;
+
+            if ($oldStatus === $request->status) {
+                return back()->with('info', 'No change in status.');
+            }
+
+            $order->status = $request->status;
+            $order->save();
+
+            // Optional: log this in an order history table
+
+            return redirect()->back()->with('success', 'Order status updated successfully!');
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Failed to update status. ' . $e->getMessage()]);
         }
     }
 }

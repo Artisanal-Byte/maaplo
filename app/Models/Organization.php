@@ -18,6 +18,13 @@ class Organization extends Model
         'logo_request',
         'logo_created',
         'user_id',
+        'account_holder_name',
+        'account_number',
+        'ifsc_code',
+        'branch_name',
+        'bank_name',
+        'state',
+        'qr_payment_img',
     ];
 
     public function users()

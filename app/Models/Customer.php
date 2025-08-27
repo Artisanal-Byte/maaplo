@@ -23,7 +23,8 @@ class Customer extends Model
         'base_measurements',
         'address',
         'notes',
-        'dob'
+        'dob',
+        'state',
     ];
 
     protected $with = ['photos'];
