@@ -88,7 +88,7 @@ function capitalizeFirst(str) {
                         routeSource === 'fullclosed'
                             ? '📦 Fully Closed Order Overview'
                             : routeSource === 'closed'
-                                ? '🧾 Closed Order Overview'
+                                ? '🧾 Orders Ready For Deliver'
                                 : '🧾 Order Overview'
                     }}
                 </h1>
@@ -180,9 +180,9 @@ function capitalizeFirst(str) {
                             <div><span class="font-semibold">Colors :</span> {{ item?.colors }}</div>
                             <div><span class="font-semibold">Material Type :</span> {{
                                 capitalizeFirst(item?.material_type) ?? 'N/A'
-                            }}</div>
+                                }}</div>
                             <div><span class="font-semibold">Material Code :</span> {{ item?.material_code ?? 'N/A'
-                                }}
+                            }}
                             </div>
                             <div><span class="font-semibold">Work Type :</span> {{ item?.work_type ?? 'N/A' }}</div>
                             <div>
@@ -201,7 +201,7 @@ function capitalizeFirst(str) {
                             <div><span class="font-semibold">Stitching Cost:</span> ₹ {{ item?.stiching_cost ??
                                 '0.00' }}</div>
                             <div><span class="font-semibold">Altering Cost:</span> ₹ {{ item?.altering_cost ?? '00.0'
-                                }}
+                            }}
                             </div>
                             <div><span class="font-semibold">Item Cost:</span> ₹ {{ item?.item_cost }}</div>
                             <div><span class="font-semibold">Trial Date:</span> {{ item?.trial_dates }}

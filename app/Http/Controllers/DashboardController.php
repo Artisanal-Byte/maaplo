@@ -39,7 +39,7 @@ class DashboardController extends Controller
         $search = $request->input('search');
 
         $deliveredOrders = Order::with(['customer'])
-            ->where('status', 'delivered')
+            ->where('status', 'ready_for_delivery')
             ->whereHas('customer', function ($q) use ($user) {
                 $q->where('user_id', $user->id); // Filter orders by user
             })
@@ -68,6 +68,40 @@ class DashboardController extends Controller
         ]);
     }
 
+
+    public function close(Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|exists:orders,id',
+        ]);
+
+        $order = Order::find($request->order_id);
+
+        $order->update([
+            'status' => 'closed',
+            // 'close_date' => Carbon::now(),
+        ]);
+
+        ToastMagic::success('Order Delivered successfully!');
+        return redirect()->route('orders.index');
+    }
+    public function deliverd(Request $request)
+    {
+        // dd('This function is ignored. See Delivered function.');
+        $request->validate([
+            'order_id' => 'required|exists:orders,id',
+        ]);
+
+        $order = Order::find($request->order_id);
+
+        $order->update([
+            'status' => 'delivered',
+            // 'close_date' => Carbon::now(),
+        ]);
+
+        ToastMagic::success('Order Delivered successfully!');
+        return redirect()->route('orders.index');
+    }
 
     //this function is used to closed orders
     public function viewClosedOrders(Request $request)
@@ -122,21 +156,56 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function close(Request $request)
+    public function viewCloseOrders(Request $request)
     {
-        $request->validate([
-            'order_id' => 'required|exists:orders,id',
+        $user = auth()->user();
+        $search = $request->input('search');
+        $query = Order::with('customer')
+            ->where('status', 'delivered')
+            ->whereHas('customer', function ($q) use ($user) {
+                $q->where('user_id', $user->id); // Only this user's orders
+            });
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                // Match end of order number
+                $q->whereRaw('RIGHT(order_number, ?) = ?', [strlen($search), $search])
+
+                    // Match anywhere in order_number (optional: keep if desired)
+                    ->orWhere('order_number', 'like', "%{$search}%")
+
+                    // Case-insensitive name search
+                    ->orWhereHas('customer', function ($q2) use ($search) {
+                        $q2->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%']);
+                    });
+            });
+        }
+
+        $closedOrders = $query->paginate(10)
+            ->appends(['search' => $search])
+            ->through(function ($order) {
+                return [
+                    'id' => $order->id,
+                    'order_number' => $order->order_number,
+                    'status' => $order->status,
+                    'total_amount' => $order->total_amount,
+                    'advance_paid' => $order->advance_paid,
+                    'delivery_date' => $order->delivery_date,
+                    'customer' => [
+                        'name' => optional($order->customer)->name,
+                        'email' => optional($order->customer)->email,
+                        'phone' => optional($order->customer)->phone,
+                        'country_code' => optional($order->customer)->country_code,
+                        'gender' => optional($order->customer)->gender,
+                        'address' => optional($order->customer)->address,
+                    ],
+                ];
+            });
+
+        return Inertia::render('CloseOrder', [
+            'closedOrders' => $closedOrders,
+            'search' => $search,
         ]);
-
-        $order = Order::find($request->order_id);
-
-        $order->update([
-            'status' => 'closed',
-            'close_date' => Carbon::now(),
-        ]);
-
-        ToastMagic::success('Order closed successfully!');
-        return redirect()->route('orders.index');
     }
 
     public function getChartData(Request $request)

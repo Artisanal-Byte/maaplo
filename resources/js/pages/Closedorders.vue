@@ -15,63 +15,55 @@ const props = defineProps({
     search: String,
 });
 
-const showModal = ref(false);
-const selectedOrder = ref(null);
-
-// Make deliveredOrders reactive and update on every fetch
+// Reactive State
 const deliveredOrders = ref(props.deliveredOrders);
-
-// Controls search input visibility
 const showable = reactive({ showSearch: false });
-
 const searchTerm = ref(props.search ?? '');
-
 const form = reactive({ isLoading: false });
 
-// Fetch orders, with optional pagination url and search term
+// Modal control
+const showDeliverModal = ref(false);
+const showCloseModal = ref(false);
+const selectedOrder = ref(null);
+
+// Fetch Orders
 function fetchOrders(url = null, search = '') {
     form.isLoading = true;
 
+    const handleSuccess = (page) => {
+        deliveredOrders.value = page.props.deliveredOrders;
+    };
+    const handleFinish = () => {
+        form.isLoading = false;
+    };
+
     if (url) {
-        // Append current search to pagination url
         const urlObj = new URL(url, window.location.origin);
         if (search) urlObj.searchParams.set('search', search);
-
         router.get(urlObj.pathname + urlObj.search, {}, {
             preserveState: true,
             preserveScroll: true,
-            onSuccess: (page) => {
-                deliveredOrders.value = page.props.deliveredOrders;
-            },
-            onFinish: () => {
-                form.isLoading = false;
-            },
+            onSuccess: handleSuccess,
+            onFinish: handleFinish,
         });
     } else {
-        // Fetch first page or filtered by search term
         const query = {};
         if (search) query.search = search;
-
         router.get(route('orders.closed'), query, {
             preserveState: true,
             preserveScroll: true,
-            onSuccess: (page) => {
-                deliveredOrders.value = page.props.deliveredOrders;
-            },
-            onFinish: () => {
-                form.isLoading = false;
-            },
+            onSuccess: handleSuccess,
+            onFinish: handleFinish,
         });
     }
 }
 
-// Called when search input changes
+// Search, pagination
 function onSearchInput(val) {
     searchTerm.value = val;
     fetchOrders(null, val);
 }
 
-// Handle pagination click
 function handlePaginationClick(url) {
     if (!url) return;
     fetchOrders(url, searchTerm.value);
@@ -84,23 +76,39 @@ function focusSearchInput() {
     });
 }
 
-onMounted(() => {
-    if (page.props.flash?.success) {
-        toast.success(page.props.flash.success);
-    }
-    if (page.props.flash?.error) {
-        toast.error(page.props.flash.error);
-    }
-});
-
-function openCloseOrderModal(order) {
+// Modal triggers
+function openDeliverModal(order) {
     selectedOrder.value = order;
-    showModal.value = true;
+    showDeliverModal.value = true;
+}
+
+function openCloseModal(order) {
+    selectedOrder.value = order;
+    showCloseModal.value = true;
 }
 
 function closeModal() {
     selectedOrder.value = null;
-    showModal.value = false;
+    showDeliverModal.value = false;
+    showCloseModal.value = false;
+}
+
+// Action handlers
+function deliverOrder() {
+    if (!selectedOrder.value) return;
+
+    router.post('/orders/deliverd', {
+        order_id: selectedOrder.value.id
+    }, {
+        onSuccess: () => {
+            toast.success('Order delivered successfully');
+            closeModal();
+            router.visit(route('orders.closed'));
+        },
+        onError: () => {
+            toast.error('Failed to deliver order');
+        }
+    });
 }
 
 function closeOrder() {
@@ -112,7 +120,7 @@ function closeOrder() {
         onSuccess: () => {
             toast.success('Order closed successfully');
             closeModal();
-            router.visit(route('orders.closed'));  // force redirect / reload of page
+            router.visit(route('orders.closed'));
         },
         onError: () => {
             toast.error('Failed to close order');
@@ -120,22 +128,27 @@ function closeOrder() {
     });
 }
 
-
 function viewOrder(orderId) {
     router.visit(route('orders.show', orderId) + '?source=closed');
 }
+
+onMounted(() => {
+    if (page.props.flash?.success) toast.success(page.props.flash.success);
+    if (page.props.flash?.error) toast.error(page.props.flash.error);
+});
 </script>
+
 
 <template>
 
-    <Head title="Delivered Orders" />
+    <Head title="Deliver Orders" />
     <AppLayout>
         <div class="max-w-7xl mx-auto py-10 px-4">
             <div class="flex items-center justify-between mb-6">
                 <div>
                     <h1 class="text-3xl font-bold text-primary flex items-center gap-2">
                         <Icon icon="material-symbols:order-approve" class="text-primary" width="28" height="28" />
-                        Delivered Orders
+                        Orders Ready For Deliver
                     </h1>
                 </div>
                 <div class="flex items-center gap-4">
@@ -204,14 +217,15 @@ function viewOrder(orderId) {
                             </td>
 
                             <td class="px-6 py-4 text-center whitespace-nowrap">
+                                <!-- Action buttons -->
                                 <div class="flex justify-center items-center gap-2">
+                                    <!-- View Button -->
                                     <div class="relative group">
                                         <button @click="viewOrder(order.id)"
                                             class="p-2 rounded-full hover:bg-gray-100 transition relative">
                                             <Icon icon="ic:round-visibility" class="text-primary" width="20"
                                                 height="20" />
                                         </button>
-
                                         <!-- Tooltip -->
                                         <div
                                             class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 text-xs text-white bg-gray-800 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 whitespace-nowrap">
@@ -219,11 +233,19 @@ function viewOrder(orderId) {
                                         </div>
                                     </div>
 
-                                    <button @click="openCloseOrderModal(order)"
+                                    <!-- Deliver Order Button -->
+                                    <button @click="openDeliverModal(order)"
                                         class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition">
-                                        Close Order
+                                        Deliver
+                                    </button>
+
+                                    <!-- NEW BUTTON: Deliver/Closed Order -->
+                                    <button @click="openCloseModal(order)"
+                                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition">
+                                        Deliver & Closed
                                     </button>
                                 </div>
+
                             </td>
                         </tr>
                     </tbody>
@@ -258,17 +280,25 @@ function viewOrder(orderId) {
                         <p class="text-gray-700">{{ order.customer?.name ?? 'N/A' }}</p>
                     </div>
 
-                    <div class="flex justify-between items-center">
+                    <div class="flex justify-between items-center gap-3 mt-4">
                         <button @click="viewOrder(order.id)"
                             class="flex items-center gap-1 text-primary text-sm font-medium">
                             <Icon icon="ic:round-visibility" class="text-primary" width="18" height="18" />
                             View
                         </button>
-                        <button @click="openCloseOrderModal(order)"
+
+                        <button @click="openDeliverModal(order)"
                             class="bg-primary text-white px-3 py-1.5 rounded-md text-sm font-medium shadow-sm">
-                            Close Order
+                            Deliver
+                        </button>
+
+                        <!-- NEW BUTTON -->
+                        <button @click="openCloseModal(order)"
+                            class="bg-green-600 text-white px-3 py-1.5 rounded-md text-sm font-medium shadow-sm">
+                            Deliver & Closed
                         </button>
                     </div>
+
                 </div>
             </div>
 
@@ -280,25 +310,44 @@ function viewOrder(orderId) {
         </div>
 
         <!-- Modal -->
-        <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <!-- Deliver Modal -->
+        <div v-if="showDeliverModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
             <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 mx-4">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Confirm Close</h2>
-                <p class="text-sm font-medium text-primary px-4 py-2 rounded-md mb-4 flex items-center gap-2">
-                    Payment received for this order ?
-                </p>
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Confirm Delivery</h2>
                 <p class="text-gray-600 mb-6">
-                    Are you sure you want to close <strong>Order #{{ selectedOrder.order_number }}</strong>?
+                    Are you sure you want to mark <strong>Order #{{ selectedOrder.order_number }}</strong> as delivered?
                 </p>
                 <div class="flex justify-end gap-3">
                     <button @click="closeModal"
                         class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md transition">
-                        No
+                        Cancel
                     </button>
-                    <button @click="closeOrder" class="px-4 py-2 bg-primary text-white rounded-md transition">
-                        Yes
+                    <button @click="deliverOrder" class="px-4 py-2 bg-primary text-white rounded-md transition">
+                        Confirm
                     </button>
                 </div>
             </div>
         </div>
+
+        <!-- Close Modal -->
+        <div v-if="showCloseModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 mx-4">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Confirm Delivery & Close</h2>
+                <p class="text-gray-600 mb-6">
+                    Are you sure you want to <strong>deliver & close</strong> <strong>Order #{{
+                        selectedOrder.order_number }}</strong>?
+                </p>
+                <div class="flex justify-end gap-3">
+                    <button @click="closeModal"
+                        class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md transition">
+                        Cancel
+                    </button>
+                    <button @click="closeOrder" class="px-4 py-2 bg-green-600 text-white rounded-md transition">
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </AppLayout>
 </template>
