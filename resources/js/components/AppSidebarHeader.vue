@@ -102,37 +102,37 @@ function submitFactoryData() {
 
         </div>
         <!-- Modal -->
-        <transition name="fade">
+        <!-- <transition name="fade"> -->
             <div v-if="showFactoryModal"
                 class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
                 <div class="bg-white rounded-lg shadow-lg p-6 w-[400px]">
-                    <h2 class="text-lg font-semibold mb-4">Seed Factory Data</h2>
+                    <h2 class="text-lg font-semibold mb-4 text-black">Seed Factory Data</h2>
                     <div class="space-y-4">
                         <div>
-                            <label class="block font-medium mb-1">New Customers (optional)</label>
+                            <label class="block font-medium mb-1 text-black">New Customers (optional)</label>
                             <input type="number" min="0" v-model="factoryForm.customers"
                                 placeholder="Leave empty or 0 to use existing customers"
-                                class="w-full border border-gray-300 rounded px-3 py-2" />
+                                class="w-full text-black border border-gray-300 rounded px-3 py-2" />
                         </div>
                         <div>
-                            <label class="block font-medium mb-1">Orders per Customer</label>
+                            <label class="block text-black font-medium mb-1">Orders per Customer</label>
                             <input type="number" v-model="factoryForm.orders"
-                                class="w-full border border-gray-300 rounded px-3 py-2" />
+                                class="w-full text-black border border-gray-300 rounded px-3 py-2" />
                         </div>
                         <div>
-                            <label class="block font-medium mb-1">Order Items per Order</label>
+                            <label class="block text-black font-medium mb-1">Order Items per Order</label>
                             <input type="number" v-model="factoryForm.order_items"
-                                class="w-full border border-gray-300 rounded px-3 py-2" />
+                                class="w-full text-black border border-gray-300 rounded px-3 py-2" />
                         </div>
                     </div>
                     <div class="mt-6 flex justify-end gap-3">
-                        <button @click="closeFactoryModal" class="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+                        <button @click="closeFactoryModal" class="px-4 text-black py-2 bg-gray-300 rounded">Cancel</button>
                         <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                             @click="submitFactoryData">Create</button>
                     </div>
                 </div>
             </div>
-        </transition>
+        <!-- </transition> -->
 
     </header>
 </template>
