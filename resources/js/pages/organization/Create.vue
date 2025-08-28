@@ -230,7 +230,7 @@ const createOrganization = () => {
                         <label class="font-medium block mb-1">
                             State <span class="text-red-500">*</span>
                         </label>
-                        <select v-model="form.state" class="form-input border border-primary w-full p-4 rounded-lg"
+                        <select v-model="form.state" class="form-input border border-primary w-full p-3 rounded-lg"
                             :required="true">
                             <option value="Andhra_Pradesh">Andhra Pradesh</option>
                             <option value="Arunachal_Pradesh">Arunachal Pradesh</option>
