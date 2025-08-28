@@ -286,13 +286,11 @@ const updateOrganization = () => {
                     </p>
                 </div>
 
-
-
                 <!-- Submit Button -->
                 <div class="flex">
                     <Button @click="updateOrganization" :disabled="form.processing" :color="'primary'" :padding="'md'"
                         :rounded="'full'" :textSize="'sm'"
-                        class="w-full flex justify-center items-center hover:scale-105 transition-transform duration-200">
+                        class="w-full flex justify-center items-center transition-transform duration-200">
                         <Icon icon="mdi:check-bold" width="20" height="20" class="mr-2" />
                         Update Organization
                     </Button>

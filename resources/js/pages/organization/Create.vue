@@ -295,7 +295,7 @@ const createOrganization = () => {
                 <div class="flex w-full mt-8">
                     <Button @click="createOrganization" :disabled="form.processing" :color="'primary'" :padding="'md'"
                         :rounded="'full'" :textSize="'sm'"
-                        class="w-full flex justify-center items-center hover:scale-105 transition-transform duration-200">
+                        class="w-full flex justify-center items-center transition-transform duration-200">
                         <Icon icon="mdi:check-bold" width="20" height="20" class="mr-2" />
                         Save & Continue
                     </Button>
