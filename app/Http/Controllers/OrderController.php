@@ -202,8 +202,17 @@ class OrderController extends Controller
         // Get the source query parameter, default null
         $source = $request->query('source');
         $allDesignDetails = DesignDetail::with('bodyPartValue')->get();
+
+        // QR Code path
+
+        $order->load('customer', 'orderItems', 'organization');
+
+        if ($order->qr_code) {
+            $order->qr_code = asset($order->qr_code); // converts to full URL
+        }
+
         return Inertia::render('orders/Show', [
-            'order' => $order->load('customer', 'orderItems', 'organization'),
+            'order' => $order,
             'designDetails' => $designDetailsData,
             'source' => $source,
             'allDesignDetails' => $allDesignDetails,
