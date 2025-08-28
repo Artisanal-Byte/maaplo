@@ -8,7 +8,6 @@
         order: Object,
         show: Boolean,
     });
-    console.log("InvoiceGenerator props:", props.show, props.order);
     const emit = defineEmits(["close"]);
 
     function closeModal() {
