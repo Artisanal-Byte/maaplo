@@ -197,7 +197,6 @@ async function fetchChartData() {
             <div class="">
                 <Chart :chart-labels="chartLabels" :chart-data="chartData" :chart-rows="chartRows"
                     :chart-type="activeTab" />
-
             </div>
 
             <!-- Quick Links Section -->
