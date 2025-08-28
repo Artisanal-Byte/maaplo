@@ -109,7 +109,6 @@ function confirmCloseOrder() {
                         <Icon icon="material-symbols:order-approve" class="text-primary" width="28" height="28" />
                         Close Orders
                     </h1>
-                    <h1>THis is close page</h1>
                 </div>
                 <div class="flex items-center gap-4">
                     <!-- 🔍 Search -->

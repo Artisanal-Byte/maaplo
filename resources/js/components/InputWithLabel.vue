@@ -91,7 +91,9 @@ const widthClass = {
                         widthClass,
                         disabled ? 'opacity-50 cursor-not-allowed' : ''
                     ]" />
-                <label :for="id" class="text-sm">{{ label }}</label>
+                <label :for="id" class="text-sm">{{ label }}
+
+                </label>
             </div>
         </template>
 
@@ -116,6 +118,7 @@ const widthClass = {
         <template v-else-if="type === 'textarea'">
             <label v-if="label" :for="id" :class="[textSizeClass, fonttype]" class="font-medium">
                 {{ label }}
+
                 <span v-if="required" class="text-red-500 text-lg">*</span>
                 <span v-else class="text-gray-400 text-sm">(optional)</span>
             </label>
@@ -137,6 +140,7 @@ const widthClass = {
             <div class="relative">
                 <label v-if="label" :for="id" :class="[textSizeClass, fonttype]" class="font-medium">
                     {{ label }}
+                    <slot name="hint" class="text-gray-400 text-sm"></slot>
                     <span v-if="required" class="text-red-500 text-lg">*</span>
                     <span v-else class="text-gray-400 text-sm">(optional)</span>
                 </label>
@@ -155,7 +159,8 @@ const widthClass = {
                         ]" />
 
                     <!-- Icon slot (optional) -->
-                    <div class="absolute top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none pl-2 mb-1">
+                    <div
+                        class="absolute top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none pl-2 mb-1">
                         <slot name="icon" />
                     </div>
                 </div>

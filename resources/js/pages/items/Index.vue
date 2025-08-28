@@ -112,7 +112,7 @@ function focusSearchInput() {
                     <h1 class="text-2xl font-bold text-primary">Template's</h1>
                 </div>
                 <div class="flex items-center gap-4">
-                    <div class="flex justify-between">
+                    <div class="flex justify-between text-gray-600">
                         <SearchList :showable="showable" @focusSearch="focusSearchInput" />
                     </div>
                     <div class="flex gap-4 text-gray-600 items-center">

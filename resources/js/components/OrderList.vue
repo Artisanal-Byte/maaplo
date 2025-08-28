@@ -125,12 +125,12 @@ function resetStatusModal() {
 <template>
     <Loader v-if="loading" class="fixed inset-0 flex items-center justify-center z-50 bg-white/70" />
     <!-- dashbord view -->
-    <div class=" hidden lg:block gap-[10px] rounded-[10px] px-[10px] py-[17px] mt-[6px]" :style="{
+    <div class=" hidden lg:block gap-[10px] rounded-[10px]  py-[17px] mt-[6px]" :style="{
         backgroundColor: bgColor,
         border: `1px solid ${borderColor}`,
 
     }">
-        <div class="flex flex-row">
+        <div class="flex flex-row border-b border-white px-[10px] pb-2">
             <div>
                 <h1
                     class="font-[Lato] font-medium text-[15px] lg:text-[18px] leading-[16px] tracking-[0] text-secondary p-2">
@@ -142,67 +142,91 @@ function resetStatusModal() {
                     Customer: {{ order?.customer?.name }}
                 </h1>
             </div>
-
         </div>
-        <div class="flex flex-row justify-between">
+        <!-- <hr class="border-t border-white mb-3"> -->
+        <div class="flex flex-row justify-between px-[10px] py-3">
             <div>
-                <p
-                    class="font-[Lato] font-medium text-[16px] leading-[16px] tracking-[0] text-center text-secondary p-2">
-                    Items: {{ order?.order_items?.length }}</p>
-            </div>
-            <div>
-                <p
-                    class="font-[Lato] font-medium text-[16px] leading-[16px] tracking-[0] text-center text-secondary p-2">
-                    Delivery Date: {{ order?.delivery_date }}</p>
-            </div>
-        </div>
-        <div>
-            <p class="font-[Lato] font-medium text-[16px] leading-[16px] tracking-[0]  text-secondary p-2">
-                Status: {{ formatStatus(order?.status) }}
-            </p>
-        </div>
-
-
-        <div class="flex justify-end items-center gap-3 mt-4">
-            <!-- Close Order -->
-            <button @click="openCloseModal(order)"
-                class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition">
-                Close Order
-            </button>
-            <!-- Status -->
-            <div class="relative w-[320px">
-                <select id="status" :value="order.status" @change="handleStatusSelect($event.target.value)"
-                    class="appearance-none w-full pl-4 py-2 rounded-md border border-gray-300 text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out">
-
-                    <option value="" selected>🆕 Change Status</option>
-                    <option value="created">🆕 Created</option>
-                    <option value="in_process">🔄 In Process</option>
-                    <option value="processed">📦 Processed</option>
-                    <option value="trial_done">🧪 Trial Done</option>
-                    <option value="in_alteration">✂️ In Alteration</option>
-                    <option value="ready_for_delivery">📬 Ready for Delivery</option>
-                    <option value="delivered">🚚 Delivered</option>
-                    <option value="cancelled">❌ Cancelled</option>
-                </select>
-                <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400">
-                    <Icon icon="mdi:chevron-down" width="20" height="20" />
+                <div>
+                    <p class="font-[Lato] font-medium text-[16px] leading-[16px] tracking-[0] text-secondary p-2">
+                        Items: {{ order?.order_items?.length }}</p>
+                </div>
+                <div>
+                    <p class="font-[Lato] font-medium text-[16px] leading-[16px] tracking-[0] text-secondary p-2">
+                        Delivery Date: {{ order?.delivery_date }}</p>
+                </div>
+                <div>
+                    <p class="font-[Lato] font-medium text-[16px] leading-[16px] tracking-[0]  text-secondary p-2">
+                        Status: {{ formatStatus(order?.status) }}
+                    </p>
                 </div>
             </div>
-            <!-- View Order -->
-            <Link :href="route('orders.show', props.order.id)">
-            <Icon icon="teenyicons:eye-solid" width="18" height="18" class="text-primary" />
-            </Link>
 
-            <!-- Edit Order -->
-            <Link :href="route('orders.edit', props.order.id)">
-            <Icon icon="ri:edit-fill" width="18" height="18" class="text-primary" />
-            </Link>
+            <div class=" gap-3">
+                <!-- Status -->
+                <!-- <div class="relative">
+                    <select id="status" name="status" :value="order.status" @change="handleStatusSelect($event.target.value)"
+                        class="appearance-none w-full pl-4 py-2 rounded-md border border-gray-300 text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out">
+                        <option value="" selected>🆕 Change Status</option>
+                        <option value="created">🆕 Created</option>
+                        <option value="in_process">🔄 In Process</option>
+                        <option value="processed">📦 Processed</option>
+                        <option value="trial_done">🧪 Trial Done</option>
+                        <option value="in_alteration">✂️ In Alteration</option>
+                        <option value="ready_for_delivery">📬 Ready for Delivery</option>
+                        <option value="delivered">🚚 Delivered</option>
+                        <option value="cancelled">❌ Cancelled</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400">
+                        <Icon icon="mdi:chevron-down" width="20" height="20" />
+                    </div>
+                </div> -->
+                <!-- Status -->
+                <div class="relative">
+                    <select id="status" name="status" :value="order.status"
+                        @change="handleStatusSelect($event.target.value)"
+                        class="appearance-none w-full pl-4 py-2 rounded-md border border-gray-300 text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out">
 
-            <!-- Delete Order -->
-            <button @click="openDeleteModal(order.id)">
-                <Icon icon="ic:baseline-delete" width="18" height="18" class="text-[#E73939]" />
-            </button>
+                        <option selected>Change Status</option>
+                        <option value="created">Created 🆕</option>
+                        <option value="in_process">In Process 🔄</option>
+                        <option value="processed">Processed 📦</option>
+                        <option value="trial_done">Trial Done 🧪</option>
+                        <option value="in_alteration">In Alteration ✂️</option>
+                        <option value="ready_for_delivery">Ready for Delivery 📬</option>
+                        <option value="delivered">Delivered 🚚</option>
+                        <option value="cancelled">Cancelled ❌</option>
+                    </select>
 
+                    <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400">
+                        <Icon icon="mdi:chevron-down" width="20" height="20" />
+                    </div>
+                </div>
+
+                <!-- Close Order -->
+                <button @click="openCloseModal(order)"
+                    class="bg-primary w-full mt-3 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition">
+                    Close Order
+                </button>
+
+                <!-- View Order -->
+                <div class="flex justify-between px-8 mt-3">
+                    <Link :href="route('orders.show', props.order.id)">
+                    <Icon icon="teenyicons:eye-solid" width="18" height="18" class="text-primary" />
+                    </Link>
+
+                    <!-- Edit Order -->
+                    <Link :href="route('orders.edit', props.order.id)">
+                    <Icon icon="ri:edit-fill" width="18" height="18" class="text-primary" />
+                    </Link>
+
+                    <!-- Delete Order -->
+                    <button @click="openDeleteModal(order.id)">
+                        <Icon icon="ic:baseline-delete" width="18" height="18" class="text-[#E73939]" />
+                    </button>
+                </div>
+
+
+            </div>
 
         </div>
         <!-- Close Order Modal -->
@@ -280,12 +304,14 @@ function resetStatusModal() {
             <hr class="border-t border-white mb-5">
             <div class="flex gap-3">
                 <!-- Close Order -->
-                <button @click="openCloseModal(order)"
-                    class="flex-1 bg-gray-300 text-black py-2 rounded-lg text-sm font-medium shadow-sm transition hover:bg-gray-200">
-                    Close Order
-                </button>
+                <div class="w-full">
+                    <button @click="openCloseModal(order)"
+                        class="flex-1 w-full bg-gray-300 text-black py-2 rounded-lg text-sm font-medium shadow-sm transition hover:bg-gray-200">
+                        Close Order
+                    </button>
+                </div>
                 <!-- Status -->
-                <div class="relative w-[320px">
+                <div class="relative w-full">
                     <select id="status" :value="order.status" placeholder="Change Status"
                         @change="handleStatusSelect($event.target.value)"
                         class="appearance-none w-full pl-4 py-2 rounded-md border border-gray-300 text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out">

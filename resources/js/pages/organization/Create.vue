@@ -120,6 +120,9 @@ const createOrganization = () => {
             <Loader v-if="loading" :message="'Creating Your Organization...'" />
             <!-- Form -->
             <div class="lg:mt-10 gap-3 bg-white lg:p-7 rounded-lg shadow-md p-5 border-t-4 border-primary">
+                <h1
+                    class="text-2xl text-primary font-bold text-gray-800 font-[Convergence] flex items-center gap-2 mb-3">
+                    Organization Details</h1>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Organization Name -->
                     <Input v-model="form.organization_name" label="Organization Name"
@@ -132,6 +135,9 @@ const createOrganization = () => {
                     <!-- GST Number -->
                     <Input v-model="form.gst_number" label="GST Number" placeholder="Enter GST Number"
                         :error="form.errors.gst_number" @input="form.gst_number = form.gst_number.toUpperCase()">
+                    <template #hint>
+                        <span class="text-gray-400 text-sm"> (If applicable)</span>
+                    </template>
                     <template #icon>
                         <Icon icon="mdi:certificate-outline" width="24" height="24" />
                     </template>
@@ -185,7 +191,11 @@ const createOrganization = () => {
                     </div>
                 </div>
                 <!-- Bank Account Details -->
-                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <h1
+                    class="text-2xl text-primary font-bold text-gray-800 font-[Convergence] flex items-center gap-2 my-5">
+                    Account
+                    Details</h1>
+                <div class=" grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Input v-model="form.account_holder_name" label="Account Holder Name"
                         placeholder="Enter Account Holder Name" :error="form.errors.account_holder_name"
                         required="true">
@@ -224,12 +234,11 @@ const createOrganization = () => {
                     </template>
                     </Input>
 
-
                     <div>
                         <label class="font-medium block mb-1">
                             State <span class="text-red-500">*</span>
                         </label>
-                        <select v-model="form.state" class="form-input border border-primary w-full p-4 rounded-lg"
+                        <select v-model="form.state" class="form-input border border-primary w-full p-3 rounded-lg"
                             :required="true">
                             <option value="Andhra_Pradesh">Andhra Pradesh</option>
                             <option value="Arunachal_Pradesh">Arunachal Pradesh</option>
@@ -273,7 +282,6 @@ const createOrganization = () => {
                             {{ form.errors.state }}
                         </p>
                     </div>
-
                 </div>
 
                 <!-- QR Payment Image -->
@@ -281,8 +289,8 @@ const createOrganization = () => {
                     <label class="block font-medium text-gray-700 mb-2 mt-5">QR Payment Image</label>
                     <div class="mb-4">
                         <div
-                            class="w-full h-64 bg-gray-100 border rounded flex items-center justify-center overflow-hidden">
-                            <img alt="QR Payment" class="object-contain h-full w-full" />
+                            class="w-full h-64 bg-gray-100 border border-primary rounded flex items-center justify-center overflow-hidden">
+                            <img v-if="qrUrl" :src="qrUrl" alt="QR Payment" class="object-contain h-full w-full" />
                         </div>
                     </div>
                     <input type="file" @change="handleQRChange"
@@ -295,7 +303,7 @@ const createOrganization = () => {
                 <div class="flex w-full mt-8">
                     <Button @click="createOrganization" :disabled="form.processing" :color="'primary'" :padding="'md'"
                         :rounded="'full'" :textSize="'sm'"
-                        class="w-full flex justify-center items-center hover:scale-105 transition-transform duration-200">
+                        class="w-full flex justify-center items-center transition-transform duration-200">
                         <Icon icon="mdi:check-bold" width="20" height="20" class="mr-2" />
                         Save & Continue
                     </Button>

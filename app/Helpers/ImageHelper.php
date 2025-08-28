@@ -21,34 +21,25 @@ class ImageHelper
      */
     public static function imageProccess(
         UploadedFile $image,
-        $customerId,
-        $username,
-        $userId,
-        $customerName,
-        $label = 'organization_logo',
-        $qr_payment_img = 'qr_payment_img',
-        $type = 'user'
-    ) {
+        int $customerId,
+        string $username,
+        int $userId,
+        string $customerName,
+        string $label = 'organization_logo',
+        string $type = 'user'
+    ): string {
         try {
             $timestamp = time();
 
-            $fileLabel = ($label === 'qr_payment_img') ? $qr_payment_img : $label;
+            $usernameFormatted = strtolower(preg_replace('/\s+/', '_', trim($username)));
 
-            $fileName = "{$fileLabel}_{$timestamp}.webp";
+            $subfolder = ($label === 'qr_payment_img') ? 'qr_payment_images' : '';
 
+            $basePath = "user_name_{$usernameFormatted}_id_{$userId}" . ($subfolder ? "/{$subfolder}" : '');
 
-            // Convert username and customer name to lowercase and replace spaces with underscores
-            $usernameFormatted = strtolower(str_replace(' ', '_', $username));
-            $customerNameFormatted = strtolower(str_replace(' ', '_', $customerName));
+            $fileName = "{$label}_{$timestamp}.webp";
 
-            // New base path format
-            $basePath = "user_name_{$usernameFormatted}_id_{$userId}/customers/customers_name_{$customerNameFormatted}_id_{$customerId}";
-
-            // Personal images subfolder
-            $folderPath = "{$basePath}/personal_images";
-            $fullPath = "{$folderPath}/{$fileName}";
-
-            $directory = storage_path("app/public/{$folderPath}/");
+            $directory = storage_path("app/public/{$basePath}/");
 
             if (!file_exists($directory)) {
                 mkdir($directory, 0755, true);
@@ -56,15 +47,21 @@ class ImageHelper
 
             $storagePath = $directory . $fileName;
 
-            $manager = new ImageManager(config('image.driver'));
-            $image = $manager->read($image);
-            $image = $image->scaleDown(width: 2000, height: 2000);
-            $encoded = $image->toWebp(60);
-            $encoded->save($storagePath);
+            $manager = new ImageManager(config('image.driver', 'gd'));
+            $image = $manager->read($image->getRealPath());
 
-            return "storage/{$fullPath}";
+            $image->resize(2000, 2000, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+
+            // Save image as webp with quality 60
+            $image->save($storagePath, 60, 'webp');
+
+            return "storage/{$basePath}/{$fileName}";
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            \Log::error("ImageHelper::imageProccess error: " . $e->getMessage());
+            throw $e;
         }
     }
 

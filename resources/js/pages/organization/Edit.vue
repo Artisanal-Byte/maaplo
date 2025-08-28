@@ -126,6 +126,9 @@ const updateOrganization = () => {
             <Loader v-if="loading" :message="'Updating Organization...'" />
             <!-- Form Card -->
             <div class="bg-white lg:p-6 rounded-lg lg:shadow-md space-y-6">
+                <h1
+                    class="text-2xl text-primary font-bold text-gray-800 font-[Convergence] flex items-center gap-2 mb-3">
+                    Organization Details</h1>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Name -->
                     <Input v-model="form.organization_name" label="Organization Name"
@@ -137,20 +140,49 @@ const updateOrganization = () => {
 
                     <!-- GST Number -->
                     <Input v-model="form.gst_number" label="GST Number" placeholder="Enter GST Number"
-                        :error="props.errors.gst_number" required>
+                        :error="props.errors.gst_number">
+                    <template #hint>
+                        <span class="text-gray-400 text-sm"> (If applicable)</span>
+                    </template>
                     <template #icon>
                         <Icon icon="mdi:certificate-outline" width="24" height="24" />
                     </template>
                     </Input>
-
-                    <!-- Address -->
+                </div>
+                <!-- Address -->
+                <div class="w-full">
                     <Input v-model="form.address" label="Address" placeholder="Enter Address"
                         :error="props.errors.address" required="true" type="textarea">
                     <template #icon>
                         <Icon icon="mdi:map-marker-outline" width="24" height="24" />
                     </template>
                     </Input>
+                </div>
 
+
+                <!-- Logo Upload -->
+                <div>
+                    <label class="block font-medium text-gray-700 mb-2">Organization Logo</label>
+                    <div class="mb-4">
+                        <div
+                            class="w-full h-64 bg-gray-100 border rounded flex items-center justify-center overflow-hidden">
+                            <img :src="logoUrl || '/images/organization.png'" alt="Logo"
+                                class="object-contain h-full" />
+                        </div>
+                    </div>
+                    <input type="file" @change="handleLogoChange"
+                        class="block w-full text-sm text-gray-600 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                    <p v-if="props.errors.organization_logo" class="text-red-600 text-sm mt-1">
+                        {{ props.errors.organization_logo }}
+                    </p>
+                </div>
+
+                <!-- Account Details -->
+                <h1
+                    class="text-2xl text-primary font-bold text-gray-800 font-[Convergence] flex items-center gap-2 my-5">
+                    Account
+                    Details</h1>
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Input v-model="form.account_holder_name" label="Account Holder Name"
                         placeholder="Enter account holder name" :error="props.errors.account_holder_name"
                         required="true">
@@ -234,26 +266,7 @@ const updateOrganization = () => {
                             <option value="Puducherry">Puducherry</option>
                         </select>
                     </div>
-
                 </div>
-
-                <!-- Logo Upload -->
-                <div>
-                    <label class="block font-medium text-gray-700 mb-2">Organization Logo</label>
-                    <div class="mb-4">
-                        <div
-                            class="w-full h-64 bg-gray-100 border rounded flex items-center justify-center overflow-hidden">
-                            <img :src="logoUrl || '/images/organization.png'" alt="Logo"
-                                class="object-contain h-full" />
-                        </div>
-                    </div>
-                    <input type="file" @change="handleLogoChange"
-                        class="block w-full text-sm text-gray-600 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
-                    <p v-if="props.errors.organization_logo" class="text-red-600 text-sm mt-1">
-                        {{ props.errors.organization_logo }}
-                    </p>
-                </div>
-
                 <div class="mt-6">
                     <label class="block font-medium text-gray-700 mb-2">QR Payment Image</label>
 
@@ -276,13 +289,11 @@ const updateOrganization = () => {
                     </p>
                 </div>
 
-
-
                 <!-- Submit Button -->
                 <div class="flex">
                     <Button @click="updateOrganization" :disabled="form.processing" :color="'primary'" :padding="'md'"
                         :rounded="'full'" :textSize="'sm'"
-                        class="w-full flex justify-center items-center hover:scale-105 transition-transform duration-200">
+                        class="w-full flex justify-center items-center transition-transform duration-200">
                         <Icon icon="mdi:check-bold" width="20" height="20" class="mr-2" />
                         Update Organization
                     </Button>
