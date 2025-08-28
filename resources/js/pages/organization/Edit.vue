@@ -140,7 +140,10 @@ const updateOrganization = () => {
 
                     <!-- GST Number -->
                     <Input v-model="form.gst_number" label="GST Number" placeholder="Enter GST Number"
-                        :error="props.errors.gst_number" required>
+                        :error="props.errors.gst_number">
+                    <template #hint>
+                        <span class="text-gray-400 text-sm"> (If applicable)</span>
+                    </template>
                     <template #icon>
                         <Icon icon="mdi:certificate-outline" width="24" height="24" />
                     </template>

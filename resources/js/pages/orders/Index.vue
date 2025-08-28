@@ -63,7 +63,6 @@ const filteredOrders = computed(() => {
             const deliveryDate = new Date(`${year}-${month}-${day}`);
             const today = new Date();
             const diffDays = Math.ceil((deliveryDate - today) / (1000 * 60 * 60 * 24));
-            console.log('order.delivery_date', order.delivery_date, diffDays);
 
             if (selectedDelivery.value === 'Within 7 Days') {
                 return diffDays >= 0 && diffDays <= 7;
