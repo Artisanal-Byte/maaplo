@@ -16,8 +16,9 @@ function closeModal() {
 }
 
 function formatCurrency(value) {
-    if (!value) return "₹ 0.00";
-    return `₹ ${Number(value).toLocaleString("en-IN", {
+    const num = parseFloat(value);
+    if (isNaN(num)) return "₹ 0.00";
+    return `₹ ${num.toLocaleString("en-IN", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
     })}`;
@@ -138,50 +139,80 @@ async function downloadPDF() {
     ]);
 
     // ---- Calculate totals ----
-    const total = items.reduce((sum, item) => sum + (item?.item_cost || 0), 0);
-    const taxRate = 0.1; // Example 10%
-    const tax = total * taxRate;
+    const total = items.reduce((sum, item) => sum + Number(item?.item_cost || 0), 0);
+
+    const gstRate = 0.18; // 18% GST
+
+    const orgState = props.order?.organization?.state?.toLowerCase();
+    const customerState = props.order?.customer?.state?.toLowerCase();
+
+    let cgst = 0, sgst = 0, igst = 0;
+
+    if (orgState && customerState && orgState === customerState) {
+        // Intra-state: CGST + SGST (split)
+        cgst = total * (gstRate / 2);
+        sgst = total * (gstRate / 2);
+    } else {
+        // Inter-state: IGST
+        igst = total * gstRate;
+    }
+
+    const tax = cgst + sgst + igst;
     const payable = total + tax;
 
     // Common border style
-    const borderStyle = {
-        lineWidth: 0.5,
-        lineColor: [0, 0, 0]
-    };
 
+    const borderStyle = {
+
+        lineWidth: 0.5,
+
+        lineColor: [0, 0, 0]
+
+    };
     // ---- Append summary rows ----
-    tableData.push(
-        [
-            {
-                content: "Total",
-                styles: { lineWidth: 0, fontStyle: "bold", halign: "left" }
-            },
-            {
-                content: formatCurrency(total),
-                styles: { lineWidth: 0, fontStyle: "bold", halign: "left" }
-            }
-        ],
-        [
-            {
-                content: `Tax (${taxRate * 100}%)`,
-                styles: { lineWidth: 0, halign: "left" }
-            },
-            {
-                content: formatCurrency(tax),
-                styles: { lineWidth: 0, halign: "left" }
-            }
-        ],
-        [
-            {
-                content: "Payable Amount",
-                styles: { lineWidth: 0, fontStyle: "bold", halign: "left" }
-            },
-            {
-                content: formatCurrency(payable),
-                styles: { lineWidth: 0, fontStyle: "bold", halign: "left" }
-            }
-        ]
-    );
+    tableData.push([
+        {
+            content: "Subtotal",
+            styles: { lineWidth: 0, fontStyle: "bold", halign: "left" }
+        },
+        {
+            content: formatCurrency(total),
+            styles: { lineWidth: 0, halign: "left" }
+        }
+    ]);
+
+    if (cgst || sgst) {
+        tableData.push(...[
+            [
+                { content: "CGST (9%)", styles: { halign: "left" } },
+                { content: formatCurrency(cgst), styles: { halign: "left" } }
+            ],
+            [
+                { content: "SGST (9%)", styles: { halign: "left" } },
+                { content: formatCurrency(sgst), styles: { halign: "left" } }
+            ]
+        ]);
+    } else {
+        tableData.push(...[
+            [
+                { content: "IGST (18%)", styles: { halign: "left" } },
+                { content: formatCurrency(igst), styles: { halign: "left" } }
+            ]
+        ]);
+    }
+
+
+    tableData.push([
+        {
+            content: "Total Payable",
+            styles: { fontStyle: "bold", halign: "left" }
+        },
+        {
+            content: formatCurrency(payable),
+            styles: { fontStyle: "bold", halign: "left" }
+        }
+    ]);
+
 
     autoTable(doc, {
         startY: contentY + 35,
