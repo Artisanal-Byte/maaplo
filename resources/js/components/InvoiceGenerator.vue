@@ -121,12 +121,19 @@ async function downloadPDF() {
 
     if (props.order?.qr_code) {
         try {
-            const base64Qr = await getBase64ImageFromUrl(props.order.qr_code);
+            const username = props.order?.user?.username?.toLowerCase().replace(/\s+/g, "_");
+            const userId = props.order?.user?.id;
+
+            const basePath = `storage/user_name_${username}_id_${userId}/qr_payment_images`;
+            const fullPath = `${window.location.origin}/${basePath}/${props.order.qr_code}`;
+
+            const base64Qr = await getBase64ImageFromUrl(fullPath);
             doc.addImage(base64Qr, "PNG", rightX + 40, contentY - 5, 30, 30);
         } catch (e) {
             console.warn("QR load error:", e);
         }
     }
+
 
 
     // ---------------- TABLE ----------------
@@ -172,7 +179,7 @@ async function downloadPDF() {
     // ---- Append summary rows ----
     tableData.push([
         {
-            content: "Subtotal",
+            content: "Total",
             styles: { lineWidth: 0, fontStyle: "bold", halign: "left" }
         },
         {
