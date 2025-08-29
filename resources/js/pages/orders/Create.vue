@@ -129,7 +129,16 @@ watch(() => form.customer_id, async (newCustomerId) => {
         customerMeasurements.value = [];
     }
 });
+const filteredItemTypes = computed(() => {
+    if (!form.customer_id) return props.itemTypes;
 
+    const selectedCustomer = props.customers.find(customer => customer.id === form.customer_id);
+    if (selectedCustomer) {
+        return props.itemTypes.filter(itemType => itemType.gender === selectedCustomer.gender);
+    }
+
+    return props.itemTypes;
+});
 </script>
 
 <template>
@@ -222,7 +231,7 @@ watch(() => form.customer_id, async (newCustomerId) => {
 
                         <!-- Modal Content -->
                         <ItemModel :errors="form.errors?.order_items" :showModal="showModal" @close="closeModel"
-                            :form="form.order_items" :itemTypes="itemTypes" :allDesignDetails="allDesignDetails"
+                            :form="form.order_items" :itemTypes="filteredItemTypes" :allDesignDetails="allDesignDetails"
                             :measurements="Array.isArray(customerMeasurements) ? customerMeasurements : Object.entries(customerMeasurements).map(([slug, value]) => ({ slug, value }))" />
                         <p class="text-red-600 text-sm">
                             {{ errors?.order_items }}
@@ -275,7 +284,7 @@ watch(() => form.customer_id, async (newCustomerId) => {
                             <h2><span class="font-semibold">Advance Paid:</span> ₹ {{ form.advance_paid || 0 }}</h2>
                             <h2><span class="font-semibold text-red-600 underline">Balance Due:</span> ₹ {{
                                 (form.total_amount || 0) - (form.advance_paid || 0)
-                            }}</h2>
+                                }}</h2>
                         </div>
 
                         <!-- Delete Confirmation Modal -->
