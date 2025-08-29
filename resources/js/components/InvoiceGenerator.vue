@@ -79,39 +79,118 @@
         // ORG (Left)
         doc.setTextColor(0);
         doc.setFontSize(12);
+        doc.setFont(undefined, "bold");
         doc.text("Organization Details", marginX, contentY);
 
+        // doc.setFont("helvetica", "normal");
+        // doc.setFontSize(10);
+        // doc.text("Name: " + orgName, marginX, contentY + 6);
+        // doc.text("Address: " + (props.order?.organization?.address || "-"), marginX, contentY + 12);
+        // doc.text(props.order?.organization?.organization_address || "-", marginX, contentY + 12);
+        // doc.text(`GST No.: ${props.order?.organization?.gst_number || "-"}`, marginX, contentY + 18);
         doc.setFontSize(10);
-        doc.text("Name: " + orgName, marginX, contentY + 6);
-        doc.text("Address: " + (props.order?.organization?.address || "-"), marginX, contentY + 12);
-        doc.text(props.order?.organization?.organization_address || "-", marginX, contentY + 12);
-        doc.text(`GST No.: ${props.order?.organization?.gst_number || "-"}`, marginX, contentY + 18);
+
+        // --- Name ---
+        doc.setFont("helvetica", "bold");
+        doc.text("Name: ", marginX, contentY + 6);
+        doc.setFont("helvetica", "normal");
+        doc.text(orgName || "-", marginX + 15, contentY + 6);
+
+        // --- Address ---
+        doc.setFont("helvetica", "bold");
+        doc.text("Address: ", marginX, contentY + 12);
+        doc.setFont("helvetica", "normal");
+        doc.text(props.order?.organization?.address || "-", marginX + 20, contentY + 12);
+
+        // --- GST ---
+        doc.setFont("helvetica", "bold");
+        doc.text("GST No.: ", marginX, contentY + 18);
+        doc.setFont("helvetica", "normal");
+        doc.text(props.order?.organization?.gst_number || "-", marginX + 20, contentY + 18);
+
 
         // BANK (Right)
         doc.setFontSize(12);
+        doc.setFont(undefined, "bold");
         doc.text("Bank Details", rightX, contentY);
 
+        // doc.setFont("helvetica", "normal");
+        // doc.setFontSize(10);
+        // doc.text("Account Holder: " + (props.order?.organization?.account_holder_name || "-"), rightX, contentY + 6);
+        // doc.text(`A/C No: ${props.order?.organization?.account_number || "-"}`, rightX, contentY + 12);
+        // doc.text(`IFSC: ${props.order?.organization?.ifsc_code || "-"}`, rightX, contentY + 18);
+        // doc.text("Branch: " + (props.order?.organization?.branch_name || "-"), rightX, contentY + 24);
+        // doc.text(`Bank: ${props.order?.organization?.bank_name || "-"}`, rightX, contentY + 30);
+
         doc.setFontSize(10);
-        doc.text("Account Holder: " + (props.order?.organization?.account_holder_name || "-"), rightX, contentY + 6);
-        doc.text(`A/C No: ${props.order?.organization?.account_number || "-"}`, rightX, contentY + 12);
-        doc.text(`IFSC: ${props.order?.organization?.ifsc_code || "-"}`, rightX, contentY + 18);
-        doc.text("Branch: " + (props.order?.organization?.branch_name || "-"), rightX, contentY + 24);
-        doc.text(`Bank: ${props.order?.organization?.bank_name || "-"}`, rightX, contentY + 30);
+
+        // Account Holder
+        doc.setFont("helvetica", "bold");
+        doc.text("Account Holder:", rightX, contentY + 6);
+        doc.setFont("helvetica", "normal");
+        doc.text(props.order?.organization?.account_holder_name || "-", rightX + 30, contentY + 6);
+
+        // A/C No
+        doc.setFont("helvetica", "bold");
+        doc.text("A/C No:", rightX, contentY + 12);
+        doc.setFont("helvetica", "normal");
+        doc.text(props.order?.organization?.account_number || "-", rightX + 15, contentY + 12);
+
+        // IFSC
+        doc.setFont("helvetica", "bold");
+        doc.text("IFSC:", rightX, contentY + 18);
+        doc.setFont("helvetica", "normal");
+        doc.text(props.order?.organization?.ifsc_code || "-", rightX + 15, contentY + 18);
+
+        // Branch
+        doc.setFont("helvetica", "bold");
+        doc.text("Branch:", rightX, contentY + 24);
+        doc.setFont("helvetica", "normal");
+        doc.text(props.order?.organization?.branch_name || "-", rightX + 15, contentY + 24);
+
+        // Bank
+        doc.setFont("helvetica", "bold");
+        doc.text("Bank:", rightX, contentY + 30);
+        doc.setFont("helvetica", "normal");
+        doc.text(props.order?.organization?.bank_name || "-", rightX + 15, contentY + 30);
 
         // ---------------- CUSTOMER & QR ----------------
         contentY += 40;
 
         // Customer
+        doc.setFont(undefined, "bold");
         doc.setFontSize(12);
         doc.text("Customer Details", marginX, contentY);
 
+        // doc.setFont("helvetica", "normal");
+        // doc.setFontSize(10);
+        // doc.text(`Name: ${props.order?.customer?.name || "-"}`, marginX, contentY + 6);
+        // doc.text(`Phone: ${props.order?.customer?.phone || "-"}`, marginX, contentY + 12);
+        // doc.text(`Address: ${props.order?.customer?.address || "-"}`, marginX, contentY + 18);
         doc.setFontSize(10);
-        doc.text(`Name: ${props.order?.customer?.name || "-"}`, marginX, contentY + 6);
-        doc.text(`Phone: ${props.order?.customer?.phone || "-"}`, marginX, contentY + 12);
-        doc.text(`Address: ${props.order?.customer?.address || "-"}`, marginX, contentY + 18);
+
+        // Name
+        doc.setFont("helvetica", "bold");
+        doc.text("Name:", marginX, contentY + 6);
+        doc.setFont("helvetica", "normal");
+        doc.text(`${props.order?.customer?.name || "-"}`, marginX + 13, contentY + 6);
+
+        // Phone
+        doc.setFont("helvetica", "bold");
+        doc.text("Phone:", marginX, contentY + 12);
+        doc.setFont("helvetica", "normal");
+        doc.text(`${props.order?.customer?.phone || "-"}`, marginX + 14, contentY + 12);
+
+        // Address
+        doc.setFont("helvetica", "bold");
+        doc.text("Address:", marginX, contentY + 18);
+        doc.setFont("helvetica", "normal");
+        doc.text(`${props.order?.customer?.address || "-"}`, marginX + 18, contentY + 18);
+
 
         // QR Code
         doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
         doc.text("QR Code", rightX, contentY);
 
         if (props.order.organization.qr_payment_img) {
@@ -128,7 +207,7 @@
                 console.warn("QR load error:", e);
             }
         }
-
+        contentY += 10;
         // ---------------- TABLE ----------------
         const items = props.order?.order_items || [];
 
@@ -239,7 +318,7 @@
 
     <template>
         <div v-if="show" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl p-8 relative">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl p-8 relative mx-5">
                 <button class="absolute top-4 right-4 text-gray-600 text-2xl hover:text-red-500 transition"
                     @click="closeModal">
                     &times;
@@ -250,29 +329,29 @@
                 <!-- Customer + Order Info -->
                 <div class="grid grid-cols-2 gap-6 bg-gray-50 p-4 rounded-lg border mb-6 text-sm">
                     <div>
-                        <h3 class="font-semibold text-primary mb-2">Customer</h3>
-                        <p><strong>Name:</strong> {{ order?.customer?.name }}</p>
-                        <p><strong>Phone:</strong> {{ order?.customer?.phone }}</p>
-                        <p><strong>Address:</strong> {{ order?.customer?.address }}</p>
+                        <h3 class="font-semibold text-lg text-primary mb-2">Customer</h3>
+                        <p class="mt-2"><strong>Name:</strong> {{ order?.customer?.name }}</p>
+                        <p class="mt-2"><strong>Phone:</strong> {{ order?.customer?.phone }}</p>
+                        <p class="mt-2"><strong>Address:</strong> {{ order?.customer?.address }}</p>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-primary mb-2">Order</h3>
-                        <p><strong>No:</strong> {{ order?.order_number }}</p>
-                        <p><strong>Status:</strong> {{ order?.status }}</p>
-                        <p><strong>Delivery:</strong> {{ formatDate(order?.delivery_date) }}</p>
-                        <p><strong>Close Date:</strong> {{ formatDate(order?.close_date) }}</p>
+                        <h3 class="font-semibold text-lg text-primary mb-2">Order</h3>
+                        <p class="mt-2"><strong>No:</strong> {{ order?.order_number }}</p>
+                        <p class="mt-2"><strong>Status:</strong> {{ order?.status }}</p>
+                        <p class="mt-2"><strong>Delivery:</strong> {{ formatDate(order?.delivery_date) }}</p>
+                        <p class="mt-2"><strong>Close Date:</strong> {{ formatDate(order?.close_date) }}</p>
                     </div>
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="flex justify-center gap-6 mt-6">
                     <button @click="downloadPDF"
-                        class="bg-primary text-white px-6 py-2 rounded-lg shadow flex items-center gap-2 transition">
+                        class="bg-primary text-white lg:px-6 px-2 py-2 rounded-lg shadow flex items-center gap-2 transition">
                         <Icon icon="teenyicons:pdf-outline" width="18" height="18" />
                         Download PDF
                     </button>
                     <button
-                        class="bg-green-500 text-white px-6 py-2 rounded-lg shadow flex items-center gap-2 transition">
+                        class="bg-green-500 text-white lg:px-6 px-2 py-2 rounded-lg shadow flex items-center gap-2 transition">
                         <Icon icon="bi:whatsapp" width="18" height="18" />
                         Send via WhatsApp
                     </button>
