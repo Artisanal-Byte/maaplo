@@ -1,5 +1,4 @@
     <script setup>
-    import { ref } from "vue";
     import jsPDF from "jspdf";
     import autoTable from "jspdf-autotable";
     import { Icon } from "@iconify/vue";
@@ -115,16 +114,16 @@
         doc.setFontSize(12);
         doc.text("QR Code", rightX, contentY);
 
-        if (props.order?.qr_code) {
+        if (props.order.organization.qr_payment_img) {
             try {
+                let qImg = props.order.organization.qr_payment_img
                 const username = props.order?.user?.username?.toLowerCase().replace(/\s+/g, "_");
                 const userId = props.order?.user?.id;
 
-                const basePath = `storage/user_name_${username}_id_${userId}/qr_payment_images`;
-                const fullPath = `${window.location.origin}/${basePath}/${props.order.qr_code}`;
+                const fullPath = `${window.location.origin}/${qImg}`;
 
                 const base64Qr = await getBase64ImageFromUrl(fullPath);
-                doc.addImage(base64Qr, "PNG", rightX + 40, contentY - 5, 30, 30);
+                doc.addImage(base64Qr, "PNG", rightX, contentY + 5, 30, 30);
             } catch (e) {
                 console.warn("QR load error:", e);
             }
