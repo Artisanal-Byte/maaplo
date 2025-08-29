@@ -133,6 +133,18 @@ const getItemTypeName = (id) => {
     const found = props.itemTypes.find(i => i.id == id);
     return found?.name || 'Unknown';
 };
+const filteredItemTypes = computed(() => {
+    const customer = props.customers.find(c => c.id === form.customer_id);
+    const gender = customer ? customer.gender : null;
+
+    if (gender === 'Male') {
+        return props.itemTypes.filter(i => i.gender === 'Male'); // Filter for male item types
+    } else if (gender === 'Female') {
+        return props.itemTypes.filter(i => i.gender === 'Female'); // Filter for female item types
+    }
+
+    return props.itemTypes; // If gender is not selected, show all
+});
 
 const onItemUpdated = (itemData) => {
     const index = currentEditIndex.value;
@@ -266,7 +278,7 @@ const onItemAdded = (itemData) => {
                     </div>
 
                     <ItemModel :errors="errors" :showModal="showModal" @close="closeModel"
-                        :form="form.order_items_template" :itemTypes="itemTypes" :measurements="[]"
+                        :form="form.order_items_template" :itemTypes="filteredItemTypes" :measurements="[]"
                         :orderItems="orderItems" :currentEditIndex="currentEditIndex" :order="order"
                         @item-updated="recalculateTotal" @item-added="onItemAdded"
                         :allDesignDetails="allDesignDetails" />
