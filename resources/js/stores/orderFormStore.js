@@ -64,7 +64,7 @@ export const useOrderFormStore = defineStore('orderForm', {
                 this.order_items.splice(this.editingItemIndex, 1, updatedItem);
                 this.editingItemIndex = null;
 
-                 this.total_amount = this.order_items.reduce((acc, item) => acc + (parseFloat(item.item_cost) || 0), 0);
+                this.total_amount = this.order_items.reduce((acc, item) => acc + (parseFloat(item.item_cost) || 0), 0);
             }
         },
 
@@ -269,6 +269,7 @@ export const useOrderFormStore = defineStore('orderForm', {
                 form.append(`order_items[${index}][stiching_cost]`, item.stiching_cost ?? '');
                 form.append(`order_items[${index}][altering_cost]`, item.altering_cost ?? '');
                 form.append(`order_items[${index}][item_cost]`, item.item_cost ?? '');
+                form.append(`order_items[${index}][item_status]`, item.item_status || 'created');
 
                 if (item.id) {
                     form.append(`order_items[${index}][id]`, item.id);

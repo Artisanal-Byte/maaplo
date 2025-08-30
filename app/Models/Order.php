@@ -91,4 +91,34 @@ class Order extends Model
             'id'       // local key on users
         );
     }
+
+    public function getDisplayStatusAttribute()
+    {
+        $itemStatuses = $this->orderItems->pluck('item_status')->unique();
+
+        // If all statuses are same → return as-is
+        if ($itemStatuses->count() === 1) {
+            return $itemStatuses->first();
+        }
+
+        // Define status priority (lower index = higher priority)
+        $priority = [
+            'created',
+            'in_process',
+            'processed',
+            'trial_done',
+            'in_alteration',
+            'ready_for_delivery',
+            'delivered',
+            'cancelled',
+        ];
+
+        // Find the "lowest priority" status among items
+        $mainStatus = collect($priority)->first(function ($status) use ($itemStatuses) {
+            return $itemStatuses->contains($status);
+        });
+
+        // Add (Partially)
+        return $mainStatus . '_partially';
+    }
 }

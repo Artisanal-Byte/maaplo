@@ -283,7 +283,7 @@ class OrderController extends Controller
             ];
         });
         return Inertia::render('orders/Edit', [
-            'order' => $order,
+            'order' => $order->append('display_status'),
             'itemTypes' => $itemTypes,
             'customers' => $user->customers,
             'orderItems' => $orderItems,
@@ -294,7 +294,6 @@ class OrderController extends Controller
     public function update(UpdateOrderRequest $request, Order $order)
     {
         ini_set('max_execution_time', 60);
-
         try {
             $validatedData = $request->validated();
             $userId = Auth::user()->id;
@@ -382,6 +381,29 @@ class OrderController extends Controller
                 }
                 $item->delete();
             });
+
+            // After processing all order items
+            $itemStatuses = $order->orderItems()->pluck('item_status')->unique();
+
+            if ($itemStatuses->count() === 1) {
+                // ✅ all items same
+                $order->status = $itemStatuses->first();
+            } else {
+                // ✅ mixed statuses
+                if ($itemStatuses->contains('trial_done')) {
+                    $order->status = 'trial_done';
+                } elseif ($itemStatuses->contains('ready_for_delivery')) {
+                    $order->status = 'ready_for_delivery';
+                } else {
+                    $order->status = 'in_process'; // or whatever fallback you want
+                }
+            }
+
+            $order->save();
+
+
+            $order->save();
+
 
             DB::commit();
 
