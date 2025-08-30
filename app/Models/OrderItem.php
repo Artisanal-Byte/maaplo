@@ -39,6 +39,7 @@ class OrderItem extends Model
         'work_type',
         'cloth_img1',
         'cloth_img2',
+        'item_status',
         'Pattern_img1',
         'Pattern_img2'
     ];

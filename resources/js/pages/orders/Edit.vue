@@ -13,6 +13,8 @@ import { Head, Link } from '@inertiajs/vue3';
 import { nextTick } from 'vue';
 import Loader from '@/components/Loader.vue';
 import { router } from '@inertiajs/vue3';
+import ItemStatusDropdown from '@/components/ItemStatusDropdown.vue';
+import Orderstatus from '@/components/Orderstatus.vue';
 
 const props = defineProps(["users", "customers", "itemTypes", "errors", "order", "orderItems", "allDesignDetails"]);
 
@@ -40,6 +42,14 @@ const recalculateTotal = () => {
 onMounted(() => {
     if (props.order) {
         form.setEditOrder(props.order);
+
+        // Ensure every item has item_status
+        form.order_items = form.order_items.map(item => ({
+            ...item,
+            item_status: item.item_status || "created"
+        }));
+
+
         if (!form.status) {
             form.status = 'created'; // fallback default
         }
@@ -230,22 +240,8 @@ const onItemAdded = (itemData) => {
                             Order Status
                         </span>
                     </label>
-                    <div class="relative w-[320px] mt-2">
-                        <select id="status" v-model="form.status"
-                            class="appearance-none w-full pl-4 pr-10 py-2.5 rounded-md border border-gray-300 text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out">
-                            <option value="created">🆕 Created</option>
-                            <option value="in_process">🔄 In Process</option>
-                            <option value="processed">📦 Processed</option>
-                            <option value="trial_done">🧪 Trial Done</option>
-                            <option value="in_alteration">✂️ In Alteration</option>
-                            <option value="ready_for_delivery">📬 Ready for Delivery</option>
-                            <option value="delivered">🚚 Delivered</option>
-                            <option value="cancelled">❌ Cancelled</option>
-                        </select>
-                        <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400">
-                            <Icon icon="mdi:chevron-down" width="20" height="20" />
-                        </div>
-                    </div>
+                    <Orderstatus v-model="form.status" :order="form" />
+
                     <p v-if="props.errors.status" class="mt-2 text-sm text-red-600">{{ props.errors.status }}</p>
                 </div>
 
@@ -291,6 +287,7 @@ const onItemAdded = (itemData) => {
                                     <th class="px-4 py-3 border-b border-gray-300">Item Type</th>
                                     <th class="px-4 py-3 border-b border-gray-300">Delivery Date</th>
                                     <th class="px-4 py-3 border-b border-gray-300">Cost (₹)</th>
+                                    <th class="px-4 py-3 border-b border-gray-300">Item Status</th>
                                     <th class="px-4 py-3 border-b border-gray-300">Action</th>
                                 </tr>
                             </thead>
@@ -310,6 +307,11 @@ const onItemAdded = (itemData) => {
                                             maximumFractionDigits: 2
                                         }) || '0.00' }}
                                     </td>
+                                    <td class="px-4 py-2 border-b border-gray-200">
+                                        <ItemStatusDropdown v-model="item.item_status"
+                                            :error="props.errors[`order_items.${index}.item_status`]" />
+                                    </td>
+
                                     <td class="px-4 py-2 border-b border-gray-200">
                                         <div class="flex text-center">
                                             <Icon icon="material-symbols:edit-rounded" width="24"

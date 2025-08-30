@@ -42,6 +42,24 @@ class UpdateOrderRequest extends FormRequest
                 'trial_done',
 
             ])],
+
+            // ✅ Add this new rule for each order item
+            'order_items.*.item_status' => [
+                'required',
+                'string',
+                Rule::in([
+                    'created',
+                    'in_process',
+                    'processed',
+                    'delivered',
+                    'closed',
+                    'cancelled',
+                    'ready_for_delivery',
+                    'in_alteration',
+                    'trial_done',
+                    'completed',
+                ]),
+            ],
             'total_amount' => ['required', 'numeric', 'min:0'],
             'advance_paid' => ['nullable', 'numeric', 'min:0', 'lte:total_amount'],
             'delivery_date' => ['required', 'date', 'after_or_equal:today'],
@@ -172,6 +190,10 @@ class UpdateOrderRequest extends FormRequest
             $messages["$key.item_cost.required"] = "Item cost is required for item #$displayIndex.";
             $messages["$key.item_cost.numeric"] = "Item cost must be a number for item #$displayIndex.";
             $messages["$key.item_cost.min"] = "Item cost must be at least 0 for item #$displayIndex.";
+
+            $messages["$key.item_status.required"] = "Please select a status for item #$displayIndex.";
+            $messages["$key.item_status.in"] = "The selected status for item #$displayIndex is invalid.";
+
 
             // Optional image fields
             foreach (['refrence_dress', 'cloth_img1', 'cloth_img2', 'Pattern_img1', 'Pattern_img2'] as $field) {
