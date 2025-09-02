@@ -1,14 +1,14 @@
 <script setup>
+import { computed } from 'vue';
 import { Icon } from "@iconify/vue";
 
 const props = defineProps({
     order: { type: Object, required: true },
     modelValue: { type: String, default: "created" },
-    editable: { type: Boolean, default: false }, // 👈 NEW prop
+    editable: { type: Boolean, default: false },
 });
 const emit = defineEmits(["update:modelValue"]);
 
-// Base labels
 const statusLabels = {
     created: "Created",
     in_process: "In Process",
@@ -20,14 +20,39 @@ const statusLabels = {
     cancelled: "Cancelled",
 };
 
-// Smart label resolver
+// 👇 Compute display_status locally
+const computedDisplayStatus = computed(() => {
+    const statuses = props.order?.order_items?.map(i => i.item_status).filter(Boolean);
+    const uniqueStatuses = [...new Set(statuses)];
+
+    if (uniqueStatuses.length === 1) {
+        return uniqueStatuses[0];
+    }
+
+    const priority = [
+        "created",
+        "in_process",
+        "processed",
+        "trial_done",
+        "in_alteration",
+        "ready_for_delivery",
+        "delivered",
+        "cancelled",
+    ];
+
+    const mainStatus = priority.find(s => uniqueStatuses.includes(s));
+    return mainStatus ? `${mainStatus}_partially` : props.modelValue;
+});
+
+// 👇 Match computedDisplayStatus
 const getStatusLabel = (status) => {
-    if (props.order.display_status === status + "_partially") {
+    if (computedDisplayStatus.value === status + "_partially") {
         return statusLabels[status] + " (Partially)";
     }
     return statusLabels[status] || status;
 };
 </script>
+
 
 <template>
     <div class="relative w-[320px] mt-2">
