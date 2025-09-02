@@ -383,20 +383,26 @@ class OrderController extends Controller
             });
 
             // After processing all order items
+            $priority = [
+                'created',
+                'in_process',
+                'processed',
+                'trial_done',
+                'in_alteration',
+                'ready_for_delivery',
+                'delivered',
+                'cancelled',
+            ];
+
             $itemStatuses = $order->orderItems()->pluck('item_status')->unique();
 
             if ($itemStatuses->count() === 1) {
-                // ✅ all items same
                 $order->status = $itemStatuses->first();
             } else {
-                // ✅ mixed statuses
-                if ($itemStatuses->contains('trial_done')) {
-                    $order->status = 'trial_done';
-                } elseif ($itemStatuses->contains('ready_for_delivery')) {
-                    $order->status = 'ready_for_delivery';
-                } else {
-                    $order->status = 'in_process'; // or whatever fallback you want
-                }
+                $mainStatus = collect($priority)->first(function ($status) use ($itemStatuses) {
+                    return $itemStatuses->contains($status);
+                });
+                $order->status = $mainStatus;
             }
 
             $order->save();
