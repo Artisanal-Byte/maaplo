@@ -17,7 +17,7 @@ const props = defineProps({
     user: Object,
     subscriptionPlans: Array,
 });
-console.log('User Data:', props.subscriptionPlans);
+
 
 const form = useForm({
     name: props.user.name,

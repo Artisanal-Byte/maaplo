@@ -12,7 +12,7 @@ const showPassword = ref(false);
 const props = defineProps({
     plans: Array
 });
-console.log('Plans:', props.plans);
+
 
 const form = useForm({
     name: '',
