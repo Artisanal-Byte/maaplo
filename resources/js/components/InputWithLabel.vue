@@ -21,7 +21,8 @@ const props = defineProps([
     'radioValue',
     'error',
     'required',
-    'icon'
+    'icon',
+    'min'
 ])
 
 const model = defineModel('modelValue');
@@ -145,7 +146,7 @@ const widthClass = {
                     <span v-else class="text-gray-400 text-sm">(optional)</span>
                 </label>
                 <div class="relative">
-                    <input :type="type" :id="id" :name="name" :placeholder="placeholder" :disabled="disabled"
+                    <input :type="type" :id="id" :name="name" :min="min" :placeholder="placeholder" :disabled="disabled"
                         v-model="model" :class="[
                             'transition duration-200 focus:outline-none w-full pl-9',
                             colorClass,
