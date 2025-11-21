@@ -150,8 +150,6 @@ function closeImageModal() {
                     </template>
                     </Input> -->
 
-
-
                     <!-- Organization Logo -->
                     <!-- <div>
                         <label for="organization_logo" class="block mb-1 font-semibold">Organization Logo</label>
