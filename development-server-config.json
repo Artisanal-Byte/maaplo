@@ -1,11 +1,11 @@
 [
-  {
-    "name": "buildbooker",
-    "ip": "13.203.247.54",
-    "username": "ubuntu",
-    "port": "22",
-    "beforeHooks": "",
-    "afterHooks": "",
-    "path": "/var/www/maaplo"
-  }
+    {
+        "name": "buildbooker",
+        "ip": "160.191.14.84",
+        "username": "ubuntu",
+        "port": "22",
+        "beforeHooks": "",
+        "afterHooks": "",
+        "path": "/var/www/artisanal_byte/maaplo-staging"
+    }
 ]
