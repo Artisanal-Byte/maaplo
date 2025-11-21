@@ -6,6 +6,6 @@
         "port": "22",
         "beforeHooks": "",
         "afterHooks": "",
-        "path": "/var/www/artisanal_byte/maaplo-staging"
+        "path": "/var/www/artisanal_byte/maaplo/maaplo-staging"
     }
 ]
