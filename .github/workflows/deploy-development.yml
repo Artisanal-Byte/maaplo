@@ -187,7 +187,7 @@ jobs:
             sudo rm -rf ${RELEASE_PATH}/storage
             sudo ln -s -f $STORAGE_PATH $RELEASE_PATH
             sudo ln -s -n -f $RELEASE_PATH $ACTIVE_RELEASE_PATH
-            sudo service php8.3-fpm reload
+            sudo service php8.4-fpm reload
             sudo chown -R git_deployer:www-data $ACTIVE_RELEASE_PATH
             cd ${ACTIVE_RELEASE_PATH}
 
