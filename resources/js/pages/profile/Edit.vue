@@ -209,7 +209,7 @@ function closeImageModal() {
                     </Button>
                 </div>
 
-                <!-- Modal Viewer -->
+                <!-- Modal Viewer modal -->
                 <ImageModal :show="showImageModal" :imageUrl="currentImageUrl" @close="closeImageModal" />
             </div>
         </div>
