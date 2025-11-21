@@ -70,7 +70,7 @@ function goToEdit() {
                             alt="Profile Image"
                             class="mr-0 mt-3 inline-block h-24 w-24 rounded-full border object-cover lg:mr-12 lg:mt-10 lg:h-48 lg:w-48"
                         />
-                        <!-- </Link> -->
+                        <!-- </Link> div-->
                     </div>
                 </div>
                 <!-- <div class="pt-6 text-center"> -->
