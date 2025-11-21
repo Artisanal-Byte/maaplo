@@ -2,7 +2,7 @@
     {
         "name": "buildbooker",
         "ip": "160.191.14.84",
-        "username": "ubuntu",
+        "username": "root",
         "port": "22",
         "beforeHooks": "",
         "afterHooks": "",
