@@ -193,9 +193,20 @@
         const loadReferenceDress = async () => {
             const item = props.orderItems?.[props.currentEditIndex] || null;
 
+            if (!item) {
+                const existingFile = formStore.order_items_template.refrence_dress;
+                if (existingFile && typeof existingFile === 'object') {
+                    showImageUpload.value = true;
+                    previewUrl.value = previewImage(existingFile);
+                }
+                return;
+            }
+
             if (item?.refrence_dress) {
                 try {
-                    const file = await urlToFile(item.refrence_dress, 'refrence_dress.webp', 'image/webp');
+                    const file = (typeof File !== 'undefined' && item.refrence_dress instanceof File)
+                        ? item.refrence_dress
+                        : await urlToFile(item.refrence_dress, 'refrence_dress.webp', 'image/webp');
                     formStore.order_items_template.refrence_dress = file;
                     previewUrl.value = URL.createObjectURL(file);
                     showImageUpload.value = true;
@@ -235,6 +246,16 @@
                 { urlKey: 'Pattern_img1_url', key: 'Pattern_img1' },
                 { urlKey: 'Pattern_img2_url', key: 'Pattern_img2' },
             ];
+
+            const hasAnyUrl = map.some(({ urlKey }) => !!item[urlKey]);
+            if (!hasAnyUrl) {
+                return;
+            }
+
+            formStore.order_items_template.cloth_img1 = null;
+            formStore.order_items_template.cloth_img2 = null;
+            formStore.order_items_template.Pattern_img1 = null;
+            formStore.order_items_template.Pattern_img2 = null;
 
             for (const { urlKey, key } of map) {
                 if (item[urlKey]) {

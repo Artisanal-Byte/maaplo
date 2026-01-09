@@ -231,7 +231,9 @@ const filteredItemTypes = computed(() => {
 
                         <!-- Modal Content -->
                         <ItemModel :errors="form.errors?.order_items" :showModal="showModal" @close="closeModel"
-                            :form="form.order_items" :itemTypes="filteredItemTypes" :allDesignDetails="allDesignDetails"
+                            :form="form.order_items" :orderItems="form.order_items"
+                            :currentEditIndex="form.editingItemIndex" :itemTypes="filteredItemTypes"
+                            :allDesignDetails="allDesignDetails"
                             :measurements="Array.isArray(customerMeasurements) ? customerMeasurements : Object.entries(customerMeasurements).map(([slug, value]) => ({ slug, value }))" />
                         <p class="text-red-600 text-sm">
                             {{ errors?.order_items }}

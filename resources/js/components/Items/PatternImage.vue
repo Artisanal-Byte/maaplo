@@ -22,32 +22,38 @@ const urlToFile = async (url, filename, mimeType) => {
 
 const getCurrentItem = () => props.orderItems?.[props.currentEditIndex] || null;
 const loadPatternImages = async () => {
+    const item = getCurrentItem();
+    if (!item) {
+        return;
+    }
+
+    const hasAnyUrl = !!(item.Pattern_img1_url || item.Pattern_img2_url);
+    if (!hasAnyUrl) {
+        return;
+    }
+
     formStore.order_items_template.Pattern_img1 = null;
     formStore.order_items_template.Pattern_img2 = null;
     previewUrl1.value = null;
     previewUrl2.value = null;
 
-    const item = getCurrentItem();
-
-    if (item) {
-        if (item.Pattern_img1_url) {
-            try {
-                const file1 = await urlToFile(item.Pattern_img1_url, 'Pattern_img1.webp', 'image/webp');
-                formStore.order_items_template.Pattern_img1 = file1;
-                previewUrl1.value = URL.createObjectURL(file1);
-            } catch (error) {
-                console.error("Error loading Pattern_img1:", error);
-            }
+    if (item.Pattern_img1_url) {
+        try {
+            const file1 = await urlToFile(item.Pattern_img1_url, 'Pattern_img1.webp', 'image/webp');
+            formStore.order_items_template.Pattern_img1 = file1;
+            previewUrl1.value = URL.createObjectURL(file1);
+        } catch (error) {
+            console.error("Error loading Pattern_img1:", error);
         }
+    }
 
-        if (item.Pattern_img2_url) {
-            try {
-                const file2 = await urlToFile(item.Pattern_img2_url, 'Pattern_img2.webp', 'image/webp');
-                formStore.order_items_template.Pattern_img2 = file2;
-                previewUrl2.value = URL.createObjectURL(file2);
-            } catch (error) {
-                console.error("Error loading Pattern_img2:", error);
-            }
+    if (item.Pattern_img2_url) {
+        try {
+            const file2 = await urlToFile(item.Pattern_img2_url, 'Pattern_img2.webp', 'image/webp');
+            formStore.order_items_template.Pattern_img2 = file2;
+            previewUrl2.value = URL.createObjectURL(file2);
+        } catch (error) {
+            console.error("Error loading Pattern_img2:", error);
         }
     }
 };
