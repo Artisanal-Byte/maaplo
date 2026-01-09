@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class TemplatesTableSeeder extends Seeder
 {
@@ -16,9 +17,9 @@ class TemplatesTableSeeder extends Seeder
     {
 
 
-        \DB::table('templates')->delete();
+        DB::table('templates')->delete();
 
-        \DB::table('templates')->insert(array(
+        DB::table('templates')->insert(array(
             0 =>
             array(
                 'id' => 3,
@@ -59,5 +60,11 @@ class TemplatesTableSeeder extends Seeder
                 'deleted_at' => NULL,
             ),
         ));
+
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement(
+                "SELECT setval(pg_get_serial_sequence('templates','id'), COALESCE((SELECT MAX(id) FROM templates), 1), true)"
+            );
+        }
     }
 }
