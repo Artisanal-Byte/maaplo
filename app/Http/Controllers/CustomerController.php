@@ -26,9 +26,9 @@ class CustomerController extends Controller
         $plan = $user->subscriptionPlan;
 
         $customerCount = $user->customers()->count();
-        $customerLimitExceeded = $plan
-            ? $customerCount >= $plan->user_limit
-            : $customerCount >= 5;
+        $planLimit = ($plan && is_numeric($plan->user_limit)) ? (int) $plan->user_limit : 5;
+        $customerLimitExceeded = $customerCount >= $planLimit;
+        $limitReached = session()->pull('limit_reached', false);
 
         $query = $user->customers()
             ->with(['photos' => fn($q) => $q->where('label', 'Faceimage'), 'orders'])
@@ -72,9 +72,10 @@ class CustomerController extends Controller
             'customers' => $paginatedCustomers,
             'customer_limit_exceeded' => $customerLimitExceeded,
             'plan_title' => $plan ? $plan->plan_title : 'Free',
-            'plan_limit' => $plan ? $plan->user_limit : 5,
+            'plan_limit' => $planLimit,
             'search' => $search,
             'customerCount' => $customerCount,
+            'limit_reached' => $limitReached,
         ]);
     }
 
@@ -83,7 +84,9 @@ class CustomerController extends Controller
     {
         $user = auth()->user();
         $customerCount = $user->customers()->count();
-        $customerLimitExceeded = $user->subscription_plan === 'free' && $customerCount >= 5;
+        $plan = $user->subscriptionPlan;
+        $planLimit = ($plan && is_numeric($plan->user_limit)) ? (int) $plan->user_limit : 5;
+        $customerLimitExceeded = $customerCount >= $planLimit;
 
         $user_id = auth()->id();
         $measurements = Measurement::all();
@@ -96,6 +99,8 @@ class CustomerController extends Controller
             'user_id' => $user_id,
             'measurements' => json_encode($setData, true),
             'customer_limit_exceeded' => $customerLimitExceeded,
+            'plan_title' => $plan ? $plan->plan_title : 'Free',
+            'plan_limit' => $planLimit,
             'toAsk' => json_encode($setData, true),
             'notes' => $customer->notes ?? [],
         ]);

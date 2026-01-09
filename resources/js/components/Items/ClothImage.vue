@@ -24,52 +24,65 @@ const urlToFile = async (url, filename, mimeType) => {
 const getCurrentItem = () => props.orderItems?.[props.currentEditIndex] || null;
 // Load initial images from URLs on component mount
 onMounted(async () => {
+    const item = getCurrentItem();
+    if (!item) {
+        return;
+    }
+
+    const hasAnyUrl = !!(item.cloth_img1_url || item.cloth_img2_url);
+    if (!hasAnyUrl) {
+        return;
+    }
+
     formStore.order_items_template.cloth_img1 = null;
     formStore.order_items_template.cloth_img2 = null;
-    const item = getCurrentItem();
 
-    if (item) {
-        if (item.cloth_img1_url) {
-            try {
-                const file1 = await urlToFile(item.cloth_img1_url, 'cloth_img1.webp', 'image/webp');
-                formStore.order_items_template.cloth_img1 = file1;
-                previewUrl1.value = URL.createObjectURL(file1);
-            } catch (error) {
-                console.error("Error loading cloth_img1:", error);
-            }
+    if (item.cloth_img1_url) {
+        try {
+            const file1 = await urlToFile(item.cloth_img1_url, 'cloth_img1.webp', 'image/webp');
+            formStore.order_items_template.cloth_img1 = file1;
+            previewUrl1.value = URL.createObjectURL(file1);
+        } catch (error) {
+            console.error("Error loading cloth_img1:", error);
         }
+    }
 
-        if (item.cloth_img2_url) {
-            try {
-                const file2 = await urlToFile(item.cloth_img2_url, 'cloth_img2.webp', 'image/webp');
-                formStore.order_items_template.cloth_img2 = file2;
-                previewUrl2.value = URL.createObjectURL(file2);
-            } catch (error) {
-                console.error("Error loading cloth_img2:", error);
-            }
+    if (item.cloth_img2_url) {
+        try {
+            const file2 = await urlToFile(item.cloth_img2_url, 'cloth_img2.webp', 'image/webp');
+            formStore.order_items_template.cloth_img2 = file2;
+            previewUrl2.value = URL.createObjectURL(file2);
+        } catch (error) {
+            console.error("Error loading cloth_img2:", error);
         }
     }
 });
 
 watch(() => props.currentEditIndex, async () => {
     const item = getCurrentItem();
+    if (!item) {
+        return;
+    }
+
+    const hasAnyUrl = !!(item.cloth_img1_url || item.cloth_img2_url);
+    if (!hasAnyUrl) {
+        return;
+    }
 
     formStore.order_items_template.cloth_img1 = null;
     formStore.order_items_template.cloth_img2 = null;
     previewUrl1.value = null;
     previewUrl2.value = null;
 
-    if (item) {
-        if (item.cloth_img1_url) {
-            const file1 = await urlToFile(item.cloth_img1_url, 'cloth_img1.webp', 'image/webp');
-            formStore.order_items_template.cloth_img1 = file1;
-            previewUrl1.value = URL.createObjectURL(file1);
-        }
-        if (item.cloth_img2_url) {
-            const file2 = await urlToFile(item.cloth_img2_url, 'cloth_img2.webp', 'image/webp');
-            formStore.order_items_template.cloth_img2 = file2;
-            previewUrl2.value = URL.createObjectURL(file2);
-        }
+    if (item.cloth_img1_url) {
+        const file1 = await urlToFile(item.cloth_img1_url, 'cloth_img1.webp', 'image/webp');
+        formStore.order_items_template.cloth_img1 = file1;
+        previewUrl1.value = URL.createObjectURL(file1);
+    }
+    if (item.cloth_img2_url) {
+        const file2 = await urlToFile(item.cloth_img2_url, 'cloth_img2.webp', 'image/webp');
+        formStore.order_items_template.cloth_img2 = file2;
+        previewUrl2.value = URL.createObjectURL(file2);
     }
 }, { immediate: true });
 

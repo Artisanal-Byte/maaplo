@@ -116,13 +116,14 @@ export const useOrderFormStore = defineStore('orderForm', {
         setOrderItemData(index) {
             if (index >= 0 && index < this.order_items.length) {
                 const item = this.order_items[index];
+                const isFile = (value) => typeof File !== 'undefined' && value instanceof File;
                 this.order_items_template = {
                     ...item,
-                    cloth_img1: null,
-                    cloth_img2: null,
-                    Pattern_img1: null,
-                    Pattern_img2: null,
-                    refrence_dress: null,
+                    cloth_img1: isFile(item.cloth_img1) ? item.cloth_img1 : null,
+                    cloth_img2: isFile(item.cloth_img2) ? item.cloth_img2 : null,
+                    Pattern_img1: isFile(item.Pattern_img1) ? item.Pattern_img1 : null,
+                    Pattern_img2: isFile(item.Pattern_img2) ? item.Pattern_img2 : null,
+                    refrence_dress: isFile(item.refrence_dress) ? item.refrence_dress : null,
                     cloth_img1_url: item.cloth_img1_url || null,
                     cloth_img2_url: item.cloth_img2_url || null,
                     Pattern_img1_url: item.Pattern_img1_url || null,
@@ -142,17 +143,20 @@ export const useOrderFormStore = defineStore('orderForm', {
             this.isLoading = true;
             const { order_items_template, ...formData } = this.$state;
             const form = useForm({ ...formData });
-            form.post(route('orders.store'), {
-                onSuccess: () => {
-                    toast.success('Order created successfully!');
-                    this.resetOrderData();
-
-                    this.isLoading = false;
-                },
-                onError: (errors) => {
-                    this.isLoading = false;
-                    console.error('Order creation failed:', errors);
-                }
+            return new Promise((resolve, reject) => {
+                form.post(route('orders.store'), {
+                    onSuccess: () => {
+                        toast.success('Order created successfully!');
+                        this.resetOrderData();
+                        this.isLoading = false;
+                        resolve(true);
+                    },
+                    onError: (errors) => {
+                        this.isLoading = false;
+                        console.error('Order creation failed:', errors);
+                        reject(errors);
+                    }
+                });
             });
         },
         deleteOrderItem(index) {

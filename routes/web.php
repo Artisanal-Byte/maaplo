@@ -73,7 +73,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         'destroy'
     );
     Route::post('/factory-seed', [DashboardController::class, 'seed'])->name('factory.seed')->middleware('auth');
-    Route::resource('customers', CustomerController::class);
+    Route::resource('customers', CustomerController::class)->except(['store', 'create', 'show']);
+    Route::get('customers/create', [CustomerController::class, 'create'])
+        ->name('customers.create')
+        ->middleware('customer.limit');
+    Route::post('customers', [CustomerController::class, 'store'])
+        ->name('customers.store')
+        ->middleware('customer.limit');
     Route::resource('items', TemplateController::class);
     Route::resource('organization', OrganizationController::class);
     Route::post('/orders/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
