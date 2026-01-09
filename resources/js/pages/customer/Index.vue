@@ -41,11 +41,12 @@ const props = defineProps<{
     plan_limit: number,
     search?: string,
     customerCount?: number,
+    limit_reached?: boolean,
 }>();
 
 const searchTerm = ref(props.search ?? '');
 
-const showLimitModal = ref(false);
+const showLimitModal = ref(props.limit_reached ?? false);
 
 function handleCreateClick(event: Event) {
     if (props.customer_limit_exceeded) {

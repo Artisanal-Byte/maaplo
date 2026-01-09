@@ -15,6 +15,8 @@ const props = defineProps<{
     errors: Record<string, string>,
     user_id: number,
     customer_limit_exceeded: boolean,
+    plan_title: string,
+    plan_limit: number,
     measurements,
     isOrder?: boolean;
     toAsk?: string | null;
@@ -30,7 +32,7 @@ const form = reactive({
     email: null,
     address: '',
     dob: null,
-    measurements: '',
+    measurements: { unit: 'in' },
     half_image: '',
     full_image: '',
     half_image_preview: '',
@@ -92,7 +94,8 @@ const onPhoneInput = (event: Event) => {
     <Head title="Costomer-Create" />
     <AppLayout>
         <!-- Limit Reached Modal -->
-        <CustomerLimitPopup :show="showLimitModal" @close="showLimitModal = false" />
+        <CustomerLimitPopup :show="showLimitModal" @close="showLimitModal = false"
+            :planTitle="props.plan_title" :planLimit="props.plan_limit" />
         <Loader v-if="loading" :message="'Creating customer...'" />
         <div class="px-4 py-8 max-w-6xl mx-auto">
             <div class="flex justify-between items-center">
