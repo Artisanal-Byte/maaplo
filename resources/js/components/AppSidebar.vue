@@ -7,6 +7,7 @@ import Logo from "./Logo.vue";
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 const organizationId = computed(() => user.value?.id);
+const isAdmin = computed(() => user.value?.role === "admin");
 const showDropdown = ref(false);
 const showDropdownCustomer = ref(false);
 const showDropdownSelectAction = ref(false);
@@ -149,13 +150,16 @@ const visible = ref(false);
                             <ul class="ml-6 list-disc list-inside font-inter font-medium text-[16px] leading-[16px] tracking-[0]"
                                 aria-labelledby="dropdownTrigger">
                                 <div class="flex flex-row rounded hover:bg-gray-100 p-2">
-                                    <Link :href="route('suggestion.create')" class="text-gray-700 hover:text-black">
+                                    <Link
+                                        :href="isAdmin ? route('suggestion.index') : route('suggestion.create')"
+                                        class="text-gray-700 hover:text-black">
                                     Add Suggestion
                                     </Link>
                                 </div>
 
                                 <div class="mt-2 rounded hover:bg-gray-100">
-                                    <Link :href="route('reporterror.create')"
+                                    <Link
+                                        :href="isAdmin ? route('reporterror.index') : route('reporterror.create')"
                                         class="flex flex-row items-center gap-2 px-3 py-2 text-gray-700 hover:text-black">
                                     <Icon icon="streamline-freehand:cloud-error-404" width="24" height="24" />
                                     <span>Report Error</span>
@@ -164,7 +168,8 @@ const visible = ref(false);
 
 
                                 <div class="flex flex-row py-2 mt-2 rounded hover:bg-gray-100 p-2">
-                                    <Link :href="route('feature-request.create')"
+                                    <Link
+                                        :href="isAdmin ? route('feature-request.index') : route('feature-request.create')"
                                         class="block text-gray-700 hover:text-black">
                                     Feature Request
                                     </Link>
