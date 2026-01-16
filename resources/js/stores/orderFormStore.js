@@ -32,7 +32,7 @@ export const useOrderFormStore = defineStore('orderForm', {
                 stiching_cost: null,
                 altering_cost: null,
                 item_cost: null,
-                notes: [{}],
+                notes: [{ label: '', text: '' }],
                 trial_dates: '',
                 delivery_date: '',
                 status: '',
@@ -84,7 +84,7 @@ export const useOrderFormStore = defineStore('orderForm', {
                 stiching_cost: null,
                 altering_cost: null,
                 item_cost: null,
-                notes: [{}],
+                notes: [{ label: '', text: '' }],
                 trial_dates: '',
                 delivery_date: '',
                 status: '',
@@ -132,6 +132,9 @@ export const useOrderFormStore = defineStore('orderForm', {
                     delivery_date: item.delivery_date || '',
                     mode: 'edit'
                 };
+                if (!Array.isArray(this.order_items_template.notes)) {
+                    this.order_items_template.notes = [];
+                }
 
                 // ✅ This is ESSENTIAL
                 this.editingItemIndex = index;
@@ -214,7 +217,9 @@ export const useOrderFormStore = defineStore('orderForm', {
                         : '',
                     measurements: typeof item.measurements === 'string' ? JSON.parse(item.measurements || '{}') : item.measurements,
                     design_detail: typeof item.design_detail === 'string' ? JSON.parse(item.design_detail || '{}') : item.design_detail,
-                    notes: typeof item.notes === 'string' ? JSON.parse(item.notes || '[]') : item.notes,
+                    notes: Array.isArray(item.notes)
+                        ? item.notes
+                        : (typeof item.notes === 'string' ? JSON.parse(item.notes || '[]') : []),
                 };
 
                 return parsedItem;
