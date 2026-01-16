@@ -47,7 +47,13 @@ class StoreOrderRequest extends FormRequest
     {
         return [
             'user_id' => ['required', 'exists:users,id'],
-            'customer_id' => ['required', 'exists:customers,id'],
+            'customer_id' => [
+                'required',
+                Rule::exists('users_customers', 'customer_id')->where(function ($query) {
+                    $query->where('user_id', $this->user()->id)
+                        ->whereNull('deleted_at');
+                }),
+            ],
             // 'order_number' => ['required', 'string',  Rule::unique('orders')->where(function ($query) {
             //     return $query->where('user_id', $this->user_id);
             // })],

@@ -434,8 +434,18 @@ class OrderController extends Controller
 
     public function fetchCustomers()
     {
-        // You can add auth() or user-specific filters if needed
-        $customers = Customer::with(['photos'])->latest()->get();
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'customers' => [],
+            ], 401);
+        }
+
+        $customers = $user->customers()
+            ->with(['photos'])
+            ->latest('customers.created_at')
+            ->get();
 
         return response()->json([
             'status' => true,
@@ -446,7 +456,14 @@ class OrderController extends Controller
     public function getCustomerMeasurements($customerId)
     {
         try {
-            $customer = Customer::findOrFail($customerId);
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+
+            $customer = $user->customers()
+                ->where('customers.id', $customerId)
+                ->firstOrFail();
 
             // Use accessor that automatically casts JSON to array
             $measurements = $customer->base_measurements ?? [];

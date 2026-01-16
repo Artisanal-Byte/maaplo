@@ -29,7 +29,13 @@ class UpdateOrderRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'customer_id' => ['required', 'exists:customers,id'],
+            'customer_id' => [
+                'required',
+                Rule::exists('users_customers', 'customer_id')->where(function ($query) {
+                    $query->where('user_id', $this->user()->id)
+                        ->whereNull('deleted_at');
+                }),
+            ],
             'status' => ['required', 'string', Rule::in([
                 'created',
                 'in_process',
