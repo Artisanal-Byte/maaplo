@@ -33,7 +33,7 @@ Route::get('/demo', function () {
 
 // Autofill login defaults only for allowed domains
 Route::get('/login-defaults', function () {
-    if (env("APP_ENV") === "production || staging") {
+    if (env("APP_ENV") === "production || development") {
         return response()->json(['auto_fill' => false]);
     }
 
