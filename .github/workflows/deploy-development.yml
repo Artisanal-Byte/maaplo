@@ -198,7 +198,7 @@ jobs:
             sudo php artisan queue:restart
             sudo php artisan optimize
             sudo php artisan storage:link
-            sudo composer install --no-interaction --prefer-dist --optimize-autoloader
+            sudo env COMPOSER_ALLOW_SUPERUSER=1 php8.4 /usr/local/bin/composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
   run-after-hooks:
     name: '${{ matrix.server.name }}: After hook'
