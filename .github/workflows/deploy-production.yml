@@ -182,18 +182,18 @@ jobs:
             sudo rm -rf ${RELEASE_PATH}/storage
             sudo ln -s -f $STORAGE_PATH $RELEASE_PATH
             sudo ln -s -n -f $RELEASE_PATH $ACTIVE_RELEASE_PATH
-            sudo service php8.3-fpm reload
+            sudo service php8.4-fpm reload
             sudo chown -R ubuntu:www-data $ACTIVE_RELEASE_PATH
             cd ${ACTIVE_RELEASE_PATH}
 
-            sudo php artisan migrate --force
-            sudo php artisan cache:clear
-            sudo php artisan auth:clear-resets
-            sudo php artisan view:cache
-            sudo php artisan queue:restart
-            sudo php artisan optimize
-            sudo php artisan storage:link
-            sudo composer install --optimize-autoloader --no-dev
+            sudo php8.4 artisan migrate --force
+            sudo php8.4 artisan cache:clear
+            sudo php8.4 artisan auth:clear-resets
+            sudo php8.4 artisan view:cache
+            sudo php8.4 artisan queue:restart
+            sudo php8.4 artisan optimize
+            sudo php8.4 artisan storage:link
+            sudo php8.4 $(which composer) install --optimize-autoloader --no-dev
 
   run-after-hooks:
     name: '${{ matrix.server.name }}: After hook'
