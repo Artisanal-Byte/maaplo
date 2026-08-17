@@ -44,8 +44,8 @@ Route::middleware('auth')->group(function () {
     // Route::get('/profile/edit', [ProfileController::class, 'edit'])
     // ->name('profile.edit');
     // Update profile
-    Route::put('/profile/update', [ProfileController::class, 'update'])
-        ->name('profile.update');
+    // Route::put('/profile/update', [ProfileController::class, 'update'])
+    //     ->name('profile.update');
 
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');
