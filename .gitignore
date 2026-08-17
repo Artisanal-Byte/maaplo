@@ -9,7 +9,7 @@
 /vendor
 .env
 .env.*
-
+production-server-config.json
 .phpactor.json
 .phpunit.result.cache
 Homestead.json
